@@ -1,0 +1,39 @@
+syntax = "proto2";
+
+package apollo.canbus;
+
+import "modules/common/proto/header.proto";
+
+// next id : 27
+message ChassisToAutoboxBridge {
+    // chassis also needs it own sending timestamp
+    optional apollo.common.Header header = 1;
+    optional bool engine_started = 2;
+
+  // Engine speed in RPM.
+  optional double engine_rpm = 3 [default = 0];
+
+  // Vehicle odometer in meters.
+  optional double odometer_m = 4 [default = 0];
+
+  // Fuel range in meters.
+  optional int32 fuel_range_m = 5;
+
+  // Real throttle location in [%], ranging from 0 to 100.
+  optional double throttle_percentage = 6 [default = 0];
+
+  // Real brake location in [%], ranging from 0 to 100.
+  optional double brake_percentage = 7 [default = 0];
+
+  // Real steering location in [%], ranging from -100 to 100.
+  // steering_angle / max_steering_angle
+  // Clockwise: negative
+  // CountClockwise: positive
+  optional double steering_percentage = 8 [default = 0];
+
+  // Applied steering torque in [Nm].
+  optional double steering_torque_nm = 9 [default = 0];
+
+  // Parking brake status.
+  optional bool parking_brake = 10;
+}

@@ -1,0 +1,7 @@
+check_timeouts: false
+localization_channel_name: "/apollo/localization/pose"
+trajectory_channel_name: "/apollo/planning"
+controlcmd_channel_name: "/apollo/control"
+chassis_channel_name: "/apollo/canbus/Chassis"
+
+

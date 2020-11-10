@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+import "modules/common/proto/pnc_point.proto";
+import "modules/common/proto/header.proto";
+// next id: 21
+message ADCTrajectoryToAutoboxBridge {
+
+  // Message publishing time in seconds. It is recommended to obtain
+  // timestamp_sec from ros::Time::now(), right before calling
+  // SerializeToString() and publish().
+  // Normally in proto.header
+  optional apollo.common.Header header = 1;
+
+  // path data + speed data
+  repeated apollo.common.TrajectoryPoint trajectory_point = 2;
+}

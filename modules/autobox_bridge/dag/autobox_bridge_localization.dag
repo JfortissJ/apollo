@@ -1,0 +1,11 @@
+module_config {
+    module_library : "/apollo/bazel-bin/modules/autobox_bridge/libautobox_bridge_component_localization.so"
+    timer_components{
+        class_name : "AutoBoxBridgeComponent_LOCALIZATION"
+        config {
+            name: "AutoBox_Bridge_Localization"
+            config_file_path:  "/apollo/modules/autobox_bridge/conf/autobox_bridge_conf.pb.txt"
+            interval: 10
+            }
+        }
+    }

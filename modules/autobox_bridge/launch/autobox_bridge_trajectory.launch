@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>autobox_bridge_trajectory</name>
+        <dag_conf>/apollo/modules/autobox_bridge/dag/autobox_bridge_trajectory.dag</dag_conf>
+        <process_name>autobox_bridge_trajectory</process_name>
+    </module>
+</cyber>

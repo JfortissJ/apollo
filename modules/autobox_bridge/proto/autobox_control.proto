@@ -1,0 +1,28 @@
+syntax = "proto2";
+
+package apollo.control;
+
+//import "modules/canbus/proto/chassis.proto";
+import "modules/common/proto/header.proto";
+// next id : 27
+message ControlCommandToAutoboxBridge {
+  // replaced Header by timestamp_sec
+  optional apollo.common.Header header = 1;
+  // target throttle in percentage [0, 100]
+  optional double throttle = 3;
+
+  // target brake in percentage [0, 100]
+  optional double brake = 4;
+
+  // target non-directional steering rate, in percentage of full scale per
+  // second [0, 100]
+  optional double steering_rate = 5;
+
+  // target steering angle, in percentage of full scale [-100, 100]
+  optional double steering_target = 6;
+
+  // target acceleration in m`s^-2
+  optional double acceleration = 7;
+
+  //optional apollo.canbus.Chassis.GearPosition gear_location = 20;
+}

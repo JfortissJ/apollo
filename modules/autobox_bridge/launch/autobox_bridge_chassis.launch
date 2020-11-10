@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>autobox_bridge_chassis</name>
+        <dag_conf>/apollo/modules/autobox_bridge/dag/autobox_bridge_chassis.dag</dag_conf>
+        <process_name>autobox_bridge_chassis</process_name>
+    </module>
+</cyber>

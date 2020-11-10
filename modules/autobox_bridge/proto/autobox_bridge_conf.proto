@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package apollo.drivers;
+
+message AutoboxBridgeConf {
+    required string localization_channel_name = 1;
+    required string trajectory_channel_name = 2;
+    required string controlcmd_channel_name = 3;
+    required string chassis_channel_name=4;
+    required bool check_timeouts = 5;
+
+}

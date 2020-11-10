@@ -1,0 +1,11 @@
+module_config {
+    module_library : "/apollo/bazel-bin/modules/autobox_bridge/libautobox_bridge_component_trajectory.so"
+    timer_components{
+        class_name : "AutoBoxBridgeComponent_TRAJECTORY"
+        config {
+            name: "AutoBox_Bridge_Trajectory"
+            config_file_path:  "/apollo/modules/autobox_bridge/conf/autobox_bridge_conf.pb.txt"
+            interval: 1000
+            }
+        }
+    }
