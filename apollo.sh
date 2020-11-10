@@ -723,10 +723,20 @@ function print_usage() {
   ${BLUE}version${NONE}: display current commit and date
   "
 }
-
+function protoc_genfiles()
+{
+	DIR=protoc_genfiles
+	if [ ! -d "$DIR" ]; then
+	  mkdir -p $DIR
+	fi
+	protoFile=$(find ./modules -name '*.proto')
+	for file in $protoFile; do
+		protoc --c_out=$DIR $file
+	done
+}
 function main() {
   source_apollo_base
-
+  protoc_genfiles
   check_machine_arch
   apollo_check_system_config
   check_esd_files
