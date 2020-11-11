@@ -74,7 +74,7 @@ void Velodyne16Parser::Unpack(const VelodynePacket& pkt,
 
   // const RawPacket* raw = (const RawPacket*)&pkt.data[0];
   const RawPacket* raw = (const RawPacket*)pkt.data().c_str();
-  double basetime = raw->gps_timestamp;  // usec
+  // double basetime = raw->gps_timestamp;  // usec
 
   for (int block = 0; block < BLOCKS_PER_PACKET; block++) {
     float azimuth = static_cast<float>(raw->blocks[block].rotation);
@@ -110,10 +110,11 @@ void Velodyne16Parser::Unpack(const VelodynePacket& pkt,
 
         // set 4th param to LOWER_BANK, only use lower_gps_base_usec_ and
         // lower_previous_packet_stamp_
-        uint64_t timestamp = GetTimestamp(
-            basetime,
-            (*inner_time_)[block][firing * VLP16_SCANS_PER_FIRING + dsr],
-            LOWER_BANK);
+        // uint64_t timestamp = GetTimestamp(
+        //    basetime,
+        //    (*inner_time_)[block][firing * VLP16_SCANS_PER_FIRING + dsr],
+        //    LOWER_BANK);
+        uint64_t timestamp = static_cast<uint64_t>(cyber::Time::Now().ToSecond());
 
         if (block == BLOCKS_PER_PACKET - 1 &&
             firing == VLP16_FIRINGS_PER_BLOCK - 1 &&

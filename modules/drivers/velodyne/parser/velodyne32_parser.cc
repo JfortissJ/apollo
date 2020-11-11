@@ -73,7 +73,7 @@ uint64_t Velodyne32Parser::GetTimestamp(double base_time, float time_offset,
 void Velodyne32Parser::UnpackVLP32C(const VelodynePacket& pkt,
                                     std::shared_ptr<PointCloud> pc) {
   const RawPacket* raw = (const RawPacket*)pkt.data().c_str();
-  double basetime = raw->gps_timestamp;  // usec
+  // double basetime = raw->gps_timestamp;  // usec
   float azimuth = 0.0f;
   float azimuth_diff = 0.0f;
   float last_azimuth_diff = 0.0f;
@@ -99,8 +99,10 @@ void Velodyne32Parser::UnpackVLP32C(const VelodynePacket& pkt,
       raw_distance.bytes[1] = raw->blocks[i].data[k + 1];
 
       // compute time
-      uint64_t timestamp = static_cast<uint64_t>(GetTimestamp(
-          basetime, (*inner_time_)[i][laser_id], static_cast<uint16_t>(i)));
+      // uint64_t timestamp = static_cast<uint64_t>(GetTimestamp(
+      //    basetime, (*inner_time_)[i][laser_id], static_cast<uint16_t>(i)));
+
+      uint64_t timestamp = static_cast<uint64_t>(cyber::Time::Now().ToNanosecond());
 
       if (laser_id == SCANS_PER_BLOCK - 1) {
         // set header stamp before organize the point cloud
@@ -146,7 +148,7 @@ void Velodyne32Parser::Unpack(const VelodynePacket& pkt,
                               std::shared_ptr<PointCloud> pc) {
   // const RawPacket* raw = (const RawPacket*)&pkt.data[0];
   const RawPacket* raw = (const RawPacket*)pkt.data().c_str();
-  double basetime = raw->gps_timestamp;  // usec
+  // double basetime = raw->gps_timestamp;  // usec
 
   for (int i = 0; i < BLOCKS_PER_PACKET; i++) {  // 12
     for (int laser_id = 0, k = 0; laser_id < SCANS_PER_BLOCK;
@@ -158,8 +160,9 @@ void Velodyne32Parser::Unpack(const VelodynePacket& pkt,
       raw_distance.bytes[1] = raw->blocks[i].data[k + 1];
 
       // compute time
-      uint64_t timestamp = static_cast<uint64_t>(GetTimestamp(
-          basetime, (*inner_time_)[i][laser_id], static_cast<uint16_t>(i)));
+      // uint64_t timestamp = static_cast<uint64_t>(GetTimestamp(
+      //     basetime, (*inner_time_)[i][laser_id], static_cast<uint16_t>(i)));
+      uint64_t timestamp = static_cast<uint64_t>(cyber::Time::Now().ToNanosecond());
 
       if (laser_id == SCANS_PER_BLOCK - 1) {
         // set header stamp before organize the point cloud

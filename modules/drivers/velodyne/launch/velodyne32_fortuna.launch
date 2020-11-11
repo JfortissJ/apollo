@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>velodyne32_fortuna</name>
+        <dag_conf>/apollo/modules/drivers/velodyne/dag/velodyne32_fortuna.dag</dag_conf>
+        <process_name>velodyne32_fortuna</process_name>
+    </module>
+</cyber>

@@ -1,0 +1,4 @@
+world_frame_id: "world"
+target_frame_id: "imar"
+transform_query_timeout: 0.02
+output_channel: "/apollo/sensor/velodyne32/compensator/PointCloud2"

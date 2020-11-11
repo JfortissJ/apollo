@@ -9,12 +9,12 @@ header:
   frame_id: imar
 transform:
   translation:
-    x: -0.1941689746184177
-    y: 1.438544324620427
-    z: 0
+    x: 0.62
+    y: 0
+    z: 1.43
   rotation:
-    x: -0.00971305
-    y: 0.00327669
-    z: 0.7157
-    w: 0.698332
+    x: 1.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
 child_frame_id: velodyne32
