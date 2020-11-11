@@ -58,7 +58,7 @@ bool MlfEngine::Init(const MultiTargetTrackerInitOptions& options) {
   foreground_track_data_.clear();
   background_track_data_.clear();
   if (main_sensor_.empty()) {
-    main_sensor_.emplace("velodyne64");  // default value
+    main_sensor_.emplace("velodyne32");  // default value
   }
 
   matcher_.reset(new MlfTrackObjectMatcher);

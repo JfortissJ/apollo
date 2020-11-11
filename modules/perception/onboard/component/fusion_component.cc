@@ -51,6 +51,8 @@ bool FusionComponent::Init() {
 }
 
 bool FusionComponent::Proc(const std::shared_ptr<SensorFrameMessage>& message) {
+  AINFO << "Enter FusionComponent proc. message->sensor_id_: "
+        << message->sensor_id_;
   if (message->process_stage_ == ProcessStage::SENSOR_FUSION) {
     return true;
   }

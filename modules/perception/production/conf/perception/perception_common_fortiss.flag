@@ -26,7 +26,7 @@
 # enable hdmap input for roi filter.
 # type: bool
 # default: true
---obs_enable_hdmap_input=true
+--obs_enable_hdmap_input=false
 
 # whether to send message for visualization.
 # type: bool
@@ -36,7 +36,7 @@
 # where to save screenshots of visualization
 # type: string
 # default: ./
---obs_screen_output_dir=./
+--obs_screen_output_dir=./vis/
 
 # whether switch to benchmark output mode
 # type: bool
@@ -46,7 +46,7 @@
 # whether save fusion supplement data
 # type: bool
 # default: false
---obs_save_fusion_supplement=true
+--obs_save_fusion_supplement=false
 
 ###########################################################################
 # Flags from transform_wrapper
@@ -54,7 +54,7 @@
 # sensor to novatel frame id.
 # type: string
 # default:
---obs_sensor2novatel_tf2_frame_id=novatel
+--obs_sensor2novatel_tf2_frame_id=imar
 
 # novatel to world frame id.
 # type: string
@@ -64,12 +64,12 @@
 # novatel to world child frame id.
 # type: string
 # default:
---obs_novatel2world_tf2_child_frame_id=novatel
+--obs_novatel2world_tf2_child_frame_id=imar
 
 # query Cyber TF buffer size in second.
 # type: double
 # default: 0.01
---obs_tf2_buff_size=0.01
+--obs_tf2_buff_size=0.5
 
 # enabled state of local pose extrapolation when failed to query pose
 # type: bool
@@ -87,4 +87,4 @@
 --obs_max_local_pose_extrapolation_latency=0.15
 
 --config_manager_path=./
---start_visualizer=true
+--start_visualizer=false

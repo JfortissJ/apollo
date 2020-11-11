@@ -633,7 +633,7 @@ bool RTNet::Init(const std::map<std::string, std::vector<int>> &shapes) {
 
   parse_with_api(shapes);
   builder_->setMaxBatchSize(max_batch_size_);
-  workspaceSize_ = 1 << 30;
+  workspaceSize_ = 1 << 20;
   builder_->setMaxWorkspaceSize(workspaceSize_);
   cudaDeviceProp prop;
   cudaGetDeviceProperties(&prop, gpu_id_);

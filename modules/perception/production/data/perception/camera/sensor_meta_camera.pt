@@ -5,6 +5,12 @@ sensor_meta {
 }
 
 sensor_meta {
+    name: "velodyne32"
+    type: VELODYNE_32
+    orientation: PANORAMIC
+}
+
+sensor_meta {
     name: "front_12mm"
     type: MONOCULAR_CAMERA
     orientation: FRONT

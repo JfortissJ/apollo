@@ -9,6 +9,11 @@ sensor_meta {
     orientation: PANORAMIC
 }
 sensor_meta {
+    name: "velodyne32"
+    type: VELODYNE_32
+    orientation: PANORAMIC
+}
+sensor_meta {
     name: "velodyne16"
     type: VELODYNE_16
     orientation: FRONT
@@ -24,6 +29,12 @@ sensor_meta {
     name: "radar_rear"
     type: LONG_RANGE_RADAR
     orientation: REAR
+}
+
+sensor_meta {
+    name: "fortuna_production_radar"
+    type: LONG_RANGE_RADAR
+    orientation: PANORAMIC
 }
 
 sensor_meta {

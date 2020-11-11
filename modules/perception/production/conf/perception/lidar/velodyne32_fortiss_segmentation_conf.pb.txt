@@ -1,0 +1,5 @@
+sensor_name: "velodyne32"
+enable_hdmap: false
+lidar_query_tf_offset: 0
+lidar2novatel_tf2_child_frame_id: "velodyne32"
+output_channel_name: "/perception/inner/SegmentationObjects"
