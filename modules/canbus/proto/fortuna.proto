@@ -1,0 +1,187 @@
+syntax = "proto2";
+
+package apollo.canbus;
+
+
+//Sensor data messages
+
+//Front Object_1
+message Front_object_1 {
+    
+    enum Fused_stateType{
+        NOT_FUSED = 0;
+        OBJECT_FUSED = 1;
+    }
+    
+    optional double rel_velocity_x = 1;
+    optional double rel_pos_y = 2;
+    optional double rel_pos_x = 3;
+    optional int32 id = 4;
+    optional Fused_stateType fused_state = 5;
+}
+
+//Front Object_2
+message Front_object_2 {
+    
+    enum Fused_stateType{
+        NOT_FUSED = 0;
+        OBJECT_FUSED = 1;
+    }
+    
+    optional double rel_velocity_x = 1;
+    optional double rel_pos_y = 2;
+    optional double rel_pos_x = 3;
+    optional int32 id = 4;
+    optional Fused_stateType fused_state = 5;
+}
+
+//Front Object_3
+message Front_object_3 {
+    
+    enum Fused_stateType{
+        NOT_FUSED = 0;
+        OBJECT_FUSED = 1;
+    }
+    
+    optional double rel_velocity_x = 1;
+    optional double rel_pos_y = 2;
+    optional double rel_pos_x = 3;
+    optional int32 id = 4;
+    optional Fused_stateType fused_state = 5;
+}
+
+//Front Object_4
+message Front_object_4 {
+    
+    enum Fused_stateType{
+        NOT_FUSED = 0;
+        OBJECT_FUSED = 1;
+    }
+    
+    optional double rel_velocity_x = 1;
+    optional double rel_pos_y = 2;
+    optional double rel_pos_x = 3;
+    optional int32 id = 4;
+    optional Fused_stateType fused_state = 5;
+}
+
+
+//Rear Object_1
+message Rear_object_1 {
+    
+    enum Rear_trackedType{
+        OBJECT_TRACKED = 0;
+        OBJECT_MEASURED = 1;
+    }
+    
+    optional Rear_trackedType rear_tracked = 1;
+    optional int32 rear_id = 2;
+    optional double rear_pos_y = 3;
+    optional double rear_rel_velocity_x = 4;
+    optional double rear_pos_x = 5;
+}
+
+
+//Rear Object_2
+message Rear_object_2 {
+    
+    enum Rear_trackedType{
+        OBJECT_TRACKED = 0;
+        OBJECT_MEASURED = 1;
+    }
+    
+    optional Rear_trackedType rear_tracked = 1;
+    optional int32 rear_id = 2;
+    optional double rear_pos_y = 3;
+    optional double rear_rel_velocity_x = 4;
+    optional double rear_pos_x = 5;
+}
+//Rear Object_3
+message Rear_object_3 {
+    
+    enum Rear_trackedType{
+        OBJECT_TRACKED = 0;
+        OBJECT_MEASURED = 1;
+    }
+    
+    optional Rear_trackedType rear_tracked = 1;
+    optional int32 rear_id = 2;
+    optional double rear_pos_y = 3;
+    optional double rear_rel_velocity_x = 4;
+    optional double rear_pos_x = 5;
+}
+//Rear Object_4
+message Rear_object_4 {
+    
+    enum Rear_trackedType{
+        OBJECT_TRACKED = 0;
+        OBJECT_MEASURED = 1;
+    }
+    
+    optional Rear_trackedType rear_tracked = 1;
+    optional int32 rear_id = 2;
+    optional double rear_pos_y = 3;
+    optional double rear_rel_velocity_x = 4;
+    optional double rear_pos_x = 5;
+}
+//Rear Object_5
+message Rear_object_5 {
+    
+    enum Rear_trackedType{
+        OBJECT_TRACKED = 0;
+        OBJECT_MEASURED = 1;
+    }
+    
+    optional Rear_trackedType rear_tracked = 1;
+    optional int32 rear_id = 2;
+    optional double rear_pos_y = 3;
+    optional double rear_rel_velocity_x = 4;
+    optional double rear_pos_x = 5;
+}
+
+//Rear Object_6
+message Rear_object_6 {
+    
+    enum Rear_trackedType{
+        OBJECT_TRACKED = 0;
+        OBJECT_MEASURED = 1;
+    }
+    
+    optional Rear_trackedType rear_tracked = 1;
+    optional int32 rear_id = 2;
+    optional double rear_pos_y = 3;
+    optional double rear_rel_velocity_x = 4;
+    optional double rear_pos_x = 5;
+}
+
+
+//Steering message
+message Steering {
+    
+    enum Steering_signType{
+        STEERING_LEFT = 0;
+        STEERING_RIGHT = 1; 
+    }
+
+    optional Steering_signType steering_wheel_angle_sign = 1;
+    optional Steering_signType steering_wheel_speed_sign = 2;
+    optional Steering_signType steering_wheel_torque_sign = 3;
+    optional double steering_wheel_torque = 4;
+    optional double steering_wheel_angle = 5;
+    optional double steering_wheel_speed = 6;
+}
+
+
+message Fortuna{
+    optional Front_object_1 front_object_1 = 1; // report message
+    optional Front_object_2 front_object_2 = 2; // report message
+    optional Front_object_3 front_object_3 = 3; // report message
+    optional Front_object_4 front_object_4 = 4; // report message
+    optional Rear_object_1 rear_object_1 = 5; //report message
+    optional Rear_object_2 rear_object_2 = 6; //report message
+    optional Rear_object_3 rear_object_3 = 7; //report message
+    optional Rear_object_4 rear_object_4 = 8; //report message
+    optional Rear_object_5 rear_object_5 = 9; //report message
+    optional Rear_object_6 rear_object_6 = 10; //report message
+    optional Steering steering = 11; // report message
+}

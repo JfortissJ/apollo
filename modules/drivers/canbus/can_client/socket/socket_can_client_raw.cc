@@ -77,21 +77,21 @@ ErrorCode SocketCanClientRaw::Start() {
   // init config and state
   int ret;
 
-  // 1. for non virtual busses, set receive message_id filter, ie white list
-  if (interface_ != CANCardParameter::VIRTUAL) {
-    struct can_filter filter[2048];
-    for (int i = 0; i < 2048; ++i) {
-      filter[i].can_id = 0x000 + i;
-      filter[i].can_mask = CAN_SFF_MASK;
-    }
+  // // 1. for non virtual busses, set receive message_id filter, ie white list
+  // if (interface_ != CANCardParameter::VIRTUAL) {
+  //   struct can_filter filter[2048];
+  //   for (int i = 0; i < 2048; ++i) {
+  //     filter[i].can_id = 0x000 + i;
+  //     filter[i].can_mask = CAN_SFF_MASK;
+  //   }
 
-    ret = setsockopt(dev_handler_, SOL_CAN_RAW, CAN_RAW_FILTER, &filter,
-                         sizeof(filter));
-    if (ret < 0) {
-      AERROR << "add receive msg id filter error code: " << ret;
-      return ErrorCode::CAN_CLIENT_ERROR_BASE;
-    }
-  }
+  //   ret = setsockopt(dev_handler_, SOL_CAN_RAW, CAN_RAW_FILTER, &filter,
+  //                        sizeof(filter));
+  //   if (ret < 0) {
+  //     AERROR << "add receive msg id filter error code: " << ret;
+  //     return ErrorCode::CAN_CLIENT_ERROR_BASE;
+  //   }
+  // }
 
   // 2. enable reception of can frames.
   int enable = 1;
@@ -203,14 +203,14 @@ ErrorCode SocketCanClientRaw::Receive(std::vector<CanFrame> *const frames,
       AERROR << "receive message failed, error code: " << ret;
       return ErrorCode::CAN_CLIENT_ERROR_BASE;
     }
-    if (recv_frames_[i].can_dlc > CANBUS_MESSAGE_LENGTH ||
-        recv_frames_[i].can_dlc < 0) {
-      AERROR << "recv_frames_[" << i
-             << "].can_dlc = " << recv_frames_[i].can_dlc
-             << ", which is not equal to can message data length ("
-             << CANBUS_MESSAGE_LENGTH << ").";
-      return ErrorCode::CAN_CLIENT_ERROR_RECV_FAILED;
-    }
+    //if (recv_frames_[i].can_dlc > CANBUS_MESSAGE_LENGTH ||
+    //    recv_frames_[i].can_dlc < 0) {
+    //  AERROR << "recv_frames_[" << i
+    //         << "].can_dlc = " << recv_frames_[i].can_dlc
+    //         << ", which is not equal to can message data length ("
+    //         << CANBUS_MESSAGE_LENGTH << ").";
+    //  return ErrorCode::CAN_CLIENT_ERROR_RECV_FAILED;
+    //}
     cf.id = recv_frames_[i].can_id;
     cf.len = recv_frames_[i].can_dlc;
     std::memcpy(cf.data, recv_frames_[i].data, recv_frames_[i].can_dlc);

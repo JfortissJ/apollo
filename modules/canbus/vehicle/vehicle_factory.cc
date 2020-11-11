@@ -27,6 +27,7 @@
 #include "modules/canbus/vehicle/transit/transit_vehicle_factory.h"
 #include "modules/canbus/vehicle/wey/wey_vehicle_factory.h"
 #include "modules/canbus/vehicle/zhongyun/zhongyun_vehicle_factory.h"
+#include "modules/canbus/vehicle/fortuna/fortuna_vehicle_factory.h"
 
 namespace apollo {
 namespace canbus {
@@ -60,6 +61,9 @@ void VehicleFactory::RegisterVehicleFactory() {
   });
   Register(apollo::common::NEOLIX, []() -> AbstractVehicleFactory * {
     return new Neolix_eduVehicleFactory();
+  });
+  Register(apollo::common::VW_PASSAT_GTE, []() -> AbstractVehicleFactory * {
+    return new FortunaVehicleFactory();
   });
 }
 

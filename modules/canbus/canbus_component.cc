@@ -184,6 +184,8 @@ void CanbusComponent::PublishChassis() {
 void CanbusComponent::PublishChassisDetail() {
   ChassisDetail chassis_detail;
   message_manager_->GetSensorData(&chassis_detail);
+  const double unix_sec_gps = cyber::Time::Now().ToSecond();
+  chassis_detail.set_timestamp(unix_sec_gps);
   ADEBUG << chassis_detail.ShortDebugString();
   chassis_detail_writer_->Write(chassis_detail);
 }

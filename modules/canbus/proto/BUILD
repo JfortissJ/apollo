@@ -14,14 +14,14 @@ proto_library(
         "ch.proto",
         "chassis.proto",
         "chassis_detail.proto",
-        "devkit.proto",
+        "devkit.proto"
         "ge3.proto",
         "lexus.proto",
         "transit.proto",
         "vehicle_parameter.proto",
         "wey.proto",
         "zhongyun.proto",
-        "neolix_edu.proto",
+        "fortuna.proto",
     ],
     deps = [
         "//modules/common/configs/proto:vehicle_config_proto_lib",
