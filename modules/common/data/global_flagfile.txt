@@ -5,14 +5,22 @@
 # 3. To override the flag values, you must set it after this file, as all Flags
 #    are evaluated strictly in order.
 
---vehicle_config_path=/apollo/modules/common/data/vehicle_param.pb.txt
+--vehicle_config_path=/apollo/modules/common/data/vehicle_param_fortuna.pb.txt
+
+--local_utm_zone_id=32
 
 --log_dir=/apollo/data/log
 
 --use_navigation_mode=false
 
---map_dir=/apollo/modules/map/data/sunnyvale_with_two_offices
-
 --use_sim_time=false
-
+--enable_functional_safety==false
 --use_cyber_time=true
+
+--fortiss_simcontrol_set_start_pose=true
+
+--fortiss_simcontrol_start_x=586903
+
+--fortiss_simcontrol_start_y=4141629
+
+map_dir=/apollo/modules/map/data/guerickestrasse

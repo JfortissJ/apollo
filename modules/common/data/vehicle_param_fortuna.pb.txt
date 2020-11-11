@@ -1,0 +1,24 @@
+vehicle_param {
+  brand: VW_PASSAT_GTE
+  front_edge_to_center: 3.7785
+  back_edge_to_center: 0.9925
+  left_edge_to_center: 1.0415
+  right_edge_to_center: 1.0415
+
+  length: 4.767
+  width: 2.083
+  height: 1.825
+  min_turn_radius: 6.315
+  max_acceleration: 2.0
+  max_deceleration: -4.5
+  max_steer_angle: 6.1871
+  max_steer_angle_rate: 7.0
+  min_steer_angle_rate: 0
+  steer_ratio: 14.8828
+  wheel_base: 2.786
+  wheel_rolling_radius: 0.335
+  max_abs_speed_when_stopped: 0.2
+
+  brake_deadzone: 15.5
+  throttle_deadzone: 18.0
+}

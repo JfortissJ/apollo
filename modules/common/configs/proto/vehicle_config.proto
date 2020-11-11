@@ -36,6 +36,7 @@ enum VehicleBrand {
   CH = 7;
   DKIT = 8;
   NEOLIX =9;
+  VW_PASSAT_GTE = 10;
 }
 
 message VehicleID {
