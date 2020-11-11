@@ -464,6 +464,16 @@ bool MapService::GetStartPoint(apollo::common::PointENU *start_point) const {
   return true;
 }
 
+bool MapService::GetStartPointAtXY(apollo::common::PointENU *start_point, const double x, const double y) const {
+  double s, l;
+  LaneInfoConstPtr lane;
+  if (!GetNearestLane(x, y, &lane, &s, &l)) {
+    return false;
+  }
+  *start_point = lane->GetSmoothPoint(s);
+  return true;
+}
+
 bool MapService::CreatePathsFromRouting(const RoutingResponse &routing,
                                         std::vector<Path> *paths) const {
   if (routing.road().empty()) {

@@ -59,3 +59,10 @@ DECLARE_string(lidar_height_yaml);
 DECLARE_int32(monitor_msg_pending_queue_size);
 
 DECLARE_string(default_data_collection_config_path);
+DECLARE_string(data_collection_config_path);
+
+DECLARE_bool(fortiss_simcontrol_set_start_pose);
+
+DECLARE_double(fortiss_simcontrol_start_x);
+
+DECLARE_double(fortiss_simcontrol_start_y);

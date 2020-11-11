@@ -61,6 +61,9 @@ class MapService {
   // Get a point on the map to serve as dummy start point of SimControl
   bool GetStartPoint(apollo::common::PointENU *start_point) const;
 
+  // Get a point on the map nearest to the provided (x,y coordinates)
+  bool GetStartPointAtXY(apollo::common::PointENU *start_point, const double x, const double y) const;
+
   /**
    * @brief The function fills out proper routing lane waypoint
    * from the given (x,y) position.
