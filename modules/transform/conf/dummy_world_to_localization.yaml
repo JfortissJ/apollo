@@ -1,0 +1,18 @@
+# Dummy localization in UTM zone 32 frame
+child_frame_id: localization
+transform:
+  translation:
+    x: 693011.582
+    y: 5339022.902
+    z: 506
+  rotation:
+    x: 0.0
+    y: 0.0
+    z: -0.793
+    w: 0.609
+header:
+  seq: 0
+  stamp:
+    secs: 1512689414
+    nsecs: 0
+  frame_id: world
