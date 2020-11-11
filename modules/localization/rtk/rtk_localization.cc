@@ -350,12 +350,17 @@ bool RTKLocalization::FindMatchingIMU(const double gps_timestamp_sec,
   }
 
   if (imu_it != imu_list.end()) {  // found one
+    auto l = imu_list.size();
     if (imu_it == imu_list.begin()) {
+      std::cout.precision(20);
       AERROR << "IMU queue too short or request too old. "
              << "Oldest timestamp[" << imu_list.front().header().timestamp_sec()
              << "], Newest timestamp["
              << imu_list.back().header().timestamp_sec() << "], GPS timestamp["
              << gps_timestamp_sec << "]";
+
+      AERROR << "list size = " << l 
+            << " time diff = " << imu_list.front().header().timestamp_sec() - imu_list.back().header().timestamp_sec();
       *imu_msg = imu_list.front();  // the oldest imu
     } else {
       // here is the normal case

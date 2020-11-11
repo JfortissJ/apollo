@@ -5,8 +5,8 @@ gps_topic: "/apollo/sensor/gnss/odometry"
 gps_status_topic: "/apollo/sensor/gnss/ins_stat"
 broadcast_tf_frame_id: "world"
 broadcast_tf_child_frame_id: "localization"
-imu_list_max_size: 20
-gps_imu_time_diff_threshold: 0.02
+imu_list_max_size: 100
+gps_imu_time_diff_threshold: 0.05
 map_offset_x: 0.0
 map_offset_y: 0.0
 map_offset_z: 0.0
