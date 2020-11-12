@@ -56,6 +56,26 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = "udp_bridge_sender_autobox",
+    srcs = ["udp_bridge_sender_component_autobox.cc"],
+    hdrs = ["udp_bridge_sender_component_autobox.h"],
+    copts = ['-DMODULE_NAME=\\"bridge\\"'],
+    deps = [
+        ":udp_bridge",
+        "//modules/control/proto:control_command_proto",
+        "//modules/planning/proto:planning_proto",
+        "//modules/localization/proto:localization_proto",
+        "//modules/autobox_bridge/proto:autobox_trajectory_proto",
+	    "//modules/autobox_bridge/proto:autobox_control_proto",
+	    "//modules/autobox_bridge/proto:autobox_localization_proto",
+        "//modules/autobox_bridge/proto:autobox_chassis_proto",
+        "//modules/autobox_bridge/proto:autobox_bridge_conf_proto",
+    ],
+)
+
+
+
 cc_binary(
     name = "libudp_bridge_sender_component.so",
     linkshared = True,
@@ -76,6 +96,14 @@ cc_binary(
     linkstatic = False,
     deps = [":udp_bridge_multi_receiver"],
 )
+
+cc_binary(
+    name = "udp_bridge_sender_component_autobox.so",
+    linkshared = True,
+    linkstatic = False,
+    deps = [":udp_bridge_sender_autobox"],
+)
+
 
 cc_test(
     name = "udp_bridge_component_test",
