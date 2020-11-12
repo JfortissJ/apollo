@@ -1,0 +1,3 @@
+remote_ip: "127.0.0.1"
+remote_port: 5001
+proto_name: "AutoBoxLocalizationEstimate"

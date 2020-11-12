@@ -1,0 +1,43 @@
+module_config {
+    module_library: "/apollo/bazel-bin/modules/bridge/udp_bridge_sender_component_autobox.so"
+    components {
+    class_name: "UDPAutoBoxBridgeSenderComponent<apollo::planning::ADCTrajectoryToAutoboxBridge>"
+    config {
+        name: "bridge_sender_autobox_trajectory"
+        config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_autobox_adctrajectory_dspace.pb.txt"
+        readers {
+          channel: "/apollo/autobox_bridge/adctrajectory"
+        }
+  }
+   }
+
+
+    components {
+
+        class_name: "UDPAutoBoxBridgeSenderComponent<apollo::localization::LocalizationToAutoboxBridge>"
+
+        config {
+
+            name: "bridge_sender_autobox_LocalizationEstimate"
+
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_autobox_localization_dspace.pb.txt"
+
+            readers {
+
+              channel: "/apollo/autobox_bridge/localization"
+
+            }
+      }
+   }
+
+       components {
+        class_name: "UDPAutoBoxBridgeSenderComponent<apollo::control::ControlCommandToAutoboxBridge>"
+        config {
+            name: "bridge_sender_autobox_control"
+            config_file_path: "/apollo/modules/bridge/conf/udp_bridge_sender_autobox_control_dspace.pb.txt"
+            readers {
+              channel: "/apollo/autobox_bridge/control"
+            }
+      }
+   }
+}
