@@ -1,0 +1,14 @@
+# Define all coms in DAG streaming.
+module_config {
+    module_library : "/apollo/bazel-bin/modules/drivers/imar/libimar_component.so"
+
+    components {
+      class_name : "imarDriverComponent"
+      config {
+        name : "imar"
+        config_file_path : "/apollo/modules/drivers/imar/conf/imar_conf.pb.txt"
+      }
+    }
+}
+
+

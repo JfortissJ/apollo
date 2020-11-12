@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>imar</name>
+        <dag_conf>/apollo/modules/drivers/imar/dag/imar.dag</dag_conf>
+        <process_name>imar</process_name>
+    </module>
+</cyber>
