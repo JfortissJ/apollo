@@ -2,33 +2,6 @@ load("//tools:cpplint.bzl", "cpplint")
 
 package(default_visibility = ["//visibility:public"])
 
-
-cc_binary(
-    name = "libautobox_bridge_component.so",
-    linkopts = ["-shared"],
-    linkstatic = False,
-    deps = [":autobox_bridge_component_lib"],
-)
-
-cc_library(
-    name = "autobox_bridge_component_lib",
-    srcs = ["autobox_bridge_component.cc"],
-    hdrs = ["autobox_bridge_component.h"],
-    copts = ['-DMODULE_NAME=\\"autobox_bridge\\"'],
-    deps = [
-        "//cyber",
-        "//modules/common/monitor_log",
-        "//modules/control/proto:control_command_proto",
-        "//modules/planning/proto:planning_proto",
-        "//modules/localization/proto:localization_proto",
-        "//modules/autobox_bridge/proto:autobox_trajectory_proto",
-	    "//modules/autobox_bridge/proto:autobox_control_proto",
-	    "//modules/autobox_bridge/proto:autobox_localization_proto",
-        "//modules/autobox_bridge/proto:autobox_chassis_proto",
-        "//modules/autobox_bridge/proto:autobox_bridge_conf_proto",
-    ],
-)
-
 cc_binary(
     name = "libautobox_bridge_component_chassis.so",
     linkopts = ["-shared"],
