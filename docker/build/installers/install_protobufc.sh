@@ -24,7 +24,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 wget -O protobuf-c-v1.3.3.tar.gz https://github.com/protobuf-c/protobuf-c/archive/v1.3.3.tar.gz
 tar xzf protobuf-c-v1.3.3.tar.gz
 pushd protobuf-c-1.3.3
-./configure
+./autogen.sh&&./configure
 make -j8
 make install
 popd
