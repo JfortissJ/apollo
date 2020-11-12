@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+message imarConf {
+  optional string ip_address = 1;
+  optional uint32 tcp_port = 2;
+  optional uint32 udp_port = 3;
+  optional string localization_topic = 4;
+  optional string imu_topic = 5;
+  optional string imar_status_topic = 6;
+  optional string ins_status_topic = 7;
+  optional double x_lever = 8;
+  optional double y_lever = 9;
+  optional double z_lever = 10;
+  optional double x_offset = 11;
+  optional double y_offset = 12;
+  optional double z_offset = 13;
+  optional bool gps_available = 14;
+}
