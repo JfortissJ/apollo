@@ -1,0 +1,50 @@
+syntax = "proto2";
+
+package apollo.drivers;
+
+import "modules/common/proto/header.proto";
+
+message FortissCameraStatus {
+  optional apollo.common.Header header = 1;
+  enum Type {
+    DISCONNECTED = 0;
+    CONNECTED = 1;
+  }
+   optional Type type = 2 [default = DISCONNECTED];
+}
+
+message FortissImarStatus {
+  optional apollo.common.Header header = 1;
+  enum Type {
+    DISCONNECTED = 0;
+    CONNECTED = 1;
+  }
+   optional Type type = 2 [default = DISCONNECTED];
+}
+
+message FortissLidarStatus {
+  optional apollo.common.Header header = 1;
+  enum Type {
+    DISCONNECTED = 0;
+    CONNECTED = 1;
+  }
+   optional Type type = 2 [default = DISCONNECTED];
+}
+
+message FortissRadarStatus {
+  optional apollo.common.Header header = 1;
+  enum Type {
+    DISCONNECTED = 0;
+    CONNECTED = 1;
+  }
+   optional Type type = 2 [default = DISCONNECTED];
+}
+
+message FortissAutoboxStatus {
+  optional apollo.common.Header header = 1;
+  enum Type {
+    DISCONNECTED = 0;
+    CONNECTED = 1;
+  }
+   optional Type type = 2 [default = DISCONNECTED];
+}
