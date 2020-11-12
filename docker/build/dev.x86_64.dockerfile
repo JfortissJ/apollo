@@ -71,6 +71,7 @@ RUN bash /tmp/installers/install_ota.sh
 RUN bash /tmp/installers/install_pcl.sh
 RUN bash /tmp/installers/install_poco.sh
 RUN bash /tmp/installers/install_protobuf.sh
+RUN bash /tmp/installers/install_protobufc.sh
 RUN bash /tmp/installers/install_python_modules.sh
 RUN bash /tmp/installers/install_qp_oases.sh
 RUN bash /tmp/installers/install_qt.sh
