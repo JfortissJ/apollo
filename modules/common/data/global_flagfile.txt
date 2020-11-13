@@ -14,13 +14,15 @@
 --use_navigation_mode=false
 
 --use_sim_time=false
---enable_functional_safety==false
+
+--enable_functional_safety=false
+
 --use_cyber_time=true
 
---fortiss_simcontrol_set_start_pose=true
+--fortiss_simcontrol_set_start_pose=false
 
 --fortiss_simcontrol_start_x=586903
 
 --fortiss_simcontrol_start_y=4141629
 
-map_dir=/apollo/modules/map/data/guerickestrasse
+--map_dir=/apollo/modules/map/data/osterwaldstrasse
