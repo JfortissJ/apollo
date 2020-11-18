@@ -29,11 +29,6 @@ bool handle_message_Check(BridgeProtoDiserializedBuf* proto_buf, const char* tot
 		FORTISS_INFO_PRINTF("APollo_BRIDGE_HEADER can not be correctly decoded\n");
 		return false;
 	}
-	if(APOLLO_BRIDGE_HEADER_GetFrameBufferSize(&bridgeHeader) != frame_buffer_size)
-	{
-		FORTISS_INFO_PRINTF("The receving data buffer size is not equal to the real data buffer size\n");
-		return false;
-	}
 	if(!*hasinit)
 	{
 		bool basicInit = APOLLO_BRIDGE_DiserializeInit(proto_buf, &bridgeHeader);
