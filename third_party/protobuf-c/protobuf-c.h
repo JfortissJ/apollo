@@ -287,7 +287,7 @@ typedef enum {
 	PROTOBUF_C_FIELD_FLAG_DEPRECATED	= (1 << 1),
 
 	/** Set if the field is a member of a oneof (union). */
-	PROTOBUF_C_FIELD_FLAG_ONEOF		= (1 << 2),
+	PROTOBUF_C_FIELD_FLAG_ONEOF		= (1 << 2)
 } ProtobufCFieldFlag;
 
 /**
@@ -319,7 +319,7 @@ typedef enum {
 	 * This field has no label. This is valid only in proto3 and is
 	 * equivalent to OPTIONAL but no "has" quantifier will be consulted.
 	 */
-	PROTOBUF_C_LABEL_NONE,
+	PROTOBUF_C_LABEL_NONE
 } ProtobufCLabel;
 
 /**
@@ -347,7 +347,7 @@ typedef enum {
 	PROTOBUF_C_TYPE_ENUM,       /**< enumerated type */
 	PROTOBUF_C_TYPE_STRING,     /**< UTF-8 or ASCII string */
 	PROTOBUF_C_TYPE_BYTES,      /**< arbitrary byte sequence */
-	PROTOBUF_C_TYPE_MESSAGE,    /**< nested message */
+	PROTOBUF_C_TYPE_MESSAGE    /**< nested message */
 } ProtobufCType;
 
 /**
@@ -363,7 +363,7 @@ typedef enum {
 	PROTOBUF_C_WIRE_TYPE_64BIT = 1,
 	PROTOBUF_C_WIRE_TYPE_LENGTH_PREFIXED = 2,
 	/* "Start group" and "end group" wire types are unsupported. */
-	PROTOBUF_C_WIRE_TYPE_32BIT = 5,
+	PROTOBUF_C_WIRE_TYPE_32BIT = 5
 } ProtobufCWireType;
 
 struct ProtobufCAllocator;
