@@ -736,7 +736,7 @@ function protoc_genfiles()
 }
 function main() {
   source_apollo_base
-  protoc_genfiles
+#  protoc_genfiles
   check_machine_arch
   apollo_check_system_config
   check_esd_files

@@ -7,7 +7,7 @@ python scripts/fortiss/set_cyber_ip.py
 
 tmux new -d
 tmux send-keys 'source cyber/setup.bash' C-m
-tmux send-keys 'cyber_launch start modules/drivers/imar35/launch/imar35.launch' C-m
+tmux send-keys 'cyber_launch start modules/drivers/imar/launch/imar.launch' C-m
 tmux split-window -h
 tmux send-keys 'source cyber/setup.bash' C-m
 tmux send-keys 'cyber_launch start modules/drivers/velodyne/launch/velodyne32_fortuna.launch' C-m
