@@ -23,9 +23,7 @@
 #include <string.h>
 
 #ifdef linux
-
 #include <unistd.h>
-
 #endif
 
 #include <stdlib.h>
@@ -35,12 +33,14 @@
 #ifdef _DS1401 //dspace
 #include <brtenv.h>
 #include <dstypes.h>
+#ifndef uint32_t
 typedef UInt32 uint32_t; 
+#endif
+#ifndef uint8_t
 typedef UInt8 uint8_t;
+#endif
 #else
-
 #include <stdint.h>
-
 #endif
 
 #include <stddef.h>
@@ -62,7 +62,7 @@ typedef enum _HType
 	Frame_Pos,
 	Frame_Index,
 	Time_Stamp,
-	Header_Tail,
+	Header_Tail
 } HType;
 
 struct _APOLLO_BRIDGE_HeaderItem_STRING

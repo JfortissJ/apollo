@@ -135,7 +135,7 @@ static void mdlUpdate(SimStruct* S, int_T tid)
 	const bool* input_status = (bool*) ssGetInputPortSignal(S, INPUT_STATUS);
 	if(*input_status)
 	{
-		const uint8_T* buf = (uint8_T*) ssGetInputPortSignal(S, INPUT_DATA);
+		const char* buf = (char*) ssGetInputPortSignal(S, INPUT_DATA);
 		const uint16_T* size = (const uint16_T*) ssGetInputPortSignal(S, INPUT_SIZE);
 		
 		BridgeProtoDiserializedBuf* proto_buf = (BridgeProtoDiserializedBuf*) ssGetPWorkValue(S, 0);

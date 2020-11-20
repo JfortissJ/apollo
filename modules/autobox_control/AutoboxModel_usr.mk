@@ -93,18 +93,15 @@ USER_SRCS_DIR = \
 "..\bridge_c\client" \
 "..\bridge_c\common" \
 "..\..\third_party\protobuf-c" \
-"..\..\third_party"
 
 # Path names for user include files.
 USER_INCLUDES_PATH = \
 "sfunctions" \
-"..\..\protoc_genfiles\modules\canbus\proto" \
-"..\..\protoc_genfiles\modules\common\proto" \
-"..\bridge_c\client" \
-"..\bridge_c\common" \
-"..\..\protoc_genfiles\modules\autobox_bridge\proto" \
-"..\..\third_party\protobuf-c" \
-"..\..\third_party"
+"..\bridge_c" \
+"..\.." \
+"..\..\third_party" \
+"..\..\protoc_genfiles"
+
 
 # Additional user object files to be linked.
 USER_OBJS =

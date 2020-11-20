@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Root>
+	<creator type="key">ControlDesk 7.1</creator>
+	<project>
+		<Creator type="key">ControlDesk</Creator>
+		<MigrationHistory type="key"/>
+		<Name type="key">ApolloControl.CDP</Name>
+		<DisplayName type="key">ApolloControl</DisplayName>
+		<Flags type="key">4096</Flags>
+		<Type type="key">1</Type>
+		<UniqueID type="key">601938887</UniqueID>
+		<EntityID type="key">{5090CA8F-CC05-4386-80AC-48D5314910FA}</EntityID>
+		<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+		<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+		<ItemInfoDescr type="key"/>
+		<ItemInfoAddInfoDb type="key"/>
+		<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+		<item>
+			<Targets type="key">project</Targets>
+			<Name type="key">ApolloControl</Name>
+			<DisplayName type="key">ApolloControl</DisplayName>
+			<Path type="key">..</Path>
+			<Flags type="key">4100</Flags>
+			<Type type="key">3</Type>
+			<UniqueID type="key">619019001</UniqueID>
+			<EntityID type="key">{77D458BD-53B5-4453-9373-BDF54E63386F}</EntityID>
+			<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+			<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+			<ItemInfoDescr type="key"/>
+			<ItemInfoAddInfoDb type="key"/>
+			<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			<item>
+				<Docs type="key">.doc,.docx,.pdf</Docs>
+				<Name type="key">Specifications</Name>
+				<DisplayName type="key">Specifications</DisplayName>
+				<Path type="key">.</Path>
+				<Type type="key">3</Type>
+				<UniqueID type="key">245206496</UniqueID>
+				<EntityID type="key">{758DEE04-CAF1-4911-8AF2-A3896281E50C}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDocs type="key">.doc,.docx,.pdf</ItemInfoDocs>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+			<item>
+				<Docs type="key">.mpp</Docs>
+				<Name type="key">Project Plans</Name>
+				<DisplayName type="key">Project Plans</DisplayName>
+				<Path type="key">.</Path>
+				<Type type="key">3</Type>
+				<UniqueID type="key">63809266</UniqueID>
+				<EntityID type="key">{6BA9867D-6DE7-4283-8042-8E44F1A090EE}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDocs type="key">.mpp</ItemInfoDocs>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+			<item>
+				<Targets type="key">datasetmanager_global</Targets>
+				<Name type="key">Global Data Sets</Name>
+				<DisplayName type="key">Global Data Sets</DisplayName>
+				<Path type="key">.</Path>
+				<Flags type="key">256</Flags>
+				<Type type="key">29</Type>
+				<UniqueID type="key">1067989752</UniqueID>
+				<EntityID type="key">{0A431A65-1B9D-4D06-A096-BA8A7E2D768C}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+			<item>
+				<Targets type="key">variablesmanagement</Targets>
+				<Name type="key">Variable Descriptions</Name>
+				<DisplayName type="key">Variable Descriptions</DisplayName>
+				<Path type="key">.</Path>
+				<Flags type="key">256</Flags>
+				<ExtendedFlags type="key">4</ExtendedFlags>
+				<Type type="key">3</Type>
+				<UniqueID type="key">972463700</UniqueID>
+				<EntityID type="key">{E3B18DDF-7D95-47D0-B1F8-4333CEC526EA}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				<item>
+					<Component type="key">VariablesManagement</Component>
+					<Name type="key">ApolloControl.vdb</Name>
+					<DisplayName type="key">C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\control_desk\ApolloControl\Variable Descriptions\ApolloControl.vdb</DisplayName>
+					<Path type="key">.\Variable Descriptions</Path>
+					<Flags type="key">276</Flags>
+					<Type type="key">18</Type>
+					<UniqueID type="key">565739105</UniqueID>
+					<EntityID type="key">{DA1F39BD-C90C-4FBC-8C1D-2F74C5F055AB}</EntityID>
+					<ItemInfoDate type="key">19.10.2020 15:53:05</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">VariablesManagement</Component>
+					<Name type="key">autoboxmodel.sdf</Name>
+					<DisplayName type="key">autoboxmodel.sdf</DisplayName>
+					<Path type="key">.\Variable Descriptions\autoboxmodel.sdf</Path>
+					<Flags type="key">18704</Flags>
+					<Type type="key">7</Type>
+					<UniqueID type="key">385428993</UniqueID>
+					<EntityID type="key">{C88B3C77-7BAF-4AF5-899D-EAAED105A51D}</EntityID>
+					<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 13:18:29 (UTC)]
+
+Variable description reloaded on 19.10.2020 16:17:22 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 14:16:05 (UTC)]
+
+Variable description reloaded on 19.10.2020 16:25:28 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 14:24:12 (UTC)]
+
+Variable description reloaded on 19.10.2020 16:32:49 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 14:30:42 (UTC)]
+
+Variable description reloaded on 19.10.2020 16:41:56 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 14:40:18 (UTC)]
+
+Variable description reloaded on 19.10.2020 16:46:09 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 14:45:05 (UTC)]
+
+Variable description reloaded on 19.10.2020 17:11:16 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 15:10:08 (UTC)]
+
+Variable description reloaded on 19.10.2020 17:25:14 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 15:24:07 (UTC)]
+
+Variable description reloaded on 19.10.2020 17:35:06 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 15:33:47 (UTC)]
+
+Variable description reloaded on 19.10.2020 17:45:18 (C:\Users\kessler\Documents\fav\stack\src\autobox\Simulink\autoboxmodel.sdf)
+Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 15:41:37 (UTC)]
+
+Variable description reloaded on 18.11.2020 12:10:43 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2020-11-18 10:01:26 (UTC)]
+</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+					<item>
+						<Component type="key">VariablesManagement</Component>
+						<Name type="key">autoboxmodel.trc</Name>
+						<DisplayName type="key">autoboxmodel.trc</DisplayName>
+						<Path type="key">.\Variable Descriptions\autoboxmodel.sdf</Path>
+						<Flags type="key">18692</Flags>
+						<ExtendedFlags type="key">1</ExtendedFlags>
+						<Type type="key">4</Type>
+						<UniqueID type="key">332319670</UniqueID>
+						<EntityID type="key">{B5A157F7-59A0-48E2-9196-E41E2733159B}</EntityID>
+						<ItemInfoDate type="key">18.11.2020 12:10:43</ItemInfoDate>
+						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+						<ItemInfoDescr type="key"/>
+						<ItemInfoAddInfoDb type="key"/>
+						<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+					</item>
+					<item>
+						<Component type="key">VariablesManagement</Component>
+						<Name type="key">autoboxmodel.map</Name>
+						<DisplayName type="key">autoboxmodel.map</DisplayName>
+						<Path type="key">.\Variable Descriptions\autoboxmodel.sdf</Path>
+						<Flags type="key">18692</Flags>
+						<ExtendedFlags type="key">1</ExtendedFlags>
+						<Type type="key">4</Type>
+						<UniqueID type="key">1056997886</UniqueID>
+						<EntityID type="key">{A87A3046-77B5-47C2-A232-3EF235732084}</EntityID>
+						<ItemInfoDate type="key">18.11.2020 12:10:43</ItemInfoDate>
+						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+						<ItemInfoDescr type="key"/>
+						<ItemInfoAddInfoDb type="key"/>
+						<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+					</item>
+					<item>
+						<Component type="key">VariablesManagement</Component>
+						<Name type="key">autoboxmodel.ppc</Name>
+						<DisplayName type="key">autoboxmodel.ppc</DisplayName>
+						<Path type="key">.\Variable Descriptions\autoboxmodel.sdf</Path>
+						<Flags type="key">18692</Flags>
+						<ExtendedFlags type="key">1</ExtendedFlags>
+						<Type type="key">30</Type>
+						<UniqueID type="key">345105697</UniqueID>
+						<EntityID type="key">{0505931F-ED76-4C9E-8387-C0B1B3D2A38E}</EntityID>
+						<ItemInfoDate type="key">18.11.2020 12:10:43</ItemInfoDate>
+						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+						<ItemInfoDescr type="key"/>
+						<ItemInfoAddInfoDb type="key"/>
+						<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+					</item>
+					<item>
+						<Component type="key">VariablesManagement</Component>
+						<Name type="key">autoboxmodel.trz</Name>
+						<DisplayName type="key">autoboxmodel.trz</DisplayName>
+						<Path type="key">.\Variable Descriptions\autoboxmodel.sdf</Path>
+						<Flags type="key">18692</Flags>
+						<ExtendedFlags type="key">1</ExtendedFlags>
+						<Type type="key">4</Type>
+						<UniqueID type="key">1024839863</UniqueID>
+						<EntityID type="key">{C29DC461-5A1F-45BC-8B49-A24BEF2B247A}</EntityID>
+						<ItemInfoDate type="key">18.11.2020 12:10:43</ItemInfoDate>
+						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+						<ItemInfoDescr type="key"/>
+						<ItemInfoAddInfoDb type="key"/>
+						<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+					</item>
+				</item>
+			</item>
+			<item>
+				<Targets type="key">datasetmanager</Targets>
+				<Name type="key">Data Sets</Name>
+				<DisplayName type="key">Data Sets</DisplayName>
+				<Path type="key">.</Path>
+				<Flags type="key">260</Flags>
+				<Type type="key">29</Type>
+				<UniqueID type="key">665526396</UniqueID>
+				<EntityID type="key">{2830DD27-73AB-4809-BA8E-404DE945440A}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+			<item>
+				<Targets type="key">.vfe</Targets>
+				<Name type="key">Variable Filters</Name>
+				<DisplayName type="key">Variable Filters</DisplayName>
+				<Path type="key">.</Path>
+				<Flags type="key">2304</Flags>
+				<Type type="key">3</Type>
+				<UniqueID type="key">479188036</UniqueID>
+				<EntityID type="key">{6A7BC68E-13E0-41B4-8BD0-D14E0D9330B2}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+			<item>
+				<Targets type="key">.lab</Targets>
+				<Docs type="key">.lab,.txt</Docs>
+				<Name type="key">Label Lists</Name>
+				<DisplayName type="key">Label Lists</DisplayName>
+				<Path type="key">.</Path>
+				<Type type="key">3</Type>
+				<UniqueID type="key">825826670</UniqueID>
+				<EntityID type="key">{436A5BA4-078B-4AA6-83E5-38F3EAC85C33}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDocs type="key">.lab,.txt</ItemInfoDocs>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+			<item>
+				<Targets type="key">interpreter,.py</Targets>
+				<Docs type="key">.py</Docs>
+				<Name type="key">Python Scripts</Name>
+				<DisplayName type="key">Python Scripts</DisplayName>
+				<Path type="key">.</Path>
+				<Flags type="key">256</Flags>
+				<ExtendedFlags type="key">4224</ExtendedFlags>
+				<Type type="key">3</Type>
+				<UniqueID type="key">746271753</UniqueID>
+				<EntityID type="key">{66B471E6-1483-4689-882E-3180EE8B24FA}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDocs type="key">.py</ItemInfoDocs>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+			<item>
+				<Targets type="key">signaleditor</Targets>
+				<Name type="key">Signal Description Sets</Name>
+				<DisplayName type="key">Signal Description Sets</DisplayName>
+				<Path type="key">.</Path>
+				<Flags type="key">256</Flags>
+				<Type type="key">3</Type>
+				<UniqueID type="key">277026333</UniqueID>
+				<EntityID type="key">{6457A64B-52F1-4351-8660-23F3605EDCE2}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+		</item>
+		<item>
+			<Name type="key">Events</Name>
+			<DisplayName type="key">Events</DisplayName>
+			<Path type="key">.</Path>
+			<Flags type="key">4</Flags>
+			<ExtendedFlags type="key">4</ExtendedFlags>
+			<Type type="key">3</Type>
+			<UniqueID type="key">411872998</UniqueID>
+			<EntityID type="key">{2B033494-A044-4F5A-9576-5606DD56D904}</EntityID>
+			<ItemInfoDate type="key">19.10.2020 15:53:05</ItemInfoDate>
+			<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+			<ItemInfoDescr type="key"/>
+			<ItemInfoAddInfoDb type="key"/>
+			<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			<item>
+				<Name type="key">Project.events</Name>
+				<DisplayName type="key">Project.events</DisplayName>
+				<Path type="key">.\Events</Path>
+				<Flags type="key">4</Flags>
+				<Type type="key">52</Type>
+				<UniqueID type="key">142289685</UniqueID>
+				<EntityID type="key">{CED62FA9-B184-4966-8EB8-F79047FDD6D7}</EntityID>
+				<ItemInfoDate type="key">19.10.2020 15:53:05</ItemInfoDate>
+				<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+				<ItemInfoDescr type="key"/>
+				<ItemInfoAddInfoDb type="key"/>
+				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+			</item>
+		</item>
+	</project>
+	<experiments>
+		<experiment>
+			<Creator type="key">ControlDesk</Creator>
+			<MigrationHistory type="key"/>
+			<Name type="key">ControllerEthernetDebugExperiment.CDE</Name>
+			<DisplayName type="key">ControllerEthernetDebugExperiment</DisplayName>
+			<Path type="key">.\ControllerEthernetDebugExperiment</Path>
+			<Flags type="key">4096</Flags>
+			<Type type="key">2</Type>
+			<UniqueID type="key">861915585</UniqueID>
+			<EntityID type="key">{83DBFCF9-B115-49FD-B473-7AD7F4AF925F}</EntityID>
+			<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+			<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+			<ItemInfoDescr type="key"/>
+			<ItemInfoAddInfoDb type="key"/>
+			<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+		</experiment>
+	</experiments>
+	<BusNavigator/>
+	<VariablesManagement/>
+	<UserManager/>
+	<XILAPIEESPort/>
+	<SignalEditor/>
+	<Interpreter>
+		<PythonVersion type="key">3.6</PythonVersion>
+	</Interpreter>
+	<ProjectExperiment>
+		<LastActiveExperiment type="key">ControllerEthernetDebugExperiment</LastActiveExperiment>
+	</ProjectExperiment>
+	<Instrumentation Version="1">
+		<UniqueIds Version="3">
+			<Count type="key">2</Count>
+			<File1 type="key">ControllerEthernetDebugExperiment/Ethernet</File1>
+			<Id1 type="key">0</Id1>
+			<File2 type="key">ControllerEthernetDebugExperiment/Initialize_Status</File2>
+			<Id2 type="key">5</Id2>
+		</UniqueIds>
+	</Instrumentation>
+	<DiagnosticsManagement/>
+	<PlatformManagement/>
+	<MeasurementConfiguration/>
+	<MeasureDataManagement/>
+	<DataSetManager>
+		<Version>
+			<Version type="key">2</Version>
+		</Version>
+		<Work/>
+		<ActiveWork/>
+		<Reference/>
+		<ActiveReference/>
+		<Master/>
+		<ActiveMaster/>
+		<InitialMaster/>
+		<Incomplete/>
+		<IncompleteReadonly/>
+		<DataSet/>
+		<Readonly/>
+		<AutomaticDownload/>
+	</DataSetManager>
+</Root>
