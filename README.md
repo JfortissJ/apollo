@@ -1,3 +1,13 @@
+<img src="https://www.fortiss.org/fileadmin/user_upload/Veroeffentlichungen/Informationsmaterialien/Logo_fortiss_RGB_blue.png" height="150">
+
+This is a fork of the great [apollo](https://github.com/ApolloAuto/apollo) plattform to serve as a basic software stack on our prototype autonomous vehicle [fortuna](https://arxiv.org/abs/1905.02980). It contains the necessary sensor drivers, perception setup, and the vehicle control access using a MicroAutobox 2. [Here](fortiss.md) we provide a comprehensive list, some highlights are the:
+* [map converter](tools/opendrive_to_apollo) to generate an a map for apollo from a standard opendrive map
+* [pure-C implementation](modules/bridge-c) of apollo's bridge module to run a real-time control unit
+* [trajectory tracking controller](modules/autobox_control) for apollo's ADCTrajectory written in Simulink 
+* [CAN bus interface](modules/canbus/vehicle/fortuna) for a VW Passat GTE
+
+***
+
 ![image alt text](docs/demo_guide/images/Apollo_logo.png)
 
 [![Build Status](http://180.76.142.62:8111/app/rest/builds/buildType:ApolloPublic_Build/statusIcon)](http://180.76.142.62:8111/viewType.html?buildTypeId=ApolloPublic_Build&guest=1)
@@ -21,13 +31,19 @@ For business and partnership, please visit [our website](http://apollo.auto).
 
 ## Table of Contents
 
-1. [Getting Started](#getting-started)
-2. [Prerequisites](#prerequisites)
-    - [Basic Requirements](#basic-requirements)
-    - [Individual Version Requirements](#individual-version-requirements)
-3. [Architecture](#architecture)
-4. [Installation](#installation)
-5. [Documents](#documents)
+- [Table of Contents](#table-of-contents)
+- [Getting Started](#getting-started)
+- [Prerequisites](#prerequisites)
+    - [Basic Requirements:](#basic-requirements)
+    - [Individual Version Requirements:](#individual-version-requirements)
+- [Architecture](#architecture)
+- [Installation](#installation)
+  - [With Hardware:](#with-hardware)
+- [Documents](#documents)
+- [Questions](#questions)
+- [Copyright and License](#copyright-and-license)
+- [Disclaimer](#disclaimer)
+- [Connect with us](#connect-with-us)
 
 ## Getting Started
 
