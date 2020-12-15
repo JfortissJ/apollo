@@ -8,7 +8,7 @@
 | Fortuna Canbus | An extension for apollo's canbus component for some of the interfaces from the VW Passat. The new vehicle fortuna publishes an adapted chassis_detail msg. | modues/canbus, modules/vehicles/fortuna | Apache 2 |
 | VW production radar perception | An apollo component taking raw radar detection objects (from the canbus component) and outputs apollo PreFused objects. | modules/perception/onboard/component | Apache 2 |
 | IMAR Driver | An apollo component publishing GPS and INS message from an imar inat dgps system based on imar's SDK. | modules/drivers/imar | Apache 2 |
-| Opendrive Map Converter | A tool to convert standard XODR maps into apollo's special open drive format | modules/tools/opendrive_map_converter | LGPLv2 |
+| Opendrive Map Converter | A tool to convert standard XODR maps into apollo's special open drive format | tools/opendrive_to_apollo | LGPLv2 |
 
 # Further Adaptions to apollo
 - Velodyne 32 layer configuration

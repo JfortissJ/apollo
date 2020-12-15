@@ -1,0 +1,9 @@
+matplotlib
+numpy
+lxml
+networkx
+scipy
+tqdm
+pygraphviz
+pyproj
+shapely
