@@ -1,7 +1,7 @@
 # List of fortiss Code Contributions
 
 | Module | Description | Path | License |
-| --- | --- | --- | --- | --- |
+|--------|-------------|------|---------|
 | Autobox Trajectory Tracking Controller | A trajectory tracking controller for trajectories in apollo's ADCTrajectory format, CAN actuation interfaces for the VW Passat, UDP communication to the PC running apollo for a dSpace Micro Autobox platform written in Simulink and C. | modules/autobox_control | LGPLv2 |
 | Autobox Brigde | An apollo module removing unnecessary parts for the Autobox Controller from messages to keep the UDP package size samll. | modules/autobox_bridge | Apache 2 |
 | bridge_c | A pure-C implementation of apollo's bridge component (to be used on the dSpace plattform) | modules/bridge_c | LGPLv2 |
