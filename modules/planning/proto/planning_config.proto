@@ -328,6 +328,7 @@ enum PlannerType {
   PUBLIC_ROAD = 1;  // public road planner
   NAVI = 2;         // navigation planner
   LATTICE = 3;      // lattice planner
+  MIQP = 4;         // miqp planner
 }
 
 message RtkPlanningConfig {
