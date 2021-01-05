@@ -315,3 +315,115 @@ new_local_repository(
     build_file = "third_party/opencv.BUILD",
     path = "/usr/include",
 )
+
+# miqp planner
+local_repository(
+    name = "planner_miqp",
+    path = "/apollo/miqp_logical_constraints",
+    )
+
+#new_http_archive(
+#    # Need Eigen 3.4 (which is in development) for STL-compatible iterators
+#    name = "com_github_eigen_eigen",
+#    build_file_content = """
+#cc_library(
+#    name = 'eigen',
+#    srcs = [],
+#    includes = ['.'],
+#    hdrs = glob(['Eigen/**', 'unsupported/**']),
+#    visibility = ['//visibility:public'],
+#)""",
+#    sha256 = "4b1120abc5d4a63620a886dcc5d7a7a27bf5b048c8c74ac57521dd27845b1d9f",
+#    strip_prefix = "eigen-git-mirror-98e54de5e25aefc6b984c168fb3009868a93e217",
+#    urls = [
+#        "https://github.com/eigenteam/eigen-git-mirror/archive/98e54de5e25aefc6b984c168fb3009868a93e217.zip",
+#    ],
+#    )
+
+new_git_repository(
+    name="com_github_eigen_eigen",
+    build_file_content = """
+cc_library(
+    name = 'eigen',
+    srcs = [],
+    includes = ['.'],
+    hdrs = glob(['Eigen/**', 'unsupported/**']),
+    visibility = ['//visibility:public'],
+)""",
+    #commit = "fdf2ee62c5174441076fb64c9737d89bbe102759", #latest master 01/2021
+    commit = "a36d19c4fc46097da9dd9965e7d548aa05d2cbf8", #v3.3
+    remote = "https://gitlab.com/libeigen/eigen.git",
+)
+
+git_repository(
+    name = "bark_project",
+    commit="d9ff1136e6247cbf7dd2a8fff10d7441941f97e3",
+    remote = "https://github.com/bark-simulator/bark",
+    )
+
+new_git_repository(
+      name = "com_github_spline",
+      commit = "619c634ef5f6f2df1508c767f979eb4b7bf9c66a",
+      remote = "https://github.com/ttk592/spline",
+      build_file_content = """
+cc_library(
+    name = 'spline',
+    srcs = [],
+    includes = ['.'],
+    hdrs = ["src/spline.h"],
+    visibility = ['//visibility:public'],
+)
+    """
+    )
+
+#git_repository(
+#    name = "com_github_nelhage_rules_boost",
+#    commit = "fbac9be7640ecc0fab075233d394f08f1a37e449",
+#    remote = "https://github.com/nelhage/rules_boost"
+#    )
+#load("//:boost_copy.bzl", "boost_deps")
+#boost_deps()
+
+#git_repository(
+#    name = "com_github_google_glog",
+#    commit = "3ba8976592274bc1f907c402ce22558011d6fc5e",
+#    remote = "https://github.com/google/glog"
+#)
+
+new_local_repository(
+    name = "cplex_models",
+    path = "/apollo/miqp_logical_constraints/matlab/cplexmodel",
+    build_file_content = """
+filegroup(
+   name="cplex_models_filegroup",
+   srcs=glob(["*.mod",
+              "*.dat",
+              "*.txt",]),
+   visibility = ["//visibility:public"],
+)""",
+    )
+
+new_local_repository(
+    name = "local_cplex_installation",
+    path = "/opt/ibm/ILOG/CPLEX_Studio1210/opl",
+    build_file_content = """
+cc_library(
+    name = "cplex",
+    srcs = [
+        "lib/x86-64_linux/static_pic/libopl.a",
+        "lib/x86-64_linux/static_pic/libiljs.a",
+        "lib/x86-64_linux/static_pic/libilocplex.a",
+        "lib/x86-64_linux/static_pic/libcp.a",
+        "lib/x86-64_linux/static_pic/libconcert.a",
+        "bin/x86-64_linux/libcplex12100.so",
+        "bin/x86-64_linux/libicuuc.so",
+        "bin/x86-64_linux/libicui18n.so",
+        "bin/x86-64_linux/libicuio.so",
+        "bin/x86-64_linux/libicudata.so",
+        "bin/x86-64_linux/liboplnl1.so",
+    ],
+    hdrs = glob(["include/**/*.h"]),
+    visibility = ["//visibility:public"],
+    includes = ["include"],
+)""",
+    )
