@@ -357,7 +357,7 @@ cc_library(
 
 git_repository(
     name = "bark_project",
-    commit="d9ff1136e6247cbf7dd2a8fff10d7441941f97e3",
+    commit="6358f2b0deae7c0e00e4c0699d2dc3a3f8848ca3",
     remote = "https://github.com/bark-simulator/bark",
     )
 
@@ -376,13 +376,13 @@ cc_library(
     """
     )
 
-#git_repository(
-#    name = "com_github_nelhage_rules_boost",
-#    commit = "fbac9be7640ecc0fab075233d394f08f1a37e449",
-#    remote = "https://github.com/nelhage/rules_boost"
-#    )
-#load("//:boost_copy.bzl", "boost_deps")
-#boost_deps()
+git_repository(
+    name = "com_github_nelhage_rules_boost",
+    commit = "d97b4e22c3a9c7857f390d0afbfd2bb12491e34c",
+    remote = "https://github.com/tobiaskessler/rules_boost"
+    )
+load("@com_github_nelhage_rules_boost//:boost_bark/boost.bzl", "boost_deps")
+boost_deps()
 
 #git_repository(
 #    name = "com_github_google_glog",

@@ -80,3 +80,6 @@ build --cxxopt="-std=c++1y"
 # Enable colorful output of GCC
 # build --cxxopt="-fdiagnostics-color=always"
 
+# https://github.com/bazelbuild/bazel/issues/7055
+startup --host_jvm_args="-Dsun.jnu.encoding=UTF-8" --host_jvm_args="-Dfile.encoding=UTF-8"
+
