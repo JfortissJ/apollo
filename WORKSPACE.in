@@ -316,11 +316,13 @@ new_local_repository(
     path = "/usr/include",
 )
 
-# miqp planner
-local_repository(
-    name = "planner_miqp",
-    path = "/apollo/miqp_logical_constraints",
-    )
+################## Start Bark Integration ########################
+
+## miqp planner
+#local_repository(
+#    name = "planner_miqp",
+#    path = "/apollo/miqp_logical_constraints",
+#    )
 
 #new_http_archive(
 #    # Need Eigen 3.4 (which is in development) for STL-compatible iterators
@@ -390,40 +392,40 @@ boost_deps()
 #    remote = "https://github.com/google/glog"
 #)
 
-new_local_repository(
-    name = "cplex_models",
-    path = "/apollo/miqp_logical_constraints/matlab/cplexmodel",
-    build_file_content = """
-filegroup(
-   name="cplex_models_filegroup",
-   srcs=glob(["*.mod",
-              "*.dat",
-              "*.txt",]),
-   visibility = ["//visibility:public"],
-)""",
-    )
+#new_local_repository(
+#    name = "cplex_models",
+#    path = "/apollo/miqp_logical_constraints/matlab/cplexmodel",
+#    build_file_content = """
+#filegroup(
+#   name="cplex_models_filegroup",
+#   srcs=glob(["*.mod",
+#              "*.dat",
+#              "*.txt",]),
+#   visibility = ["//visibility:public"],
+#)""",
+#    )
 
-new_local_repository(
-    name = "local_cplex_installation",
-    path = "/opt/ibm/ILOG/CPLEX_Studio1210/opl",
-    build_file_content = """
-cc_library(
-    name = "cplex",
-    srcs = [
-        "lib/x86-64_linux/static_pic/libopl.a",
-        "lib/x86-64_linux/static_pic/libiljs.a",
-        "lib/x86-64_linux/static_pic/libilocplex.a",
-        "lib/x86-64_linux/static_pic/libcp.a",
-        "lib/x86-64_linux/static_pic/libconcert.a",
-        "bin/x86-64_linux/libcplex12100.so",
-        "bin/x86-64_linux/libicuuc.so",
-        "bin/x86-64_linux/libicui18n.so",
-        "bin/x86-64_linux/libicuio.so",
-        "bin/x86-64_linux/libicudata.so",
-        "bin/x86-64_linux/liboplnl1.so",
-    ],
-    hdrs = glob(["include/**/*.h"]),
-    visibility = ["//visibility:public"],
-    includes = ["include"],
-)""",
-    )
+#new_local_repository(
+#    name = "local_cplex_installation",
+#    path = "/opt/ibm/ILOG/CPLEX_Studio1210/opl",
+#    build_file_content = """
+#cc_library(
+#    name = "cplex",
+#    srcs = [
+#        "lib/x86-64_linux/static_pic/libopl.a",
+#        "lib/x86-64_linux/static_pic/libiljs.a",
+#        "lib/x86-64_linux/static_pic/libilocplex.a",
+#        "lib/x86-64_linux/static_pic/libcp.a",
+#        "lib/x86-64_linux/static_pic/libconcert.a",
+#        "bin/x86-64_linux/libcplex12100.so",
+#        "bin/x86-64_linux/libicuuc.so",
+#        "bin/x86-64_linux/libicui18n.so",
+#        "bin/x86-64_linux/libicuio.so",
+#        "bin/x86-64_linux/libicudata.so",
+#        "bin/x86-64_linux/liboplnl1.so",
+#    ],
+#    hdrs = glob(["include/**/*.h"]),
+#    visibility = ["//visibility:public"],
+#    includes = ["include"],
+#)""",
+#    )
