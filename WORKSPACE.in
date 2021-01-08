@@ -380,7 +380,7 @@ cc_library(
 
 git_repository(
     name = "com_github_nelhage_rules_boost",
-    commit = "a2030ad076a3379328ba54045a83a8e30aaacac1",
+    commit = "d34c1359f53c085931e1c168bdbbd198e03114fa",
     remote = "https://github.com/tobiaskessler/rules_boost"
     )
 load("@com_github_nelhage_rules_boost//:boost_bark/boost.bzl", "boost_deps")
