@@ -36,7 +36,7 @@
 #include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/constraint_checker/constraint_checker.h"
 
-#include "bark_prebuild/commons/params/params.h"
+#include "bark/commons/params/params.h"
 
 namespace apollo {
 namespace planning {

@@ -4,14 +4,15 @@ cc_library(
     name = "core",
     copts = [],
     hdrs = glob([
-        "*.h",
+    #    "*.h",
+        "commons/params/params.h"
     ]),
     includes = [
         ".",
-        "commons/params/*.h",
+    #     "commons/params/*.h",
     ],
-    linkopts = [
-        "-L/apollo/bark_prebuild",
-    ],
+    # linkopts = [
+    #     "-L/apollo/bark_prebuild",
+    # ],
     visibility = ["//visibility:public"],
 )

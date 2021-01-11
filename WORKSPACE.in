@@ -320,9 +320,9 @@ new_local_repository(
 
 
 new_local_repository(
-    name = "bark_prebuild",
-    build_file = "/apollo/bark_prebuild/core.BUILD",
-    path = "/apollo/bark_prebuild",
+    name = "bark",
+    build_file = "third_party/bark.BUILD",
+    path = "/apollo/bark",
 )
 
 # boost_bark
