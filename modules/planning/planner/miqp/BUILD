@@ -19,6 +19,7 @@ cc_library(
         #"@planner_miqp//src:behavior_miqp",
         #"@planner_miqp//common/dynamic:dynamic_conversion",
         #"@bark_project//bark/models/behavior/idm:idm_classic",
+        "@bark_prebuild//:core",
     ],
 )
 

@@ -7,7 +7,7 @@ cc_library(
     copts = ["-fPIC"],
     includes = ["."],
     linkopts = [
-        "-L/usr/local/apollo/boost_bark/lib",
+        "-L/usr/local/apollo/boost/lib",
         "-lboost_system",
         "-lboost_filesystem",
         "-lboost_program_options",

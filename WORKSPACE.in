@@ -310,13 +310,6 @@ new_local_repository(
     path = "/usr/local/apollo/boost/include",
 )
 
-# boost_bark
-#new_local_repository(
-#    name = "boost_bark",
-#    build_file = "third_party/boost_bark.BUILD",
-#    path = "/usr/local/apollo/boost_bark/include",
-#)
-
 new_local_repository(
     name = "opencv",
     build_file = "third_party/opencv.BUILD",
@@ -324,6 +317,20 @@ new_local_repository(
 )
 
 ################## Start Bark Integration ########################
+
+
+new_local_repository(
+    name = "bark_prebuild",
+    build_file = "/apollo/bark_prebuild/core.BUILD",
+    path = "/apollo/bark_prebuild",
+)
+
+# boost_bark
+#new_local_repository(
+#    name = "boost_bark",
+#    build_file = "third_party/boost_bark.BUILD",
+#    path = "/usr/local/apollo/boost_bark/include",
+#)
 
 ## miqp planner
 #local_repository(
