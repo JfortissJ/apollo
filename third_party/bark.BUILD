@@ -13,6 +13,7 @@ cc_library(
     ],
     linkopts = [
         "-L/apollo/bark/lib",
+        "-lcorec"
     ],
     visibility = ["//visibility:public"],
 )
