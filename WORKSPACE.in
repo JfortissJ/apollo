@@ -310,6 +310,13 @@ new_local_repository(
     path = "/usr/local/apollo/boost/include",
 )
 
+# boost_bark
+#new_local_repository(
+#    name = "boost_bark",
+#    build_file = "third_party/boost_bark.BUILD",
+#    path = "/usr/local/apollo/boost_bark/include",
+#)
+
 new_local_repository(
     name = "opencv",
     build_file = "third_party/opencv.BUILD",
@@ -357,11 +364,11 @@ cc_library(
     remote = "https://gitlab.com/libeigen/eigen.git",
 )
 
-git_repository(
-    name = "bark_project",
-    commit="6358f2b0deae7c0e00e4c0699d2dc3a3f8848ca3",
-    remote = "https://github.com/bark-simulator/bark",
-    )
+#git_repository(
+#    name = "bark_project",
+#    commit="ae5b3134517aa9cfbabd868b67fe3670eef0507b",
+#    remote = "https://github.com/bark-simulator/bark",
+#    )
 
 new_git_repository(
       name = "com_github_spline",
@@ -378,13 +385,13 @@ cc_library(
     """
     )
 
-git_repository(
-    name = "com_github_nelhage_rules_boost",
-    commit = "d34c1359f53c085931e1c168bdbbd198e03114fa",
-    remote = "https://github.com/tobiaskessler/rules_boost"
-    )
-load("@com_github_nelhage_rules_boost//:boost_bark/boost.bzl", "boost_deps")
-boost_deps()
+#git_repository(
+#    name = "com_github_nelhage_rules_boost",
+#    commit = "8ecf35c69d2faa1bbc824fb0452f548ab9e7bf7e",
+#    remote = "https://github.com/tobiaskessler/rules_boost"
+#    )
+#load("@com_github_nelhage_rules_boost//:boost_bark/boost.bzl", "boost_deps")
+#boost_deps()
 
 #git_repository(
 #    name = "com_github_google_glog",
