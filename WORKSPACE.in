@@ -322,7 +322,7 @@ new_local_repository(
 new_local_repository(
     name = "bark",
     build_file = "third_party/bark.BUILD",
-    path = "/apollo/bark",
+    path = "/apollo/bark/include",
 )
 
 # boost_bark
