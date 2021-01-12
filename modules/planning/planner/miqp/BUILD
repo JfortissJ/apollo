@@ -16,9 +16,6 @@ cc_library(
         "//modules/planning/constraint_checker:collision_checker",
         "//modules/planning/planner",
         "//modules/planning/proto:planning_proto",
-        #"@planner_miqp//src:behavior_miqp",
-        #"@planner_miqp//common/dynamic:dynamic_conversion",
-        #"@bark_project//bark/models/behavior/idm:idm_classic",
         "@bark//:core",
     ],
 )
