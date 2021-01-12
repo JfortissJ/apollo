@@ -89,10 +89,13 @@ Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
 
+      AERROR << "PlanOnReferenceLine() of MIQP planner called!";
+
       auto bp = bark::commons::Params();
       bark::commons::Params::Point2d_test a(1,1);
       bark::commons::Params::Point2d_test b(2,2);
-      bark::commons::Params::Point2d_test c = bp.Distance(a,b);
+      double c = bp.Distance(a,b);
+      AERROR << "Distance test = " << c;
 
 
   double start_time = Clock::NowInSeconds();

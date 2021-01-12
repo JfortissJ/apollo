@@ -22,6 +22,7 @@
 #include "modules/planning/planner/navi/navi_planner.h"
 #include "modules/planning/planner/public_road/public_road_planner.h"
 #include "modules/planning/planner/rtk/rtk_replay_planner.h"
+#include "modules/planning/planner/miqp/miqp_planner.h"
 
 namespace apollo {
 namespace planning {
@@ -37,6 +38,9 @@ void PlannerDispatcher::RegisterPlanners() {
 
   planner_factory_.Register(PlannerType::NAVI,
                             []() -> Planner* { return new NaviPlanner(); });
+
+  planner_factory_.Register(PlannerType::MIQP,
+                            []() -> Planner* { return new MiqpPlanner(); });
 }
 
 }  // namespace planning

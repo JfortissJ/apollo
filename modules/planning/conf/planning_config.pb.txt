@@ -1,5 +1,5 @@
 standard_planning_config {
-  planner_type: PUBLIC_ROAD
+  planner_type: MIQP
   planner_public_road_config {
   }
 }
