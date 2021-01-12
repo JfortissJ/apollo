@@ -89,6 +89,11 @@ Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
 
+      auto bp = bark::commons::Params();
+      bark::commons::Params::Point2d_test a(1,1);
+      bark::commons::Params::Point2d_test b(2,2);
+      bark::commons::Params::Point2d_test c = bp.Distance(a,b);
+
 
   double start_time = Clock::NowInSeconds();
   double current_time = start_time;
