@@ -15,7 +15,6 @@
  * limitations under the License.
  *****************************************************************************/
 
-
 /**
  * @file
  **/
@@ -27,6 +26,7 @@
 #include <utility>
 #include <vector>
 
+#include "bark/commons/params/setter_params.hpp"
 #include "cyber/common/log.h"
 #include "cyber/common/macros.h"
 #include "modules/common/math/cartesian_frenet_conversion.h"
@@ -35,8 +35,6 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/constraint_checker/constraint_checker.h"
-
-#include "bark/commons/params/params.h"
 
 namespace apollo {
 namespace planning {
@@ -49,59 +47,23 @@ using apollo::common::math::CartesianFrenetConverter;
 using apollo::common::math::PathMatcher;
 using apollo::common::time::Clock;
 
+using bark::commons::Params;
+using bark::commons::SetterParams;
 
-Status MiqpPlanner::Plan(const TrajectoryPoint& planning_start_point,
-                            Frame* frame,
-                            ADCTrajectory* ptr_computed_trajectory) {
-  size_t success_line_count = 0;
-  size_t index = 0;
-  for (auto& reference_line_info : *frame->mutable_reference_line_info()) {
-    if (index != 0) {
-      reference_line_info.SetPriorityCost(
-          FLAGS_cost_non_priority_reference_line);
-    } else {
-      reference_line_info.SetPriorityCost(0.0);
-    }
-    auto status =
-        PlanOnReferenceLine(planning_start_point, frame, &reference_line_info);
-
-    if (status != Status::OK()) {
-      if (reference_line_info.IsChangeLanePath()) {
-        AERROR << "Planner failed to change lane to "
-               << reference_line_info.Lanes().Id();
-      } else {
-        AERROR << "Planner failed to " << reference_line_info.Lanes().Id();
-      }
-    } else {
-      success_line_count += 1;
-    }
-    ++index;
-  }
-
-  if (success_line_count > 0) {
-    return Status::OK();
-  }
-  return Status(ErrorCode::PLANNING_ERROR,
-                "Failed to plan on any reference line.");
-}
 
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
+  AERROR << "PlanOnReferenceLine() of MIQP planner called!";
 
-      AERROR << "PlanOnReferenceLine() of MIQP planner called!";
-
-      auto bp = bark::commons::Params();
-      bark::commons::Params::Point2d_test a(1,1);
-      bark::commons::Params::Point2d_test b(2,2);
-      double c = bp.Distance(a,b);
-      AERROR << "Distance test = " << c;
-
+  auto params = std::make_shared<SetterParams>();
+  // TODO Error first access to params throws std::bad_alloc!!! does it persist? is params == NULL?
+  params->SetReal("Miqp::CollisionRadius", 0.9);
+  double test = params->GetReal("Miqp::CollisionRadius", "", 11.11);
+  AERROR << "Test get param: " << test;
 
   double start_time = Clock::NowInSeconds();
   double current_time = start_time;
-
-
 
   // reference_line_info->set_is_on_reference_line();
   // // 1. obtain a reference line and transform it to the PathPoint format.
@@ -115,29 +77,22 @@ Status MiqpPlanner::PlanOnReferenceLine(
   //     *ptr_reference_line, planning_init_point.path_point().x(),
   //     planning_init_point.path_point().y());
 
-
-
-
-
   ADEBUG << "Decision_Time = " << (Clock::NowInSeconds() - current_time) * 1000;
   current_time = Clock::NowInSeconds();
 
-
-
   // // Get instance of collision checker and constraint checker
-  // CollisionChecker collision_checker(frame->obstacles(), init_s[0], init_d[0],
-  //                                    *ptr_reference_line, reference_line_info,
+  // CollisionChecker collision_checker(frame->obstacles(), init_s[0],
+  // init_d[0],
+  //                                    *ptr_reference_line,
+  //                                    reference_line_info,
   //                                    ptr_path_time_graph);
 
-  
-    // // check collision with other obstacles
-    // if (collision_checker.InCollision(combined_trajectory)) {
-    //   ++collision_failure_count;
-    //   continue;
-    // }
+  // // check collision with other obstacles
+  // if (collision_checker.InCollision(combined_trajectory)) {
+  //   ++collision_failure_count;
+  //   continue;
+  // }
 
-  
- 
   // if (num_lattice_traj > 0) {
   //   ADEBUG << "Planning succeeded";
   //   num_planning_succeeded_cycles += 1;
@@ -164,7 +119,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
   //   }
   //   return Status(ErrorCode::PLANNING_ERROR, "No feasible trajectories");
   // }
-
 
   return Status::OK();
 }

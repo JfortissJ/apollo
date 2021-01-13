@@ -15,6 +15,7 @@ cc_library(
         "//modules/planning/constraint_checker",
         "//modules/planning/constraint_checker:collision_checker",
         "//modules/planning/planner",
+        "//modules/planning/planner/lattice:lattice_planner",
         "//modules/planning/proto:planning_proto",
         "@bark//:core",
     ],

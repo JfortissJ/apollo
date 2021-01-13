@@ -28,6 +28,7 @@
 #include "modules/planning/common/reference_line_info.h"
 #include "modules/planning/planner/planner.h"
 #include "modules/planning/proto/planning_config.pb.h"
+#include "modules/planning/planner/lattice/lattice_planner.h"
 
 namespace apollo {
 namespace planning {
@@ -35,9 +36,8 @@ namespace planning {
 /**
  * @class MiqpPlanner
  * @note LatticePlanner class from apollo served as a reference implementation!
- * @todo Tobias better derive from LatticePlanner? Then we could use the Plan() function from there, currently it is a copy...
  **/
-class MiqpPlanner : public PlannerWithReferenceLine {
+class MiqpPlanner : public LatticePlanner {
  public:
   MiqpPlanner() = default;
 
@@ -50,16 +50,6 @@ class MiqpPlanner : public PlannerWithReferenceLine {
   }
 
   void Stop() override {}
-
-  /**
-   * @brief Override function Plan in parent class Planner.
-   * @param planning_init_point The trajectory point where planning starts.
-   * @param frame Current planning frame.
-   * @return OK if planning succeeds; error otherwise.
-   */
-  common::Status Plan(const common::TrajectoryPoint& planning_init_point,
-                      Frame* frame,
-                      ADCTrajectory* ptr_computed_trajectory) override;
 
   /**
    * @brief Override function Plan in parent class Planner.
