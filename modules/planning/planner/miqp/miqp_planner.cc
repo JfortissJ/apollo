@@ -58,6 +58,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   auto params = std::make_shared<SetterParams>();
   // TODO Error first access to params throws std::bad_alloc!!! does it persist? is params == NULL?
+  // if(params == nullptr) {
+  //   AERROR << "nullptr!!";
+  // }
   params->SetReal("Miqp::CollisionRadius", 0.9);
   double test = params->GetReal("Miqp::CollisionRadius", "", 11.11);
   AERROR << "Test get param: " << test;
