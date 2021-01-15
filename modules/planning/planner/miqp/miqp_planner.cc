@@ -26,7 +26,7 @@
 #include <utility>
 #include <vector>
 
-#include "bark/commons/params/setter_params.hpp"
+#include "bark/commons/params/params_c_api.h"
 #include "cyber/common/log.h"
 #include "cyber/common/macros.h"
 #include "modules/common/math/cartesian_frenet_conversion.h"
@@ -47,22 +47,16 @@ using apollo::common::math::CartesianFrenetConverter;
 using apollo::common::math::PathMatcher;
 using apollo::common::time::Clock;
 
-using bark::commons::Params;
-using bark::commons::SetterParams;
-
 
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
   AERROR << "PlanOnReferenceLine() of MIQP planner called!";
 
-  auto params = std::make_shared<SetterParams>();
-  // TODO Error first access to params throws std::bad_alloc!!! does it persist? is params == NULL?
-  // if(params == nullptr) {
-  //   AERROR << "nullptr!!";
-  // }
-  params->SetReal("Miqp::CollisionRadius", 0.9);
-  double test = params->GetReal("Miqp::CollisionRadius", "", 11.11);
+  CSetterParams csp = newCSetterParams(false);
+  setRealCSetterParams(csp, "Miqp::CollisionRadius", 0.9);
+  double test = getRealCSetterParams(csp, "Miqp::CollisionRadius", "", 1.1);
+  delCSetterParams(csp);
   AERROR << "Test get param: " << test;
 
   double start_time = Clock::NowInSeconds();
