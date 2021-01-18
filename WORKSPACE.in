@@ -318,12 +318,12 @@ new_local_repository(
 
 ################## Start Bark Integration ########################
 
-# bark 
-new_local_repository(
-    name = "bark",
-    build_file = "third_party/bark.BUILD",
-    path = "/apollo/bark/include",
-)
+## bark 
+#new_local_repository(
+#    name = "bark",
+#    build_file = "third_party/bark.BUILD",
+#    path = "/apollo/bark/include",
+#)
 
 new_local_repository(
     name = "miqp_planner",
@@ -361,4 +361,16 @@ cc_library(
 )""",
     )
 
+new_local_repository(
+    name = "cplex_models",
+    path = "/apollo/miqp_logical_constraints/matlab/cplexmodel",
+    build_file_content = """
+filegroup(
+   name="cplex_models_filegroup",
+   srcs=glob(["*.mod",
+              "*.dat",
+              "*.txt",]),
+   visibility = ["//visibility:public"],
+)""",
+    )
 
