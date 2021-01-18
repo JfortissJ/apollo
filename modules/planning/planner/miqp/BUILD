@@ -17,10 +17,10 @@ cc_library(
         "//modules/planning/planner",
         "//modules/planning/planner/lattice:lattice_planner",
         "//modules/planning/proto:planning_proto",
-        # "@bark//:core",
         "@miqp_planner//:miqp_c_api",
         "@cplex",
     ],
+    data = ["@cplex_models//:cplex_models_filegroup"],
 )
 
 cpplint()

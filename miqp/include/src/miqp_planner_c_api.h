@@ -11,7 +11,7 @@
 
 typedef void* CMiqpPlanner;
 
-extern "C" CMiqpPlanner newCMiqpPlanner();
+extern "C" CMiqpPlanner NewCMiqpPlanner();
 
 extern "C" void DelCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 

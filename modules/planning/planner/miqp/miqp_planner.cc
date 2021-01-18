@@ -27,7 +27,6 @@
 #include <vector>
 
 #include "src/miqp_planner_c_api.h"
-// #include "bark/commons/params/params_c_api.h"
 #include "cyber/common/log.h"
 #include "cyber/common/macros.h"
 #include "modules/common/math/cartesian_frenet_conversion.h"
@@ -54,9 +53,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   AERROR << "PlanOnReferenceLine() of MIQP planner called!";
 
   {
-    AERROR << "00000000000000000000000000000";
-    CMiqpPlanner planner = newCMiqpPlanner();
-    AERROR << "11111111111111111111111";
+    CMiqpPlanner planner = NewCMiqpPlanner();
     const int ref_size = 3;
     double ref[ref_size * 2] = {0, 0, 5, 0, 30, 0};
     double initial_state[6] = {0, 0, 0, 1, 0.01, 0};
@@ -64,13 +61,10 @@ Status MiqpPlanner::PlanOnReferenceLine(
     double timestep = 0.0;
     int idx = AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes,
                                  timestep);
-    AERROR << "222222222222222222222222222222";
     PlanCMiqpPlanner(planner, timestep);
-    AERROR << "3333333333333333333333333333333";
     double traj[5 * 20];  // TODO this is a hack!
     int size;
     GetCTrajectoryCMiqpPlanner(planner, idx, timestep, traj, size);
-    AERROR << "444444444444444444444444";
     int r = size;
     int c = 5;  // StateDefinition::MIN_STATE_SIZE
     for (int i = 0; i < r; ++i) {
@@ -80,14 +74,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
       std::cout << std::endl;
     }
     DelCMiqpPlanner(planner);
-    AERROR << "222222222222222222222222222222";
   }
 
-  // CSetterParams csp = newCSetterParams(false);
-  // setRealCSetterParams(csp, "Miqp::CollisionRadius", 0.9);
-  // double test = getRealCSetterParams(csp, "Miqp::CollisionRadius", "", 1.1);
-  // delCSetterParams(csp);
-  // AERROR << "Test get param: " << test;
 
   double start_time = Clock::NowInSeconds();
   double current_time = start_time;
