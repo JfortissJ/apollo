@@ -7,3 +7,9 @@ cc_library(
     srcs = ["lib/libmiqp_planner_c_api.so"],
     visibility = ["//visibility:public"],
 )
+
+filegroup(
+   name="cplex_models_filegroup",
+   srcs=glob(["cplex_modfiles/*.mod"]),
+   visibility = ["//visibility:public"],
+)
