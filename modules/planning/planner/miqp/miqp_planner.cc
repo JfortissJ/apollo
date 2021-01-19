@@ -48,6 +48,35 @@ using apollo::common::math::PathMatcher;
 using apollo::common::time::Clock;
 using apollo::planning::DiscretizedTrajectory;
 
+
+namespace {
+
+std::vector<PathPoint> ToDiscretizedReferenceLine(
+    const std::vector<ReferencePoint>& ref_points) {
+  double s = 0.0;
+  std::vector<PathPoint> path_points;
+  for (const auto& ref_point : ref_points) {
+    PathPoint path_point;
+    path_point.set_x(ref_point.x());
+    path_point.set_y(ref_point.y());
+    path_point.set_theta(ref_point.heading());
+    path_point.set_kappa(ref_point.kappa());
+    path_point.set_dkappa(ref_point.dkappa());
+
+    if (!path_points.empty()) {
+      double dx = path_point.x() - path_points.back().x();
+      double dy = path_point.y() - path_points.back().y();
+      s += std::sqrt(dx * dx + dy * dy);
+    }
+    path_point.set_s(s);
+    path_points.push_back(std::move(path_point));
+  }
+  return path_points;
+}
+
+
+}  // namespace
+
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
@@ -56,14 +85,53 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double traj[5 * 20];  // TODO this is a hack!
   int size;
   {
+    AERROR << "00000000000000000000000000000";
     CMiqpPlanner planner = NewCMiqpPlanner();
-    const int ref_size = 3;
-    double ref[ref_size * 2] = {0, 0, 5, 0, 30, 0};
-    double initial_state[6] = {0, 0, 0, 1, 0.01, 0};
+    ActivateDebugFileWriteCMiqpPlanner(planner, "/apollo/data/log", "test_");
+    AERROR << "11111111111111111111111";
+
+    double start_time = Clock::NowInSeconds();
+    double current_time = start_time;
+
+    reference_line_info->set_is_on_reference_line();
+    // 1. obtain a reference line and transform it to the PathPoint format.
+    std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
+            reference_line_info->reference_line().reference_points());
+
+    const int ref_size = discrete_reference_line.size(); // aka N optimization support points
+
+    double ref[ref_size * 2];
+    for (int i = 0; i < ref_size; ++i) {
+      PathPoint refPoint = discrete_reference_line.at(i);
+      // AERROR << refPoint.x() << ", " << refPoint.y();
+      ref[2*i] = refPoint.x();
+      ref[2*i+1] = refPoint.y();
+    }
+
+    AERROR << "ReferenceLine Time = "
+          << (Clock::NowInSeconds() - current_time) * 1000;
+    current_time = Clock::NowInSeconds();
+
+    // double ref[ref_size * 2] = {0, 0, 5, 0, 30, 0};
+    double initial_state[6] = {0 , 0, 0, 1, 0.01, 0};
+    // double initial_state[6];
+    // double theta = planning_init_point.path_point().theta();
+    // initial_state[0] = planning_init_point.path_point().x();
+    // initial_state[1] = planning_init_point.v() * cos(theta);
+    // initial_state[2] = planning_init_point.a() * cos(theta); // is that correct?
+    // initial_state[3] = planning_init_point.path_point().y();
+    // initial_state[4] = planning_init_point.v() * sin(theta);
+    // initial_state[5] = planning_init_point.a() * sin(theta); // is that correct?
+    
     double vDes = 5;
     double timestep = 0.0;
     int idx = AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes,
                                  timestep);
+
+    AERROR << "Added ego car Time = "
+          << (Clock::NowInSeconds() - current_time) * 1000;
+    current_time = Clock::NowInSeconds();
+
     PlanCMiqpPlanner(planner, timestep);
     GetCTrajectoryCMiqpPlanner(planner, idx, timestep, traj, size);
     int r = size;

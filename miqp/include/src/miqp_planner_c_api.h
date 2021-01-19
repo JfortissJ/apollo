@@ -30,3 +30,6 @@ extern "C" void UpdateCarCMiqpPlanner(CMiqpPlanner c_miqp_planner, int idx,
 extern "C" void GetCTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int idx,
                                            double start_time,
                                            double* trajectory, int& size);
+
+extern "C" void ActivateDebugFileWriteCMiqpPlanner(CMiqpPlanner c_miqp_planner,
+                                                   char path[], char name[]);
