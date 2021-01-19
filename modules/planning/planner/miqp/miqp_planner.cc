@@ -84,6 +84,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   {
     AERROR << "00000000000000000000000000000";
     CMiqpPlanner planner = NewCMiqpPlanner();
+    ActivateDebugFileWriteCMiqpPlanner(planner, "/apollo/data/log", "test_");
     AERROR << "11111111111111111111111";
 
     double start_time = Clock::NowInSeconds();
@@ -109,15 +110,15 @@ Status MiqpPlanner::PlanOnReferenceLine(
     current_time = Clock::NowInSeconds();
 
     // double ref[ref_size * 2] = {0, 0, 5, 0, 30, 0};
-    // double initial_state[6] = {, 0, 0, 1, 0.01, 0};
-    double initial_state[6];
-    double theta = planning_init_point.path_point().theta();
-    initial_state[0] = planning_init_point.path_point().x();
-    initial_state[1] = planning_init_point.v() * cos(theta);
-    initial_state[2] = planning_init_point.a() * cos(theta); // is that correct?
-    initial_state[3] = planning_init_point.path_point().y();
-    initial_state[4] = planning_init_point.v() * sin(theta);
-    initial_state[5] = planning_init_point.a() * sin(theta); // is that correct?
+    double initial_state[6] = {0 , 0, 0, 1, 0.01, 0};
+    // double initial_state[6];
+    // double theta = planning_init_point.path_point().theta();
+    // initial_state[0] = planning_init_point.path_point().x();
+    // initial_state[1] = planning_init_point.v() * cos(theta);
+    // initial_state[2] = planning_init_point.a() * cos(theta); // is that correct?
+    // initial_state[3] = planning_init_point.path_point().y();
+    // initial_state[4] = planning_init_point.v() * sin(theta);
+    // initial_state[5] = planning_init_point.a() * sin(theta); // is that correct?
     
     double vDes = 5;
     double timestep = 0.0;
