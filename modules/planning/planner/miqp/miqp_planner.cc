@@ -26,7 +26,6 @@
 #include <utility>
 #include <vector>
 
-#include "src/miqp_planner_c_api.h"
 #include "cyber/common/log.h"
 #include "cyber/common/macros.h"
 #include "modules/common/math/cartesian_frenet_conversion.h"
@@ -35,6 +34,7 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/constraint_checker/constraint_checker.h"
+#include "src/miqp_planner_c_api.h"
 
 namespace apollo {
 namespace planning {
@@ -46,12 +46,15 @@ using apollo::common::TrajectoryPoint;
 using apollo::common::math::CartesianFrenetConverter;
 using apollo::common::math::PathMatcher;
 using apollo::common::time::Clock;
+using apollo::planning::DiscretizedTrajectory;
 
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
   AERROR << "PlanOnReferenceLine() of MIQP planner called!";
 
+  double traj[5 * 20];  // TODO this is a hack!
+  int size;
   {
     CMiqpPlanner planner = NewCMiqpPlanner();
     const int ref_size = 3;
@@ -62,8 +65,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
     int idx = AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes,
                                  timestep);
     PlanCMiqpPlanner(planner, timestep);
-    double traj[5 * 20];  // TODO this is a hack!
-    int size;
     GetCTrajectoryCMiqpPlanner(planner, idx, timestep, traj, size);
     int r = size;
     int c = 5;  // StateDefinition::MIN_STATE_SIZE
@@ -76,6 +77,11 @@ Status MiqpPlanner::PlanOnReferenceLine(
     DelCMiqpPlanner(planner);
   }
 
+  DiscretizedTrajectory apollo_traj =
+      BarkTrajectoryToApolloTrajectory(traj, size);
+  reference_line_info->SetTrajectory(apollo_traj);
+  reference_line_info->SetCost(0);  // TODO necessary?
+  reference_line_info->SetDrivable(true);
 
   double start_time = Clock::NowInSeconds();
   double current_time = start_time;
@@ -136,6 +142,46 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // }
 
   return Status::OK();
+}
+
+apollo::planning::DiscretizedTrajectory
+MiqpPlanner::BarkTrajectoryToApolloTrajectory(double traj[], int size) {
+  const int TIME_POSITION = 0;
+  const int X_POSITION = 1;
+  const int Y_POSITION = 2;
+  const int THETA_POSITION = 3;
+  const int VEL_POSITION = 4;
+  const int MIN_STATE_SIZE = 5;
+
+  double s = 0.0f;
+  double lastx = traj[0 + X_POSITION];
+  double lasty = traj[0 + Y_POSITION];
+
+  DiscretizedTrajectory apollo_trajectory;
+  for (int trajidx = 0; trajidx < size; ++trajidx) {
+    double time = traj[trajidx * MIN_STATE_SIZE + TIME_POSITION];
+    double x = traj[trajidx * MIN_STATE_SIZE + X_POSITION];
+    double y = traj[trajidx * MIN_STATE_SIZE + Y_POSITION];
+    double theta = traj[trajidx * MIN_STATE_SIZE + THETA_POSITION];
+    double v = traj[trajidx * MIN_STATE_SIZE + VEL_POSITION];
+    s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
+
+    TrajectoryPoint trajectory_point;
+    trajectory_point.mutable_path_point()->set_x(x);
+    trajectory_point.mutable_path_point()->set_y(y);
+    trajectory_point.mutable_path_point()->set_s(s);
+    trajectory_point.mutable_path_point()->set_theta(theta);
+    // trajectory_point.mutable_path_point()->set_kappa(kappa); //TODO
+    trajectory_point.set_v(v);
+    // trajectory_point.set_a(a); //TODO
+    trajectory_point.set_relative_time(time);
+    apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
+
+    lastx = x;
+    lasty = y;
+  }
+
+  return apollo_trajectory;
 }
 
 }  // namespace planning
