@@ -20,7 +20,7 @@ cc_library(
         "@miqp_planner//:miqp_c_api",
         "@cplex",
     ],
-    data = ["@cplex_models//:cplex_models_filegroup"],
+    data = ["@miqp_planner//:cplex_models_filegroup"],
 )
 
 cpplint()

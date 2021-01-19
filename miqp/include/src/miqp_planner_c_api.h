@@ -4,8 +4,7 @@
 // For a copy, see <https://opensource.org/licenses/MIT>.
 
 // we need to wrap: in this order
-// Trajectory traj = planner.GetBarkTrajectory(idx, t);
-//   MiqpPlanner planner = MiqpPlanner(settings, envPoly);
+// MiqpPlanner planner = MiqpPlanner(settings, envPoly);
 // planner_.UpdateConvexifiedMap(envPoly_);
 // planner.AddObstacle(predictedTraj, obstacleShape);
 

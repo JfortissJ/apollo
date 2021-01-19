@@ -334,43 +334,6 @@ new_local_repository(
 new_local_repository(
     name = "cplex",
     path = "/apollo/cplex/opl",
-    build_file_content = """
-cc_library(
-    name = "cplex",
-    srcs = [
-        "lib/x86-64_linux/static_pic/libopl.a",
-        "lib/x86-64_linux/static_pic/libiljs.a",
-        "lib/x86-64_linux/static_pic/libilocplex.a",
-        "lib/x86-64_linux/static_pic/libcp.a",
-        "lib/x86-64_linux/static_pic/libconcert.a",
-        "bin/x86-64_linux/libcplex12100.so",
-        "bin/x86-64_linux/libicuuc.so",
-        "bin/x86-64_linux/libicui18n.so",
-        "bin/x86-64_linux/libicuio.so",
-        "bin/x86-64_linux/libicudata.so",
-        "bin/x86-64_linux/liboplnl1.so",
-        "bin/x86-64_linux/libicuuc.so.55",
-        "bin/x86-64_linux/libicui18n.so.55",
-        "bin/x86-64_linux/libicuio.so.55",
-        "bin/x86-64_linux/libicudata.so.55",
-        "bin/x86-64_linux/liboplnl1.so.12",
-    ],
-#    hdrs = glob(["include/**/*.h"]),
-    visibility = ["//visibility:public"],
-#    includes = ["include"],
-)""",
-    )
-
-new_local_repository(
-    name = "cplex_models",
-    path = "/apollo/miqp_logical_constraints/matlab/cplexmodel",
-    build_file_content = """
-filegroup(
-   name="cplex_models_filegroup",
-   srcs=glob(["*.mod",
-              "*.dat",
-              "*.txt",]),
-   visibility = ["//visibility:public"],
-)""",
+    build_file = "cplex/cplex.BUILD",
     )
 
