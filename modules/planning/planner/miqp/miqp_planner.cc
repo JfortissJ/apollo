@@ -26,7 +26,6 @@
 #include <utility>
 #include <vector>
 
-#include "src/miqp_planner_c_api.h"
 #include "cyber/common/log.h"
 #include "cyber/common/macros.h"
 #include "modules/common/math/cartesian_frenet_conversion.h"
@@ -35,6 +34,7 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/constraint_checker/constraint_checker.h"
+#include "src/miqp_planner_c_api.h"
 
 namespace apollo {
 namespace planning {
@@ -46,7 +46,6 @@ using apollo::common::TrajectoryPoint;
 using apollo::common::math::CartesianFrenetConverter;
 using apollo::common::math::PathMatcher;
 using apollo::common::time::Clock;
-
 
 namespace {
 
@@ -73,7 +72,6 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
   return path_points;
 }
 
-
 }  // namespace
 
 Status MiqpPlanner::PlanOnReferenceLine(
@@ -93,40 +91,49 @@ Status MiqpPlanner::PlanOnReferenceLine(
     reference_line_info->set_is_on_reference_line();
     // 1. obtain a reference line and transform it to the PathPoint format.
     std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
-            reference_line_info->reference_line().reference_points());
+        reference_line_info->reference_line().reference_points());
 
-    const int ref_size = discrete_reference_line.size(); // aka N optimization support points
+    const int ref_size = discrete_reference_line.size();
 
     double ref[ref_size * 2];
     for (int i = 0; i < ref_size; ++i) {
       PathPoint refPoint = discrete_reference_line.at(i);
       // AERROR << refPoint.x() << ", " << refPoint.y();
-      ref[2*i] = refPoint.x();
-      ref[2*i+1] = refPoint.y();
+      ref[2 * i] = refPoint.x();
+      ref[2 * i + 1] = refPoint.y();
     }
 
     AERROR << "ReferenceLine Time = "
-          << (Clock::NowInSeconds() - current_time) * 1000;
+           << (Clock::NowInSeconds() - current_time) * 1000;
     current_time = Clock::NowInSeconds();
 
-    // double ref[ref_size * 2] = {0, 0, 5, 0, 30, 0};
-    double initial_state[6] = {0 , 0, 0, 1, 0.01, 0};
-    // double initial_state[6];
-    // double theta = planning_init_point.path_point().theta();
-    // initial_state[0] = planning_init_point.path_point().x();
-    // initial_state[1] = planning_init_point.v() * cos(theta);
-    // initial_state[2] = planning_init_point.a() * cos(theta); // is that correct?
-    // initial_state[3] = planning_init_point.path_point().y();
-    // initial_state[4] = planning_init_point.v() * sin(theta);
-    // initial_state[5] = planning_init_point.a() * sin(theta); // is that correct?
-    
+    AERROR << "planning_init_point = v:" << planning_init_point.v()
+           << ", theta:" << planning_init_point.path_point().theta();
+    double initial_state[6];
+    double theta = planning_init_point.path_point().theta();
+    double vel = std::max(planning_init_point.v(),
+                          0.1);  // cplex throws an exception if vel=0
+    initial_state[0] = planning_init_point.path_point().x();
+    initial_state[1] = vel * cos(theta);
+    initial_state[2] =
+        planning_init_point.a() * cos(theta);  // is that correct?
+    initial_state[3] = planning_init_point.path_point().y();
+    initial_state[4] = vel * sin(theta);
+    initial_state[5] =
+        planning_init_point.a() * sin(theta);  // is that correct?
+
+    AERROR << "initial state = x:" << initial_state[0]
+           << ", xd:" << initial_state[1] << ", xdd:" << initial_state[2]
+           << ", y:" << initial_state[3] << ", yd:" << initial_state[4]
+           << ", ydd:" << initial_state[5];
+
     double vDes = 5;
     double timestep = 0.0;
     int idx = AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes,
                                  timestep);
 
     AERROR << "Added ego car Time = "
-          << (Clock::NowInSeconds() - current_time) * 1000;
+           << (Clock::NowInSeconds() - current_time) * 1000;
     current_time = Clock::NowInSeconds();
 
     PlanCMiqpPlanner(planner, timestep);
@@ -143,7 +150,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
     }
     DelCMiqpPlanner(planner);
   }
-
 
   double start_time = Clock::NowInSeconds();
   double current_time = start_time;
