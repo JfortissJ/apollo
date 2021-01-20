@@ -48,7 +48,6 @@ using apollo::common::math::PathMatcher;
 using apollo::common::time::Clock;
 using apollo::planning::DiscretizedTrajectory;
 
-
 namespace {
 
 std::vector<PathPoint> ToDiscretizedReferenceLine(
@@ -74,85 +73,110 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
   return path_points;
 }
 
-
 }  // namespace
 
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
   AERROR << "PlanOnReferenceLine() of MIQP planner called!";
+  double start_time = Clock::NowInSeconds();
+  double current_time = start_time;
 
-  double traj[5 * 20];  // TODO this is a hack!
+  CMiqpPlanner planner = NewCMiqpPlanner();
+  ActivateDebugFileWriteCMiqpPlanner(planner, "/apollo/data/log", "test_");
+
+  const int N = GetNCMiqpPlanner(planner);
+  double traj[TRAJECTORY_SIZE * N];
   int size;
-  {
-    AERROR << "00000000000000000000000000000";
-    CMiqpPlanner planner = NewCMiqpPlanner();
-    ActivateDebugFileWriteCMiqpPlanner(planner, "/apollo/data/log", "test_");
-    AERROR << "11111111111111111111111";
 
-    double start_time = Clock::NowInSeconds();
-    double current_time = start_time;
+  reference_line_info->set_is_on_reference_line();
+  // 1. obtain a reference line and transform it to the PathPoint format.
+  std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
+      reference_line_info->reference_line().reference_points());
 
-    reference_line_info->set_is_on_reference_line();
-    // 1. obtain a reference line and transform it to the PathPoint format.
-    std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
-            reference_line_info->reference_line().reference_points());
+  const int ref_size =
+      discrete_reference_line.size();  // aka N optimization support points
 
-    const int ref_size = discrete_reference_line.size(); // aka N optimization support points
-
-    double ref[ref_size * 2];
-    for (int i = 0; i < ref_size; ++i) {
-      PathPoint refPoint = discrete_reference_line.at(i);
-      // AERROR << refPoint.x() << ", " << refPoint.y();
-      ref[2*i] = refPoint.x();
-      ref[2*i+1] = refPoint.y();
-    }
-
-    AERROR << "ReferenceLine Time = "
-          << (Clock::NowInSeconds() - current_time) * 1000;
-    current_time = Clock::NowInSeconds();
-
-    // double ref[ref_size * 2] = {0, 0, 5, 0, 30, 0};
-    double initial_state[6] = {0 , 0, 0, 1, 0.01, 0};
-    // double initial_state[6];
-    // double theta = planning_init_point.path_point().theta();
-    // initial_state[0] = planning_init_point.path_point().x();
-    // initial_state[1] = planning_init_point.v() * cos(theta);
-    // initial_state[2] = planning_init_point.a() * cos(theta); // is that correct?
-    // initial_state[3] = planning_init_point.path_point().y();
-    // initial_state[4] = planning_init_point.v() * sin(theta);
-    // initial_state[5] = planning_init_point.a() * sin(theta); // is that correct?
-    
-    double vDes = 5;
-    double timestep = 0.0;
-    int idx = AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes,
-                                 timestep);
-
-    AERROR << "Added ego car Time = "
-          << (Clock::NowInSeconds() - current_time) * 1000;
-    current_time = Clock::NowInSeconds();
-
-    PlanCMiqpPlanner(planner, timestep);
-    GetCTrajectoryCMiqpPlanner(planner, idx, timestep, traj, size);
-    int r = size;
-    int c = 5;  // StateDefinition::MIN_STATE_SIZE
-    for (int i = 0; i < r; ++i) {
-      for (int j = 0; j < c; ++j) {
-        std::cout << traj[i * c + j] << "\t";
-      }
-      std::cout << std::endl;
-    }
-    DelCMiqpPlanner(planner);
+  double ref[ref_size * 2];
+  for (int i = 0; i < ref_size; ++i) {
+    PathPoint refPoint = discrete_reference_line.at(i);
+    // AERROR << refPoint.x() << ", " << refPoint.y();
+    ref[2 * i] = refPoint.x();
+    ref[2 * i + 1] = refPoint.y();
   }
 
+  AERROR << "ReferenceLine Time = "
+         << (Clock::NowInSeconds() - current_time) * 1000;
+  current_time = Clock::NowInSeconds();
+
+  // double ref[ref_size * 2] = {0, 0, 5, 0, 30, 0};
+  double initial_state[6] = {0, 0, 0, 1, 0.01, 0};
+  // double initial_state[6];
+  // double theta = planning_init_point.path_point().theta();
+  // initial_state[0] = planning_init_point.path_point().x();
+  // initial_state[1] = planning_init_point.v() * cos(theta);
+  // initial_state[2] = planning_init_point.a() * cos(theta); // is that
+  // correct? initial_state[3] = planning_init_point.path_point().y();
+  // initial_state[4] = planning_init_point.v() * sin(theta);
+  // initial_state[5] = planning_init_point.a() * sin(theta); // is that
+  // correct?
+
+  double vDes = 5;
+  double timestep = 0.0;
+  int idx =
+      AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes, timestep);
+
+  AERROR << "Added ego car Time = "
+         << (Clock::NowInSeconds() - current_time) * 1000;
+  current_time = Clock::NowInSeconds();
+
+  bool success = PlanCMiqpPlanner(planner, timestep);
+
+  if (!success) {
+    AERROR << "Planning failed";
+    return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
+
+    // This code snipped from apollo could be an alternative
+    // if (FLAGS_enable_backup_trajectory) {
+    //   AERROR << "Use backup trajectory";
+    //   BackupTrajectoryGenerator backup_trajectory_generator(
+    //       init_s, init_d, planning_init_point.relative_time(),
+    //       std::make_shared<CollisionChecker>(collision_checker),
+    //       &trajectory1d_generator);
+    //   DiscretizedTrajectory trajectory =
+    //       backup_trajectory_generator.GenerateTrajectory(*ptr_reference_line);
+    //   reference_line_info->AddCost(FLAGS_backup_trajectory_cost);
+    //   reference_line_info->SetTrajectory(trajectory);
+    //   reference_line_info->SetDrivable(true);
+    //   return Status::OK();
+    // } else {
+    //   reference_line_info->SetCost(std::numeric_limits<double>::infinity());
+    // }
+  }
+
+  GetRawCMiqpTrajectoryCMiqpPlanner(planner, idx, timestep, traj, size);
   DiscretizedTrajectory apollo_traj =
-      BarkTrajectoryToApolloTrajectory(traj, size);
+      RawCTrajectoryToApolloTrajectory(traj, size);
   reference_line_info->SetTrajectory(apollo_traj);
   reference_line_info->SetCost(0);  // TODO necessary?
   reference_line_info->SetDrivable(true);
 
-  double start_time = Clock::NowInSeconds();
-  double current_time = start_time;
+  DelCMiqpPlanner(planner);
+
+  ADEBUG << "MIQP Planner took [s]: "
+         << (Clock::NowInSeconds() - current_time) * 1000;
+
+  // debug outputs:
+  int r = size;
+  int c = TRAJECTORY_SIZE;
+  for (int i = 0; i < r; ++i) {
+    for (int j = 0; j < c; ++j) {
+      std::cout << traj[i * c + j] << "\t";
+    }
+    std::cout << std::endl;
+  }
+
+  return Status::OK();
 
   // reference_line_info->set_is_on_reference_line();
   // // 1. obtain a reference line and transform it to the PathPoint format.
@@ -166,9 +190,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
   //     *ptr_reference_line, planning_init_point.path_point().x(),
   //     planning_init_point.path_point().y());
 
-  ADEBUG << "Decision_Time = " << (Clock::NowInSeconds() - current_time) * 1000;
-  current_time = Clock::NowInSeconds();
-
   // // Get instance of collision checker and constraint checker
   // CollisionChecker collision_checker(frame->obstacles(), init_s[0],
   // init_d[0],
@@ -181,35 +202,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
   //   ++collision_failure_count;
   //   continue;
   // }
-
-  // if (num_lattice_traj > 0) {
-  //   ADEBUG << "Planning succeeded";
-  //   num_planning_succeeded_cycles += 1;
-  //   reference_line_info->SetDrivable(true);
-  //   return Status::OK();
-  // } else {
-  //   AERROR << "Planning failed";
-  //   if (FLAGS_enable_backup_trajectory) {
-  //     AERROR << "Use backup trajectory";
-  //     BackupTrajectoryGenerator backup_trajectory_generator(
-  //         init_s, init_d, planning_init_point.relative_time(),
-  //         std::make_shared<CollisionChecker>(collision_checker),
-  //         &trajectory1d_generator);
-  //     DiscretizedTrajectory trajectory =
-  //         backup_trajectory_generator.GenerateTrajectory(*ptr_reference_line);
-
-  //     reference_line_info->AddCost(FLAGS_backup_trajectory_cost);
-  //     reference_line_info->SetTrajectory(trajectory);
-  //     reference_line_info->SetDrivable(true);
-  //     return Status::OK();
-
-  //   } else {
-  //     reference_line_info->SetCost(std::numeric_limits<double>::infinity());
-  //   }
-  //   return Status(ErrorCode::PLANNING_ERROR, "No feasible trajectories");
-  // }
-
-  return Status::OK();
 }
 
 apollo::planning::DiscretizedTrajectory
@@ -242,6 +234,48 @@ MiqpPlanner::BarkTrajectoryToApolloTrajectory(double traj[], int size) {
     // trajectory_point.mutable_path_point()->set_kappa(kappa); //TODO
     trajectory_point.set_v(v);
     // trajectory_point.set_a(a); //TODO
+    trajectory_point.set_relative_time(time);
+    apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
+
+    lastx = x;
+    lasty = y;
+  }
+
+  return apollo_trajectory;
+}
+
+apollo::planning::DiscretizedTrajectory
+MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
+  double s = 0.0f;
+  double lastx = traj[0 + TRAJECTORY_X_IDX];
+  double lasty = traj[0 + TRAJECTORY_Y_IDX];
+
+  DiscretizedTrajectory apollo_trajectory;
+  for (int trajidx = 0; trajidx < size; ++trajidx) {
+    const double time = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_TIME_IDX];
+    const double x = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_X_IDX];
+    const double y = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_Y_IDX];
+    const double vx = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_VX_IDX];
+    const double vy = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_VY_IDX];
+    const double ax = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_AX_IDX];
+    const double ay = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_AY_IDX];
+    // const double ux = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UX_IDX];
+    // const double uy = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UY_IDX];
+    const double theta = atan2(vy, vx);
+    const double v = sqrt(pow(vx, 2) + pow(vy, 2));
+    const double a = sqrt(pow(ax, 2) + pow(ay, 2));
+    s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
+    const double kappa =
+        (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
+
+    TrajectoryPoint trajectory_point;
+    trajectory_point.mutable_path_point()->set_x(x);
+    trajectory_point.mutable_path_point()->set_y(y);
+    trajectory_point.mutable_path_point()->set_s(s);
+    trajectory_point.mutable_path_point()->set_theta(theta);
+    trajectory_point.mutable_path_point()->set_kappa(kappa);
+    trajectory_point.set_v(v);
+    trajectory_point.set_a(a);
     trajectory_point.set_relative_time(time);
     apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
 

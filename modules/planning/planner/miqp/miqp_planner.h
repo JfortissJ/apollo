@@ -64,6 +64,9 @@ class MiqpPlanner : public LatticePlanner {
 
   apollo::planning::DiscretizedTrajectory BarkTrajectoryToApolloTrajectory(
       double traj[], int size);
+
+  apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
+      double traj[], int size);
 };
 
 }  // namespace planning
