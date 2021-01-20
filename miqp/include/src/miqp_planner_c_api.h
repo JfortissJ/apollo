@@ -8,28 +8,45 @@
 // planner_.UpdateConvexifiedMap(envPoly_);
 // planner.AddObstacle(predictedTraj, obstacleShape);
 
+#define TRAJECTORY_TIME_IDX 0
+#define TRAJECTORY_X_IDX 1
+#define TRAJECTORY_Y_IDX 2
+#define TRAJECTORY_VX_IDX 3
+#define TRAJECTORY_VY_IDX 4
+#define TRAJECTORY_AX_IDX 5
+#define TRAJECTORY_AY_IDX 6
+#define TRAJECTORY_UX_IDX 7
+#define TRAJECTORY_UY_IDX 8
+#define TRAJECTORY_SIZE 9
+
 typedef void* CMiqpPlanner;
 
-extern "C" CMiqpPlanner NewCMiqpPlanner();
+extern "C" {
 
-extern "C" void DelCMiqpPlanner(CMiqpPlanner c_miqp_planner);
+CMiqpPlanner NewCMiqpPlanner();
 
-extern "C" int AddCarCMiqpPlanner(CMiqpPlanner c_miqp_planner,
-                                  double initial_state_in[], double ref_in[],
-                                  const int ref_size, double vDes,
-                                  const double timestep);
+void DelCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 
-extern "C" bool PlanCMiqpPlanner(CMiqpPlanner c_miqp_planner,
-                                 const double timestep);
+int AddCarCMiqpPlanner(CMiqpPlanner c_miqp_planner, double initial_state_in[],
+                       double ref_in[], const int ref_size, double vDes,
+                       const double timestep);
 
-extern "C" void UpdateCarCMiqpPlanner(CMiqpPlanner c_miqp_planner, int idx,
-                                      double initial_state_in[],
-                                      double ref_in[], const int ref_size,
-                                      const double timestep);
+bool PlanCMiqpPlanner(CMiqpPlanner c_miqp_planner, const double timestep);
 
-extern "C" void GetCTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int idx,
-                                           double start_time,
-                                           double* trajectory, int& size);
+void UpdateCarCMiqpPlanner(CMiqpPlanner c_miqp_planner, int idx,
+                           double initial_state_in[], double ref_in[],
+                           const int ref_size, const double timestep);
 
-extern "C" void ActivateDebugFileWriteCMiqpPlanner(CMiqpPlanner c_miqp_planner,
-                                                   char path[], char name[]);
+void GetCTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int idx,
+                                double start_time, double* trajectory,
+                                int& size);
+
+void ActivateDebugFileWriteCMiqpPlanner(CMiqpPlanner c_miqp_planner,
+                                        char path[], char name[]);
+
+int GetNCMiqpPlanner(CMiqpPlanner c_miqp_planner);
+
+void GetRawCMiqpTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
+                                       double start_time, double* trajectory,
+                                       int& size);
+}

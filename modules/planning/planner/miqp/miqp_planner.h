@@ -26,9 +26,9 @@
 #include "modules/common/status/status.h"
 #include "modules/planning/common/frame.h"
 #include "modules/planning/common/reference_line_info.h"
+#include "modules/planning/planner/lattice/lattice_planner.h"
 #include "modules/planning/planner/planner.h"
 #include "modules/planning/proto/planning_config.pb.h"
-#include "modules/planning/planner/lattice/lattice_planner.h"
 
 namespace apollo {
 namespace planning {
@@ -61,6 +61,12 @@ class MiqpPlanner : public LatticePlanner {
   common::Status PlanOnReferenceLine(
       const common::TrajectoryPoint& planning_init_point, Frame* frame,
       ReferenceLineInfo* reference_line_info) override;
+
+  apollo::planning::DiscretizedTrajectory BarkTrajectoryToApolloTrajectory(
+      double traj[], int size);
+
+  apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
+      double traj[], int size);
 };
 
 }  // namespace planning
