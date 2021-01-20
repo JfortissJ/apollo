@@ -130,7 +130,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
           << ", ydd:" << initial_state[5];
 
   double vDes = 5;
-  double timestep = 0.0;
+  double timestep = planning_init_point.relative_time();
+  AERROR << "Planning timestep = " << timestep;
   int idx =
       AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes, timestep);
 
