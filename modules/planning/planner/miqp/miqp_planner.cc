@@ -78,25 +78,30 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
-  AERROR << "PlanOnReferenceLine() of MIQP planner called!";
+  const double timestep = planning_init_point.relative_time();
+  AERROR << "---------- PlanOnReferenceLine() of MIQP planner called at "
+            "timestep = "
+         << timestep << " ----------";
   double start_time = Clock::NowInSeconds();
   double current_time = start_time;
 
+  // Initialize miqp planner
   CMiqpPlanner planner = NewCMiqpPlanner();
   ActivateDebugFileWriteCMiqpPlanner(planner, "/apollo/data/log", "test_");
 
+  // Initialized raw C trajectory output
   const int N = GetNCMiqpPlanner(planner);
   double traj[TRAJECTORY_SIZE * N];
   int size;
 
+  // Obtain a reference line and transform it to the PathPoint format.
   reference_line_info->set_is_on_reference_line();
-  // 1. obtain a reference line and transform it to the PathPoint format.
   std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
       reference_line_info->reference_line().reference_points());
 
+  // Reference line to raw c format
   const int ref_size =
       discrete_reference_line.size();  // aka N optimization support points
-
   double ref[ref_size * 2];
   for (int i = 0; i < ref_size; ++i) {
     PathPoint refPoint = discrete_reference_line.at(i);
@@ -104,43 +109,43 @@ Status MiqpPlanner::PlanOnReferenceLine(
     ref[2 * i] = refPoint.x();
     ref[2 * i + 1] = refPoint.y();
   }
-
-  AERROR << "ReferenceLine Time = "
-         << (Clock::NowInSeconds() - current_time) * 1000;
+  AINFO << "ReferenceLine Time = "
+        << (Clock::NowInSeconds() - current_time) * 1000;
   current_time = Clock::NowInSeconds();
 
+  // Intial position to raw c format
   AERROR << "planning_init_point = v:" << planning_init_point.v()
-          << ", theta:" << planning_init_point.path_point().theta();
+         << ", theta:" << planning_init_point.path_point().theta();
   double initial_state[6];
   double theta = planning_init_point.path_point().theta();
   double vel = std::max(planning_init_point.v(),
                         0.1);  // cplex throws an exception if vel=0
   initial_state[0] = planning_init_point.path_point().x();
   initial_state[1] = vel * cos(theta);
-  initial_state[2] =
-      planning_init_point.a() * cos(theta);  // is that correct?
+  initial_state[2] = planning_init_point.a() * cos(theta);  // is that correct?
   initial_state[3] = planning_init_point.path_point().y();
   initial_state[4] = vel * sin(theta);
-  initial_state[5] =
-      planning_init_point.a() * sin(theta);  // is that correct?
+  initial_state[5] = planning_init_point.a() * sin(theta);  // is that correct?
+  AERROR << "initial state miqp = x:" << initial_state[0]
+         << ", xd:" << initial_state[1] << ", xdd:" << initial_state[2]
+         << ", y:" << initial_state[3] << ", yd:" << initial_state[4]
+         << ", ydd:" << initial_state[5];
+  double vDes = FLAGS_default_cruise_speed;
 
-  AERROR << "initial state = x:" << initial_state[0]
-          << ", xd:" << initial_state[1] << ", xdd:" << initial_state[2]
-          << ", y:" << initial_state[3] << ", yd:" << initial_state[4]
-          << ", ydd:" << initial_state[5];
-
-  double vDes = 5;
-  double timestep = planning_init_point.relative_time();
-  AERROR << "Planning timestep = " << timestep;
+  // Add ego car
   int idx =
       AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes, timestep);
-
-  AERROR << "Added ego car Time = "
-         << (Clock::NowInSeconds() - current_time) * 1000;
+  AINFO << "Added ego car Time = "
+        << (Clock::NowInSeconds() - current_time) * 1000;
   current_time = Clock::NowInSeconds();
 
+  // Plan
   bool success = PlanCMiqpPlanner(planner, timestep);
+  AINFO << "Miqp planning Time = "
+        << (Clock::NowInSeconds() - current_time) * 1000;
+  current_time = Clock::NowInSeconds();
 
+  // Planning failed
   if (!success) {
     AERROR << "Planning failed";
     return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
@@ -163,6 +168,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
     // }
   }
 
+  // Planning success -> publish trajectory
+  AINFO << "Planning Success!";
   GetRawCMiqpTrajectoryCMiqpPlanner(planner, idx, timestep, traj, size);
   DiscretizedTrajectory apollo_traj =
       RawCTrajectoryToApolloTrajectory(traj, size);
@@ -170,28 +177,21 @@ Status MiqpPlanner::PlanOnReferenceLine(
   reference_line_info->SetCost(0);  // TODO necessary?
   reference_line_info->SetDrivable(true);
 
-  DelCMiqpPlanner(planner);
-
-  ADEBUG << "MIQP Planner took [s]: "
-         << (Clock::NowInSeconds() - current_time) * 1000;
+  AINFO << "MIQP Planner took [s]: "
+        << (Clock::NowInSeconds() - current_time) * 1000;
 
   // debug outputs:
   int r = size;
   int c = TRAJECTORY_SIZE;
   for (int i = 0; i < r; ++i) {
     for (int j = 0; j < c; ++j) {
-      std::cout << traj[i * c + j] << "\t";
+      std::cout << traj[i * c + j] << "\t\t";
     }
     std::cout << std::endl;
   }
 
+  DelCMiqpPlanner(planner);
   return Status::OK();
-
-  // reference_line_info->set_is_on_reference_line();
-  // // 1. obtain a reference line and transform it to the PathPoint format.
-  // auto ptr_reference_line =
-  //     std::make_shared<std::vector<PathPoint>>(ToDiscretizedReferenceLine(
-  //         reference_line_info->reference_line().reference_points()));
 
   // // 2. compute the matched point of the init planning point on the reference
   // // line.
@@ -283,8 +283,11 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
     trajectory_point.mutable_path_point()->set_s(s);
     trajectory_point.mutable_path_point()->set_theta(theta);
     trajectory_point.mutable_path_point()->set_kappa(kappa);
+    // trajectory_point.mutable_path_point()->set_dkappa(dkappa);
+    // trajectory_point.mutable_path_point()->set_dkappa(ddkappa);
     trajectory_point.set_v(v);
     trajectory_point.set_a(a);
+    // trajectory_point.set_da(jerk);
     trajectory_point.set_relative_time(time);
     apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
 
