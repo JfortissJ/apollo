@@ -34,7 +34,6 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/constraint_checker/constraint_checker.h"
-#include "src/miqp_planner_c_api.h"
 
 namespace apollo {
 namespace planning {
@@ -86,7 +85,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double current_time = start_time;
 
   // Initialize miqp planner
-  CMiqpPlanner planner = NewCMiqpPlanner();
+  MiqpPlannerSettings settings = DefaultSettings();
+  CMiqpPlanner planner = NewCMiqpPlannerSettings(settings);
   ActivateDebugFileWriteCMiqpPlanner(planner, "/apollo/data/log", "test_");
 
   // Initialized raw C trajectory output
@@ -296,6 +296,46 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
   }
 
   return apollo_trajectory;
+}
+
+MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
+  MiqpPlannerSettings s = MiqpPlannerSettings();
+  s.nr_regions = 16;
+  s.nr_steps = 20;
+  s.nr_neighbouring_possible_regions = 1;
+  s.ts = 0.25;
+  s.max_solution_time = 10;
+  s.relative_mip_gap_tolerance = 0.1;
+  s.mipdisplay = 2;
+  s.mipemphasis = 0;
+  s.relobjdif = 0.0;
+  s.cutpass = 0;
+  s.probe = 0;
+  s.repairtries = 0;
+  s.rinsheur = 0;
+  s.varsel = 0;
+  s.mircuts = 0;
+  s.precision = 12;
+  s.constant_agent_safety_distance_slack = 3;
+  s.minimum_region_change_speed = 2;
+  s.lambda = 0.5;
+  s.wheelBase = common::VehicleConfigHelper::Instance()
+                    ->GetConfig()
+                    .vehicle_param()
+                    .wheel_base();
+  s.collisionRadius = 1; //TODO width! + 0.1 oder so
+  s.slackWeight = 30;
+  s.jerkWeight = 1;
+  s.positionWeight = 2;
+  s.velocityWeight = 0;
+  s.acclerationWeight = 0;
+  s.simplificationDistanceMap = 0.2;
+  s.refLineInterpInc = 0.2;
+  s.scaleVelocityForReferenceLongerHorizon = 2.0;
+  s.cplexModelpath =
+      "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
+      "miqp_planner/cplex_modfiles/";
+  return s;
 }
 
 }  // namespace planning

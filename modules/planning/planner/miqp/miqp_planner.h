@@ -29,6 +29,7 @@
 #include "modules/planning/planner/lattice/lattice_planner.h"
 #include "modules/planning/planner/planner.h"
 #include "modules/planning/proto/planning_config.pb.h"
+#include "src/miqp_planner_c_api.h"
 
 namespace apollo {
 namespace planning {
@@ -67,6 +68,8 @@ class MiqpPlanner : public LatticePlanner {
 
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
       double traj[], int size);
+
+  MiqpPlannerSettings DefaultSettings();
 };
 
 }  // namespace planning

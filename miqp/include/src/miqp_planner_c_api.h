@@ -8,6 +8,8 @@
 // planner_.UpdateConvexifiedMap(envPoly_);
 // planner.AddObstacle(predictedTraj, obstacleShape);
 
+#include "miqp_planner_settings.h"
+
 #define TRAJECTORY_TIME_IDX 0
 #define TRAJECTORY_X_IDX 1
 #define TRAJECTORY_Y_IDX 2
@@ -24,6 +26,8 @@ typedef void* CMiqpPlanner;
 extern "C" {
 
 CMiqpPlanner NewCMiqpPlanner();
+
+CMiqpPlanner NewCMiqpPlannerSettings(MiqpPlannerSettings settings);
 
 void DelCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 
