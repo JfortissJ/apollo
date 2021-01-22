@@ -13,16 +13,16 @@ module_config {
         {
           channel: "/apollo/canbus/chassis"
           qos_profile: {
-              depth : 15
+              depth : 7
           }
-          pending_queue_size: 50
+          pending_queue_size: 25
         },
         {
           channel: "/apollo/localization/pose"
           qos_profile: {
-              depth : 15
+              depth : 7
           }
-          pending_queue_size: 50
+          pending_queue_size: 25
         }
       ]
     }
