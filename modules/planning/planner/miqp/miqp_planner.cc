@@ -77,12 +77,11 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
-  const double timestep = planning_init_point.relative_time();
+  const double timestep = Clock::NowInSeconds();
   AERROR << "---------- PlanOnReferenceLine() of MIQP planner called at "
             "timestep = "
          << timestep << " ----------";
-  double start_time = Clock::NowInSeconds();
-  double current_time = start_time;
+  double current_time = timestep;
 
   // Initialize miqp planner
   MiqpPlannerSettings settings = DefaultSettings();
@@ -170,14 +169,17 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Planning success -> publish trajectory
   AINFO << "Planning Success!";
-  GetRawCMiqpTrajectoryCMiqpPlanner(planner, idx, timestep, traj, size);
+  // trajectories shall start at t=0 with an offset of
+  // planning_init_point.relative_time()
+  GetRawCMiqpTrajectoryCMiqpPlanner(
+      planner, idx, planning_init_point.relative_time(), traj, size);
   DiscretizedTrajectory apollo_traj =
       RawCTrajectoryToApolloTrajectory(traj, size);
   reference_line_info->SetTrajectory(apollo_traj);
   reference_line_info->SetCost(0);  // TODO necessary?
   reference_line_info->SetDrivable(true);
 
-  AINFO << "MIQP Planner took [s]: "
+  AINFO << "MIQP Planner postprocess took: "
         << (Clock::NowInSeconds() - current_time) * 1000;
 
   // debug outputs:
@@ -307,8 +309,8 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.max_solution_time = 10;
   s.relative_mip_gap_tolerance = 0.1;
   s.mipdisplay = 2;
-  s.mipemphasis = 0;
-  s.relobjdif = 0.0;
+  s.mipemphasis = 1;
+  s.relobjdif = 0.7;
   s.cutpass = 0;
   s.probe = 0;
   s.repairtries = 0;
@@ -323,7 +325,12 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
                     ->GetConfig()
                     .vehicle_param()
                     .wheel_base();
-  s.collisionRadius = 1; //TODO width! + 0.1 oder so
+  const float collision_radius_add = 0.3;
+  s.collisionRadius = common::VehicleConfigHelper::Instance()
+                          ->GetConfig()
+                          .vehicle_param()
+                          .width() +
+                      collision_radius_add;
   s.slackWeight = 30;
   s.jerkWeight = 1;
   s.positionWeight = 2;
@@ -335,6 +342,10 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.cplexModelpath =
       "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
       "miqp_planner/cplex_modfiles/";
+  s.useSos = false;
+  s.useBranchingPriorities = true;
+  s.warmstartType = MiqpPlannerWarmstartType::
+      LAST_SOLUTION_WARMSTART;  // Receding Horizon Warmstart does not work TODO
   return s;
 }
 
