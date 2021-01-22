@@ -6,6 +6,13 @@
 #ifndef MIQP_PLANNER_SETTINGS_HEADER
 #define MIQP_PLANNER_SETTINGS_HEADER
 
+enum MiqpPlannerWarmstartType {
+    NO_WARMSTART = 0,
+    RECEDING_HORIZON_WARMSTART = 1,
+    LAST_SOLUTION_WARMSTART = 2,
+    BOTH_WARMSTART_STRATEGIES = 3
+  };
+
 struct MiqpPlannerSettings {
   int nr_regions;
   int nr_steps;
@@ -37,6 +44,9 @@ struct MiqpPlannerSettings {
   int varsel;
   int mircuts;
   const char* cplexModelpath;
+  bool useSos;
+  bool useBranchingPriorities;
+  MiqpPlannerWarmstartType warmstartType;
 };
 
 #endif  // MIQP_PLANNER_SETTINGS_HEADER
