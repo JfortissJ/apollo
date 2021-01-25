@@ -78,20 +78,21 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
 
 std::pair<std::vector<Vec2d>, std::vector<Vec2d>> ToLeftAndRightBoundary(
     ReferenceLineInfo* reference_line_info) {
-  const hdmap::RouteSegments& lanes = reference_line_info->Lanes();
-  const apollo::hdmap::LaneInfoConstPtr lane_info =
-      lanes.at(0).lane;  // for now, we only use first lane element
 
-  std::vector<Vec2d> left_points;
-  for (auto& segment : (lane_info->lane().left_boundary().curve().segment())) {
-    for (auto& p : (segment.line_segment().point())) {
-      left_points.emplace_back(p.x(), p.y());
+  std::vector<Vec2d> left_points, right_points;
+  const hdmap::RouteSegments& segments = reference_line_info->Lanes();
+  for (const auto& seg : segments) {
+    const apollo::hdmap::LaneInfoConstPtr lane_info = seg.lane;
+
+    for (auto& segment : (lane_info->lane().left_boundary().curve().segment())) {
+      for (auto& p : (segment.line_segment().point())) {
+        left_points.emplace_back(p.x(), p.y());
+      }
     }
-  }
-  std::vector<Vec2d> right_points;
-  for (auto& segment : (lane_info->lane().right_boundary().curve().segment())) {
-    for (auto& p : (segment.line_segment().point())) {
-      right_points.emplace_back(p.x(), p.y());
+    for (auto& segment : (lane_info->lane().right_boundary().curve().segment())) {
+      for (auto& p : (segment.line_segment().point())) {
+        right_points.emplace_back(p.x(), p.y());
+      }
     }
   }
   return std::make_pair(left_points, right_points);
