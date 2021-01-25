@@ -182,15 +182,15 @@ Status MiqpPlanner::PlanOnReferenceLine(
   AINFO << "MIQP Planner postprocess took: "
         << (Clock::NowInSeconds() - current_time) * 1000;
 
-  // debug outputs:
-  int r = size;
-  int c = TRAJECTORY_SIZE;
-  for (int i = 0; i < r; ++i) {
-    for (int j = 0; j < c; ++j) {
-      std::cout << traj[i * c + j] << "\t\t";
-    }
-    std::cout << std::endl;
-  }
+  // // debug outputs:
+  // int r = size;
+  // int c = TRAJECTORY_SIZE;
+  // for (int i = 0; i < r; ++i) {
+  //   for (int j = 0; j < c; ++j) {
+  //     std::cout << traj[i * c + j] << "\t\t";
+  //   }
+  //   std::cout << std::endl;
+  // }
 
   DelCMiqpPlanner(planner);
   return Status::OK();
@@ -327,9 +327,10 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
                     .wheel_base();
   const float collision_radius_add = 0.3;
   s.collisionRadius = common::VehicleConfigHelper::Instance()
-                          ->GetConfig()
-                          .vehicle_param()
-                          .width() +
+                              ->GetConfig()
+                              .vehicle_param()
+                              .width() /
+                          2 +
                       collision_radius_add;
   s.slackWeight = 30;
   s.jerkWeight = 1;
@@ -344,8 +345,10 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
       "miqp_planner/cplex_modfiles/";
   s.useSos = false;
   s.useBranchingPriorities = true;
-  s.warmstartType = MiqpPlannerWarmstartType::
-      LAST_SOLUTION_WARMSTART;  // Receding Horizon Warmstart does not work TODO
+  s.warmstartType =
+      MiqpPlannerWarmstartType::BOTH_WARMSTART_STRATEGIES;  // Receding Horizon
+                                                            // Warmstart does
+                                                            // not work TODO
   return s;
 }
 
