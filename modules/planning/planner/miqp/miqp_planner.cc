@@ -34,7 +34,6 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/constraint_checker/constraint_checker.h"
-#include "src/miqp_planner_c_api.h"
 
 namespace apollo {
 namespace planning {
@@ -103,15 +102,15 @@ std::pair<std::vector<Vec2d>, std::vector<Vec2d>> ToLeftAndRightBoundary(
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
-  const double timestep = planning_init_point.relative_time();
+  const double timestep = Clock::NowInSeconds();
   AERROR << "---------- PlanOnReferenceLine() of MIQP planner called at "
             "timestep = "
          << timestep << " ----------";
-  double start_time = Clock::NowInSeconds();
-  double current_time = start_time;
+  double current_time = timestep;
 
   // Initialize miqp planner
-  CMiqpPlanner planner = NewCMiqpPlanner();
+  MiqpPlannerSettings settings = DefaultSettings();
+  CMiqpPlanner planner = NewCMiqpPlannerSettings(settings);
   ActivateDebugFileWriteCMiqpPlanner(planner, "/apollo/data/log", "test_");
 
   // Initialized raw C trajectory output
@@ -217,25 +216,28 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Planning success -> publish trajectory
   AINFO << "Planning Success!";
-  GetRawCMiqpTrajectoryCMiqpPlanner(planner, idx, timestep, traj, size);
+  // trajectories shall start at t=0 with an offset of
+  // planning_init_point.relative_time()
+  GetRawCMiqpTrajectoryCMiqpPlanner(
+      planner, idx, planning_init_point.relative_time(), traj, size);
   DiscretizedTrajectory apollo_traj =
       RawCTrajectoryToApolloTrajectory(traj, size);
   reference_line_info->SetTrajectory(apollo_traj);
   reference_line_info->SetCost(0);  // TODO necessary?
   reference_line_info->SetDrivable(true);
 
-  AINFO << "MIQP Planner took [s]: "
+  AINFO << "MIQP Planner postprocess took: "
         << (Clock::NowInSeconds() - current_time) * 1000;
 
-  // debug outputs:
-  int r = size;
-  int c = TRAJECTORY_SIZE;
-  for (int i = 0; i < r; ++i) {
-    for (int j = 0; j < c; ++j) {
-      std::cout << traj[i * c + j] << "\t\t";
-    }
-    std::cout << std::endl;
-  }
+  // // debug outputs:
+  // int r = size;
+  // int c = TRAJECTORY_SIZE;
+  // for (int i = 0; i < r; ++i) {
+  //   for (int j = 0; j < c; ++j) {
+  //     std::cout << traj[i * c + j] << "\t\t";
+  //   }
+  //   std::cout << std::endl;
+  // }
 
   DelCMiqpPlanner(planner);
   return Status::OK();
@@ -345,6 +347,58 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
   }
 
   return apollo_trajectory;
+}
+
+MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
+  MiqpPlannerSettings s = MiqpPlannerSettings();
+  s.nr_regions = 16;
+  s.nr_steps = 20;
+  s.nr_neighbouring_possible_regions = 1;
+  s.ts = 0.25;
+  s.max_solution_time = 10;
+  s.relative_mip_gap_tolerance = 0.1;
+  s.mipdisplay = 2;
+  s.mipemphasis = 1;
+  s.relobjdif = 0.7;
+  s.cutpass = 0;
+  s.probe = 0;
+  s.repairtries = 0;
+  s.rinsheur = 0;
+  s.varsel = 0;
+  s.mircuts = 0;
+  s.precision = 12;
+  s.constant_agent_safety_distance_slack = 3;
+  s.minimum_region_change_speed = 2;
+  s.lambda = 0.5;
+  s.wheelBase = common::VehicleConfigHelper::Instance()
+                    ->GetConfig()
+                    .vehicle_param()
+                    .wheel_base();
+  const float collision_radius_add = 0.3;
+  s.collisionRadius = common::VehicleConfigHelper::Instance()
+                              ->GetConfig()
+                              .vehicle_param()
+                              .width() /
+                          2 +
+                      collision_radius_add;
+  s.slackWeight = 30;
+  s.jerkWeight = 1;
+  s.positionWeight = 2;
+  s.velocityWeight = 0;
+  s.acclerationWeight = 0;
+  s.simplificationDistanceMap = 0.2;
+  s.refLineInterpInc = 0.2;
+  s.scaleVelocityForReferenceLongerHorizon = 2.0;
+  s.cplexModelpath =
+      "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
+      "miqp_planner/cplex_modfiles/";
+  s.useSos = false;
+  s.useBranchingPriorities = true;
+  s.warmstartType =
+      MiqpPlannerWarmstartType::BOTH_WARMSTART_STRATEGIES;  // Receding Horizon
+                                                            // Warmstart does
+                                                            // not work TODO
+  return s;
 }
 
 }  // namespace planning
