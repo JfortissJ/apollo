@@ -78,18 +78,19 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
 
 std::pair<std::vector<Vec2d>, std::vector<Vec2d>> ToLeftAndRightBoundary(
     ReferenceLineInfo* reference_line_info) {
-
   std::vector<Vec2d> left_points, right_points;
   const hdmap::RouteSegments& segments = reference_line_info->Lanes();
   for (const auto& seg : segments) {
     const apollo::hdmap::LaneInfoConstPtr lane_info = seg.lane;
 
-    for (auto& segment : (lane_info->lane().left_boundary().curve().segment())) {
+    for (auto& segment :
+         (lane_info->lane().left_boundary().curve().segment())) {
       for (auto& p : (segment.line_segment().point())) {
         left_points.emplace_back(p.x(), p.y());
       }
     }
-    for (auto& segment : (lane_info->lane().right_boundary().curve().segment())) {
+    for (auto& segment :
+         (lane_info->lane().right_boundary().curve().segment())) {
       for (auto& p : (segment.line_segment().point())) {
         right_points.emplace_back(p.x(), p.y());
       }
@@ -161,7 +162,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
     i++;
   }
 
-  UpdateConvexifiedMapCMiqpPlaner(planner, poly_pts, poly_size);
+  UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
 
   AINFO << "ReferenceLine Time = "
         << (Clock::NowInSeconds() - current_time) * 1000;
