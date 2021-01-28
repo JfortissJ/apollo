@@ -21,9 +21,13 @@
 
 --fortiss_simcontrol_set_start_pose=true
 
---fortiss_simcontrol_start_x=586903
+# guerickestrasse begin
+--fortiss_simcontrol_start_x=692939
+--fortiss_simcontrol_start_y=5339064
 
---fortiss_simcontrol_start_y=4141629
+# sunnyvale
+#--fortiss_simcontrol_start_x=586903
+#--fortiss_simcontrol_start_y=4141629
 
 --map_dir=/apollo/modules/map/data/osterwaldstrasse
 
