@@ -74,22 +74,29 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
 
 }  // namespace
 
+common::Status MiqpPlanner::Init(const PlanningConfig& config) {
+  MiqpPlannerSettings settings = DefaultSettings();
+  planner_ = NewCMiqpPlannerSettings(settings);
+  firstrun_ = true;
+  egoCarIdx_ = -1;  // invalid
+  ActivateDebugFileWriteCMiqpPlanner(planner_, "/apollo/data/log", "test_");
+  return common::Status::OK();
+}
+
+void MiqpPlanner::Stop() { DelCMiqpPlanner(planner_); }
+
 Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
   const double timestep = Clock::NowInSeconds();
-  AERROR << "---------- PlanOnReferenceLine() of MIQP planner called at "
+  AERROR << std::setprecision(15)
+         << "---------- PlanOnReferenceLine() of MIQP planner called at "
             "timestep = "
          << timestep << " ----------";
   double current_time = timestep;
 
-  // Initialize miqp planner
-  MiqpPlannerSettings settings = DefaultSettings();
-  CMiqpPlanner planner = NewCMiqpPlannerSettings(settings);
-  ActivateDebugFileWriteCMiqpPlanner(planner, "/apollo/data/log", "test_");
-
   // Initialized raw C trajectory output
-  const int N = GetNCMiqpPlanner(planner);
+  const int N = GetNCMiqpPlanner(planner_);
   double traj[TRAJECTORY_SIZE * N];
   int size;
 
@@ -113,8 +120,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   current_time = Clock::NowInSeconds();
 
   // Intial position to raw c format
-  AERROR << "planning_init_point = v:" << planning_init_point.v()
-         << ", theta:" << planning_init_point.path_point().theta();
+  // AERROR << "planning_init_point = v:" << planning_init_point.v()
+  //        << ", theta:" << planning_init_point.path_point().theta();
   double initial_state[6];
   double theta = planning_init_point.path_point().theta();
   double vel = std::max(planning_init_point.v(),
@@ -125,21 +132,30 @@ Status MiqpPlanner::PlanOnReferenceLine(
   initial_state[3] = planning_init_point.path_point().y();
   initial_state[4] = vel * sin(theta);
   initial_state[5] = planning_init_point.a() * sin(theta);  // is that correct?
-  AERROR << "initial state miqp = x:" << initial_state[0]
+  AERROR << std::setprecision(15)
+         << "initial state miqp = x:" << initial_state[0]
          << ", xd:" << initial_state[1] << ", xdd:" << initial_state[2]
          << ", y:" << initial_state[3] << ", yd:" << initial_state[4]
          << ", ydd:" << initial_state[5];
   double vDes = FLAGS_default_cruise_speed;
 
-  // Add ego car
-  int idx =
-      AddCarCMiqpPlanner(planner, initial_state, ref, ref_size, vDes, timestep);
-  AINFO << "Added ego car Time = "
-        << (Clock::NowInSeconds() - current_time) * 1000;
+  // Add/update ego car
+  if (firstrun_) {
+    egoCarIdx_ = AddCarCMiqpPlanner(planner_, initial_state, ref, ref_size,
+                                    vDes, timestep);
+    firstrun_ = false;
+    AINFO << "Added ego car Time = "
+          << (Clock::NowInSeconds() - current_time) * 1000;
+  } else {
+    UpdateCarCMiqpPlanner(planner_, egoCarIdx_, initial_state, ref, ref_size,
+                          timestep);
+    AINFO << "Update ego car Time = "
+          << (Clock::NowInSeconds() - current_time) * 1000;
+  }
   current_time = Clock::NowInSeconds();
 
   // Plan
-  bool success = PlanCMiqpPlanner(planner, timestep);
+  bool success = PlanCMiqpPlanner(planner_, timestep);
   AINFO << "Miqp planning Time = "
         << (Clock::NowInSeconds() - current_time) * 1000;
   current_time = Clock::NowInSeconds();
@@ -172,7 +188,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // trajectories shall start at t=0 with an offset of
   // planning_init_point.relative_time()
   GetRawCMiqpTrajectoryCMiqpPlanner(
-      planner, idx, planning_init_point.relative_time(), traj, size);
+      planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
   DiscretizedTrajectory apollo_traj =
       RawCTrajectoryToApolloTrajectory(traj, size);
   reference_line_info->SetTrajectory(apollo_traj);
@@ -192,7 +208,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
   //   std::cout << std::endl;
   // }
 
-  DelCMiqpPlanner(planner);
   return Status::OK();
 
   // // 2. compute the matched point of the init planning point on the reference
@@ -319,7 +334,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.mircuts = 0;
   s.precision = 12;
   s.constant_agent_safety_distance_slack = 3;
-  s.minimum_region_change_speed = 2;
+  s.minimum_region_change_speed = 1;
   s.lambda = 0.5;
   s.wheelBase = common::VehicleConfigHelper::Instance()
                     ->GetConfig()

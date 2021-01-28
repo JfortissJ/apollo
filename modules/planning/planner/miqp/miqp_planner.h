@@ -46,11 +46,9 @@ class MiqpPlanner : public LatticePlanner {
 
   std::string Name() override { return "MIQP"; }
 
-  common::Status Init(const PlanningConfig& config) override {
-    return common::Status::OK();
-  }
+  common::Status Init(const PlanningConfig& config) override;
 
-  void Stop() override {}
+  void Stop() override;
 
   /**
    * @brief Override function Plan in parent class Planner.
@@ -63,6 +61,7 @@ class MiqpPlanner : public LatticePlanner {
       const common::TrajectoryPoint& planning_init_point, Frame* frame,
       ReferenceLineInfo* reference_line_info) override;
 
+ private:
   apollo::planning::DiscretizedTrajectory BarkTrajectoryToApolloTrajectory(
       double traj[], int size);
 
@@ -70,6 +69,11 @@ class MiqpPlanner : public LatticePlanner {
       double traj[], int size);
 
   MiqpPlannerSettings DefaultSettings();
+
+ private:
+  CMiqpPlanner planner_;
+  bool firstrun_;
+  int egoCarIdx_;
 };
 
 }  // namespace planning
