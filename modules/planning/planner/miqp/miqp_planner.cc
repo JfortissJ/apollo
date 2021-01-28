@@ -44,8 +44,12 @@ using apollo::common::Status;
 using apollo::common::TrajectoryPoint;
 using apollo::common::math::CartesianFrenetConverter;
 using apollo::common::math::PathMatcher;
+using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
 using apollo::planning::DiscretizedTrajectory;
+
+static const double X_OFFSET = 692000;
+static const double Y_OFFSET = 5.339e+06;
 
 namespace {
 
@@ -70,6 +74,28 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
     path_points.push_back(std::move(path_point));
   }
   return path_points;
+}
+
+std::pair<std::vector<Vec2d>, std::vector<Vec2d>> ToLeftAndRightBoundary(
+    ReferenceLineInfo* reference_line_info) {
+
+  std::vector<Vec2d> left_points, right_points;
+  const hdmap::RouteSegments& segments = reference_line_info->Lanes();
+  for (const auto& seg : segments) {
+    const apollo::hdmap::LaneInfoConstPtr lane_info = seg.lane;
+
+    for (auto& segment : (lane_info->lane().left_boundary().curve().segment())) {
+      for (auto& p : (segment.line_segment().point())) {
+        left_points.emplace_back(p.x(), p.y());
+      }
+    }
+    for (auto& segment : (lane_info->lane().right_boundary().curve().segment())) {
+      for (auto& p : (segment.line_segment().point())) {
+        right_points.emplace_back(p.x(), p.y());
+      }
+    }
+  }
+  return std::make_pair(left_points, right_points);
 }
 
 }  // namespace
@@ -112,9 +138,31 @@ Status MiqpPlanner::PlanOnReferenceLine(
   for (int i = 0; i < ref_size; ++i) {
     PathPoint refPoint = discrete_reference_line.at(i);
     // AERROR << refPoint.x() << ", " << refPoint.y();
-    ref[2 * i] = refPoint.x();
-    ref[2 * i + 1] = refPoint.y();
+    ref[2 * i] = refPoint.x() - X_OFFSET;
+    ref[2 * i + 1] = refPoint.y() - Y_OFFSET;
   }
+
+  // Map
+  std::vector<Vec2d> left_pts, right_pts;
+  std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
+
+  const int poly_size = left_pts.size() + right_pts.size();
+  double poly_pts[poly_size * 2];
+
+  int i = 0;
+  for (auto it = left_pts.begin(); it != left_pts.end(); ++it) {
+    poly_pts[2 * i] = it->x() - X_OFFSET;
+    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
+    i++;
+  }
+  for (auto it = right_pts.rbegin(); it != right_pts.rend(); ++it) {
+    poly_pts[2 * i] = it->x() - X_OFFSET;
+    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
+    i++;
+  }
+
+  UpdateConvexifiedMapCMiqpPlaner(planner, poly_pts, poly_size);
+
   AINFO << "ReferenceLine Time = "
         << (Clock::NowInSeconds() - current_time) * 1000;
   current_time = Clock::NowInSeconds();
@@ -126,10 +174,10 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double theta = planning_init_point.path_point().theta();
   double vel = std::max(planning_init_point.v(),
                         0.1);  // cplex throws an exception if vel=0
-  initial_state[0] = planning_init_point.path_point().x();
+  initial_state[0] = planning_init_point.path_point().x() - X_OFFSET;
   initial_state[1] = vel * cos(theta);
   initial_state[2] = planning_init_point.a() * cos(theta);  // is that correct?
-  initial_state[3] = planning_init_point.path_point().y();
+  initial_state[3] = planning_init_point.path_point().y() - Y_OFFSET;
   initial_state[4] = vel * sin(theta);
   initial_state[5] = planning_init_point.a() * sin(theta);  // is that correct?
   AERROR << std::setprecision(15)
@@ -246,8 +294,8 @@ MiqpPlanner::BarkTrajectoryToApolloTrajectory(double traj[], int size) {
   DiscretizedTrajectory apollo_trajectory;
   for (int trajidx = 0; trajidx < size; ++trajidx) {
     double time = traj[trajidx * MIN_STATE_SIZE + TIME_POSITION];
-    double x = traj[trajidx * MIN_STATE_SIZE + X_POSITION];
-    double y = traj[trajidx * MIN_STATE_SIZE + Y_POSITION];
+    double x = traj[trajidx * MIN_STATE_SIZE + X_POSITION] + X_OFFSET;
+    double y = traj[trajidx * MIN_STATE_SIZE + Y_POSITION] + Y_OFFSET;
     double theta = traj[trajidx * MIN_STATE_SIZE + THETA_POSITION];
     double v = traj[trajidx * MIN_STATE_SIZE + VEL_POSITION];
     s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
@@ -279,8 +327,10 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
   DiscretizedTrajectory apollo_trajectory;
   for (int trajidx = 0; trajidx < size; ++trajidx) {
     const double time = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_TIME_IDX];
-    const double x = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_X_IDX];
-    const double y = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_Y_IDX];
+    const double x =
+        traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_X_IDX] + X_OFFSET;
+    const double y =
+        traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_Y_IDX] + Y_OFFSET;
     const double vx = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_VX_IDX];
     const double vy = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_VY_IDX];
     const double ax = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_AX_IDX];
