@@ -54,8 +54,9 @@ static const double Y_OFFSET = 5.339e+06;
 namespace {
 
 std::vector<PathPoint> ToDiscretizedReferenceLine(
-    const std::vector<ReferencePoint>& ref_points) {
+    const std::vector<ReferencePoint>& ref_points, const PlanningTarget& planning_target) {
   double s = 0.0;
+
   std::vector<PathPoint> path_points;
   for (const auto& ref_point : ref_points) {
     PathPoint path_point;
@@ -71,6 +72,11 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
       s += std::sqrt(dx * dx + dy * dy);
     }
     path_point.set_s(s);
+
+    if (planning_target.has_stop_point() && (s > planning_target.stop_point().s())) {
+      AERROR << "cutting off reference after s:" << s;
+      break;
+    }
     path_points.push_back(std::move(path_point));
   }
   return path_points;
@@ -131,7 +137,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // Obtain a reference line and transform it to the PathPoint format.
   reference_line_info->set_is_on_reference_line();
   std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
-      reference_line_info->reference_line().reference_points());
+      reference_line_info->reference_line().reference_points(), reference_line_info->planning_target());
 
   // Reference line to raw c format
   const int ref_size =
@@ -152,13 +158,13 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   PlanningTarget planning_target = reference_line_info->planning_target();
   if (planning_target.has_stop_point()) {
-    ADEBUG << "Planning target stop s: " << planning_target.stop_point().s();
+    AERROR << "Planning target stop s: " << planning_target.stop_point().s();
   }
 
 
   auto sdist = reference_line_info->SDistanceToDestination();
-  ADEBUG << "          sdist " << sdist;
-  ADEBUG << "#######################";
+  AERROR << "          sdist " << sdist;
+  AERROR << "#######################";
 
 
   // Map
