@@ -106,7 +106,8 @@ common::Status MiqpPlanner::Init(const PlanningConfig& config) {
   planner_ = NewCMiqpPlannerSettings(settings);
   firstrun_ = true;
   egoCarIdx_ = -1;  // invalid
-  ActivateDebugFileWriteCMiqpPlanner(planner_, "/apollo/data/log", "test_");
+  ActivateDebugFileWriteCMiqpPlanner(planner_, "/apollo/data/log",
+                                     "miqp_planner_");
   return common::Status::OK();
 }
 
@@ -138,10 +139,27 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double ref[ref_size * 2];
   for (int i = 0; i < ref_size; ++i) {
     PathPoint refPoint = discrete_reference_line.at(i);
-    // AERROR << refPoint.x() << ", " << refPoint.y();
+    // AERROR << refPoint.x() - X_OFFSET<< ", " << refPoint.y() - Y_OFFSET;
     ref[2 * i] = refPoint.x() - X_OFFSET;
     ref[2 * i + 1] = refPoint.y() - Y_OFFSET;
   }
+
+// TODO TEST CODE:
+  std::vector<common::SLPoint> slstoppts = reference_line_info->GetAllStopDecisionSLPoint();
+  for (auto& sl : slstoppts) {
+    AERROR << sl.l() << " " << sl.s();
+  }
+
+  PlanningTarget planning_target = reference_line_info->planning_target();
+  if (planning_target.has_stop_point()) {
+    ADEBUG << "Planning target stop s: " << planning_target.stop_point().s();
+  }
+
+
+  auto sdist = reference_line_info->SDistanceToDestination();
+  ADEBUG << "          sdist " << sdist;
+  ADEBUG << "#######################";
+
 
   // Map
   std::vector<Vec2d> left_pts, right_pts;
@@ -162,7 +180,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
     i++;
   }
 
-  UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
+  // UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
 
   AINFO << "ReferenceLine Time = "
         << (Clock::NowInSeconds() - current_time) * 1000;
@@ -187,11 +205,12 @@ Status MiqpPlanner::PlanOnReferenceLine(
          << ", y:" << initial_state[3] << ", yd:" << initial_state[4]
          << ", ydd:" << initial_state[5];
   double vDes = FLAGS_default_cruise_speed;
+  double deltaSDes = 5;
 
   // Add/update ego car
   if (firstrun_) {
     egoCarIdx_ = AddCarCMiqpPlanner(planner_, initial_state, ref, ref_size,
-                                    vDes, timestep);
+                                    vDes, deltaSDes, timestep);
     firstrun_ = false;
     AINFO << "Added ego car Time = "
           << (Clock::NowInSeconds() - current_time) * 1000;
@@ -385,13 +404,13 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.mircuts = 0;
   s.precision = 12;
   s.constant_agent_safety_distance_slack = 3;
-  s.minimum_region_change_speed = 1;
+  s.minimum_region_change_speed = 2;
   s.lambda = 0.5;
   s.wheelBase = common::VehicleConfigHelper::Instance()
                     ->GetConfig()
                     .vehicle_param()
                     .wheel_base();
-  const float collision_radius_add = 0.3;
+  const float collision_radius_add = -0.5;
   s.collisionRadius = common::VehicleConfigHelper::Instance()
                               ->GetConfig()
                               .vehicle_param()

@@ -33,7 +33,7 @@ void DelCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 
 int AddCarCMiqpPlanner(CMiqpPlanner c_miqp_planner, double initial_state_in[],
                        double ref_in[], const int ref_size, double vDes,
-                       const double timestep);
+                       double deltaSDes, const double timestep);
 
 bool PlanCMiqpPlanner(CMiqpPlanner c_miqp_planner, const double timestep);
 
