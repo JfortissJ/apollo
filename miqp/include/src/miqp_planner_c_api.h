@@ -39,7 +39,8 @@ bool PlanCMiqpPlanner(CMiqpPlanner c_miqp_planner, const double timestep);
 
 void UpdateCarCMiqpPlanner(CMiqpPlanner c_miqp_planner, int idx,
                            double initial_state_in[], double ref_in[],
-                           const int ref_size, const double timestep);
+                           const int ref_size, const double timestep,
+                           bool track_reference_positions);
 
 void GetCTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int idx,
                                 double start_time, double* trajectory,

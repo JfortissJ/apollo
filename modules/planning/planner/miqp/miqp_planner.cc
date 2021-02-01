@@ -54,7 +54,8 @@ static const double Y_OFFSET = 5.339e+06;
 namespace {
 
 std::vector<PathPoint> ToDiscretizedReferenceLine(
-    const std::vector<ReferencePoint>& ref_points, const PlanningTarget& planning_target) {
+    const std::vector<ReferencePoint>& ref_points,
+    const PlanningTarget& planning_target) {
   double s = 0.0;
 
   std::vector<PathPoint> path_points;
@@ -73,7 +74,8 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
     }
     path_point.set_s(s);
 
-    if (planning_target.has_stop_point() && (s > planning_target.stop_point().s())) {
+    if (planning_target.has_stop_point() &&
+        (s > planning_target.stop_point().s())) {
       AERROR << "cutting off reference after s:" << s;
       break;
     }
@@ -137,7 +139,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // Obtain a reference line and transform it to the PathPoint format.
   reference_line_info->set_is_on_reference_line();
   std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
-      reference_line_info->reference_line().reference_points(), reference_line_info->planning_target());
+      reference_line_info->reference_line().reference_points(),
+      reference_line_info->planning_target());
 
   // Reference line to raw c format
   const int ref_size =
@@ -150,8 +153,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
     ref[2 * i + 1] = refPoint.y() - Y_OFFSET;
   }
 
-// TODO TEST CODE:
-  std::vector<common::SLPoint> slstoppts = reference_line_info->GetAllStopDecisionSLPoint();
+  // TODO TEST CODE:
+  std::vector<common::SLPoint> slstoppts =
+      reference_line_info->GetAllStopDecisionSLPoint();
   for (auto& sl : slstoppts) {
     AERROR << sl.l() << " " << sl.s();
   }
@@ -161,11 +165,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
     AERROR << "Planning target stop s: " << planning_target.stop_point().s();
   }
 
-
   auto sdist = reference_line_info->SDistanceToDestination();
   AERROR << "          sdist " << sdist;
   AERROR << "#######################";
-
 
   // Map
   std::vector<Vec2d> left_pts, right_pts;
@@ -213,6 +215,12 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double vDes = FLAGS_default_cruise_speed;
   double deltaSDes = 5;
 
+  bool track_reference_positions = true;
+  if (ref_size <= 2 || (discrete_reference_line.back().s() -
+                        discrete_reference_line.front().s()) < 0.3) {
+    track_reference_positions = false;
+  }
+
   // Add/update ego car
   if (firstrun_) {
     egoCarIdx_ = AddCarCMiqpPlanner(planner_, initial_state, ref, ref_size,
@@ -222,7 +230,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
           << (Clock::NowInSeconds() - current_time) * 1000;
   } else {
     UpdateCarCMiqpPlanner(planner_, egoCarIdx_, initial_state, ref, ref_size,
-                          timestep);
+                          timestep, track_reference_positions);
     AINFO << "Update ego car Time = "
           << (Clock::NowInSeconds() - current_time) * 1000;
   }
