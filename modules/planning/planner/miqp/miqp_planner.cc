@@ -116,6 +116,16 @@ common::Status MiqpPlanner::Init(const PlanningConfig& config) {
   egoCarIdx_ = -1;  // invalid
   ActivateDebugFileWriteCMiqpPlanner(planner_, "/apollo/data/log",
                                      "miqp_planner_");
+  config_ = config;
+  if (!config_.has_miqp_planner_config()) {
+    AERROR << "Please provide miqp planner parameter file! " +
+                  config_.DebugString();
+    return Status(ErrorCode::PLANNING_ERROR,
+                  "miqp planner parameters missing!");
+  } else {
+    AINFO << "MIQP Planner Configuration: "
+          << config_.miqp_planner_config().DebugString();
+  }
   return common::Status::OK();
 }
 
@@ -154,25 +164,27 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Map
-  std::vector<Vec2d> left_pts, right_pts;
-  std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
+  if (config_.miqp_planner_config().use_environment_polygon()) {
+    std::vector<Vec2d> left_pts, right_pts;
+    std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
 
-  const int poly_size = left_pts.size() + right_pts.size();
-  double poly_pts[poly_size * 2];
+    const int poly_size = left_pts.size() + right_pts.size();
+    double poly_pts[poly_size * 2];
 
-  int i = 0;
-  for (auto it = left_pts.begin(); it != left_pts.end(); ++it) {
-    poly_pts[2 * i] = it->x() - X_OFFSET;
-    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
-    i++;
+    int i = 0;
+    for (auto it = left_pts.begin(); it != left_pts.end(); ++it) {
+      poly_pts[2 * i] = it->x() - X_OFFSET;
+      poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
+      i++;
+    }
+    for (auto it = right_pts.rbegin(); it != right_pts.rend(); ++it) {
+      poly_pts[2 * i] = it->x() - X_OFFSET;
+      poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
+      i++;
+    }
+
+    UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
   }
-  for (auto it = right_pts.rbegin(); it != right_pts.rend(); ++it) {
-    poly_pts[2 * i] = it->x() - X_OFFSET;
-    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
-    i++;
-  }
-
-  // UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
 
   AINFO << "ReferenceLine Time = "
         << (Clock::NowInSeconds() - current_time) * 1000;
@@ -259,7 +271,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // }
 
   return Status::OK();
-
 }
 
 apollo::planning::DiscretizedTrajectory
@@ -351,7 +362,13 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
 
 MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   MiqpPlannerSettings s = MiqpPlannerSettings();
-  s.nr_regions = 16;
+  auto& conf = config_.miqp_planner_config();
+
+  if (conf.has_nr_regions()) {
+    s.nr_regions = conf.nr_regions();
+  } else {
+    s.nr_regions = 16;
+  }
   s.nr_steps = 20;
   s.nr_neighbouring_possible_regions = 1;
   s.ts = 0.25;
@@ -374,7 +391,12 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
                     ->GetConfig()
                     .vehicle_param()
                     .wheel_base();
-  const float collision_radius_add = -0.5;
+  float collision_radius_add;
+  if (conf.has_collision_radius_add()) {
+    collision_radius_adds = conf.collision_radius_add();
+  } else {
+    collision_radius_add = 0.0;
+  }
   s.collisionRadius = common::VehicleConfigHelper::Instance()
                               ->GetConfig()
                               .vehicle_param()
@@ -382,9 +404,21 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
                           2 +
                       collision_radius_add;
   s.slackWeight = 30;
-  s.jerkWeight = 1;
-  s.positionWeight = 2;
-  s.velocityWeight = 0;
+  if (conf.has_jerk_weight()) {
+    s.jerkWeight = conf.jerk_weight();
+  } else {
+    s.jerkWeight = 1.0;
+  }
+  if (conf.has_position_weight()) {
+    s.positionWeight = conf.position_weight();
+  } else {
+    s.positionWeight = 2.0;
+  }
+  if (conf.has_velocity_weight()) {
+    s.velocityWeight = conf.velocity_weight();
+  } else {
+    s.velocityWeight = 0.0;
+  }
   s.acclerationWeight = 0;
   s.simplificationDistanceMap = 0.2;
   s.refLineInterpInc = 0.2;
@@ -394,8 +428,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
       "miqp_planner/cplex_modfiles/";
   s.useSos = false;
   s.useBranchingPriorities = true;
-  s.warmstartType =
-      MiqpPlannerWarmstartType::BOTH_WARMSTART_STRATEGIES;
+  s.warmstartType = MiqpPlannerWarmstartType::BOTH_WARMSTART_STRATEGIES;
   return s;
 }
 

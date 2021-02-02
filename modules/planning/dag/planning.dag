@@ -6,9 +6,11 @@ module_config {
     config {
       name: "planning"
       flag_file_path:  "/apollo/modules/planning/conf/planning.conf"
+      config_file_path: "/apollo/modules/planning/conf/planning_config.pb.txt"
       readers: [
         {
           channel: "/apollo/prediction"
+          pending_queue_size: 1
         },
         {
           channel: "/apollo/canbus/chassis"

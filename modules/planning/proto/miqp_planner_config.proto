@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+message MiqpPlannerConfiguration {
+    optional int32 nr_regions = 1 [default = 16];
+    optional bool use_environment_polygon = 2 [default = true];
+    optional double close_to_end_distance = 3 [default = 1.0];
+    optional double collision_radius_add = 4 [default = 0.0];
+    optional double jerk_weight = 5 [default = 1.0];
+    optional double position_weight = 6 [default = 2.0];
+    optional double velocity_weight = 7 [default = 0.0];
+    
+}

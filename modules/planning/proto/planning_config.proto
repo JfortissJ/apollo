@@ -24,6 +24,7 @@ import "modules/planning/proto/navi_speed_decider_config.proto";
 import "modules/planning/proto/navi_obstacle_decider_config.proto";
 import "modules/planning/proto/path_reuse_decider_config.proto";
 import "modules/planning/proto/st_bounds_decider_config.proto";
+import "modules/planning/proto/miqp_planner_config.proto";
 
 // Planning's configuration is based on the following architecture
 // * Scenario has one more multiple stages
@@ -355,4 +356,6 @@ message PlanningConfig {
   // default task config, it will be used if there is no scenario-specific
   // task config.
   repeated TaskConfig default_task_config = 5;
+
+  optional MiqpPlannerConfiguration miqp_planner_config = 6;
 }

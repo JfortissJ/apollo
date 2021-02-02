@@ -146,6 +146,7 @@ proto_library(
         ":rule_based_stop_decider_config_proto_lib",
         ":speed_bounds_decider_config_proto_lib",
         ":st_bounds_decider_config_proto_lib",
+        ":miqp_planner_config_proto_lib",
     ],
 )
 
@@ -584,6 +585,11 @@ cc_proto_library(
 proto_library(
     name = "ipopt_return_status_proto_lib",
     srcs = ["ipopt_return_status.proto"],
+)
+
+proto_library(
+    name = "miqp_planner_config_proto_lib",
+    srcs = ["miqp_planner_config.proto"],
 )
 
 cpplint()
