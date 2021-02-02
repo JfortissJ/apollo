@@ -153,22 +153,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
     ref[2 * i + 1] = refPoint.y() - Y_OFFSET;
   }
 
-  // TODO TEST CODE:
-  std::vector<common::SLPoint> slstoppts =
-      reference_line_info->GetAllStopDecisionSLPoint();
-  for (auto& sl : slstoppts) {
-    AERROR << sl.l() << " " << sl.s();
-  }
-
-  PlanningTarget planning_target = reference_line_info->planning_target();
-  if (planning_target.has_stop_point()) {
-    AERROR << "Planning target stop s: " << planning_target.stop_point().s();
-  }
-
-  auto sdist = reference_line_info->SDistanceToDestination();
-  AERROR << "          sdist " << sdist;
-  AERROR << "#######################";
-
   // Map
   std::vector<Vec2d> left_pts, right_pts;
   std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
@@ -245,24 +229,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // Planning failed
   if (!success) {
     AERROR << "Planning failed";
+    // TODO Generate some error trajectory
     return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
-
-    // This code snipped from apollo could be an alternative
-    // if (FLAGS_enable_backup_trajectory) {
-    //   AERROR << "Use backup trajectory";
-    //   BackupTrajectoryGenerator backup_trajectory_generator(
-    //       init_s, init_d, planning_init_point.relative_time(),
-    //       std::make_shared<CollisionChecker>(collision_checker),
-    //       &trajectory1d_generator);
-    //   DiscretizedTrajectory trajectory =
-    //       backup_trajectory_generator.GenerateTrajectory(*ptr_reference_line);
-    //   reference_line_info->AddCost(FLAGS_backup_trajectory_cost);
-    //   reference_line_info->SetTrajectory(trajectory);
-    //   reference_line_info->SetDrivable(true);
-    //   return Status::OK();
-    // } else {
-    //   reference_line_info->SetCost(std::numeric_limits<double>::infinity());
-    // }
   }
 
   // Planning success -> publish trajectory
@@ -292,24 +260,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   return Status::OK();
 
-  // // 2. compute the matched point of the init planning point on the reference
-  // // line.
-  // PathPoint matched_point = PathMatcher::MatchToPath(
-  //     *ptr_reference_line, planning_init_point.path_point().x(),
-  //     planning_init_point.path_point().y());
-
-  // // Get instance of collision checker and constraint checker
-  // CollisionChecker collision_checker(frame->obstacles(), init_s[0],
-  // init_d[0],
-  //                                    *ptr_reference_line,
-  //                                    reference_line_info,
-  //                                    ptr_path_time_graph);
-
-  // // check collision with other obstacles
-  // if (collision_checker.InCollision(combined_trajectory)) {
-  //   ++collision_failure_count;
-  //   continue;
-  // }
 }
 
 apollo::planning::DiscretizedTrajectory
@@ -445,9 +395,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.useSos = false;
   s.useBranchingPriorities = true;
   s.warmstartType =
-      MiqpPlannerWarmstartType::BOTH_WARMSTART_STRATEGIES;  // Receding Horizon
-                                                            // Warmstart does
-                                                            // not work TODO
+      MiqpPlannerWarmstartType::BOTH_WARMSTART_STRATEGIES;
   return s;
 }
 
