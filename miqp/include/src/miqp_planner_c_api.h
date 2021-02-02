@@ -33,7 +33,8 @@ void DelCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 
 int AddCarCMiqpPlanner(CMiqpPlanner c_miqp_planner, double initial_state_in[],
                        double ref_in[], const int ref_size, double vDes,
-                       double deltaSDes, const double timestep);
+                       double deltaSDes, const double timestep,
+                       const bool track_reference_positions);
 
 bool PlanCMiqpPlanner(CMiqpPlanner c_miqp_planner, const double timestep);
 
@@ -59,5 +60,6 @@ bool UpdateConvexifiedMapCMiqpPlaner(CMiqpPlanner c_miqp_planner,
                                      double poly_pts[], const int poly_size);
 
 void UpdateDesiredVelocityCMiqpPlanner(CMiqpPlanner c_miqp_planner,
-                                       const int carIdx, const double vDes);
+                                       const int carIdx, const double vDes,
+                                       const double deltaSDes);
 }

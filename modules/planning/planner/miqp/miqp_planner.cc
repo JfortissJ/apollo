@@ -74,11 +74,11 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
     }
     path_point.set_s(s);
 
-    if (planning_target.has_stop_point() &&
-        (s > planning_target.stop_point().s())) {
-      AERROR << "cutting off reference after s:" << s;
-      break;
-    }
+    // if (planning_target.has_stop_point() &&
+    //     (s > planning_target.stop_point().s())) {
+    //   AERROR << "cutting off reference after s:" << s;
+    //   break;
+    // }
     path_points.push_back(std::move(path_point));
   }
   return path_points;
@@ -216,21 +216,30 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double deltaSDes = 5;
 
   bool track_reference_positions = true;
-  if (ref_size <= 2 || (discrete_reference_line.back().s() -
-                        discrete_reference_line.front().s()) < 0.3) {
+  // if (ref_size <= 2 || (discrete_reference_line.back().s() -
+  //                       discrete_reference_line.front().s()) < 0.3) {
+  //   track_reference_positions = false;
+  //   AERROR << "Close to goal, tracking velocity instead of pts";
+  // }
+
+  if (reference_line_info->SDistanceToDestination() < 5.0) {
     track_reference_positions = false;
+    vDes = 0;
+    deltaSDes = 0; // or reference_line_info->SDistanceToDestination()
+    AERROR << "Close to goal, tracking velocity instead of pts";
   }
 
   // Add/update ego car
   if (firstrun_) {
     egoCarIdx_ = AddCarCMiqpPlanner(planner_, initial_state, ref, ref_size,
-                                    vDes, deltaSDes, timestep);
+                                    vDes, deltaSDes, timestep, track_reference_positions);
     firstrun_ = false;
     AINFO << "Added ego car Time = "
           << (Clock::NowInSeconds() - current_time) * 1000;
   } else {
     UpdateCarCMiqpPlanner(planner_, egoCarIdx_, initial_state, ref, ref_size,
                           timestep, track_reference_positions);
+    UpdateDesiredVelocityCMiqpPlanner(planner_, egoCarIdx_, vDes, deltaSDes);
     AINFO << "Update ego car Time = "
           << (Clock::NowInSeconds() - current_time) * 1000;
   }
