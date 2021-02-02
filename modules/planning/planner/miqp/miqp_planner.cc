@@ -393,7 +393,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
                     .wheel_base();
   float collision_radius_add;
   if (conf.has_collision_radius_add()) {
-    collision_radius_adds = conf.collision_radius_add();
+    collision_radius_add = conf.collision_radius_add();
   } else {
     collision_radius_add = 0.0;
   }

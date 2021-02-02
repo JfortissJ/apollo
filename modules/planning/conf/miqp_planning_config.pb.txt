@@ -1,0 +1,16 @@
+standard_planning_config {
+  planner_type: MIQP
+  planner_public_road_config {
+  }
+}
+miqp_planner_config: {
+    nr_regions: 16
+    use_environment_polygon: false
+    close_to_end_distance: 0.3
+    collision_radius_add: -0.5
+    jerk_weight: 1.0
+    position_weight: 2.0
+    velocity_weight: 0.0
+}
+
+

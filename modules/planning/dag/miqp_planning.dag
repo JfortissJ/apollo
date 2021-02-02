@@ -5,10 +5,12 @@ module_config {
     class_name : "PlanningComponent"
     config {
       name: "planning"
-      flag_file_path:  "/apollo/modules/planning/conf/planning.conf"
+      flag_file_path:  "/apollo/modules/planning/conf/miqp_planning.conf"
+      
       readers: [
         {
           channel: "/apollo/prediction"
+          pending_queue_size: 1
         },
         {
           channel: "/apollo/canbus/chassis"
