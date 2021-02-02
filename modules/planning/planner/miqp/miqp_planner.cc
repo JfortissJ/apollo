@@ -48,8 +48,8 @@ using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
 using apollo::planning::DiscretizedTrajectory;
 
-static const double X_OFFSET = 692000;
-static const double Y_OFFSET = 5.339e+06;
+static const double X_OFFSET = 692000;     // TODO: move to proto file
+static const double Y_OFFSET = 5.339e+06;  // TODO: move to proto file
 
 namespace {
 
@@ -153,92 +153,51 @@ Status MiqpPlanner::PlanOnReferenceLine(
     ref[2 * i + 1] = refPoint.y() - Y_OFFSET;
   }
 
-  // TODO TEST CODE:
-  std::vector<common::SLPoint> slstoppts =
-      reference_line_info->GetAllStopDecisionSLPoint();
-  for (auto& sl : slstoppts) {
-    AERROR << sl.l() << " " << sl.s();
-  }
-
-  PlanningTarget planning_target = reference_line_info->planning_target();
-  if (planning_target.has_stop_point()) {
-    AERROR << "Planning target stop s: " << planning_target.stop_point().s();
-  }
-
-  auto sdist = reference_line_info->SDistanceToDestination();
-  AERROR << "          sdist " << sdist;
-  AERROR << "#######################";
-
   // Map
   std::vector<Vec2d> left_pts, right_pts;
   std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
-
   const int poly_size = left_pts.size() + right_pts.size();
   double poly_pts[poly_size * 2];
-
-  int i = 0;
-  for (auto it = left_pts.begin(); it != left_pts.end(); ++it) {
-    poly_pts[2 * i] = it->x() - X_OFFSET;
-    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
-    i++;
-  }
-  for (auto it = right_pts.rbegin(); it != right_pts.rend(); ++it) {
-    poly_pts[2 * i] = it->x() - X_OFFSET;
-    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
-    i++;
-  }
-
+  ConvertToPolyPts(left_pts, right_pts, poly_pts);
   // UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
 
   AINFO << "ReferenceLine Time = "
         << (Clock::NowInSeconds() - current_time) * 1000;
   current_time = Clock::NowInSeconds();
 
-  // Intial position to raw c format
-  // AERROR << "planning_init_point = v:" << planning_init_point.v()
-  //        << ", theta:" << planning_init_point.path_point().theta();
   double initial_state[6];
-  double theta = planning_init_point.path_point().theta();
-  double vel = std::max(planning_init_point.v(),
-                        0.1);  // cplex throws an exception if vel=0
-  initial_state[0] = planning_init_point.path_point().x() - X_OFFSET;
-  initial_state[1] = vel * cos(theta);
-  initial_state[2] = planning_init_point.a() * cos(theta);  // is that correct?
-  initial_state[3] = planning_init_point.path_point().y() - Y_OFFSET;
-  initial_state[4] = vel * sin(theta);
-  initial_state[5] = planning_init_point.a() * sin(theta);  // is that correct?
-  AERROR << std::setprecision(15)
-         << "initial state miqp = x:" << initial_state[0]
-         << ", xd:" << initial_state[1] << ", xdd:" << initial_state[2]
-         << ", y:" << initial_state[3] << ", yd:" << initial_state[4]
-         << ", ydd:" << initial_state[5];
-  double vDes = FLAGS_default_cruise_speed;
-  double deltaSDes = 5;
+  ConvertToInitialStateSecondOrder(planning_init_point, initial_state);
 
-  bool track_reference_positions = true;
-  // if (ref_size <= 2 || (discrete_reference_line.back().s() -
-  //                       discrete_reference_line.front().s()) < 0.3) {
-  //   track_reference_positions = false;
-  //   AERROR << "Close to goal, tracking velocity instead of pts";
-  // }
+  bool track_ref_pos;
+  double vDes;
+  double deltaSDes;
 
-  if (reference_line_info->SDistanceToDestination() < 5.0) {
-    track_reference_positions = false;
+  const double dist_start_slowdown = 15.0;  // TODO: move to proto file
+  const double dist_stop_before = 5;        // TODO: move to proto file
+
+  auto distGoal = reference_line_info->SDistanceToDestination();
+  if (distGoal - dist_stop_before < dist_start_slowdown) {
+    track_ref_pos = false;
     vDes = 0;
-    deltaSDes = 0; // or reference_line_info->SDistanceToDestination()
-    AERROR << "Close to goal, tracking velocity instead of pts";
+    deltaSDes = std::max(0.0, distGoal - dist_stop_before);
+    AERROR << "Close to goal, tracking velocity instead of pts, distGoal:"
+           << distGoal;
+  } else {
+    track_ref_pos = true;
+    vDes = FLAGS_default_cruise_speed;
+    deltaSDes = 5;  // TODO: move to proto file
   }
 
   // Add/update ego car
   if (firstrun_) {
     egoCarIdx_ = AddCarCMiqpPlanner(planner_, initial_state, ref, ref_size,
-                                    vDes, deltaSDes, timestep, track_reference_positions);
+                                    vDes, deltaSDes, timestep, track_ref_pos);
     firstrun_ = false;
     AINFO << "Added ego car Time = "
           << (Clock::NowInSeconds() - current_time) * 1000;
   } else {
     UpdateCarCMiqpPlanner(planner_, egoCarIdx_, initial_state, ref, ref_size,
-                          timestep, track_reference_positions);
+                          timestep, track_ref_pos);
     UpdateDesiredVelocityCMiqpPlanner(planner_, egoCarIdx_, vDes, deltaSDes);
     AINFO << "Update ego car Time = "
           << (Clock::NowInSeconds() - current_time) * 1000;
@@ -381,8 +340,8 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
     // const double ux = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UX_IDX];
     // const double uy = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UY_IDX];
     const double theta = atan2(vy, vx);
-    const double v = sqrt(pow(vx, 2) + pow(vy, 2));
-    const double a = sqrt(pow(ax, 2) + pow(ay, 2));
+    const double v = vx / cos(theta);
+    const double a = ax / cos(theta);
     s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
     const double kappa =
         (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
@@ -406,6 +365,49 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
   }
 
   return apollo_trajectory;
+}
+
+void MiqpPlanner::ConvertToInitialStateSecondOrder(
+    const TrajectoryPoint& planning_init_point, double initial_state[]) {
+  // Intial position to raw c format
+  AERROR << "planning_init_point = "
+         << " x:" << planning_init_point.path_point().x()
+         << ", y:" << planning_init_point.path_point().y()
+         << ", v:" << planning_init_point.v()
+         << ", a:" << planning_init_point.a()
+         << ", theta:" << planning_init_point.path_point().theta();
+
+  double theta = planning_init_point.path_point().theta();
+  // cplex throws an exception if vel=0
+  double vel = std::max(planning_init_point.v(), 0.1);
+
+  initial_state[0] = planning_init_point.path_point().x() - X_OFFSET;
+  initial_state[1] = vel * cos(theta);
+  initial_state[2] = planning_init_point.a() * cos(theta);
+  initial_state[3] = planning_init_point.path_point().y() - Y_OFFSET;
+  initial_state[4] = vel * sin(theta);
+  initial_state[5] = planning_init_point.a() * sin(theta);
+  AERROR << std::setprecision(15)
+         << "initial state in miqp = x:" << initial_state[0]
+         << ", xd:" << initial_state[1] << ", xdd:" << initial_state[2]
+         << ", y:" << initial_state[3] << ", yd:" << initial_state[4]
+         << ", ydd:" << initial_state[5];
+}
+
+void MiqpPlanner::ConvertToPolyPts(const std::vector<Vec2d>& left_pts,
+                                   const std::vector<Vec2d>& right_pts,
+                                   double poly_pts[]) {
+  int i = 0;
+  for (auto it = left_pts.begin(); it != left_pts.end(); ++it) {
+    poly_pts[2 * i] = it->x() - X_OFFSET;
+    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
+    i++;
+  }
+  for (auto it = right_pts.rbegin(); it != right_pts.rend(); ++it) {
+    poly_pts[2 * i] = it->x() - X_OFFSET;
+    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
+    i++;
+  }
 }
 
 MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
