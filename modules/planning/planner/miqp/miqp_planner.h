@@ -68,6 +68,13 @@ class MiqpPlanner : public LatticePlanner {
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
       double traj[], int size);
 
+  void ConvertToInitialStateSecondOrder(
+      const common::TrajectoryPoint& planning_init_point,
+      double initial_state[]);
+
+  void ConvertToPolyPts(const std::vector<common::math::Vec2d>& left_pts,
+                        const std::vector<common::math::Vec2d>& right_pts,
+                        double poly_pts[]);
   MiqpPlannerSettings DefaultSettings();
 
  private:
