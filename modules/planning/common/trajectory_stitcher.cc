@@ -21,6 +21,7 @@
 #include "modules/planning/common/trajectory_stitcher.h"
 
 #include <algorithm>
+#include <iomanip>
 
 #include "cyber/common/log.h"
 #include "modules/common/configs/config_gflags.h"
@@ -212,11 +213,13 @@ std::vector<TrajectoryPoint> TrajectoryStitcher::ComputeStitchingTrajectory(
               "disabled";
   }
 
-  double forward_rel_time = veh_rel_time + planning_cycle_time;
+  double forward_rel_time = veh_rel_time + planning_cycle_time +
+                            FLAGS_trajectory_stitching_advance_time;
 
   size_t forward_time_index =
       prev_trajectory->QueryLowerBoundPoint(forward_rel_time);
 
+  ADEBUG << "veh_rel_time = " << veh_rel_time;
   ADEBUG << "Position matched index:\t" << position_matched_index;
   ADEBUG << "Time matched index:\t" << time_matched_index;
 
@@ -239,6 +242,19 @@ std::vector<TrajectoryPoint> TrajectoryStitcher::ComputeStitchingTrajectory(
                          current_timestamp);
     tp.mutable_path_point()->set_s(tp.path_point().s() - zero_s);
   }
+
+  // AERROR << "Previous Trajectory:";
+  // for (auto it = prev_trajectory->begin(); it != prev_trajectory->end();
+  // ++it) {
+  //   AERROR << std::setprecision(15) << it->relative_time() << "\t"
+  //          << it->path_point().x() << "\t" << it->path_point().y();
+  // }
+  // AERROR << "Stitching Trajectory:";
+  // for (auto& pt : stitching_trajectory) {
+  //   AERROR << std::setprecision(15) << pt.relative_time() << "\t"
+  //          << pt.path_point().x() << "\t" << pt.path_point().y();
+  // }
+
   return stitching_trajectory;
 }
 

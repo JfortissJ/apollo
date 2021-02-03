@@ -164,14 +164,14 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Map
-if (config_.miqp_planner_config().use_environment_polygon()) {
-  std::vector<Vec2d> left_pts, right_pts;
-  std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
-  const int poly_size = left_pts.size() + right_pts.size();
-  double poly_pts[poly_size * 2];
-  ConvertToPolyPts(left_pts, right_pts, poly_pts);
-  UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
-}
+  if (config_.miqp_planner_config().use_environment_polygon()) {
+    std::vector<Vec2d> left_pts, right_pts;
+    std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
+    const int poly_size = left_pts.size() + right_pts.size();
+    double poly_pts[poly_size * 2];
+    ConvertToPolyPts(left_pts, right_pts, poly_pts);
+    UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
+  }
 
   AINFO << "ReferenceLine Time = "
         << (Clock::NowInSeconds() - current_time) * 1000;
@@ -348,6 +348,7 @@ void MiqpPlanner::ConvertToInitialStateSecondOrder(
     const TrajectoryPoint& planning_init_point, double initial_state[]) {
   // Intial position to raw c format
   AERROR << "planning_init_point = "
+         << " rel. time: " << planning_init_point.relative_time()
          << " x:" << planning_init_point.path_point().x()
          << ", y:" << planning_init_point.path_point().y()
          << ", v:" << planning_init_point.v()
