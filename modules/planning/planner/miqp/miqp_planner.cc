@@ -300,9 +300,9 @@ MiqpPlanner::BarkTrajectoryToApolloTrajectory(double traj[], int size) {
 apollo::planning::DiscretizedTrajectory
 MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
   double s = 0.0f;
-  double lastx = traj[0 + TRAJECTORY_X_IDX];
-  double lasty = traj[0 + TRAJECTORY_Y_IDX];
-
+  double lastx = traj[0 + TRAJECTORY_X_IDX] + X_OFFSET;
+  double lasty = traj[0 + TRAJECTORY_Y_IDX] + Y_OFFSET;
+  
   DiscretizedTrajectory apollo_trajectory;
   for (int trajidx = 0; trajidx < size; ++trajidx) {
     const double time = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_TIME_IDX];
@@ -347,8 +347,8 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
 void MiqpPlanner::ConvertToInitialStateSecondOrder(
     const TrajectoryPoint& planning_init_point, double initial_state[]) {
   // Intial position to raw c format
-  AERROR << "planning_init_point = "
-         << " rel. time: " << planning_init_point.relative_time()
+  AERROR << std::setprecision(15) << "planning_init_point = "
+         << " rel. time:" << planning_init_point.relative_time()
          << " x:" << planning_init_point.path_point().x()
          << ", y:" << planning_init_point.path_point().y()
          << ", v:" << planning_init_point.v()
