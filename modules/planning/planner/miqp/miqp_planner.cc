@@ -173,8 +173,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
     UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
   }
 
-  AINFO << "ReferenceLine Time = "
-        << (Clock::NowInSeconds() - current_time) * 1000;
+  AINFO << "ReferenceLine Time [s] = "
+        << (Clock::NowInSeconds() - current_time);
   current_time = Clock::NowInSeconds();
 
   double initial_state[6];
@@ -205,21 +205,21 @@ Status MiqpPlanner::PlanOnReferenceLine(
     egoCarIdx_ = AddCarCMiqpPlanner(planner_, initial_state, ref, ref_size,
                                     vDes, deltaSDes, timestep, track_ref_pos);
     firstrun_ = false;
-    AINFO << "Added ego car Time = "
-          << (Clock::NowInSeconds() - current_time) * 1000;
+    AINFO << "Added ego car Time [s] = "
+          << (Clock::NowInSeconds() - current_time);
   } else {
     UpdateCarCMiqpPlanner(planner_, egoCarIdx_, initial_state, ref, ref_size,
                           timestep, track_ref_pos);
     UpdateDesiredVelocityCMiqpPlanner(planner_, egoCarIdx_, vDes, deltaSDes);
-    AINFO << "Update ego car Time = "
-          << (Clock::NowInSeconds() - current_time) * 1000;
+    AINFO << "Update ego car Time [s] = "
+          << (Clock::NowInSeconds() - current_time);
   }
   current_time = Clock::NowInSeconds();
 
   // Plan
   bool success = PlanCMiqpPlanner(planner_, timestep);
-  AINFO << "Miqp planning Time = "
-        << (Clock::NowInSeconds() - current_time) * 1000;
+  AINFO << "Miqp planning Time [s] = "
+        << (Clock::NowInSeconds() - current_time);
   current_time = Clock::NowInSeconds();
 
   // Planning failed
@@ -241,8 +241,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   reference_line_info->SetCost(0);  // TODO necessary?
   reference_line_info->SetDrivable(true);
 
-  AINFO << "MIQP Planner postprocess took: "
-        << (Clock::NowInSeconds() - current_time) * 1000;
+  AINFO << "MIQP Planner postprocess took [s]: "
+        << (Clock::NowInSeconds() - current_time);
 
   // // debug outputs:
   // int r = size;
