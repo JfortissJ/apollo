@@ -6,6 +6,7 @@ standard_planning_config {
 miqp_planner_config: {
     nr_regions: 16
     use_environment_polygon: true
+    consider_obstacles: false
     close_to_end_distance: 1.0
     collision_radius_add: 0.0
     jerk_weight: 1.0
