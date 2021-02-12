@@ -400,9 +400,9 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.nr_steps = 20;
   s.nr_neighbouring_possible_regions = 1;
   s.ts = 0.25;
-  s.max_solution_time = 10;
+  s.max_solution_time = 5;
   s.relative_mip_gap_tolerance = 0.1;
-  s.mipdisplay = 2;
+  s.mipdisplay = 1;
   s.mipemphasis = 1;
   s.relobjdif = 0.7;
   s.cutpass = 0;
@@ -449,8 +449,9 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   }
   s.acclerationWeight = 0;
   s.simplificationDistanceMap = 0.2;
+  s.bufferReference = 1.0;
   s.refLineInterpInc = 0.2;
-  s.scaleVelocityForReferenceLongerHorizon = 2.0;
+  s.scaleVelocityForReferenceLongerHorizon = 1.1;
   s.cplexModelpath =
       "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
       "miqp_planner/cplex_modfiles/";

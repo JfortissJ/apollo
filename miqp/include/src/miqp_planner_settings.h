@@ -30,6 +30,7 @@ struct MiqpPlannerSettings {
   float velocityWeight;
   float acclerationWeight;
   float simplificationDistanceMap;
+  float bufferReference;
   float refLineInterpInc;
   float scaleVelocityForReferenceLongerHorizon;
   float max_solution_time;

@@ -52,6 +52,8 @@ void ActivateDebugFileWriteCMiqpPlanner(CMiqpPlanner c_miqp_planner,
 
 int GetNCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 
+float GetTsCMiqpPlanner(CMiqpPlanner c_miqp_planner);
+
 void GetRawCMiqpTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
                                        double start_time, double* trajectory,
                                        int& size);
@@ -62,4 +64,15 @@ bool UpdateConvexifiedMapCMiqpPlaner(CMiqpPlanner c_miqp_planner,
 void UpdateDesiredVelocityCMiqpPlanner(CMiqpPlanner c_miqp_planner,
                                        const int carIdx, const double vDes,
                                        const double deltaSDes);
+
+int AddObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, double min_x[],
+                            double max_x[], double min_y[], double max_y[],
+                            int& size);
+
+void UpdateObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, int id,
+                                double min_x[], double max_x[], double min_y[],
+                                double max_y[], int& size);
+
+void RemoveAllObstaclesCMiqpPlanner(CMiqpPlanner c_miqp_planner);
+
 }
