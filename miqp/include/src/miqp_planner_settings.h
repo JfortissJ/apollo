@@ -48,6 +48,7 @@ struct MiqpPlannerSettings {
   bool useSos;
   bool useBranchingPriorities;
   MiqpPlannerWarmstartType warmstartType;
+  float max_velocity_fitting;
 };
 
 #endif  // MIQP_PLANNER_SETTINGS_HEADER

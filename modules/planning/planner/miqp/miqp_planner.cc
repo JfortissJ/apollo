@@ -441,6 +441,11 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   } else {
     s.nr_regions = 16;
   }
+  if (conf.has_max_velocity_fitting()) {
+    s.max_velocity_fitting = conf.max_velocity_fitting();
+  } else {
+    s.max_velocity_fitting = 10;
+  }
   s.nr_steps = 20;
   s.nr_neighbouring_possible_regions = 1;
   s.ts = 0.25;

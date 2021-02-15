@@ -5,6 +5,7 @@ standard_planning_config {
 }
 miqp_planner_config: {
     nr_regions: 16
+    max_velocity_fitting: 10
     use_environment_polygon: true
     consider_obstacles: false
     close_to_end_distance: 1.0
