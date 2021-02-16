@@ -184,20 +184,21 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double vDes;
   double deltaSDes;
 
-  const double dist_start_slowdown = 15.0;  // TODO: move to proto file
-  const double dist_stop_before = 5;        // TODO: move to proto file
+  const double dist_start_slowdown =
+      config_.miqp_planner_config().distance_start_slowdown();
+  const double dist_stop_before =
+      config_.miqp_planner_config().distance_stop_before();
 
   auto distGoal = reference_line_info->SDistanceToDestination();
   if (distGoal - dist_stop_before < dist_start_slowdown) {
     track_ref_pos = false;
     vDes = 0;
     deltaSDes = std::max(0.0, distGoal - dist_stop_before);
-    AERROR << "Close to goal, tracking velocity instead of pts, distGoal:"
-           << distGoal;
+    AERROR << "Tracking velocity instead of pts, distance goal :" << distGoal;
   } else {
     track_ref_pos = true;
     vDes = FLAGS_default_cruise_speed;
-    deltaSDes = 5;  // TODO: move to proto file
+    deltaSDes = config_.miqp_planner_config().delta_s_desired();
   }
 
   // Add/update ego car
@@ -205,13 +206,13 @@ Status MiqpPlanner::PlanOnReferenceLine(
     egoCarIdx_ = AddCarCMiqpPlanner(planner_, initial_state, ref, ref_size,
                                     vDes, deltaSDes, timestep, track_ref_pos);
     firstrun_ = false;
-    AINFO << "Added ego car Time [s] = "
+    AERROR << "Added ego car Time [s] = "
           << (Clock::NowInSeconds() - current_time);
   } else {
     UpdateCarCMiqpPlanner(planner_, egoCarIdx_, initial_state, ref, ref_size,
                           timestep, track_ref_pos);
     UpdateDesiredVelocityCMiqpPlanner(planner_, egoCarIdx_, vDes, deltaSDes);
-    AINFO << "Update ego car Time [s] = "
+    AERROR << "Update ego car Time [s] = "
           << (Clock::NowInSeconds() - current_time);
   }
 
@@ -264,8 +265,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
   current_time = Clock::NowInSeconds();
 
   // Plan
+  AERROR << "Miqp planning call";
   bool success = PlanCMiqpPlanner(planner_, timestep);
-  AINFO << "Miqp planning Time [s] = "
+  AERROR << "Miqp planning Time [s] = "
         << (Clock::NowInSeconds() - current_time);
   current_time = Clock::NowInSeconds();
 

@@ -21,8 +21,11 @@ message MiqpPlannerConfiguration {
     optional double relobjdif = 16 [default = 0.9];
     optional double minimum_region_change_speed = 17 [default = 2];
     optional double scale_velocity_for_reference_longer_horizon = 18 [default = 2];
-    optional bool use_sos = 19 [default = false];
-    optional bool use_branching_priorities = 20 [default = true];
-    optional int32 warmstart_type = 21 [default = 2];
+    optional double delta_s_desired = 19 [default = 5];
+    optional double distance_stop_before = 20 [default = 5];
+    optional double distance_start_slowdown = 21 [default = 15];
+    optional bool use_sos = 22 [default = false];
+    optional bool use_branching_priorities = 23 [default = true];
+    optional int32 warmstart_type = 24 [default = 2];
     
 }
