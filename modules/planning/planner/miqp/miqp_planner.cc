@@ -224,8 +224,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
       int N = GetNCMiqpPlanner(planner_);
       if (obstacle->IsVirtual()) {
         continue;
-      } 
-      else if (!obstacle->HasTrajectory()) { // static
+      } else if (!obstacle->HasTrajectory()) {  // static
         const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
         for (int i = 0; i < N; ++i) {
           min_x[i] = polygon.min_x();
@@ -233,12 +232,14 @@ Status MiqpPlanner::PlanOnReferenceLine(
           min_y[i] = polygon.min_y();
           max_y[i] = polygon.max_y();
         }
-        AINFO << "Static obstacle " << obstacle->Id() << " at " << min_x << ", " 
+        AINFO << "Static obstacle " << obstacle->Id() << " at " << min_x << ", "
               << max_x << ", " << min_y << ", " << max_y;
-      } else { // dynamic
+      } else {  // dynamic
         const float ts = GetTsCMiqpPlanner(planner_);
         for (int i = 0; i < N; ++i) {
-          double pred_time = timestep + i*ts; // TODO: is that correct or should make use of relative time?
+          double pred_time =
+              timestep + i * ts;  // TODO: is that correct or should make use of
+                                  // relative time?
           TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
           common::math::Box2d box = obstacle->GetBoundingBox(point);
           min_x[i] = box.min_x();
@@ -246,14 +247,16 @@ Status MiqpPlanner::PlanOnReferenceLine(
           min_y[i] = box.min_y();
           max_y[i] = box.max_y();
         }
-        AINFO << "Dynamic obstacle " << obstacle->Id() << " at t0" << min_x[0] 
+        AINFO << "Dynamic obstacle " << obstacle->Id() << " at t0" << min_x[0]
               << ", " << max_x[0] << ", " << min_y[0] << ", " << max_y[0];
-        AINFO << "Dynamic obstacle " << obstacle->Id() << " at tend" << min_x[N-1] 
-              << ", " << max_x[N-1] << ", " << min_y[N-1] << ", " << max_y[N-1];
+        AINFO << "Dynamic obstacle " << obstacle->Id() << " at tend"
+              << min_x[N - 1] << ", " << max_x[N - 1] << ", " << min_y[N - 1]
+              << ", " << max_y[N - 1];
       }
 
       // maybe use obstacle->IsLaneBlocking() to filter out some obstacles
-      int idx = AddObstacleCMiqpPlanner(planner_, min_x, max_x, min_y, max_y, N);
+      int idx =
+          AddObstacleCMiqpPlanner(planner_, min_x, max_x, min_y, max_y, N);
       AINFO << "Added obstacle " << obstacle->Id();
     }
   }
@@ -346,7 +349,7 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
   double s = 0.0f;
   double lastx = traj[0 + TRAJECTORY_X_IDX] + X_OFFSET;
   double lasty = traj[0 + TRAJECTORY_Y_IDX] + Y_OFFSET;
-  
+
   DiscretizedTrajectory apollo_trajectory;
   for (int trajidx = 0; trajidx < size; ++trajidx) {
     const double time = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_TIME_IDX];
@@ -446,41 +449,75 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   } else {
     s.max_velocity_fitting = 10;
   }
-  s.nr_steps = 20;
-  s.nr_neighbouring_possible_regions = 1;
-  s.ts = 0.25;
-  s.max_solution_time = 5;
-  s.relative_mip_gap_tolerance = 0.1;
-  s.mipdisplay = 1;
-  s.mipemphasis = 1;
-  s.relobjdif = 0.7;
-  s.cutpass = 0;
-  s.probe = 0;
-  s.repairtries = 0;
-  s.rinsheur = 0;
-  s.varsel = 0;
-  s.mircuts = 0;
-  s.precision = 12;
-  s.constant_agent_safety_distance_slack = 3;
-  s.minimum_region_change_speed = 2;
-  s.lambda = 0.5;
-  s.wheelBase = common::VehicleConfigHelper::Instance()
-                    ->GetConfig()
-                    .vehicle_param()
-                    .wheel_base();
+  if (conf.has_nr_steps()) {
+    s.nr_steps = conf.nr_steps();
+  } else {
+    s.nr_steps = 20;
+  }
+  if (conf.has_nr_neighbouring_possible_regions()) {
+    s.nr_neighbouring_possible_regions =
+        conf.nr_neighbouring_possible_regions();
+  } else {
+    s.nr_neighbouring_possible_regions = 1;
+  }
+  if (conf.has_ts()) {
+    s.ts = conf.ts();
+  } else {
+    s.ts = 0.25;
+  }
+  if (conf.has_max_solution_time()) {
+    s.max_solution_time = conf.max_solution_time();
+  } else {
+    s.max_solution_time = 5.0;
+  }
+  if (conf.has_relative_mip_gap_tolerance()) {
+    s.relative_mip_gap_tolerance = conf.relative_mip_gap_tolerance();
+  } else {
+    s.relative_mip_gap_tolerance = 0.1;
+  }
+  if (conf.has_mipemphasis()) {
+    s.mipemphasis = conf.mipemphasis();
+  } else {
+    s.mipemphasis = 1;
+  }
+  if (conf.has_relobjdif()) {
+    s.relobjdif = conf.relobjdif();
+  } else {
+    s.relobjdif = 0.9;
+  }
+  if (conf.has_minimum_region_change_speed()) {
+    s.minimum_region_change_speed = conf.minimum_region_change_speed();
+  } else {
+    s.minimum_region_change_speed = 2;
+  }
+  if (conf.has_scale_velocity_for_reference_longer_horizon()) {
+    s.scaleVelocityForReferenceLongerHorizon =
+        conf.scale_velocity_for_reference_longer_horizon();
+  } else {
+    s.scaleVelocityForReferenceLongerHorizon = 2;
+  }
+  if (conf.has_use_sos()) {
+    s.useSos = conf.use_sos();
+  } else {
+    s.useSos = false;
+  }
+  if (conf.has_use_branching_priorities()) {
+    s.useBranchingPriorities = conf.use_branching_priorities();
+  } else {
+    s.useBranchingPriorities = true;
+  }
+  if (conf.has_warmstart_type()) {
+    s.warmstartType =
+        static_cast<MiqpPlannerWarmstartType>(conf.warmstart_type());
+  } else {
+    s.warmstartType = MiqpPlannerWarmstartType::NO_WARMSTART;
+  }
   float collision_radius_add;
   if (conf.has_collision_radius_add()) {
     collision_radius_add = conf.collision_radius_add();
   } else {
     collision_radius_add = 0.0;
   }
-  s.collisionRadius = common::VehicleConfigHelper::Instance()
-                              ->GetConfig()
-                              .vehicle_param()
-                              .width() /
-                          2 +
-                      collision_radius_add;
-  s.slackWeight = 30;
   if (conf.has_jerk_weight()) {
     s.jerkWeight = conf.jerk_weight();
   } else {
@@ -496,17 +533,36 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   } else {
     s.velocityWeight = 0.0;
   }
+
+  s.wheelBase = common::VehicleConfigHelper::Instance()
+                    ->GetConfig()
+                    .vehicle_param()
+                    .wheel_base();
+  s.collisionRadius = common::VehicleConfigHelper::Instance()
+                              ->GetConfig()
+                              .vehicle_param()
+                              .width() /
+                          2 +
+                      collision_radius_add;
+
+  s.slackWeight = 30;
   s.acclerationWeight = 0;
   s.simplificationDistanceMap = 0.2;
   s.bufferReference = 1.0;
   s.refLineInterpInc = 0.2;
-  s.scaleVelocityForReferenceLongerHorizon = 1.1;
   s.cplexModelpath =
       "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
       "miqp_planner/cplex_modfiles/";
-  s.useSos = false;
-  s.useBranchingPriorities = true;
-  s.warmstartType = MiqpPlannerWarmstartType::BOTH_WARMSTART_STRATEGIES;
+  s.mipdisplay = 1;
+  s.cutpass = 0;
+  s.probe = 0;
+  s.repairtries = 0;
+  s.rinsheur = 0;
+  s.varsel = 0;
+  s.mircuts = 0;
+  s.precision = 12;
+  s.constant_agent_safety_distance_slack = 3;
+  s.lambda = 0.5;
   return s;
 }
 

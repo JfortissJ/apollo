@@ -12,5 +12,17 @@ message MiqpPlannerConfiguration {
     optional double jerk_weight = 7 [default = 1.0];
     optional double position_weight = 8 [default = 2.0];
     optional double velocity_weight = 9 [default = 0.0];
+    optional int32 nr_steps = 10 [default = 20];
+    optional int32 nr_neighbouring_possible_regions = 11 [default = 1];
+    optional double ts = 12 [default = 0.25];
+    optional double max_solution_time = 13 [default = 5.0];
+    optional double relative_mip_gap_tolerance = 14 [default = 0.1];
+    optional int32 mipemphasis = 15 [default = 1];
+    optional double relobjdif = 16 [default = 0.9];
+    optional double minimum_region_change_speed = 17 [default = 2];
+    optional double scale_velocity_for_reference_longer_horizon = 18 [default = 2];
+    optional bool use_sos = 19 [default = false];
+    optional bool use_branching_priorities = 20 [default = true];
+    optional int32 warmstart_type = 21 [default = 2];
     
 }
