@@ -21,10 +21,10 @@ miqp_planner_config: {
     mipemphasis: 1
     relobjdif: 0.9
     minimum_region_change_speed: 2
-    scaleVelocityForReferenceLongerHorizon: 2
-    useSos: false
-    useBranchingPriorities:true
-    warmstartType: 2
+    scale_velocity_for_reference_longer_horizon: 2
+    use_sos: false
+    use_branching_priorities:true
+    warmstart_type: 2
 
 }
 
