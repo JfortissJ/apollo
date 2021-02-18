@@ -20,7 +20,7 @@ message MiqpPlannerConfiguration {
     optional int32 mipemphasis = 15 [default = 1];
     optional double relobjdif = 16 [default = 0.9];
     optional double minimum_region_change_speed = 17 [default = 2];
-    optional double scale_velocity_for_reference_longer_horizon = 18 [default = 2];
+    optional int32 additional_steps_for_reference_longer_horizon = 18 [default = 4];
     optional double delta_s_desired = 19 [default = 5];
     optional double distance_stop_before = 20 [default = 5];
     optional double distance_start_slowdown = 21 [default = 15];

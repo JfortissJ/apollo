@@ -21,7 +21,7 @@ miqp_planner_config: {
     mipemphasis: 1
     relobjdif: 0.9
     minimum_region_change_speed: 2
-    scale_velocity_for_reference_longer_horizon: 2
+    additional_steps_for_reference_longer_horizon: 6
     delta_s_desired: 2
     distance_stop_before: 5
     distance_start_slowdown: 15

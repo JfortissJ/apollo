@@ -32,7 +32,7 @@ struct MiqpPlannerSettings {
   float simplificationDistanceMap;
   float bufferReference;
   float refLineInterpInc;
-  float scaleVelocityForReferenceLongerHorizon;
+  int additionalStepsForReferenceLongerHorizon;
   float max_solution_time;
   float relative_mip_gap_tolerance;
   int mipdisplay;

@@ -492,11 +492,11 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   } else {
     s.minimum_region_change_speed = 2;
   }
-  if (conf.has_scale_velocity_for_reference_longer_horizon()) {
-    s.scaleVelocityForReferenceLongerHorizon =
-        conf.scale_velocity_for_reference_longer_horizon();
+  if (conf.has_additional_steps_for_reference_longer_horizon()) {
+    s.additionalStepsForReferenceLongerHorizon =
+        conf.additional_steps_for_reference_longer_horizon();
   } else {
-    s.scaleVelocityForReferenceLongerHorizon = 2;
+    s.additionalStepsForReferenceLongerHorizon = 2;
   }
   if (conf.has_use_sos()) {
     s.useSos = conf.use_sos();
