@@ -243,6 +243,16 @@ Status MiqpPlanner::PlanOnReferenceLine(
   DiscretizedTrajectory apollo_traj =
       RawCTrajectoryToApolloTrajectory(traj, size);
 
+  // // debug outputs:
+  // int r = size;
+  // int c = TRAJECTORY_SIZE;
+  // for (int i = 0; i < r; ++i) {
+  //   for (int j = 0; j < c; ++j) {
+  //     std::cout << traj[i * c + j] << ", ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
   // Check resulting trajectory for collision with obstacles
   if (config_.miqp_planner_config().consider_obstacles()) {
     const auto& vehicle_config =
@@ -277,16 +287,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   AINFO << "MIQP Planner postprocess took [s]: "
         << (Clock::NowInSeconds() - current_time);
-
-  // // debug outputs:
-  // int r = size;
-  // int c = TRAJECTORY_SIZE;
-  // for (int i = 0; i < r; ++i) {
-  //   for (int j = 0; j < c; ++j) {
-  //     std::cout << traj[i * c + j] << "\t\t";
-  //   }
-  //   std::cout << std::endl;
-  // }
 
   return Status::OK();
 }
@@ -391,7 +391,7 @@ void MiqpPlanner::ConvertToInitialStateSecondOrder(
 
   double theta = planning_init_point.path_point().theta();
   // cplex throws an exception if vel=0
-  double vel = std::max(planning_init_point.v(), 0.1);
+  double vel = std::max(planning_init_point.v(), 1.0); //TODO 0.1 is not stable!!!!!!!!!
 
   initial_state[0] = planning_init_point.path_point().x() - X_OFFSET;
   initial_state[1] = vel * cos(theta);
@@ -541,11 +541,11 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.cplexModelpath =
       "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
       "miqp_planner/cplex_modfiles/";
-  s.mipdisplay = 1;
+  s.mipdisplay = 3;
   s.cutpass = 0;
   s.probe = 0;
-  s.repairtries = 0;
-  s.rinsheur = 0;
+  s.repairtries = 5;
+  s.rinsheur = 5;
   s.varsel = 0;
   s.mircuts = 0;
   s.precision = 12;
@@ -584,8 +584,21 @@ bool MiqpPlanner::EnvironmentCollision(
     Vec2d shift_vec(shift_distance * std::cos(ego_theta),
                     shift_distance * std::sin(ego_theta));
     ego_box.Shift(shift_vec);
+    Polygon2d carpoly = Polygon2d(ego_box);
 
-    if (!envpoly.Contains(Polygon2d(ego_box))) {
+    if (!envpoly.Contains(carpoly)) {
+      AERROR << "Collision found at idx = " << i;
+      std::stringstream ss;
+      ss << std::setprecision(15) << "envpoly = [";
+      for (auto& pt : envpoly.points()) {
+        ss << pt.x() << ", " << pt.y() << "; ";
+      }
+      ss << "] carpoly = [";
+      for (auto& pt : carpoly.points()) {
+        ss << pt.x() << ", " << pt.y() << "; ";
+      }
+      ss << "]";
+      AERROR << std::setprecision(15) << ss.str().c_str();
       return true;
     }
   }
@@ -616,8 +629,7 @@ void MiqpPlanner::ProcessObstacles(
     } else {  // dynamic
       const float ts = GetTsCMiqpPlanner(planner_);
       for (int i = 0; i < N; ++i) {
-        double pred_time =
-            timestep + i * ts;
+        double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
         common::math::Box2d box = obstacle->GetBoundingBox(point);
         min_x[i] = box.min_x();

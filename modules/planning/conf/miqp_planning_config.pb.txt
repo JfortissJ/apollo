@@ -9,24 +9,24 @@ miqp_planner_config: {
     use_environment_polygon: true
     consider_obstacles: false
     close_to_end_distance: 1.0
-    collision_radius_add: 0.0
+    collision_radius_add: 0.2
     jerk_weight: 1.0
     position_weight: 2.0
     velocity_weight: 0.0
     nr_steps: 20
-    nr_neighbouring_possible_regions: 1
+    nr_neighbouring_possible_regions: 0
     ts: 0.25
-    max_solution_time: 4
-    relative_mip_gap_tolerance: 0.1
-    mipemphasis: 1
+    max_solution_time: 4.5
+    relative_mip_gap_tolerance: 0.3
+    mipemphasis: 0
     relobjdif: 0.9
-    minimum_region_change_speed: 2
+    minimum_region_change_speed: 1
     additional_steps_for_reference_longer_horizon: 6
     delta_s_desired: 2
     distance_stop_before: 5
     distance_start_slowdown: 15
     use_sos: false
-    use_branching_priorities:true
+    use_branching_priorities: true
     warmstart_type: 2
 
 }
