@@ -44,6 +44,7 @@ using apollo::common::Status;
 using apollo::common::TrajectoryPoint;
 using apollo::common::math::CartesianFrenetConverter;
 using apollo::common::math::PathMatcher;
+using apollo::common::math::Polygon2d;
 using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
 using apollo::planning::DiscretizedTrajectory;
@@ -135,10 +136,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
     const TrajectoryPoint& planning_init_point, Frame* frame,
     ReferenceLineInfo* reference_line_info) {
   const double timestep = Clock::NowInSeconds();
-  AERROR << std::setprecision(15)
-         << "---------- PlanOnReferenceLine() of MIQP planner called at "
-            "timestep = "
-         << timestep << " ----------";
+  AINFO << std::setprecision(15) << " MIQP Planner called at t " << timestep;
   double current_time = timestep;
 
   // Initialized raw C trajectory output
@@ -151,7 +149,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
   std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
       reference_line_info->reference_line().reference_points(),
       reference_line_info->planning_target());
-
   // Reference line to raw c format
   const int ref_size =
       discrete_reference_line.size();  // aka N optimization support points
@@ -164,8 +161,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Map
+  std::vector<Vec2d> left_pts, right_pts;
   if (config_.miqp_planner_config().use_environment_polygon()) {
-    std::vector<Vec2d> left_pts, right_pts;
     std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
     const int poly_size = left_pts.size() + right_pts.size();
     double poly_pts[poly_size * 2];
@@ -177,18 +174,18 @@ Status MiqpPlanner::PlanOnReferenceLine(
         << (Clock::NowInSeconds() - current_time);
   current_time = Clock::NowInSeconds();
 
+  // Initial State
   double initial_state[6];
   ConvertToInitialStateSecondOrder(planning_init_point, initial_state);
 
+  // Target velocity
   bool track_ref_pos;
   double vDes;
   double deltaSDes;
-
   const double dist_start_slowdown =
       config_.miqp_planner_config().distance_start_slowdown();
   const double dist_stop_before =
       config_.miqp_planner_config().distance_stop_before();
-
   auto distGoal = reference_line_info->SDistanceToDestination();
   if (distGoal - dist_stop_before < dist_start_slowdown) {
     track_ref_pos = false;
@@ -207,68 +204,25 @@ Status MiqpPlanner::PlanOnReferenceLine(
                                     vDes, deltaSDes, timestep, track_ref_pos);
     firstrun_ = false;
     AERROR << "Added ego car Time [s] = "
-          << (Clock::NowInSeconds() - current_time);
+           << (Clock::NowInSeconds() - current_time);
   } else {
     UpdateCarCMiqpPlanner(planner_, egoCarIdx_, initial_state, ref, ref_size,
                           timestep, track_ref_pos);
     UpdateDesiredVelocityCMiqpPlanner(planner_, egoCarIdx_, vDes, deltaSDes);
     AERROR << "Update ego car Time [s] = "
-          << (Clock::NowInSeconds() - current_time);
+           << (Clock::NowInSeconds() - current_time);
   }
 
+  // Obstacles as obstacles
   if (config_.miqp_planner_config().consider_obstacles()) {
-    RemoveAllObstaclesCMiqpPlanner(planner_);
-
-    // Add obstacles
-    for (const Obstacle* obstacle : frame->obstacles()) {
-      double min_x[N], max_x[N], min_y[N], max_y[N];
-      int N = GetNCMiqpPlanner(planner_);
-      if (obstacle->IsVirtual()) {
-        continue;
-      } else if (!obstacle->HasTrajectory()) {  // static
-        const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
-        for (int i = 0; i < N; ++i) {
-          min_x[i] = polygon.min_x();
-          max_x[i] = polygon.max_x();
-          min_y[i] = polygon.min_y();
-          max_y[i] = polygon.max_y();
-        }
-        AINFO << "Static obstacle " << obstacle->Id() << " at " << min_x << ", "
-              << max_x << ", " << min_y << ", " << max_y;
-      } else {  // dynamic
-        const float ts = GetTsCMiqpPlanner(planner_);
-        for (int i = 0; i < N; ++i) {
-          double pred_time =
-              timestep + i * ts;  // TODO: is that correct or should make use of
-                                  // relative time?
-          TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
-          common::math::Box2d box = obstacle->GetBoundingBox(point);
-          min_x[i] = box.min_x();
-          max_x[i] = box.max_x();
-          min_y[i] = box.min_y();
-          max_y[i] = box.max_y();
-        }
-        AINFO << "Dynamic obstacle " << obstacle->Id() << " at t0" << min_x[0]
-              << ", " << max_x[0] << ", " << min_y[0] << ", " << max_y[0];
-        AINFO << "Dynamic obstacle " << obstacle->Id() << " at tend"
-              << min_x[N - 1] << ", " << max_x[N - 1] << ", " << min_y[N - 1]
-              << ", " << max_y[N - 1];
-      }
-
-      // maybe use obstacle->IsLaneBlocking() to filter out some obstacles
-      int idx =
-          AddObstacleCMiqpPlanner(planner_, min_x, max_x, min_y, max_y, N);
-      AINFO << "Added obstacle " << obstacle->Id();
-    }
+    ProcessObstacles(frame->obstacles());
   }
-
-  current_time = Clock::NowInSeconds();
 
   // Plan
-  AERROR << "Miqp planning call";
+  current_time = Clock::NowInSeconds();
   bool success = PlanCMiqpPlanner(planner_, timestep);
   AERROR << "Miqp planning Time [s] = "
-        << (Clock::NowInSeconds() - current_time);
+         << (Clock::NowInSeconds() - current_time);
   current_time = Clock::NowInSeconds();
 
   // Planning failed
@@ -278,7 +232,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
     return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
   }
 
-  // Planning success -> publish trajectory
+  // Get trajectory from miqp planner
   AINFO << "Planning Success!";
   // trajectories shall start at t=0 with an offset of
   // planning_init_point.relative_time()
@@ -286,6 +240,35 @@ Status MiqpPlanner::PlanOnReferenceLine(
       planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
   DiscretizedTrajectory apollo_traj =
       RawCTrajectoryToApolloTrajectory(traj, size);
+
+  // Check resulting trajectory for collision with obstacles
+  if (config_.miqp_planner_config().consider_obstacles()) {
+    const auto& vehicle_config =
+        common::VehicleConfigHelper::Instance()->GetConfig();
+    const double ego_length = vehicle_config.vehicle_param().length();
+    const double ego_width = vehicle_config.vehicle_param().width();
+    const double ego_back_edge_to_center =
+        vehicle_config.vehicle_param().back_edge_to_center();
+    const bool obstacle_collision = CollisionChecker::InCollision(
+        frame->obstacles(), apollo_traj, ego_length, ego_width,
+        ego_back_edge_to_center);
+    if (obstacle_collision) {
+      AERROR << "Planning success but collision with obstacle!";
+      return Status(ErrorCode::PLANNING_ERROR,
+                    "miqp trajectory colliding with obstacles");
+    }
+  }
+
+  // Check resulting trajectory for collision with environment
+  if (config_.miqp_planner_config().use_environment_polygon()) {
+    if (EnvironmentCollision(left_pts, ight_pts, apollo_traj)) {
+      AERROR << "Planning success but collision with environment!";
+      return Status(ErrorCode::PLANNING_ERROR,
+                    "miqp trajectory colliding with environment");
+    }
+  }
+
+  // Planning success -> publish trajectory
   reference_line_info->SetTrajectory(apollo_traj);
   reference_line_info->SetCost(0);  // TODO necessary?
   reference_line_info->SetDrivable(true);
@@ -566,6 +549,91 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.constant_agent_safety_distance_slack = 3;
   s.lambda = 0.5;
   return s;
+}
+
+//! @note copied from apollo's CollisionChecker::InCollision() function
+bool MiqpPlanner::EnvironmentCollision(
+    std::vector<Vec2d> left_pts, std::vector<Vec2d> right_pts,
+    const DiscretizedTrajectory& ego_trajectory) {
+  // append reversed right points to the left points
+  left_pts.insert(left_pts.end(), right_pts.rbegin(), right_pts.rend());
+  // create polygon from the point vector
+  Polygon2d envpoly(left_pts);
+
+  const auto& vehicle_config =
+      common::VehicleConfigHelper::Instance()->GetConfig();
+  const double ego_length = vehicle_config.vehicle_param().length();
+  const double ego_width = vehicle_config.vehicle_param().width();
+  const double ego_back_edge_to_center =
+      vehicle_config.vehicle_param().back_edge_to_center();
+
+  for (size_t i = 0; i < ego_trajectory.NumOfPoints(); ++i) {
+    const auto& ego_point =
+        ego_trajectory.TrajectoryPointAt(static_cast<std::uint32_t>(i));
+    const auto relative_time = ego_point.relative_time();
+    const auto ego_theta = ego_point.path_point().theta();
+
+    Box2d ego_box({ego_point.path_point().x(), ego_point.path_point().y()},
+                  ego_theta, ego_length, ego_width);
+
+    // correct the inconsistency of reference point and center point
+    // TODO(all): move the logic before constructing the ego_box
+    double shift_distance = ego_length / 2.0 - ego_back_edge_to_center;
+    Vec2d shift_vec(shift_distance * std::cos(ego_theta),
+                    shift_distance * std::sin(ego_theta));
+    ego_box.Shift(shift_vec);
+
+    if (!envpoly.Contains(Polygon2d(ego_box))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+void MiqpPlanner::ProcessObstacles(
+    const std::vector<const Obstacle*>& obstacles) {
+  RemoveAllObstaclesCMiqpPlanner(planner_);
+
+  // Add obstacles
+  for (const Obstacle* obstacle : obstacles) {
+    double min_x[N], max_x[N], min_y[N], max_y[N];
+    int N = GetNCMiqpPlanner(planner_);
+    if (obstacle->IsVirtual()) {
+      continue;
+    } else if (!obstacle->HasTrajectory()) {  // static
+      const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
+      for (int i = 0; i < N; ++i) {
+        min_x[i] = polygon.min_x();
+        max_x[i] = polygon.max_x();
+        min_y[i] = polygon.min_y();
+        max_y[i] = polygon.max_y();
+      }
+      AINFO << "Static obstacle " << obstacle->Id() << " at " << min_x << ", "
+            << max_x << ", " << min_y << ", " << max_y;
+    } else {  // dynamic
+      const float ts = GetTsCMiqpPlanner(planner_);
+      for (int i = 0; i < N; ++i) {
+        double pred_time =
+            timestep + i * ts;  // TODO: is that correct or should make use of
+                                // relative time?
+        TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
+        common::math::Box2d box = obstacle->GetBoundingBox(point);
+        min_x[i] = box.min_x();
+        max_x[i] = box.max_x();
+        min_y[i] = box.min_y();
+        max_y[i] = box.max_y();
+      }
+      AINFO << "Dynamic obstacle " << obstacle->Id() << " at t0" << min_x[0]
+            << ", " << max_x[0] << ", " << min_y[0] << ", " << max_y[0];
+      AINFO << "Dynamic obstacle " << obstacle->Id() << " at tend"
+            << min_x[N - 1] << ", " << max_x[N - 1] << ", " << min_y[N - 1]
+            << ", " << max_y[N - 1];
+    }
+
+    // maybe use obstacle->IsLaneBlocking() to filter out some obstacles
+    int idx = AddObstacleCMiqpPlanner(planner_, min_x, max_x, min_y, max_y, N);
+    AINFO << "Added obstacle " << obstacle->Id();
+  }
 }
 
 }  // namespace planning
