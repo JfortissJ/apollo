@@ -75,7 +75,16 @@ class MiqpPlanner : public LatticePlanner {
   void ConvertToPolyPts(const std::vector<common::math::Vec2d>& left_pts,
                         const std::vector<common::math::Vec2d>& right_pts,
                         double poly_pts[]);
+
   MiqpPlannerSettings DefaultSettings();
+
+  bool EnvironmentCollision(
+      std::vector<common::math::Vec2d> left_pts,
+      std::vector<common::math::Vec2d> right_pts,
+      const apollo::planning::DiscretizedTrajectory& ego_trajectory);
+
+  void ProcessObstacles(const std::vector<const Obstacle*>& obstacles,
+                        double timestep);
 
  private:
   CMiqpPlanner planner_;

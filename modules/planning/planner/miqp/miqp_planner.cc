@@ -42,6 +42,7 @@ using apollo::common::ErrorCode;
 using apollo::common::PathPoint;
 using apollo::common::Status;
 using apollo::common::TrajectoryPoint;
+using apollo::common::math::Box2d;
 using apollo::common::math::CartesianFrenetConverter;
 using apollo::common::math::PathMatcher;
 using apollo::common::math::Polygon2d;
@@ -215,7 +216,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Obstacles as obstacles
   if (config_.miqp_planner_config().consider_obstacles()) {
-    ProcessObstacles(frame->obstacles());
+    // TODO: is that correct or should make use of relative time?
+    ProcessObstacles(frame->obstacles(), timestep);
   }
 
   // Plan
@@ -261,7 +263,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Check resulting trajectory for collision with environment
   if (config_.miqp_planner_config().use_environment_polygon()) {
-    if (EnvironmentCollision(left_pts, ight_pts, apollo_traj)) {
+    if (EnvironmentCollision(left_pts, right_pts, apollo_traj)) {
       AERROR << "Planning success but collision with environment!";
       return Status(ErrorCode::PLANNING_ERROR,
                     "miqp trajectory colliding with environment");
@@ -534,7 +536,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.acclerationWeight = 0;
   s.simplificationDistanceMap = 0.2;
   s.bufferReference = 1.0;
-  s.buffer_for_merging_tolerance = 1.0; // probably too high
+  s.buffer_for_merging_tolerance = 1.0;  // probably too high
   s.refLineInterpInc = 0.2;
   s.cplexModelpath =
       "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
@@ -571,7 +573,6 @@ bool MiqpPlanner::EnvironmentCollision(
   for (size_t i = 0; i < ego_trajectory.NumOfPoints(); ++i) {
     const auto& ego_point =
         ego_trajectory.TrajectoryPointAt(static_cast<std::uint32_t>(i));
-    const auto relative_time = ego_point.relative_time();
     const auto ego_theta = ego_point.path_point().theta();
 
     Box2d ego_box({ego_point.path_point().x(), ego_point.path_point().y()},
@@ -592,10 +593,11 @@ bool MiqpPlanner::EnvironmentCollision(
 }
 
 void MiqpPlanner::ProcessObstacles(
-    const std::vector<const Obstacle*>& obstacles) {
+    const std::vector<const Obstacle*>& obstacles, double timestep) {
   RemoveAllObstaclesCMiqpPlanner(planner_);
 
   // Add obstacles
+  const int N = GetNCMiqpPlanner(planner_);
   for (const Obstacle* obstacle : obstacles) {
     double min_x[N], max_x[N], min_y[N], max_y[N];
     int N = GetNCMiqpPlanner(planner_);
@@ -615,8 +617,7 @@ void MiqpPlanner::ProcessObstacles(
       const float ts = GetTsCMiqpPlanner(planner_);
       for (int i = 0; i < N; ++i) {
         double pred_time =
-            timestep + i * ts;  // TODO: is that correct or should make use of
-                                // relative time?
+            timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
         common::math::Box2d box = obstacle->GetBoundingBox(point);
         min_x[i] = box.min_x();
