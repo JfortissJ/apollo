@@ -551,6 +551,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.acclerationWeight = 0;
   s.simplificationDistanceMap = 0.2;
   s.bufferReference = 1.0;
+  s.buffer_for_merging_tolerance = 1.0; // probably too high
   s.refLineInterpInc = 0.2;
   s.cplexModelpath =
       "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
