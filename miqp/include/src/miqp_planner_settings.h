@@ -31,6 +31,7 @@ struct MiqpPlannerSettings {
   float acclerationWeight;
   float simplificationDistanceMap;
   float bufferReference;
+  float buffer_for_merging_tolerance;
   float refLineInterpInc;
   int additionalStepsForReferenceLongerHorizon;
   float max_solution_time;
