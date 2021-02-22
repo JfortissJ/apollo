@@ -73,6 +73,8 @@ void UpdateObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, int id,
                                 double min_x[], double max_x[], double min_y[],
                                 double max_y[], int& size);
 
-void RemoveAllObstaclesCMiqpPlanner(CMiqpPlanner c_miqp_planner);
+void GetLastReferencePointCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
+                                       double* pt);
 
+void RemoveAllObstaclesCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 }

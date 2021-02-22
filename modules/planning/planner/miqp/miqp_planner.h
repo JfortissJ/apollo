@@ -34,6 +34,13 @@
 namespace apollo {
 namespace planning {
 
+enum PlannerState {
+  DRIVING_TRAJECTORY = 0,
+  START_TRAJECTORY = 1,
+  STOP_TRAJECTORY = 2,
+  STANDSTILL_TRAJECTORY = 3
+};
+
 /**
  * @class MiqpPlanner
  * @note LatticePlanner class from apollo served as a reference implementation!
@@ -86,10 +93,25 @@ class MiqpPlanner : public LatticePlanner {
   void ProcessObstacles(const std::vector<const Obstacle*>& obstacles,
                         double timestep);
 
+  PlannerState DeterminePlannerState(double planning_init_v, double goal_dist);
+
+  int CutoffTrajectoryAtV(apollo::planning::DiscretizedTrajectory& traj,
+                          double vmin);
+
+  void CreateStandstillTrajectory(
+      const common::TrajectoryPoint& planning_init_point,
+      ReferenceLineInfo* reference_line_info);
+
+  void CreateStopTrajectory(const common::TrajectoryPoint& planning_init_point,
+                            ReferenceLineInfo* reference_line_info);
+
  private:
   CMiqpPlanner planner_;
   bool firstrun_;
   int egoCarIdx_;
+  double minimum_valid_speed_planning_;
+  double standstill_velocity_threshold_;
+  double destination_dist_threshold_;
 };
 
 }  // namespace planning
