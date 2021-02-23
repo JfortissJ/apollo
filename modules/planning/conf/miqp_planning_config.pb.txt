@@ -9,7 +9,7 @@ miqp_planner_config: {
     use_environment_polygon: true
     consider_obstacles: false
     close_to_end_distance: 1.0
-    collision_radius_add: 0.2
+    collision_radius_add: 0.3
     jerk_weight: 1.0
     position_weight: 2.0
     velocity_weight: 0.0
@@ -28,7 +28,7 @@ miqp_planner_config: {
     use_sos: false
     use_branching_priorities: true
     warmstart_type: 2
-    wheelbase_add: 0.2
+    wheelbase_add: 0.3
     destination_distance_stop_threshold: 2.0
 }
 
