@@ -111,7 +111,6 @@ class MiqpPlanner : public LatticePlanner {
   int egoCarIdx_;
   double minimum_valid_speed_planning_;
   double standstill_velocity_threshold_;
-  double destination_dist_threshold_;
 };
 
 }  // namespace planning

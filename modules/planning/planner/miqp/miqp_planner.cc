@@ -118,9 +118,6 @@ common::Status MiqpPlanner::Init(const PlanningConfig& config) {
   egoCarIdx_ = -1;                       // set invalid
   minimum_valid_speed_planning_ = 1.0;   // below our model is invalid
   standstill_velocity_threshold_ = 0.1;  // set velocity hard to zero below this
-  destination_dist_threshold_ =
-      2.0;  // issue hard stop trajectory without optimization if velocity is
-            // low enough and goal is nearer than this
   ActivateDebugFileWriteCMiqpPlanner(planner_, "/apollo/data/log",
                                      "miqp_planner_");
   config_ = config;
@@ -133,6 +130,7 @@ common::Status MiqpPlanner::Init(const PlanningConfig& config) {
     AINFO << "MIQP Planner Configuration: "
           << config_.miqp_planner_config().DebugString();
   }
+
   return common::Status::OK();
 }
 
@@ -528,6 +526,12 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   } else {
     collision_radius_add = 0.0;
   }
+  float wheelbase_add;
+  if (conf.has_wheelbase_add()) {
+    wheelbase_add = conf.wheelbase_add();
+  } else {
+    wheelbase_add = 0.0;
+  }
   if (conf.has_jerk_weight()) {
     s.jerkWeight = conf.jerk_weight();
   } else {
@@ -543,11 +547,11 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   } else {
     s.velocityWeight = 0.0;
   }
-
   s.wheelBase = common::VehicleConfigHelper::Instance()
                     ->GetConfig()
                     .vehicle_param()
-                    .wheel_base();
+                    .wheel_base() +
+                wheelbase_add;
   s.collisionRadius = common::VehicleConfigHelper::Instance()
                               ->GetConfig()
                               .vehicle_param()
@@ -678,8 +682,12 @@ void MiqpPlanner::ProcessObstacles(
 apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
     double planning_init_v, double goal_dist) {
   PlannerState status;
+  // issue hard stop trajectory without optimization if velocity is
+  // low enough and goal is nearer than this
+  const double destination_dist_threshold =
+      config_.miqp_planner_config().destination_distance_stop_threshold();
 
-  if (goal_dist < destination_dist_threshold_) {  // Approaching end or at end
+  if (goal_dist < destination_dist_threshold) {  // Approaching end or at end
     if (planning_init_v <=
         standstill_velocity_threshold_) {  // Standstill at end
       status = PlannerState::STANDSTILL_TRAJECTORY;
@@ -705,9 +713,9 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
 
 int MiqpPlanner::CutoffTrajectoryAtV(
     apollo::planning::DiscretizedTrajectory& traj, double vmin) {
-      // reverse, to not cutoff accelerating trajectories
+  // reverse, to not cutoff accelerating trajectories
   for (size_t i = traj.size() - 1; i > 1; --i) {
-    if (traj.at(i).v() < vmin && traj.at(i-1).v() >= vmin) {
+    if (traj.at(i).v() < vmin && traj.at(i - 1).v() >= vmin) {
       traj.at(i).set_v(vmin);
       traj.resize(i + 1);  // delete everything after this point
       AINFO << "Cutting trajectory off at pt idx = " << i;

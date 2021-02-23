@@ -27,5 +27,6 @@ message MiqpPlannerConfiguration {
     optional bool use_sos = 22 [default = false];
     optional bool use_branching_priorities = 23 [default = true];
     optional int32 warmstart_type = 24 [default = 2];
-    
+    optional double wheelbase_add = 25 [default = 0.0];
+    optional double destination_distance_stop_threshold = 26 [default = 2.0];
 }
