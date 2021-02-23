@@ -4,7 +4,7 @@ module_config {
         class_name : "FakePredictionComponent"
         config {
             name: "fake_prediction"
-            interval: 100
+            interval: 1000
         }
     }
 }
