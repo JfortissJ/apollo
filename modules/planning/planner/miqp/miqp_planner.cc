@@ -578,6 +578,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.precision = 12;
   s.constant_agent_safety_distance_slack = 3;
   s.lambda = 0.5;
+  s.buffer_cplex_outputs = true;
   return s;
 }
 
@@ -615,17 +616,28 @@ bool MiqpPlanner::EnvironmentCollision(
 
     if (!envpoly.Contains(carpoly)) {
       AERROR << "Collision found at idx = " << i;
-      std::stringstream ss;
-      ss << std::setprecision(15) << "envpoly = [";
-      for (auto& pt : envpoly.points()) {
-        ss << pt.x() << ", " << pt.y() << "; ";
+      // Debug outputs
+      {
+        std::stringstream ss;
+        ss << std::setprecision(15) << "envpoly = [";
+        const char* sep = "";
+        for (auto& pt : envpoly.points()) {
+          ss << sep << pt.x() << ", " << pt.y();
+          sep = "; ";
+        }
+        ss << "]";
+        AINFO << std::setprecision(15) << ss.str().c_str();
       }
-      ss << "] carpoly = [";
-      for (auto& pt : carpoly.points()) {
-        ss << pt.x() << ", " << pt.y() << "; ";
+      {
+        std::stringstream ss;
+        ss << std::setprecision(15) << "carpoly = [";
+        const char* sep = "";
+        for (auto& pt : carpoly.points()) {
+          ss << sep << pt.x() << ", " << pt.y();
+        }
+        ss << "]";
+        AINFO << std::setprecision(15) << ss.str().c_str();
       }
-      ss << "]";
-      AERROR << std::setprecision(15) << ss.str().c_str();
       return true;
     }
   }

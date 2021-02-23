@@ -50,6 +50,7 @@ struct MiqpPlannerSettings {
   bool useBranchingPriorities;
   MiqpPlannerWarmstartType warmstartType;
   float max_velocity_fitting;
+  bool buffer_cplex_outputs;
 };
 
 #endif  // MIQP_PLANNER_SETTINGS_HEADER
