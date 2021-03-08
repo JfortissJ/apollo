@@ -656,31 +656,32 @@ void MiqpPlanner::ProcessObstacles(
     if (obstacle->IsVirtual()) {
       continue;
     } else if (!obstacle->HasTrajectory()) {  // static
-      const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
-      for (int i = 0; i < N; ++i) {
-        min_x[i] = polygon.min_x();
-        max_x[i] = polygon.max_x();
-        min_y[i] = polygon.min_y();
-        max_y[i] = polygon.max_y();
-      }
-      AINFO << "Static obstacle " << obstacle->Id() << " at " << min_x << ", "
-            << max_x << ", " << min_y << ", " << max_y;
+      continue;
+      // const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
+      // for (int i = 0; i < N; ++i) {
+      //   min_x[i] = polygon.min_x() - X_OFFSET;
+      //   max_x[i] = polygon.max_x() - X_OFFSET;
+      //   min_y[i] = polygon.min_y() - Y_OFFSET;
+      //   max_y[i] = polygon.max_y() - Y_OFFSET;
+      // }
+      // AINFO << "Static obstacle " << obstacle->Id() << " at [" << min_x[0] << ", "
+      //       << max_x[0] << ", " << min_y[0] << ", " << max_y[0] << "]";
     } else {  // dynamic
       const float ts = GetTsCMiqpPlanner(planner_);
       for (int i = 0; i < N; ++i) {
         double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
         common::math::Box2d box = obstacle->GetBoundingBox(point);
-        min_x[i] = box.min_x();
-        max_x[i] = box.max_x();
-        min_y[i] = box.min_y();
-        max_y[i] = box.max_y();
+        min_x[i] = box.min_x() - X_OFFSET;
+        max_x[i] = box.max_x() - X_OFFSET;
+        min_y[i] = box.min_y() - Y_OFFSET;
+        max_y[i] = box.max_y() - Y_OFFSET;
       }
-      AINFO << "Dynamic obstacle " << obstacle->Id() << " at t0" << min_x[0]
+      AINFO << "Dynamic obstacle " << obstacle->Id() << " at t0 [" << min_x[0]
             << ", " << max_x[0] << ", " << min_y[0] << ", " << max_y[0];
-      AINFO << "Dynamic obstacle " << obstacle->Id() << " at tend"
+      AINFO << "Dynamic obstacle " << obstacle->Id() << " at tend "
             << min_x[N - 1] << ", " << max_x[N - 1] << ", " << min_y[N - 1]
-            << ", " << max_y[N - 1];
+            << ", " << max_y[N - 1] << "]";
     }
 
     // maybe use obstacle->IsLaneBlocking() to filter out some obstacles
