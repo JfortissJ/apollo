@@ -112,14 +112,7 @@ std::pair<std::vector<Vec2d>, std::vector<Vec2d>> ToLeftAndRightBoundary(
 
 }  // namespace
 
-common::Status MiqpPlanner::Init(const PlanningConfig& config) {
-  MiqpPlannerSettings settings = DefaultSettings();
-  planner_ = NewCMiqpPlannerSettings(settings);
-  firstrun_ = true;                      // add car only in first run
-  egoCarIdx_ = -1;                       // set invalid
-  minimum_valid_speed_planning_ = 1.0;   // below our model is invalid
-  standstill_velocity_threshold_ = 0.1;  // set velocity hard to zero below this
-
+MiqpPlanner::MiqpPlanner() {
   // from cyber/logger/log_file_object.cc
   struct ::tm tm_time;
   const time_t timestamp = static_cast<time_t>(Clock::NowInSeconds());
@@ -132,10 +125,20 @@ common::Status MiqpPlanner::Init(const PlanningConfig& config) {
                   << tm_time.tm_min << std::setw(2) << tm_time.tm_sec << '.'
                   << apollo::cyber::logger::GetMainThreadPid();
   const std::string& time_pid_string = time_pid_stream.str();
-  std::string logdir("/apollo/data/log/");
-  logdir += time_pid_string;
-  char logdir_cstr[logdir.length()];
-  strcpy(logdir_cstr, logdir.c_str());
+  logdir_ += "/apollo/data/log/";
+  logdir_ += time_pid_string;
+}
+
+common::Status MiqpPlanner::Init(const PlanningConfig& config) {
+  MiqpPlannerSettings settings = DefaultSettings();
+  planner_ = NewCMiqpPlannerSettings(settings);
+  firstrun_ = true;                      // add car only in first run
+  egoCarIdx_ = -1;                       // set invalid
+  minimum_valid_speed_planning_ = 1.0;   // below our model is invalid
+  standstill_velocity_threshold_ = 0.1;  // set velocity hard to zero below this
+
+  char logdir_cstr[logdir_.length()];
+  strcpy(logdir_cstr, logdir_.c_str());
   char name_prefix_cstr[14];
   strcpy(name_prefix_cstr, "miqp_planner_");
   ActivateDebugFileWriteCMiqpPlanner(planner_, logdir_cstr, name_prefix_cstr);
