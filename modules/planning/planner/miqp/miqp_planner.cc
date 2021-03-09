@@ -137,7 +137,7 @@ common::Status MiqpPlanner::Init(const PlanningConfig& config) {
   minimum_valid_speed_planning_ = 1.0;   // below our model is invalid
   standstill_velocity_threshold_ = 0.1;  // set velocity hard to zero below this
 
-  LOG(INFO) << "Writing MIQP Planner Logs to " << logdir.c_str();
+  LOG(INFO) << "Writing MIQP Planner Logs to " << logdir_.c_str();
   char logdir_cstr[logdir_.length()];
   strcpy(logdir_cstr, logdir_.c_str());
   char name_prefix_cstr[14];
