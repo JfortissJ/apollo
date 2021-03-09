@@ -67,11 +67,11 @@ void UpdateDesiredVelocityCMiqpPlanner(CMiqpPlanner c_miqp_planner,
 
 int AddObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, double min_x[],
                             double max_x[], double min_y[], double max_y[],
-                            int& size);
+                            const int size);
 
 void UpdateObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, int id,
                                 double min_x[], double max_x[], double min_y[],
-                                double max_y[], int& size);
+                                double max_y[], const int size);
 
 void GetLastReferencePointCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
                                        double* pt);

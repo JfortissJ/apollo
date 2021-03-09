@@ -234,7 +234,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // Obstacles as obstacles
   if (config_.miqp_planner_config().consider_obstacles()) {
     // TODO: is that correct or should make use of relative time?
-    ProcessObstacles(frame->obstacles(), timestep);
+    ProcessObstacles(frame->obstacles(), planning_init_point.relative_time());
+    // ProcessObstacles(frame->obstacles(), timestep);
   }
 
   // Plan
@@ -652,7 +653,6 @@ void MiqpPlanner::ProcessObstacles(
   const int N = GetNCMiqpPlanner(planner_);
   for (const Obstacle* obstacle : obstacles) {
     double min_x[N], max_x[N], min_y[N], max_y[N];
-    int N = GetNCMiqpPlanner(planner_);
     if (obstacle->IsVirtual()) {
       continue;
     } else if (!obstacle->HasTrajectory()) {  // static
@@ -668,6 +668,7 @@ void MiqpPlanner::ProcessObstacles(
       //       << max_x[0] << ", " << min_y[0] << ", " << max_y[0] << "]";
     } else {  // dynamic
       const float ts = GetTsCMiqpPlanner(planner_);
+      AINFO << "Dynamic obstacle " << obstacle->Id();
       for (int i = 0; i < N; ++i) {
         double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
@@ -676,12 +677,8 @@ void MiqpPlanner::ProcessObstacles(
         max_x[i] = box.max_x() - X_OFFSET;
         min_y[i] = box.min_y() - Y_OFFSET;
         max_y[i] = box.max_y() - Y_OFFSET;
+        AINFO << i << "[" << min_x[i] << ", " << max_x[i] << "; " << min_y[i] << ", " << max_y[i];
       }
-      AINFO << "Dynamic obstacle " << obstacle->Id() << " at t0 [" << min_x[0]
-            << ", " << max_x[0] << ", " << min_y[0] << ", " << max_y[0];
-      AINFO << "Dynamic obstacle " << obstacle->Id() << " at tend "
-            << min_x[N - 1] << ", " << max_x[N - 1] << ", " << min_y[N - 1]
-            << ", " << max_y[N - 1] << "]";
     }
 
     // maybe use obstacle->IsLaneBlocking() to filter out some obstacles

@@ -7,7 +7,7 @@ miqp_planner_config: {
     nr_regions: 16
     max_velocity_fitting: 10
     use_environment_polygon: true
-    consider_obstacles: false
+    consider_obstacles: true
     close_to_end_distance: 1.0
     collision_radius_add: 0.3
     jerk_weight: 1.0
