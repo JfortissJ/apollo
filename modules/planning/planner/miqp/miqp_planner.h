@@ -47,7 +47,7 @@ enum PlannerState {
  **/
 class MiqpPlanner : public LatticePlanner {
  public:
-  MiqpPlanner() = default;
+  MiqpPlanner();
 
   virtual ~MiqpPlanner() = default;
 
@@ -111,6 +111,7 @@ class MiqpPlanner : public LatticePlanner {
   int egoCarIdx_;
   double minimum_valid_speed_planning_;
   double standstill_velocity_threshold_;
+  std::string logdir_;
 };
 
 }  // namespace planning
