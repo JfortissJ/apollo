@@ -126,7 +126,7 @@ MiqpPlanner::MiqpPlanner() {
                   << apollo::cyber::logger::GetMainThreadPid();
   const std::string& time_pid_string = time_pid_stream.str();
   logdir_ += "/apollo/data/log/";
-  logdir_ += time_pid_string;
+  // logdir_ += time_pid_string;
 }
 
 common::Status MiqpPlanner::Init(const PlanningConfig& config) {
@@ -675,8 +675,9 @@ void MiqpPlanner::ProcessObstacles(
 
   // Add obstacles
   const int N = GetNCMiqpPlanner(planner_);
+  const double radius = GetCollisionRadius(planner_);
   for (const Obstacle* obstacle : obstacles) {
-    double min_x[N], max_x[N], min_y[N], max_y[N];
+    double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N], p4_y[N];
     if (obstacle->IsVirtual()) {
       continue;
     } else if (!obstacle->HasTrajectory()) {  // static
@@ -696,18 +697,36 @@ void MiqpPlanner::ProcessObstacles(
       for (int i = 0; i < N; ++i) {
         double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
-        common::math::Box2d box = obstacle->GetBoundingBox(point);
-        min_x[i] = box.min_x() - X_OFFSET;
-        max_x[i] = box.max_x() - X_OFFSET;
-        min_y[i] = box.min_y() - Y_OFFSET;
-        max_y[i] = box.max_y() - Y_OFFSET;
-        AINFO << i << "[" << min_x[i] << ", " << max_x[i] << "; " << min_y[i] << ", " << max_y[i];
+        
+        common::math::Box2d box_i = obstacle->GetBoundingBox(point);
+        AINFO << "box_i: " << box_i.DebugString();
+        common::math::Polygon2d poly2d_i = Polygon2d(box_i);
+        common::math::Polygon2d poly2d_buff_i = poly2d_i.ExpandByDistance(radius);
+        common::math::Box2d box_buff_i = poly2d_buff_i.MinAreaBoundingBox();
+        AINFO << "box_buff_i: " << box_buff_i.DebugString();
+        std::vector<Vec2d> pts = box_buff_i.GetAllCorners();
+        AINFO << "pts.size: " << pts.size();
+        // TODO: assert that pts.size is always 4!
+        AINFO << "pts(0): " << pts.at(0).DebugString() << " ... " << pts.at(0).x() - X_OFFSET << ", " <<  pts.at(0).y() - Y_OFFSET;
+        AINFO << "pts(1): " << pts.at(1).DebugString() << " ... " << pts.at(1).x() - X_OFFSET << ", " <<  pts.at(1).y() - Y_OFFSET;
+        AINFO << "pts(2): " << pts.at(2).DebugString() << " ... " << pts.at(2).x() - X_OFFSET << ", " <<  pts.at(2).y() - Y_OFFSET;
+        AINFO << "pts(3): " << pts.at(3).DebugString() << " ... " << pts.at(3).x() - X_OFFSET << ", " <<  pts.at(3).y() - Y_OFFSET;
+
+        p1_x[i] = pts.at(0).x() - X_OFFSET;
+        p1_y[i] = pts.at(0).y() - Y_OFFSET;
+        p2_x[i] = pts.at(1).x() - X_OFFSET;
+        p2_y[i] = pts.at(1).y() - Y_OFFSET;
+        p3_x[i] = pts.at(2).x() - X_OFFSET;
+        p3_y[i] = pts.at(2).y() - Y_OFFSET;
+        p4_x[i] = pts.at(3).x() - X_OFFSET;
+        p4_y[i] = pts.at(3).y() - Y_OFFSET;
+
       }
     }
 
     // maybe use obstacle->IsLaneBlocking() to filter out some obstacles
     int idx_obs =
-        AddObstacleCMiqpPlanner(planner_, min_x, max_x, min_y, max_y, N);
+        AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, p4_x, p4_y, N);
     AINFO << "Added obstacle " << obstacle->Id()
           << "with miqp idx = " << idx_obs;
   }

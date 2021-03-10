@@ -54,6 +54,8 @@ int GetNCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 
 float GetTsCMiqpPlanner(CMiqpPlanner c_miqp_planner);
 
+float GetCollisionRadius(CMiqpPlanner c_miqp_planner);
+
 void GetRawCMiqpTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
                                        double start_time, double* trajectory,
                                        int& size);
@@ -65,13 +67,15 @@ void UpdateDesiredVelocityCMiqpPlanner(CMiqpPlanner c_miqp_planner,
                                        const int carIdx, const double vDes,
                                        const double deltaSDes);
 
-int AddObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, double min_x[],
-                            double max_x[], double min_y[], double max_y[],
-                            const int size);
+int AddObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, double p1_x[],
+                            double p1_y[], double p2_x[], double p2_y[],
+                            double p3_x[], double p3_y[], double p4_x[],
+                            double p4_y[], const int size);
 
 void UpdateObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, int id,
-                                double min_x[], double max_x[], double min_y[],
-                                double max_y[], const int size);
+                                double p1_x[], double p1_y[], double p2_x[],
+                                double p2_y[], double p3_x[], double p3_y[],
+                                double p4_x[], double p4_y[], const int size);
 
 void GetLastReferencePointCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
                                        double* pt);
