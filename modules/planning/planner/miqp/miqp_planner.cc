@@ -258,8 +258,13 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // Obstacles as obstacles
   if (config_.miqp_planner_config().consider_obstacles()) {
     // TODO: is that correct or should make use of relative time?
-    ProcessObstacles(frame->obstacles(), planning_init_point.relative_time());
-    // ProcessObstacles(frame->obstacles(), timestep);
+    bool success = ProcessObstacles(frame->obstacles(),
+                                    planning_init_point.relative_time());
+    if (!success) {
+      AERROR << "Processing of obstacles failed";
+      return Status(ErrorCode::PLANNING_ERROR,
+                    "processing of obstacles failed!");
+    }
   }
 
   // Plan
@@ -669,67 +674,82 @@ bool MiqpPlanner::EnvironmentCollision(
   return false;
 }
 
-void MiqpPlanner::ProcessObstacles(
+bool MiqpPlanner::ProcessObstacles(
     const std::vector<const Obstacle*>& obstacles, double timestep) {
   RemoveAllObstaclesCMiqpPlanner(planner_);
 
   // Add obstacles
   const int N = GetNCMiqpPlanner(planner_);
-  const double radius = GetCollisionRadius(planner_);
   for (const Obstacle* obstacle : obstacles) {
-    double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N], p4_y[N];
+    double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N],
+        p4_y[N];
     if (obstacle->IsVirtual()) {
       continue;
-    } else if (!obstacle->HasTrajectory()) {  // static
+      // } else if (!obstacle->IsLaneBlocking()) {
+      //   AINFO << "Skipping obstacle " << obstacle->Id() << " (not blocking
+      //   lane)"; continue;
+    } else if (!obstacle->HasTrajectory()) {
       continue;
+      // AINFO << "Static obstacle " << obstacle->Id();
       // const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
       // for (int i = 0; i < N; ++i) {
-      //   min_x[i] = polygon.min_x() - X_OFFSET;
-      //   max_x[i] = polygon.max_x() - X_OFFSET;
-      //   min_y[i] = polygon.min_y() - Y_OFFSET;
-      //   max_y[i] = polygon.max_y() - Y_OFFSET;
+      //   FillInflatedPtsFromPolygon(polygon, p1_x[i], p1_y[i], p2_x[i],
+      //   p2_y[i],
+      //                              p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
       // }
-      // AINFO << "Static obstacle " << obstacle->Id() << " at [" << min_x[0] << ", "
-      //       << max_x[0] << ", " << min_y[0] << ", " << max_y[0] << "]";
-    } else {  // dynamic
+    } else {
       const float ts = GetTsCMiqpPlanner(planner_);
       AINFO << "Dynamic obstacle " << obstacle->Id();
       for (int i = 0; i < N; ++i) {
         double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
-        
+
         common::math::Box2d box_i = obstacle->GetBoundingBox(point);
-        AINFO << "box_i: " << box_i.DebugString();
         common::math::Polygon2d poly2d_i = Polygon2d(box_i);
-        common::math::Polygon2d poly2d_buff_i = poly2d_i.ExpandByDistance(radius);
-        common::math::Box2d box_buff_i = poly2d_buff_i.MinAreaBoundingBox();
-        AINFO << "box_buff_i: " << box_buff_i.DebugString();
-        std::vector<Vec2d> pts = box_buff_i.GetAllCorners();
-        AINFO << "pts.size: " << pts.size();
-        // TODO: assert that pts.size is always 4!
-        AINFO << "pts(0): " << pts.at(0).DebugString() << " ... " << pts.at(0).x() - X_OFFSET << ", " <<  pts.at(0).y() - Y_OFFSET;
-        AINFO << "pts(1): " << pts.at(1).DebugString() << " ... " << pts.at(1).x() - X_OFFSET << ", " <<  pts.at(1).y() - Y_OFFSET;
-        AINFO << "pts(2): " << pts.at(2).DebugString() << " ... " << pts.at(2).x() - X_OFFSET << ", " <<  pts.at(2).y() - Y_OFFSET;
-        AINFO << "pts(3): " << pts.at(3).DebugString() << " ... " << pts.at(3).x() - X_OFFSET << ", " <<  pts.at(3).y() - Y_OFFSET;
-
-        p1_x[i] = pts.at(0).x() - X_OFFSET;
-        p1_y[i] = pts.at(0).y() - Y_OFFSET;
-        p2_x[i] = pts.at(1).x() - X_OFFSET;
-        p2_y[i] = pts.at(1).y() - Y_OFFSET;
-        p3_x[i] = pts.at(2).x() - X_OFFSET;
-        p3_y[i] = pts.at(2).y() - Y_OFFSET;
-        p4_x[i] = pts.at(3).x() - X_OFFSET;
-        p4_y[i] = pts.at(3).y() - Y_OFFSET;
-
+        FillInflatedPtsFromPolygon(poly2d_i, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
+                                   p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
       }
     }
 
-    // maybe use obstacle->IsLaneBlocking() to filter out some obstacles
-    int idx_obs =
-        AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, p4_x, p4_y, N);
+    int idx_obs = AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y,
+                                          p3_x, p3_y, p4_x, p4_y, N);
     AINFO << "Added obstacle " << obstacle->Id()
           << "with miqp idx = " << idx_obs;
   }
+  return true;
+}
+
+bool MiqpPlanner::FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
+                                             double& p1_x, double& p1_y,
+                                             double& p2_x, double& p2_y,
+                                             double& p3_x, double& p3_y,
+                                             double& p4_x, double& p4_y) {
+  const double radius = GetCollisionRadius(planner_);
+  common::math::Polygon2d poly2d_buff = poly.ExpandByDistance(radius);
+  common::math::Box2d box_buff = poly2d_buff.MinAreaBoundingBox();
+  std::vector<Vec2d> pts = box_buff.GetAllCorners();
+  if (pts.size() != 4) {
+    return false;
+  }
+  AINFO << "pts(0): " << pts.at(0).x() - X_OFFSET << ", "
+        << pts.at(0).y() - Y_OFFSET;
+  AINFO << "pts(1): " << pts.at(1).x() - X_OFFSET << ", "
+        << pts.at(1).y() - Y_OFFSET;
+  AINFO << "pts(2): " << pts.at(2).x() - X_OFFSET << ", "
+        << pts.at(2).y() - Y_OFFSET;
+  AINFO << "pts(3): " << pts.at(3).x() - X_OFFSET << ", "
+        << pts.at(3).y() - Y_OFFSET;
+
+  p1_x = pts.at(0).x() - X_OFFSET;
+  p1_y = pts.at(0).y() - Y_OFFSET;
+  p2_x = pts.at(1).x() - X_OFFSET;
+  p2_y = pts.at(1).y() - Y_OFFSET;
+  p3_x = pts.at(2).x() - X_OFFSET;
+  p3_y = pts.at(2).y() - Y_OFFSET;
+  p4_x = pts.at(3).x() - X_OFFSET;
+  p4_y = pts.at(3).y() - Y_OFFSET;
+
+  return true;
 }
 
 apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
