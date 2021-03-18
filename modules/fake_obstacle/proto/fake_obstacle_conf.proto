@@ -1,0 +1,5 @@
+syntax = "proto2";
+
+message FakeObstacleConf {
+  optional double velocity = 1;
+}
