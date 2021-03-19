@@ -18,6 +18,8 @@ cc_library(
         "//modules/fake_obstacle/proto:fake_obstacle_proto",
         "//modules/routing/proto:routing_proto",
         "//modules/perception/proto:perception_proto",
+        "//modules/map/hdmap:hdmap_util",
+        "//modules/planning/reference_line:reference_line_provider",
     ],
 )
 
