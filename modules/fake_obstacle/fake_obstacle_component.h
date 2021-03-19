@@ -19,8 +19,10 @@
 #include <memory>
 
 #include "cyber/cyber.h"
+#include "modules/common/monitor_log/monitor_log_buffer.h"
 #include "modules/localization/proto/localization.pb.h"
 #include "modules/routing/proto/routing.pb.h"
+#include "modules/perception/proto/perception_obstacle.pb.h"
 
 namespace apollo {
 namespace fake_obstacle {
@@ -34,7 +36,7 @@ namespace fake_obstacle {
 class FakeObstacleComponent final
     : public cyber::Component<localization::LocalizationEstimate> {
  public:
-  FakeObstacleComponent() = default;
+  FakeObstacleComponent();
 
   ~FakeObstacleComponent() = default;
 
@@ -49,12 +51,14 @@ class FakeObstacleComponent final
 
  private:
   std::shared_ptr<cyber::Reader<routing::RoutingResponse>> routing_reader_;
-  std::shared_ptr<apollo::cyber::Writer<PerceptionObstacles>> obstacle_writer_;
+  std::shared_ptr<cyber::Writer<perception::PerceptionObstacles>> obstacle_writer_;
 
   std::mutex mutex_;
 
   routing::RoutingResponse latest_routing_;
   localization::LocalizationEstimate latest_localization_;
+  
+  common::monitor::MonitorLogBuffer monitor_logger_buffer_;
 };
 
 CYBER_REGISTER_COMPONENT(FakeObstacleComponent)

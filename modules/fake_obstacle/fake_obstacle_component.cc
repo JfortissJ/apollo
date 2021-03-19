@@ -16,30 +16,26 @@
 
 #include "modules/fake_obstacle/fake_obstacle_component.h"
 
-#include "cyber/common/file.h"
 #include "modules/common/adapters/adapter_gflags.h"
-#include "modules/common/configs/config_gflags.h"
-#include "modules/common/util/message_util.h"
-#include "modules/common/util/util.h"
-#include "modules/map/hdmap/hdmap_util.h"
+#include "modules/fake_obstacle/proto/fake_obstacle_conf.pb.h"
 
 namespace apollo {
 namespace fake_obstacle {
 
-using apollo::hdmap::HDMapUtil;
+// using apollo::hdmap::HDMapUtil;
+using apollo::perception::PerceptionObstacles;
 using apollo::routing::RoutingResponse;
+using apollo::localization::LocalizationEstimate;
 
 FakeObstacleComponent::FakeObstacleComponent()
-    : monitor_logger_buffer_(
-          apollo::common::monitor::MonitorMessageItem::PLANNING) {
+    : monitor_logger_buffer_(common::monitor::MonitorMessageItem::PLANNING) {
   AERROR << "Started fake obstacle node!";
 }
 
 bool FakeObstacleComponent::Init() {
   // load proto file
-  fakeObstacleConf fake_obst_config;
-  if (!apollo::cyber::common::GetProtoFromFile(config_file_path_,
-                                               &fake_obst_config)) {
+  FakeObstacleConf fake_obst_config;
+  if (!cyber::common::GetProtoFromFile(config_file_path_, &fake_obst_config)) {
     monitor_logger_buffer_.ERROR("Unable to load fake obstacle conf file: " +
                                  config_file_path_);
   }
@@ -59,12 +55,11 @@ bool FakeObstacleComponent::Init() {
   return true;
 }
 
-bool FakeObstacleComponent::Proc(
-    const std::shared_ptr<localization::LocalizationEstimate>&
+bool FakeObstacleComponent::Proc(const std::shared_ptr<LocalizationEstimate>&
         localization_estimate) {
-  latest_localization_ = localization_estimate;
+  latest_localization_ = *localization_estimate;
 
-  auto response = std::make_shared<apollo::perception::PerceptionObstacles>();
+  auto response = std::make_shared<PerceptionObstacles>();
   // TODO: fill response
 
   obstacle_writer_->Write(response);

@@ -11,10 +11,13 @@ cc_library(
     ],
     deps = [
         "//cyber",
+        "//modules/common/monitor_log",
         "//modules/common/adapters:adapter_gflags",
         "//modules/common/util:message_util",
         "//modules/localization/proto:localization_proto",
         "//modules/fake_obstacle/proto:fake_obstacle_proto",
+        "//modules/routing/proto:routing_proto",
+        "//modules/perception/proto:perception_proto",
     ],
 )
 
