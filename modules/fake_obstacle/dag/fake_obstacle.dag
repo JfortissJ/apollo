@@ -1,0 +1,23 @@
+# Define all coms in DAG streaming.
+module_config {
+  module_library : "/apollo/bazel-bin/modules/fake_obstacle/libfake_obstacle_component.so"
+
+  components {
+    class_name : "FakeObstacleComponent"
+    config {
+      name : "fake_obstacle"
+      config_file_path : "/apollo/modules/fake_obstacle/conf/fake_obstacle.pb.txt"
+      readers: [
+        {
+          channel: "/apollo/localization/pose"
+          qos_profile: {
+              depth : 7
+          }
+          pending_queue_size: 25
+        }
+      ]
+    }
+  }
+}
+
+
