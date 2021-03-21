@@ -3,11 +3,6 @@
 // This work is licensed under the terms of the MIT license.
 // For a copy, see <https://opensource.org/licenses/MIT>.
 
-// we need to wrap: in this order
-// MiqpPlanner planner = MiqpPlanner(settings, envPoly);
-// planner_.UpdateConvexifiedMap(envPoly_);
-// planner.AddObstacle(predictedTraj, obstacleShape);
-
 #include "miqp_planner_settings.h"
 
 #define TRAJECTORY_TIME_IDX 0
@@ -70,12 +65,13 @@ void UpdateDesiredVelocityCMiqpPlanner(CMiqpPlanner c_miqp_planner,
 int AddObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, double p1_x[],
                             double p1_y[], double p2_x[], double p2_y[],
                             double p3_x[], double p3_y[], double p4_x[],
-                            double p4_y[], const int size);
+                            double p4_y[], const int size, bool is_static);
 
 void UpdateObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, int id,
                                 double p1_x[], double p1_y[], double p2_x[],
                                 double p2_y[], double p3_x[], double p3_y[],
-                                double p4_x[], double p4_y[], const int size);
+                                double p4_x[], double p4_y[], const int size,
+                                bool is_static);
 
 void GetLastReferencePointCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
                                        double* pt);
