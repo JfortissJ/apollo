@@ -714,8 +714,10 @@ bool MiqpPlanner::ProcessObstacles(
 
     int idx_obs = AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y,
                                           p3_x, p3_y, p4_x, p4_y, N, is_static);
-    AINFO << "Added obstacle " << obstacle->Id()
-          << "with miqp idx = " << idx_obs << " is_static = " << is_static;
+    if (idx_obs != -1) {
+      AINFO << "Added obstacle " << obstacle->Id()
+            << " with miqp idx = " << idx_obs << " is_static = " << is_static;
+    }
   }
   return true;
 }
@@ -732,14 +734,14 @@ bool MiqpPlanner::FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
   if (pts.size() != 4) {
     return false;
   }
-  AINFO << "pts(0): " << pts.at(0).x() - X_OFFSET << ", "
-        << pts.at(0).y() - Y_OFFSET;
-  AINFO << "pts(1): " << pts.at(1).x() - X_OFFSET << ", "
-        << pts.at(1).y() - Y_OFFSET;
-  AINFO << "pts(2): " << pts.at(2).x() - X_OFFSET << ", "
-        << pts.at(2).y() - Y_OFFSET;
-  AINFO << "pts(3): " << pts.at(3).x() - X_OFFSET << ", "
-        << pts.at(3).y() - Y_OFFSET;
+  // AINFO << "pts(0): " << pts.at(0).x() - X_OFFSET << ", "
+  //       << pts.at(0).y() - Y_OFFSET;
+  // AINFO << "pts(1): " << pts.at(1).x() - X_OFFSET << ", "
+  //       << pts.at(1).y() - Y_OFFSET;
+  // AINFO << "pts(2): " << pts.at(2).x() - X_OFFSET << ", "
+  //       << pts.at(2).y() - Y_OFFSET;
+  // AINFO << "pts(3): " << pts.at(3).x() - X_OFFSET << ", "
+  //       << pts.at(3).y() - Y_OFFSET;
 
   p1_x = pts.at(0).x() - X_OFFSET;
   p1_y = pts.at(0).y() - Y_OFFSET;
