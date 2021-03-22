@@ -66,3 +66,5 @@ DECLARE_bool(fortiss_simcontrol_set_start_pose);
 DECLARE_double(fortiss_simcontrol_start_x);
 
 DECLARE_double(fortiss_simcontrol_start_y);
+
+DECLARE_bool(fortiss_publish_empty_prediction);

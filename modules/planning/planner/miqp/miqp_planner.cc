@@ -577,6 +577,16 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   } else {
     s.velocityWeight = 0.0;
   }
+  if (conf.has_obstacle_roi_filter()) {
+    s.obstacle_roi_filter = conf.obstacle_roi_filter();
+  } else {
+    s.obstacle_roi_filter = false;
+  }
+  if (conf.has_obstacle_roi_behind_distance()) {
+    s.obstacle_roi_behind_distance = conf.obstacle_roi_behind_distance();
+  } else {
+    s.obstacle_roi_behind_distance = 10.0;
+  }
   s.wheelBase = common::VehicleConfigHelper::Instance()
                     ->GetConfig()
                     .vehicle_param()

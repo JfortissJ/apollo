@@ -61,6 +61,8 @@ struct MiqpPlannerSettings {
   MiqpPlannerParallelMode parallelMode;
   float max_velocity_fitting;
   bool buffer_cplex_outputs;
+  bool obstacle_roi_filter;
+  float obstacle_roi_behind_distance;
 };
 
 #endif  // MIQP_PLANNER_SETTINGS_HEADER
