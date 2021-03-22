@@ -1,2 +1,4 @@
-velocity: 10
-delta_s_in_front: 10
+velocity: 0
+delta_s_in_front: 15
+heading_offset: 0.7
+lateral_offset: 3.5

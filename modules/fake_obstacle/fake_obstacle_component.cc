@@ -17,6 +17,7 @@
 #include "modules/fake_obstacle/fake_obstacle_component.h"
 
 #include "modules/common/adapters/adapter_gflags.h"
+#include "modules/common/util/util.h"
 #include "modules/common/vehicle_state/vehicle_state_provider.h"
 
 namespace apollo {
@@ -39,7 +40,7 @@ FakeObstacleComponent::FakeObstacleComponent()
       s_init_obstacle_(0.0),
       t_init_obstacle_(0.0),
       obstacle_has_started_(false) {
-  AERROR << "Started FakeObstacleComponent !";
+  AINFO << "Started FakeObstacleComponent !";
 }
 
 FakeObstacleComponent::~FakeObstacleComponent() {
@@ -188,17 +189,20 @@ bool FakeObstacleComponent::FillPerceptionObstacles() {
       last_reference_lines_.front().GetReferencePoint(s_current_obstacle);
 
   auto response = std::make_shared<PerceptionObstacles>();
-  // TODO: fill response
+  common::util::FillHeader(node_->Name(), response.get());
   apollo::perception::PerceptionObstacle* ob =
       response->add_perception_obstacle();
 
   apollo::common::Point3D position;
-  position.set_x(other_ref_point.x());
-  position.set_y(other_ref_point.y());
+  const double lateral_offset_direction = other_ref_point.heading() + M_PI_2;
+  position.set_x(other_ref_point.x() + cos(lateral_offset_direction) *
+                                           fake_obst_config_.lateral_offset());
+  position.set_y(other_ref_point.y() + sin(lateral_offset_direction) *
+                                           fake_obst_config_.lateral_offset());
   position.set_z(0.0);
   ob->mutable_position()->CopyFrom(position);
 
-  ob->set_theta(other_ref_point.heading());
+  ob->set_theta(other_ref_point.heading() + fake_obst_config_.heading_offset());
 
   // Set linear_velocity
   apollo::common::Point3D velocity3d;
