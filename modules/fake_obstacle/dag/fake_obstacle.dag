@@ -2,20 +2,14 @@
 module_config {
   module_library : "/apollo/bazel-bin/modules/fake_obstacle/libfake_obstacle_component.so"
 
-  components {
+  timer_components {
     class_name : "FakeObstacleComponent"
     config {
       name : "fake_obstacle"
+      flag_file_path:  "/apollo/modules/fake_obstacle/conf/fake_obstacle.conf"
       config_file_path : "/apollo/modules/fake_obstacle/conf/fake_obstacle.pb.txt"
-      readers: [
-        {
-          channel: "/apollo/localization/pose"
-          qos_profile: {
-              depth : 7
-          }
-          pending_queue_size: 25
-        }
-      ]
+      interval: 10
+      
     }
   }
 }
