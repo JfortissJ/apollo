@@ -683,23 +683,23 @@ bool MiqpPlanner::ProcessObstacles(
   for (const Obstacle* obstacle : obstacles) {
     double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N],
         p4_y[N];
+    bool is_static;
     if (obstacle->IsVirtual()) {
       continue;
       // } else if (!obstacle->IsLaneBlocking()) {
       //   AINFO << "Skipping obstacle " << obstacle->Id() << " (not blocking
       //   lane)"; continue;
     } else if (!obstacle->HasTrajectory()) {
-      continue;
       // AINFO << "Static obstacle " << obstacle->Id();
-      // const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
-      // for (int i = 0; i < N; ++i) {
-      //   FillInflatedPtsFromPolygon(polygon, p1_x[i], p1_y[i], p2_x[i],
-      //   p2_y[i],
-      //                              p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
-      // }
+      const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
+      for (int i = 0; i < N; ++i) {
+        FillInflatedPtsFromPolygon(polygon, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
+                                   p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
+      }
+      is_static = true;
     } else {
       const float ts = GetTsCMiqpPlanner(planner_);
-      AINFO << "Dynamic obstacle " << obstacle->Id();
+      // AINFO << "Dynamic obstacle " << obstacle->Id();
       for (int i = 0; i < N; ++i) {
         double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
@@ -709,12 +709,13 @@ bool MiqpPlanner::ProcessObstacles(
         FillInflatedPtsFromPolygon(poly2d_i, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
                                    p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
       }
+      is_static = false;
     }
 
     int idx_obs = AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y,
-                                          p3_x, p3_y, p4_x, p4_y, N);
+                                          p3_x, p3_y, p4_x, p4_y, N, is_static);
     AINFO << "Added obstacle " << obstacle->Id()
-          << "with miqp idx = " << idx_obs;
+          << "with miqp idx = " << idx_obs << " is_static = " << is_static;
   }
   return true;
 }
