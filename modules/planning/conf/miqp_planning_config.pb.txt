@@ -32,6 +32,8 @@ miqp_planner_config: {
     destination_distance_stop_threshold: 2.0
     obstacle_roi_filter: true
     obstacle_roi_behind_distance: 10.0
+    merge_static_obstacles: true
+    static_obstacle_distance_criteria: 2.0
 }
 
 

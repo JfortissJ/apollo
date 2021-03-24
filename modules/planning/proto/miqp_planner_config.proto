@@ -31,4 +31,6 @@ message MiqpPlannerConfiguration {
     optional double destination_distance_stop_threshold = 26 [default = 2.0];
     optional bool obstacle_roi_filter = 27 [default = false];
     optional double obstacle_roi_behind_distance = 28 [default = 10.0];
+    optional bool merge_static_obstacles = 29 [default = false];
+    optional double static_obstacle_distance_criteria = 30 [default = 2.0];
 }

@@ -90,8 +90,10 @@ class MiqpPlanner : public LatticePlanner {
       std::vector<common::math::Vec2d> right_pts,
       const apollo::planning::DiscretizedTrajectory& ego_trajectory);
 
-  bool ProcessObstacles(const std::vector<const Obstacle*>& obstacles,
-                        double timestep);
+  bool ProcessStaticObstacles(const std::vector<const Obstacle*>& obstacles);
+
+  bool ProcessDynamicObstacles(const std::vector<const Obstacle*>& obstacles,
+                               double timestep);
 
   bool FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
                                   double& p1_x, double& p1_y, double& p2_x,
