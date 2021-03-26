@@ -90,6 +90,51 @@
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
+				<item>
+					<Component type="key">Instrumentation</Component>
+					<Name type="key">Controller_outputs.lay</Name>
+					<DisplayName type="key">Controller_outputs.lay</DisplayName>
+					<Path type="key">.\Experiment Layouts</Path>
+					<Flags type="key">16448</Flags>
+					<Type type="key">10</Type>
+					<UniqueID type="key">435038581</UniqueID>
+					<EntityID type="key">{16D178C5-588B-4182-BBF9-42D167373BCB}</EntityID>
+					<ItemInfoDate type="key">25.03.2021 09:41:15</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">Instrumentation</Component>
+					<Name type="key">controller.lay</Name>
+					<DisplayName type="key">controller.lay</DisplayName>
+					<Path type="key">.\Experiment Layouts</Path>
+					<Flags type="key">17472</Flags>
+					<Type type="key">10</Type>
+					<UniqueID type="key">1021848899</UniqueID>
+					<EntityID type="key">{DDD874FD-3379-4292-93F8-501438FF0FEE}</EntityID>
+					<ItemInfoDate type="key">25.03.2021 09:42:37</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">Instrumentation</Component>
+					<Name type="key">SystemStatus.lay</Name>
+					<DisplayName type="key">SystemStatus.lay</DisplayName>
+					<Path type="key">.\Experiment Layouts</Path>
+					<Flags type="key">16448</Flags>
+					<Type type="key">10</Type>
+					<UniqueID type="key">21180097</UniqueID>
+					<EntityID type="key">{42F91E4B-C9D1-4230-9B3E-9FBD034DA71B}</EntityID>
+					<ItemInfoDate type="key">26.03.2021 09:28:21</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
 			</item>
 			<item>
 				<Targets type="key">devicemanagement,platformmanagement,diagnosticsmanagement</Targets>
@@ -292,6 +337,13 @@
 	<VariablesManagement>
 		<Favorites>
 			<Labels/>
+			<Favorite>
+				<VariableName type="key">Out1</VariableName>
+				<VariableUniqueName type="key">Model Root/AutoboxControl/limit out signals/limit acceleration rate/Out1</VariableUniqueName>
+				<VariableDescriptionName type="key">autoboxmodel.sdf</VariableDescriptionName>
+				<PlatformId type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</PlatformId>
+				<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+			</Favorite>
 		</Favorites>
 	</VariablesManagement>
 	<UserManager/>
@@ -412,16 +464,7 @@
 		<NextUniqueKey type="key">27</NextUniqueKey>
 		<SortedColumn type="key">4</SortedColumn>
 		<SortAscending type="key">-1</SortAscending>
-		<SignalList>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/ETHERNET_UDP_RX_BL1/Status</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-		</SignalList>
+		<SignalList/>
 		<Platforms>
 			<Platform>
 				<Name type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Name>
@@ -570,17 +613,7 @@
 					<OpenInMeasurementDataPoolEnabled type="key">0</OpenInMeasurementDataPoolEnabled>
 					<RecordingFileType type="key">ASAM MDF 4.1 Files (*.mf4)</RecordingFileType>
 				</StorageInformation>
-				<SignalList>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/ETHERNET_UDP_RX_BL1/Status</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-				</SignalList>
+				<SignalList/>
 			</Recorder>
 		</Recorders>
 	</MeasurementConfiguration>

@@ -8,7 +8,9 @@ controller_params.m = 2000.0; % unused, only needed to output the force
 controller_params.l_v = 2.786/2.0;
 controller_params.l_h = 2.786/2.0;
 
-controller_max_time_diff = 100;
+controller_max_time_diff = 100; %in ms, maximum difference in time the traj and the loca shall have
+max_loca_traj_diff = 10; %in m, maximum difference the first trajpoint and the loca shall have
+maxdelay = 2; %in s, only a check if the ethernet communiction is delayed by at least this
 
 switch_steering_feedback = 1; % 0:hack internal feedback, 1:from can 
 switch_velocity_feedback = 1; %0:from can, 1:from loca
@@ -26,5 +28,8 @@ steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 14.8828*180/pi
 
 % Parameters for apollo controller
 apollo_control_timeout = 10;
+
+% Below this speed shift time of the first trajpoint to the current time
+trajectory_timeshift_speed_threshold = 0.5;
 
 
