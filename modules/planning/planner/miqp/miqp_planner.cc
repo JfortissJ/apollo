@@ -343,45 +343,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
   return Status::OK();
 }
 
-apollo::planning::DiscretizedTrajectory
-MiqpPlanner::BarkTrajectoryToApolloTrajectory(double traj[], int size) {
-  const int TIME_POSITION = 0;
-  const int X_POSITION = 1;
-  const int Y_POSITION = 2;
-  const int THETA_POSITION = 3;
-  const int VEL_POSITION = 4;
-  const int MIN_STATE_SIZE = 5;
-
-  double s = 0.0f;
-  double lastx = traj[0 + X_POSITION];
-  double lasty = traj[0 + Y_POSITION];
-
-  DiscretizedTrajectory apollo_trajectory;
-  for (int trajidx = 0; trajidx < size; ++trajidx) {
-    double time = traj[trajidx * MIN_STATE_SIZE + TIME_POSITION];
-    double x = traj[trajidx * MIN_STATE_SIZE + X_POSITION] + X_OFFSET;
-    double y = traj[trajidx * MIN_STATE_SIZE + Y_POSITION] + Y_OFFSET;
-    double theta = traj[trajidx * MIN_STATE_SIZE + THETA_POSITION];
-    double v = traj[trajidx * MIN_STATE_SIZE + VEL_POSITION];
-    s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
-
-    TrajectoryPoint trajectory_point;
-    trajectory_point.mutable_path_point()->set_x(x);
-    trajectory_point.mutable_path_point()->set_y(y);
-    trajectory_point.mutable_path_point()->set_s(s);
-    trajectory_point.mutable_path_point()->set_theta(theta);
-    // trajectory_point.mutable_path_point()->set_kappa(kappa); //TODO
-    trajectory_point.set_v(v);
-    // trajectory_point.set_a(a); //TODO
-    trajectory_point.set_relative_time(time);
-    apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
-
-    lastx = x;
-    lasty = y;
-  }
-
-  return apollo_trajectory;
-}
 
 apollo::planning::DiscretizedTrajectory
 MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
@@ -421,6 +382,7 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
     trajectory_point.set_a(a);
     // trajectory_point.set_da(jerk);
     trajectory_point.set_relative_time(time);
+    AINFO << "Planned trajectory at i=" << trajidx << ": " << trajectory_point.DebugString();
     apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
 
     lastx = x;
