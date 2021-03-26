@@ -148,6 +148,57 @@ Original file added from ..\..\Simulink\autoboxmodel.sdf [2020-10-19 15:41:37 (U
 
 Variable description reloaded on 18.11.2020 12:10:43 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
 Original file added from ..\..\autoboxmodel.sdf [2020-11-18 10:01:26 (UTC)]
+
+Variable description reloaded on 18.11.2020 14:29:36 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2020-11-18 13:29:02 (UTC)]
+
+Variable description reloaded on 18.11.2020 14:33:56 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2020-11-18 13:33:15 (UTC)]
+
+Variable description reloaded on 17.03.2021 11:05:16 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-17 09:51:40 (UTC)]
+
+Variable description reloaded on 19.03.2021 12:05:23 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-17 09:51:40 (UTC)]
+
+Variable description reloaded on 25.03.2021 08:45:16 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-17 09:51:40 (UTC)]
+
+Variable description reloaded on 25.03.2021 09:43:27 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-17 09:51:40 (UTC)]
+
+Variable description reloaded on 25.03.2021 11:06:31 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-17 09:51:40 (UTC)]
+
+Variable description reloaded on 25.03.2021 11:10:49 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-25 10:09:44 (UTC)]
+
+Variable description reloaded on 25.03.2021 11:15:33 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-25 10:13:44 (UTC)]
+
+Variable description reloaded on 25.03.2021 11:22:01 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-25 10:20:15 (UTC)]
+
+Variable description reloaded on 25.03.2021 11:22:27 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-25 10:20:15 (UTC)]
+
+Variable description reloaded on 25.03.2021 11:23:26 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-25 10:20:15 (UTC)]
+
+Variable description reloaded on 26.03.2021 08:53:44 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-25 16:01:43 (UTC)]
+
+Variable description reloaded on 26.03.2021 09:10:15 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-26 08:10:00 (UTC)]
+
+Variable description reloaded on 26.03.2021 09:31:33 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-26 08:29:07 (UTC)]
+
+Variable description reloaded on 26.03.2021 15:58:20 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-26 14:58:06 (UTC)]
+
+Variable description reloaded on 26.03.2021 16:01:09 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-26 15:00:52 (UTC)]
 </ItemInfoLog>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
@@ -159,9 +210,9 @@ Original file added from ..\..\autoboxmodel.sdf [2020-11-18 10:01:26 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">332319670</UniqueID>
-						<EntityID type="key">{B5A157F7-59A0-48E2-9196-E41E2733159B}</EntityID>
-						<ItemInfoDate type="key">18.11.2020 12:10:43</ItemInfoDate>
+						<UniqueID type="key">1054566063</UniqueID>
+						<EntityID type="key">{7B85C93B-1387-484D-BB39-1D33E3F4B373}</EntityID>
+						<ItemInfoDate type="key">26.03.2021 16:01:09</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -175,9 +226,9 @@ Original file added from ..\..\autoboxmodel.sdf [2020-11-18 10:01:26 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">1056997886</UniqueID>
-						<EntityID type="key">{A87A3046-77B5-47C2-A232-3EF235732084}</EntityID>
-						<ItemInfoDate type="key">18.11.2020 12:10:43</ItemInfoDate>
+						<UniqueID type="key">62426163</UniqueID>
+						<EntityID type="key">{7FAEE2D3-B35A-4E52-8110-50F4FD2645C9}</EntityID>
+						<ItemInfoDate type="key">26.03.2021 16:01:09</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -191,9 +242,9 @@ Original file added from ..\..\autoboxmodel.sdf [2020-11-18 10:01:26 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">30</Type>
-						<UniqueID type="key">345105697</UniqueID>
-						<EntityID type="key">{0505931F-ED76-4C9E-8387-C0B1B3D2A38E}</EntityID>
-						<ItemInfoDate type="key">18.11.2020 12:10:43</ItemInfoDate>
+						<UniqueID type="key">153666322</UniqueID>
+						<EntityID type="key">{E211AECA-62D5-43A8-A2F6-D717E96BA6EB}</EntityID>
+						<ItemInfoDate type="key">26.03.2021 16:01:09</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -207,9 +258,9 @@ Original file added from ..\..\autoboxmodel.sdf [2020-11-18 10:01:26 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">1024839863</UniqueID>
-						<EntityID type="key">{C29DC461-5A1F-45BC-8B49-A24BEF2B247A}</EntityID>
-						<ItemInfoDate type="key">18.11.2020 12:10:43</ItemInfoDate>
+						<UniqueID type="key">935837934</UniqueID>
+						<EntityID type="key">{3A2F3DC0-D8F2-40AC-827D-DEB78A82AA9A}</EntityID>
+						<ItemInfoDate type="key">26.03.2021 16:01:09</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -358,11 +409,17 @@ Original file added from ..\..\autoboxmodel.sdf [2020-11-18 10:01:26 (UTC)]
 	</ProjectExperiment>
 	<Instrumentation Version="1">
 		<UniqueIds Version="3">
-			<Count type="key">2</Count>
+			<Count type="key">5</Count>
 			<File1 type="key">ControllerEthernetDebugExperiment/Ethernet</File1>
 			<Id1 type="key">0</Id1>
 			<File2 type="key">ControllerEthernetDebugExperiment/Initialize_Status</File2>
 			<Id2 type="key">5</Id2>
+			<File3 type="key">ControllerEthernetDebugExperiment/Controller_outputs</File3>
+			<Id3 type="key">1</Id3>
+			<File4 type="key">ControllerEthernetDebugExperiment/controller</File4>
+			<Id4 type="key">2</Id4>
+			<File5 type="key">ControllerEthernetDebugExperiment/SystemStatus</File5>
+			<Id5 type="key">3</Id5>
 		</UniqueIds>
 	</Instrumentation>
 	<DiagnosticsManagement/>

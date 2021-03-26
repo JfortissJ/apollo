@@ -2,3 +2,13 @@
 *.mexw64
 *.mexw64.pdb
 slprj/*
+AutoboxModel_rti1401/*
+AutoboxModel.dsbuildinfo
+AutoboxModel.map
+AutoboxModel.ppc
+AutoboxModel.ppc.hex
+AutoboxModel.ppc.srec
+AutoboxModel.trc
+AutoboxModel.trz
+AutoboxModel_usr.c
+autoboxmodel.sdf
