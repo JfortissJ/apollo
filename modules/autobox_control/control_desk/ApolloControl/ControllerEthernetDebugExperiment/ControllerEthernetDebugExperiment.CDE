@@ -135,6 +135,36 @@
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
+				<item>
+					<Component type="key">Instrumentation</Component>
+					<Name type="key">ReferencePoint.lay</Name>
+					<DisplayName type="key">ReferencePoint.lay</DisplayName>
+					<Path type="key">.\Experiment Layouts</Path>
+					<Flags type="key">16448</Flags>
+					<Type type="key">10</Type>
+					<UniqueID type="key">817047569</UniqueID>
+					<EntityID type="key">{868774D7-2FA5-4902-9AE5-7689746F11B7}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 09:37:30</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">Instrumentation</Component>
+					<Name type="key">ApolloControl.lay</Name>
+					<DisplayName type="key">ApolloControl.lay</DisplayName>
+					<Path type="key">.\Experiment Layouts</Path>
+					<Flags type="key">16448</Flags>
+					<Type type="key">10</Type>
+					<UniqueID type="key">461685748</UniqueID>
+					<EntityID type="key">{157EA24A-6212-4519-8B12-896146EBDDFC}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:43:21</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
 			</item>
 			<item>
 				<Targets type="key">devicemanagement,platformmanagement,diagnosticsmanagement</Targets>
@@ -156,7 +186,7 @@
 					<RestoreInfopmdn type="key">Platform</RestoreInfopmdn>
 					<RestoreInfopmid type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</RestoreInfopmid>
 					<Name type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Name>
-					<DisplayName type="key">Platform [MicroAutoBox, unassigned]</DisplayName>
+					<DisplayName type="key">Platform [MicroAutoBox, assigned to 'ds1401']</DisplayName>
 					<Flags type="key">128</Flags>
 					<ExtendedFlags type="key">3072</ExtendedFlags>
 					<Type type="key">6</Type>
@@ -187,6 +217,48 @@
 							<ItemInfoDescr type="key"/>
 							<ItemInfoAddInfoDb type="key"/>
 							<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">555054194</UniqueID>
+							<LinkedItem type="key">277529822</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">606428597</UniqueID>
+							<LinkedItem type="key">284265296</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">765185053</UniqueID>
+							<LinkedItem type="key">234255931</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">170633191</UniqueID>
+							<LinkedItem type="key">207585481</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">941458573</UniqueID>
+							<LinkedItem type="key">357276155</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">74505788</UniqueID>
+							<LinkedItem type="key">538189499</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">1035150766</UniqueID>
+							<LinkedItem type="key">441516934</LinkedItem>
 						</item>
 					</item>
 				</item>
@@ -221,6 +293,146 @@
 				<ItemInfoDescr type="key"/>
 				<ItemInfoAddInfoDb type="key"/>
 				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_001.mf4</Name>
+					<DisplayName type="key">rec1_001.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">277529822</UniqueID>
+					<EntityID type="key">{73DA72EB-1148-4734-8BAE-5B667A823B46}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:08:46</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_002.mf4</Name>
+					<DisplayName type="key">rec1_002.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">284265296</UniqueID>
+					<EntityID type="key">{2EF9715C-0B80-4E96-975A-216ED8A1B0AF}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:09:03</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_003.mf4</Name>
+					<DisplayName type="key">rec1_003.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">234255931</UniqueID>
+					<EntityID type="key">{B145EB9E-F955-4F0E-B56E-BB99B1ADB30A}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:09:52</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_004.mf4</Name>
+					<DisplayName type="key">rec1_004.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">207585481</UniqueID>
+					<EntityID type="key">{54815AA6-9C67-4441-8775-69637FE0D69F}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:11:09</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_005.mf4</Name>
+					<DisplayName type="key">rec1_005.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">357276155</UniqueID>
+					<EntityID type="key">{370E1B92-A45F-4F57-BE05-2CDEBCEC7626}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:16:24</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_006.mf4</Name>
+					<DisplayName type="key">rec1_006.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">538189499</UniqueID>
+					<EntityID type="key">{9700EA28-E475-4297-8FD6-7E5A0F719654}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:16:46</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_007.mf4</Name>
+					<DisplayName type="key">rec1_007.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">441516934</UniqueID>
+					<EntityID type="key">{7B83D7D7-860C-4340-82DD-6F39C59998F4}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:20:58</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
 			</item>
 			<item>
 				<Targets type="key">.rtf,.pdf,.html,.xml,.txt,.csv</Targets>
@@ -464,13 +676,294 @@
 		<NextUniqueKey type="key">27</NextUniqueKey>
 		<SortedColumn type="key">4</SortedColumn>
 		<SortAscending type="key">-1</SortAscending>
-		<SignalList/>
+		<SignalList>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.acceleration</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.brake</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.sequence_num</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.steering_rate</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.steering_target</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.throttle</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.timestamp_sec</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.MeasurementTime</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Heading</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.x</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.y</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.z</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.x</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.y</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.z</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.x</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.y</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.z</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.x</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.y</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.z</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/measure_time_delay_loca/is_not_delayed</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.a</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.ddkappa</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.dkappa</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.kappa</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.n_trajectory_point</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.relative_time</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.s</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.theta</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.timestamp_sec</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.v</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.x</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.y</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.z</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">HostService</Raster>
+				</Signal>
+			</Variable>
+		</SignalList>
 		<Platforms>
 			<Platform>
 				<Name type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Name>
 				<FilteredRastersView type="key">1</FilteredRastersView>
 				<UseDefaultRasterForParameters type="key">0</UseDefaultRasterForParameters>
-				<DefaultRaster type="key">HostService</DefaultRaster>
+				<DefaultRaster type="key">Hardware Polling [10ms]</DefaultRaster>
 				<Rasters>
 					<PlatformTriggered>
 						<Name type="key">HostService</Name>
@@ -482,7 +975,34 @@
 						<StopTrigger type="key">26</StopTrigger>
 					</PlatformTriggered>
 				</Rasters>
-				<EnabledHardwarePollingRasters/>
+				<EnabledHardwarePollingRasters>
+					<HardwarePollingRaster>
+						<Name type="key">Hardware Polling [10ms]</Name>
+					</HardwarePollingRaster>
+					<HardwarePollingRaster>
+						<Name type="key">Hardware Polling [20ms]</Name>
+					</HardwarePollingRaster>
+					<HardwarePollingRaster>
+						<Name type="key">Hardware Polling [200ms]</Name>
+					</HardwarePollingRaster>
+				</EnabledHardwarePollingRasters>
+				<DisplayedRasters>
+					<Raster>
+						<Name type="key">Hardware Polling [10ms]</Name>
+					</Raster>
+					<Raster>
+						<Name type="key">Hardware Polling [20ms]</Name>
+					</Raster>
+					<Raster>
+						<Name type="key">HostService</Name>
+					</Raster>
+					<Raster>
+						<Name type="key">OnChange</Name>
+					</Raster>
+					<Raster>
+						<Name type="key">Hardware Polling [200ms]</Name>
+					</Raster>
+				</DisplayedRasters>
 				<PlatformTriggers>
 					<PlatformTrigger>
 						<UniqueKey type="key">25</UniqueKey>
@@ -576,7 +1096,7 @@
 		</Acquisition>
 		<Recorders>
 			<Recorder>
-				<Name type="key">Recorder 1</Name>
+				<Name type="key">InputSignals</Name>
 				<UniqueKey type="key">24</UniqueKey>
 				<AutomaticSignalConfigurationEnabled type="key">-1</AutomaticSignalConfigurationEnabled>
 				<WriteToFileEnabled type="key">-1</WriteToFileEnabled>
@@ -601,19 +1121,335 @@
 				<StorageInformation>
 					<AddToExperimentEnabled type="key">-1</AddToExperimentEnabled>
 					<AutomaticSaveDialogEnabled type="key">0</AutomaticSaveDialogEnabled>
-					<AutomaticExportEnabled type="key">0</AutomaticExportEnabled>
+					<AutomaticExportEnabled type="key">-1</AutomaticExportEnabled>
 					<AutomaticExportFileNamePrefix type="key">exp1_</AutomaticExportFileNamePrefix>
-					<AutomaticExportFileType type="key">ASAM MDF 4.1 Files (*.mf4)</AutomaticExportFileType>
+					<AutomaticExportFileType type="key">MATLAB Files (*.mat)</AutomaticExportFileType>
 					<AutomaticExportFolder type="key"/>
 					<AutomaticNamingEnabled type="key">-1</AutomaticNamingEnabled>
 					<AutomaticNamingMinimunDigits type="key">3</AutomaticNamingMinimunDigits>
-					<AutomaticNamingStartIndex type="key">1</AutomaticNamingStartIndex>
+					<AutomaticNamingStartIndex type="key">8</AutomaticNamingStartIndex>
 					<Description type="key"/>
 					<FileNamePrefix type="key">rec1_</FileNamePrefix>
 					<OpenInMeasurementDataPoolEnabled type="key">0</OpenInMeasurementDataPoolEnabled>
 					<RecordingFileType type="key">ASAM MDF 4.1 Files (*.mf4)</RecordingFileType>
 				</StorageInformation>
-				<SignalList/>
+				<SignalList>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.acceleration</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.brake</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.sequence_num</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.steering_rate</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.steering_target</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.throttle</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.timestamp_sec</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.MeasurementTime</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Heading</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.x</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.y</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.z</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.x</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.y</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.z</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.x</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.y</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.z</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.x</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.y</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.z</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/measure_time_delay_loca/is_not_delayed</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.a</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.ddkappa</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.dkappa</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.kappa</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.n_trajectory_point</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.relative_time</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.s</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.theta</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.timestamp_sec</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.v</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.x</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.y</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.z</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">HostService</Raster>
+						</Signal>
+					</Variable>
+				</SignalList>
 			</Recorder>
 		</Recorders>
 	</MeasurementConfiguration>

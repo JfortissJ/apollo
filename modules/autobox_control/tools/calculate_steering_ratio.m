@@ -23,7 +23,7 @@ function [] = calculate_steering_ratio()
 
     close all
     
-    folder = '\\fs01\kf\AS\# fortiss car\recordings\20190911\Lenkradwinkelkennlinie';
+    folder = '\\fs01\kf\TAS\# fortiss car\recordings\20190911\Lenkradwinkelkennlinie';
     files = dir([folder, '\', '*.mat']);
     
     delta = zeros(1, length(files));
