@@ -155,6 +155,8 @@ DEFINE_double(replan_lateral_distance_threshold, 0.5,
               "The lateral distance threshold of replan");
 DEFINE_double(replan_longitudinal_distance_threshold, 2.5,
               "The longitudinal distance threshold of replan");
+DEFINE_double(replan_standstill_velocity_threshold, 0.3,
+              "The velocity threshold (standstill) of replan");
 
 DEFINE_bool(enable_reference_line_provider_thread, true,
             "Enable reference line provider thread.");
