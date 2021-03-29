@@ -64,21 +64,24 @@ bool AutoBoxBridgeComponent_TRAJECTORY::Init() {
   return true;
 }
 bool AutoBoxBridgeComponent_TRAJECTORY::Proc() {
-  publishTrajectory();
+  std::lock_guard<std::mutex> lock(trajectory_mutex_);
+  if (new_trajectory_) {
+    publishTrajectory();
+    new_trajectory_ = false;
+  }
+
   return true;
 }
 void AutoBoxBridgeComponent_TRAJECTORY::trajectoryMsgCallback(
     const std::shared_ptr<apollo::planning::ADCTrajectory>& trajectory_msg) {
-  AINFO << "Got a trajectory at t= " << apollo::cyber::Time::Now().ToSecond();
+  // AINFO << "Got a trajectory at t= " <<
+  // apollo::cyber::Time::Now().ToSecond();
   if (checkTrajectoryMsg(trajectory_msg)) {
-    //trajectory_mutex_.lock();
     std::lock_guard<std::mutex> lock(trajectory_mutex_);
     trajectory_->CopyFrom(*trajectory_msg);
     new_trajectory_ = true;
-    //trajectory_mutex_.unlock();
   }
 }
-
 
 bool AutoBoxBridgeComponent_TRAJECTORY::checkTrajectoryMsg(
     const std::shared_ptr<apollo::planning::ADCTrajectory>& trajectory_msg) {
@@ -107,38 +110,17 @@ bool AutoBoxBridgeComponent_TRAJECTORY::checkTrajectoryMsg(
   return true;
 }
 
-
-
-
 void AutoBoxBridgeComponent_TRAJECTORY::publishTrajectory() {
   apollo::planning::ADCTrajectoryToAutoboxBridge adctrajectorytoAutoboxBridge;
-  adctrajectorytoAutoboxBridge.mutable_header()->CopyFrom(trajectory_->header());
+  adctrajectorytoAutoboxBridge.mutable_header()->CopyFrom(
+      trajectory_->header());
   std::vector<common::TrajectoryPoint> pb_trajectory_;
-  pb_trajectory_.assign(trajectory_->trajectory_point().begin(), trajectory_->trajectory_point().end());
-  //pb_trajectory_.assign(trajectory_->trajectory_point().begin(), trajectory_->trajectory_point().begin()+10);
-  for (int i = 0; i < trajectory_->trajectory_point().size(); i++) 
-  {
-  /*
-		common::TrajectoryPoint tp;
-		auto* path_point = tp.mutable_path_point();
-		path_point->set_x(trajectory_->trajectory_point()[i].path_point().x());
-		path_point->set_y(trajectory_->trajectory_point()[i].path_point().y());
-		path_point->set_theta(trajectory_->trajectory_point()[i].path_point().theta());
-		path_point->set_kappa(trajectory_->trajectory_point()[i].path_point().kappa());
-		path_point->set_dkappa(trajectory_->trajectory_point()[i].path_point().dkappa());
-		path_point->set_ddkappa(trajectory_->trajectory_point()[i].path_point().ddkappa());
-		path_point->set_s(trajectory_->trajectory_point()[i].path_point().s());
-		tp.set_v(trajectory_->trajectory_point()[i].v());
-		tp.set_a(trajectory_->trajectory_point()[i].a());
-		tp.set_relative_time(trajectory_->trajectory_point()[i].relative_time());
-		tp.set_da(trajectory_->trajectory_point()[i].da());
-		tp.set_steer(trajectory_->trajectory_point()[i].steer());
-		*/
-		apollo::common::TrajectoryPoint* pt_traj_points =adctrajectorytoAutoboxBridge.add_trajectory_point();
-		//pt_traj_points->CopyFrom(tp);
-    	pt_traj_points->CopyFrom(pb_trajectory_[i]);
-
-    //pt_traj_points->CopyFrom(trajectory_->trajectory_point()[i]);
+  pb_trajectory_.assign(trajectory_->trajectory_point().begin(),
+                        trajectory_->trajectory_point().end());
+  for (int i = 0; i < trajectory_->trajectory_point().size(); i++) {
+    apollo::common::TrajectoryPoint* pt_traj_points =
+        adctrajectorytoAutoboxBridge.add_trajectory_point();
+    pt_traj_points->CopyFrom(pb_trajectory_[i]);
   }
   trajectory_writer_->Write(adctrajectorytoAutoboxBridge);
 }

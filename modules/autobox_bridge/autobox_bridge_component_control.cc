@@ -48,12 +48,8 @@ bool AutoBoxBridgeComponent_CONTROL::Init() {
   reader_config_control_cmd.pending_queue_size = 100;
   control_cmd_reader_ = node_->CreateReader<apollo::control::ControlCommand>(
       reader_config_control_cmd,
-      [&](const std::shared_ptr<apollo::control::ControlCommand>&control_cmd_msg) 
-      { 
-	    
-      controlCmdMsgCallback(control_cmd_msg); 
-      }
-      );
+      [&](const std::shared_ptr<apollo::control::ControlCommand>&
+              control_cmd_msg) { controlCmdMsgCallback(control_cmd_msg); });
 
   monitor_logger_buffer_.INFO("Started AutoBoxUDP connection.");
 
@@ -68,20 +64,22 @@ bool AutoBoxBridgeComponent_CONTROL::Init() {
   return true;
 }
 bool AutoBoxBridgeComponent_CONTROL::Proc() {
-  publishControl();
+  std::lock_guard<std::mutex> lock(control_cmd_mutex_);
+  if (new_control_cmd_) {
+    publishControl();
+    new_control_cmd_ = false;
+  }
+
   return true;
 }
 void AutoBoxBridgeComponent_CONTROL::controlCmdMsgCallback(
     const std::shared_ptr<apollo::control::ControlCommand>& control_cmd_msg) {
-  AINFO << "Got a control command at t= "
-        << apollo::cyber::Time::Now().ToSecond();
+  // AINFO << "Got a control command at t= "
+  //       << apollo::cyber::Time::Now().ToSecond();
   if (checkControlCmdMsg(control_cmd_msg)) {
-    //control_cmd_mutex_.lock();
-    //control_cmd_ = control_cmd_msg;
     std::lock_guard<std::mutex> lock(control_cmd_mutex_);
     control_cmd_->CopyFrom(*control_cmd_msg);
     new_control_cmd_ = true;
-    //control_cmd_mutex_.unlock();
   }
 }
 bool AutoBoxBridgeComponent_CONTROL::checkControlCmdMsg(
@@ -127,17 +125,20 @@ bool AutoBoxBridgeComponent_CONTROL::checkControlCmdMsg(
 
 void AutoBoxBridgeComponent_CONTROL::publishControl() {
   apollo::control::ControlCommandToAutoboxBridge controlcommandtoAutoBoxBridge;
-  controlcommandtoAutoBoxBridge.mutable_header()->CopyFrom(control_cmd_->header());
+  controlcommandtoAutoBoxBridge.mutable_header()->CopyFrom(
+      control_cmd_->header());
   controlcommandtoAutoBoxBridge.set_brake(control_cmd_->brake());
   controlcommandtoAutoBoxBridge.set_throttle(control_cmd_->throttle());
-  controlcommandtoAutoBoxBridge.set_steering_rate(control_cmd_->steering_rate());
+  controlcommandtoAutoBoxBridge.set_steering_rate(
+      control_cmd_->steering_rate());
 
-  controlcommandtoAutoBoxBridge.set_steering_target(control_cmd_->steering_target());
+  controlcommandtoAutoBoxBridge.set_steering_target(
+      control_cmd_->steering_target());
   controlcommandtoAutoBoxBridge.set_acceleration(control_cmd_->acceleration());
   control_cmd_writer_->Write(controlcommandtoAutoBoxBridge);
- //controlcommandtoAutoBoxBridge.set_acceleration(10);
- //controlcommandtoAutoBoxBridge.set_steering_rate(0.5);
- //controlcommandtoAutoBoxBridge.set_steering_target(5);
+  // controlcommandtoAutoBoxBridge.set_acceleration(10);
+  // controlcommandtoAutoBoxBridge.set_steering_rate(0.5);
+  // controlcommandtoAutoBoxBridge.set_steering_target(5);
 }
 
 }  // namespace autobox_bridge

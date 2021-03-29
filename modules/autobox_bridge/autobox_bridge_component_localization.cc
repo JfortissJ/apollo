@@ -42,7 +42,7 @@ bool AutoBoxBridgeComponent_LOCALIZATION::Init() {
     return false;
   }
   check_timeouts_ = abx_config.check_timeouts();
-   // Establish cyber connection localization
+  // Establish cyber connection localization
   cyber::ReaderConfig reader_config_loca;
   reader_config_loca.channel_name = abx_config.localization_channel_name();
   reader_config_loca.pending_queue_size = 100;
@@ -52,13 +52,12 @@ bool AutoBoxBridgeComponent_LOCALIZATION::Init() {
         localizationMsgCallback(localization_msg);
       });
 
-   monitor_logger_buffer_.INFO("Started AutoBoxUDP connection.");
+  monitor_logger_buffer_.INFO("Started AutoBoxUDP connection.");
 
   // Initialized stored trajectory and localization and control command
-   localization_ =
+  localization_ =
       std::make_shared<apollo::localization::LocalizationEstimate>();
   localization_->mutable_header()->set_timestamp_sec(0.0);
-
 
   localization_writer_ =
       node_->CreateWriter<apollo::localization::LocalizationToAutoboxBridge>(
@@ -68,25 +67,25 @@ bool AutoBoxBridgeComponent_LOCALIZATION::Init() {
   return true;
 }
 bool AutoBoxBridgeComponent_LOCALIZATION::Proc() {
-  publishLocalization();
+  std::lock_guard<std::mutex> lock(localization_mutex_);
+  if (new_localization_) {
+    publishLocalization();
+    new_localization_ = false;
+  }
   return true;
 }
-
 
 void AutoBoxBridgeComponent_LOCALIZATION::localizationMsgCallback(
     const std::shared_ptr<apollo::localization::LocalizationEstimate>&
         localization_msg) {
-  AINFO << "Got a localization at t= " << apollo::cyber::Time::Now().ToSecond();
+  // AINFO << "Got a localization at t= " <<
+  // apollo::cyber::Time::Now().ToSecond();
   if (checkLocalizationMsg(localization_msg)) {
-    //localization_mutex_.lock();
     std::lock_guard<std::mutex> lock(localization_mutex_);
     localization_->CopyFrom(*localization_msg);
     new_localization_ = true;
-    //localization_mutex_.unlock();
   }
 }
-
-
 
 bool AutoBoxBridgeComponent_LOCALIZATION::checkLocalizationMsg(
     const std::shared_ptr<apollo::localization::LocalizationEstimate>&
@@ -121,7 +120,7 @@ bool AutoBoxBridgeComponent_LOCALIZATION::checkLocalizationMsg(
     return false;
   }
 
-  // msg is new (compared to the old, stored one)
+  // msg is newer (compared to the old, stored one)
   if (localization_->mutable_header()->timestamp_sec() >
       localization_msg->mutable_header()->timestamp_sec()) {
     AERROR
@@ -133,14 +132,14 @@ bool AutoBoxBridgeComponent_LOCALIZATION::checkLocalizationMsg(
   }
 
   // msg timed out
-  //const double timedelta = 100.0;  // todo define a reasonable value here!
-  //if (check_timeouts_ &&
+  // const double timedelta = 100.0;  // todo define a reasonable value here!
+  // if (check_timeouts_ &&
   //    cyber::Time::Now().ToSecond() -
   //            localization_msg->mutable_header()->timestamp_sec() >
   //        timedelta) {  // check if timestamp is recent
   //  AERROR_EVERY(100) << "Localization message timed out.";
   //  return false;
- // }
+  // }
 
   // no error
   return true;
@@ -148,14 +147,15 @@ bool AutoBoxBridgeComponent_LOCALIZATION::checkLocalizationMsg(
 
 void AutoBoxBridgeComponent_LOCALIZATION::publishLocalization() {
   apollo::localization::LocalizationToAutoboxBridge localizationToAutoboxBridge;
-  localizationToAutoboxBridge.mutable_header()->CopyFrom(localization_->header());
+  localizationToAutoboxBridge.mutable_header()->CopyFrom(
+      localization_->header());
   // unused in apollo 5.5, now use timestamp in header
   // localizationToAutoboxBridge.set_measurement_time(localization_->measurement_time());
   localizationToAutoboxBridge.mutable_pose()->CopyFrom(localization_->pose());
-  localizationToAutoboxBridge.mutable_uncertainty()->CopyFrom(localization_->uncertainty());
+  localizationToAutoboxBridge.mutable_uncertainty()->CopyFrom(
+      localization_->uncertainty());
   localization_writer_->Write(localizationToAutoboxBridge);
 }
-
 
 }  // namespace autobox_bridge
 }  // namespace apollo
