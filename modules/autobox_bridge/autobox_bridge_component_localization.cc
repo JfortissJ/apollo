@@ -149,7 +149,8 @@ bool AutoBoxBridgeComponent_LOCALIZATION::checkLocalizationMsg(
 void AutoBoxBridgeComponent_LOCALIZATION::publishLocalization() {
   apollo::localization::LocalizationToAutoboxBridge localizationToAutoboxBridge;
   localizationToAutoboxBridge.mutable_header()->CopyFrom(localization_->header());
-  localizationToAutoboxBridge.set_measurement_time(localization_->measurement_time());
+  // unused in apollo 5.5, now use timestamp in header
+  // localizationToAutoboxBridge.set_measurement_time(localization_->measurement_time());
   localizationToAutoboxBridge.mutable_pose()->CopyFrom(localization_->pose());
   localizationToAutoboxBridge.mutable_uncertainty()->CopyFrom(localization_->uncertainty());
   localization_writer_->Write(localizationToAutoboxBridge);
