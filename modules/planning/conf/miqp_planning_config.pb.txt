@@ -22,7 +22,7 @@ miqp_planner_config: {
     relobjdif: 0.5
     minimum_region_change_speed: 1
     additional_steps_for_reference_longer_horizon: 6
-    delta_s_desired: 2
+    delta_s_desired: 5
     distance_stop_before: 1
     distance_start_slowdown: 15
     use_sos: false
