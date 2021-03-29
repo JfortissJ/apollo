@@ -563,6 +563,11 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
 
   s.slackWeight = 30;
   s.acclerationWeight = 0;
+  s.accLonMaxLimit = 2;
+  s.accLonMinLimit = -4;
+  s.jerkLonMaxLimit = 3;
+  s.accLatMinMaxLimit = 1.6;
+  s.jerkLatMinMaxLimit = 1.4;
   s.simplificationDistanceMap = 0.2;
   s.bufferReference = 1.0;
   s.buffer_for_merging_tolerance = 1.0;  // probably too high
