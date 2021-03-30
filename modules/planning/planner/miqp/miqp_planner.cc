@@ -332,7 +332,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
     }
   }
 
-  if (planner_status == START_TRAJECTORY) {
+  if (planner_status == START_TRAJECTORY &&
+      config_.miqp_planner_config().use_start_transformation()) {
     AINFO << "Transforming Trajectory to start from standstill";
     DiscretizedTrajectory old_traj = std::move(apollo_traj);
     apollo_traj =
