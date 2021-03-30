@@ -332,6 +332,13 @@ Status MiqpPlanner::PlanOnReferenceLine(
     }
   }
 
+  if (planner_status == START_TRAJECTORY) {
+    AINFO << "Transforming Trajectory to start from standstill";
+    DiscretizedTrajectory old_traj = std::move(apollo_traj);
+    apollo_traj =
+        TransformationStartFromStandstill(planning_init_point, old_traj);
+  }
+
   // Planning success -> publish trajectory
   reference_line_info->SetTrajectory(apollo_traj);
   reference_line_info->SetCost(0);  // TODO necessary?
@@ -343,9 +350,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   return Status::OK();
 }
 
-
-apollo::planning::DiscretizedTrajectory
-MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
+DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
+    double traj[], int size) {
   double s = 0.0f;
   double lastx = traj[0 + TRAJECTORY_X_IDX] + X_OFFSET;
   double lasty = traj[0 + TRAJECTORY_Y_IDX] + Y_OFFSET;
@@ -382,7 +388,8 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
     trajectory_point.set_a(a);
     // trajectory_point.set_da(jerk);
     trajectory_point.set_relative_time(time);
-    AINFO << "Planned trajectory at i=" << trajidx << ": " << trajectory_point.DebugString();
+    AINFO << "Planned trajectory at i=" << trajidx << ": "
+          << trajectory_point.DebugString();
     apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
 
     lastx = x;
@@ -390,6 +397,61 @@ MiqpPlanner::RawCTrajectoryToApolloTrajectory(double traj[], int size) {
   }
 
   return apollo_trajectory;
+}
+
+DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
+    const common::TrajectoryPoint& planning_init_point,
+    const DiscretizedTrajectory& optimized_traj) {
+  const double ts = config_.miqp_planner_config().ts();
+  const double nr_steps = config_.miqp_planner_config().nr_steps();
+  const double a_start = config_.miqp_planner_config().acc_start_trajectory();
+  double v_i = planning_init_point.v();
+  double a_i = a_start;
+  double s_i = optimized_traj.TrajectoryPointAt(0).path_point().s();
+  double t_i = optimized_traj.TrajectoryPointAt(0).relative_time();
+  const TrajectoryPoint optimized_last_pt =
+      optimized_traj.TrajectoryPointAt(optimized_traj.NumOfPoints() - 1);
+  const double v_max = optimized_last_pt.v();
+
+  DiscretizedTrajectory out_trajectory;
+  for (int i = 0; i < nr_steps; ++i) {
+    if (i > 0) {
+      v_i += a_i * ts;
+      s_i += v_i * ts;  // + a_i * std::pow(ts, 2.0); // can only be used if s
+                        // of optimizerd_traj has been calculated the same way
+      t_i += ts;
+    }
+
+    // Calculate values for next timestep!
+    double v_next_i = v_i + a_start * ts;
+    if (v_next_i > v_max) {
+      a_i = (v_max - v_i) / ts;
+    } else {
+      a_i = a_start;
+    }
+    TrajectoryPoint traj_pt = optimized_traj.EvaluateAtS(s_i);
+
+    traj_pt.set_v(v_i);
+    traj_pt.set_a(a_i);
+    traj_pt.set_relative_time(t_i);
+    traj_pt.clear_steer();
+    traj_pt.mutable_path_point()->clear_dkappa();
+    traj_pt.mutable_path_point()->clear_ddkappa();
+    if (s_i > optimized_last_pt.path_point().s()) {
+      AERROR << "Optimized Trajectory was shorter than transformed start "
+                "trajectory";
+    }
+    // if (a_i > config_.miqp_planner_config().accLonMaxLimit()) {
+    //   AERROR << "Transformed Start-Trajectory's acceleration is too high";
+    // } else if (a_i < config_.miqp_planner_config().accLonMinLimit()) {
+    //   AERROR << "Transformed Start-Trajectory's acceleration is too low";
+    // }
+
+    AINFO << "Transformed trajectory at i=" << i << ": "
+          << traj_pt.DebugString();
+    out_trajectory.AppendTrajectoryPoint(traj_pt);
+  }
+  return out_trajectory;
 }
 
 void MiqpPlanner::ConvertToInitialStateSecondOrder(
@@ -563,11 +625,31 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
 
   s.slackWeight = 30;
   s.acclerationWeight = 0;
-  s.accLonMaxLimit = 2;
-  s.accLonMinLimit = -4;
-  s.jerkLonMaxLimit = 3;
-  s.accLatMinMaxLimit = 1.6;
-  s.jerkLatMinMaxLimit = 1.4;
+  if (conf.has_acc_lon_max_limit()) {
+    s.accLonMaxLimit = conf.acc_lon_max_limit();
+  } else {
+    s.accLonMaxLimit = 2;
+  }
+  if (conf.has_acc_lon_min_limit()) {
+    s.accLonMinLimit = conf.acc_lon_min_limit();
+  } else {
+    s.accLonMinLimit = -4;
+  }
+  if (conf.has_jerk_lon_max_limit()) {
+    s.jerkLonMaxLimit = conf.jerk_lon_max_limit();
+  } else {
+    s.jerkLonMaxLimit = 3;
+  }
+  if (conf.has_acc_lat_min_max_limit()) {
+    s.accLatMinMaxLimit = conf.acc_lat_min_max_limit();
+  } else {
+    s.accLatMinMaxLimit = 1.6;
+  }
+  if (conf.has_jerk_lat_min_max_limit()) {
+    s.jerkLatMinMaxLimit = conf.jerk_lat_min_max_limit();
+  } else {
+    s.jerkLatMinMaxLimit = 1.4;
+  }
   s.simplificationDistanceMap = 0.2;
   s.bufferReference = 1.0;
   s.buffer_for_merging_tolerance = 1.0;  // probably too high
@@ -764,8 +846,7 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
   return status;
 }
 
-int MiqpPlanner::CutoffTrajectoryAtV(
-    apollo::planning::DiscretizedTrajectory& traj, double vmin) {
+int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double vmin) {
   // reverse, to not cutoff accelerating trajectories
   for (size_t i = traj.size() - 1; i > 1; --i) {
     if (traj.at(i).v() < vmin && traj.at(i - 1).v() >= vmin) {

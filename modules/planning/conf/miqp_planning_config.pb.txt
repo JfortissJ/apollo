@@ -13,6 +13,11 @@ miqp_planner_config: {
     jerk_weight: 1.0
     position_weight: 2.0
     velocity_weight: 0.0
+    acc_lon_max_limit: 2.0
+    acc_lon_min_limit: -4.0
+    jerk_lon_max_limit: 3.0
+    acc_lat_min_max_limit: 1.6
+    jerk_lat_min_max_limit: 1.4
     nr_steps: 10
     nr_neighbouring_possible_regions: 0
     ts: 0.5
@@ -32,6 +37,8 @@ miqp_planner_config: {
     destination_distance_stop_threshold: 2.0
     obstacle_roi_filter: true
     obstacle_roi_behind_distance: 10.0
+    use_start_transformation: true
+    acc_start_trajectory: 1.0
 }
 
 

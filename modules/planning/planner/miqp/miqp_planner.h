@@ -69,11 +69,12 @@ class MiqpPlanner : public LatticePlanner {
       ReferenceLineInfo* reference_line_info) override;
 
  private:
-  apollo::planning::DiscretizedTrajectory BarkTrajectoryToApolloTrajectory(
-      double traj[], int size);
-
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
       double traj[], int size);
+
+  apollo::planning::DiscretizedTrajectory TransformationStartFromStandstill(
+      const common::TrajectoryPoint& planning_init_point,
+      const apollo::planning::DiscretizedTrajectory& optimized_traj);
 
   void ConvertToInitialStateSecondOrder(
       const common::TrajectoryPoint& planning_init_point,

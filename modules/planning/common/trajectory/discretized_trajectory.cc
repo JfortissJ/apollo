@@ -62,6 +62,27 @@ TrajectoryPoint DiscretizedTrajectory::Evaluate(
       *(it_lower - 1), *it_lower, relative_time);
 }
 
+TrajectoryPoint DiscretizedTrajectory::EvaluateAtS(const double path_s) const {
+  auto comp = [](const TrajectoryPoint& tp, const double path_s) {
+    return tp.path_point().s() < path_s;
+  };
+
+  CHECK(!empty());
+  auto it_lower = std::lower_bound(begin(), end(), path_s, comp);
+  if (it_lower == begin()) {
+    return front();
+  }
+  if (it_lower == end()) {
+    return back();
+  }
+  apollo::common::PathPoint path_pt =
+      common::math::InterpolateUsingLinearApproximation(
+          (it_lower - 1)->path_point(), it_lower->path_point(), path_s);
+  TrajectoryPoint traj_pt;
+  traj_pt.mutable_path_point()->CopyFrom(path_pt);
+  return traj_pt;
+}
+
 size_t DiscretizedTrajectory::QueryLowerBoundPoint(const double relative_time,
                                                    const double epsilon) const {
   CHECK(!empty());
