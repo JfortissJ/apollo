@@ -2,7 +2,7 @@
 <Root>
 	<ProjectExperiment>
 		<window>
-			<RelativeDocumentPlacement type="key">1:m 1 Instrumentation|010867e6-b1d4-4361-8dca-43a159e6a62c/5:m 2 Instrumentation|016c5644-2fc0-4e7f-ba67-9069195da219/1:m 5 Instrumentation|94280714-a281-4583-9879-7045e11ef700/6:m 3 Instrumentation|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3:m 4 Instrumentation|aee80459-8c13-4109-a330-2a68a57f77a0/4:m 0 Instrumentation|530257e0-9dd7-4c8c-af26-acdb51a53091/0:</RelativeDocumentPlacement>
+			<RelativeDocumentPlacement type="key">1:m 3 Instrumentation|016c5644-2fc0-4e7f-ba67-9069195da219/1:m 2 Instrumentation|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3:m 1 Instrumentation|010867e6-b1d4-4361-8dca-43a159e6a62c/5:m 0 Instrumentation|530257e0-9dd7-4c8c-af26-acdb51a53091/0:m 5 Instrumentation|94280714-a281-4583-9879-7045e11ef700/6:m 4 Instrumentation|aee80459-8c13-4109-a330-2a68a57f77a0/4:</RelativeDocumentPlacement>
 		</window>
 		<viewflags>
 			<Name type="key">ControllerEthernetDebugExperiment.CDE</Name>
@@ -56,10 +56,6 @@
 							<Name type="key">autoboxmodel.sdf</Name>
 							<ViewFlags type="key">5</ViewFlags>
 							<item>
-								<Name type="key">Data Sets</Name>
-								<ViewFlags type="key">1</ViewFlags>
-							</item>
-							<item>
 								<Name type="key">rec1_001.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
@@ -85,6 +81,10 @@
 							</item>
 							<item>
 								<Name type="key">rec1_007.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">Data Sets</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 						</item>

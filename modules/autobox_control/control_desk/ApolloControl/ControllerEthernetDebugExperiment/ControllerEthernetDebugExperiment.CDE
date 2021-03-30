@@ -186,7 +186,7 @@
 					<RestoreInfopmdn type="key">Platform</RestoreInfopmdn>
 					<RestoreInfopmid type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</RestoreInfopmid>
 					<Name type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Name>
-					<DisplayName type="key">Platform [MicroAutoBox, assigned to 'ds1401']</DisplayName>
+					<DisplayName type="key">Platform [MicroAutoBox, unassigned]</DisplayName>
 					<Flags type="key">128</Flags>
 					<ExtendedFlags type="key">3072</ExtendedFlags>
 					<Type type="key">6</Type>
@@ -203,21 +203,6 @@
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<UniqueID type="key">208188220</UniqueID>
 						<LinkedItem type="key">385428993</LinkedItem>
-						<item>
-							<Component type="key">DataSetManager</Component>
-							<Name type="key">Data Sets</Name>
-							<DisplayName type="key">Data Sets</DisplayName>
-							<Path type="key">.\Data Sets</Path>
-							<Flags type="key">65798</Flags>
-							<ExtendedFlags type="key">132</ExtendedFlags>
-							<Type type="key">3</Type>
-							<UniqueID type="key">908251763</UniqueID>
-							<EntityID type="key">{DD4D52BD-00EC-4389-9D29-C9F605EF2F5D}</EntityID>
-							<ItemInfoDate type="key">19.10.2020 15:53:05</ItemInfoDate>
-							<ItemInfoDescr type="key"/>
-							<ItemInfoAddInfoDb type="key"/>
-							<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
-						</item>
 						<item>
 							<Component type="key">MeasureDataManagement</Component>
 							<Flags type="key">1380</Flags>
@@ -259,6 +244,21 @@
 							<Flags type="key">1380</Flags>
 							<UniqueID type="key">1035150766</UniqueID>
 							<LinkedItem type="key">441516934</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">DataSetManager</Component>
+							<Name type="key">Data Sets</Name>
+							<DisplayName type="key">Data Sets</DisplayName>
+							<Path type="key">.\Data Sets</Path>
+							<Flags type="key">65798</Flags>
+							<ExtendedFlags type="key">132</ExtendedFlags>
+							<Type type="key">3</Type>
+							<UniqueID type="key">908251763</UniqueID>
+							<EntityID type="key">{DD4D52BD-00EC-4389-9D29-C9F605EF2F5D}</EntityID>
+							<ItemInfoDate type="key">19.10.2020 15:53:05</ItemInfoDate>
+							<ItemInfoDescr type="key"/>
+							<ItemInfoAddInfoDb type="key"/>
+							<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 						</item>
 					</item>
 				</item>
@@ -304,12 +304,12 @@
 					<EntityID type="key">{73DA72EB-1148-4734-8BAE-5B667A823B46}</EntityID>
 					<ItemInfoDate type="key">29.03.2021 13:08:46</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -324,12 +324,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{2EF9715C-0B80-4E96-975A-216ED8A1B0AF}</EntityID>
 					<ItemInfoDate type="key">29.03.2021 13:09:03</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -344,12 +344,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{B145EB9E-F955-4F0E-B56E-BB99B1ADB30A}</EntityID>
 					<ItemInfoDate type="key">29.03.2021 13:09:52</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -364,12 +364,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{54815AA6-9C67-4441-8775-69637FE0D69F}</EntityID>
 					<ItemInfoDate type="key">29.03.2021 13:11:09</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -384,12 +384,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{370E1B92-A45F-4F57-BE05-2CDEBCEC7626}</EntityID>
 					<ItemInfoDate type="key">29.03.2021 13:16:24</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -404,12 +404,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{9700EA28-E475-4297-8FD6-7E5A0F719654}</EntityID>
 					<ItemInfoDate type="key">29.03.2021 13:16:46</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -424,12 +424,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{7B83D7D7-860C-4340-82DD-6F39C59998F4}</EntityID>
 					<ItemInfoDate type="key">29.03.2021 13:20:58</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -673,7 +673,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 		</DeviceFactory>
 	</PlatformManagement>
 	<MeasurementConfiguration>
-		<NextUniqueKey type="key">27</NextUniqueKey>
+		<NextUniqueKey type="key">28</NextUniqueKey>
 		<SortedColumn type="key">4</SortedColumn>
 		<SortAscending type="key">-1</SortAscending>
 		<SignalList>
@@ -682,7 +682,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -690,7 +690,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -698,7 +698,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -706,7 +706,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -714,7 +714,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -722,7 +722,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -730,7 +730,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -738,7 +738,31 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.x</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.y</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.z</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -746,7 +770,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -754,7 +778,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -762,39 +786,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.z</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.x</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.y</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.z</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -802,7 +794,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -810,15 +802,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.z</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -826,7 +810,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -834,23 +818,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.z</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/measure_time_delay_loca/is_not_delayed</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -858,7 +826,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -866,7 +834,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -874,7 +842,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -882,7 +850,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -890,7 +858,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -898,7 +866,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -906,7 +874,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -914,7 +882,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -922,7 +890,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -930,7 +898,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -938,7 +906,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -946,15 +914,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">HostService</Raster>
-				</Signal>
-			</Variable>
-			<Variable>
-				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.z</Name>
-				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-				<Active type="key">-1</Active>
-				<Signal>
-					<Raster type="key">HostService</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 		</SignalList>
@@ -1096,9 +1056,9 @@ ControlDesk version: 7.1</ItemInfoLog>
 		</Acquisition>
 		<Recorders>
 			<Recorder>
-				<Name type="key">InputSignals</Name>
-				<UniqueKey type="key">24</UniqueKey>
-				<AutomaticSignalConfigurationEnabled type="key">-1</AutomaticSignalConfigurationEnabled>
+				<Name type="key">RecorderInputData</Name>
+				<UniqueKey type="key">27</UniqueKey>
+				<AutomaticSignalConfigurationEnabled type="key">0</AutomaticSignalConfigurationEnabled>
 				<WriteToFileEnabled type="key">-1</WriteToFileEnabled>
 				<MeasurementTimestampsEnabled type="key">0</MeasurementTimestampsEnabled>
 				<StartAudioSignalEnabled type="key">0</StartAudioSignalEnabled>
@@ -1122,12 +1082,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<AddToExperimentEnabled type="key">-1</AddToExperimentEnabled>
 					<AutomaticSaveDialogEnabled type="key">0</AutomaticSaveDialogEnabled>
 					<AutomaticExportEnabled type="key">-1</AutomaticExportEnabled>
-					<AutomaticExportFileNamePrefix type="key">exp1_</AutomaticExportFileNamePrefix>
+					<AutomaticExportFileNamePrefix type="key">rec_input_</AutomaticExportFileNamePrefix>
 					<AutomaticExportFileType type="key">MATLAB Files (*.mat)</AutomaticExportFileType>
 					<AutomaticExportFolder type="key"/>
 					<AutomaticNamingEnabled type="key">-1</AutomaticNamingEnabled>
 					<AutomaticNamingMinimunDigits type="key">3</AutomaticNamingMinimunDigits>
-					<AutomaticNamingStartIndex type="key">8</AutomaticNamingStartIndex>
+					<AutomaticNamingStartIndex type="key">1</AutomaticNamingStartIndex>
 					<Description type="key"/>
 					<FileNamePrefix type="key">rec1_</FileNamePrefix>
 					<OpenInMeasurementDataPoolEnabled type="key">0</OpenInMeasurementDataPoolEnabled>
@@ -1140,7 +1100,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1149,7 +1109,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1158,7 +1118,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1167,7 +1127,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1176,7 +1136,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1185,7 +1145,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1194,7 +1154,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1203,7 +1163,34 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.x</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.y</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.z</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1212,7 +1199,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1221,7 +1208,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1230,43 +1217,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.z</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.x</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.y</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.z</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1275,7 +1226,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1284,16 +1235,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.z</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1302,7 +1244,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1311,25 +1253,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.z</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/measure_time_delay_loca/is_not_delayed</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1338,7 +1262,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1347,7 +1271,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1356,7 +1280,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1365,7 +1289,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1374,7 +1298,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1383,7 +1307,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1392,7 +1316,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1401,7 +1325,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1410,7 +1334,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1419,7 +1343,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1428,7 +1352,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1437,16 +1361,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">HostService</Raster>
-						</Signal>
-					</Variable>
-					<Variable>
-						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.z</Name>
-						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
-						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
-						<Recorded type="key">-1</Recorded>
-						<Signal>
-							<Raster type="key">HostService</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 				</SignalList>
