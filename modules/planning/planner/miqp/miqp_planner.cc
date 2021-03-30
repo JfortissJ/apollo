@@ -412,7 +412,8 @@ DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
   double t_i = optimized_traj.TrajectoryPointAt(0).relative_time();
   const TrajectoryPoint optimized_last_pt =
       optimized_traj.TrajectoryPointAt(optimized_traj.NumOfPoints() - 1);
-  const double v_max = optimized_last_pt.v();
+  const double v_last = optimized_last_pt.v();
+  const double s_last = optimized_last_pt.path_point().s();
 
   DiscretizedTrajectory out_trajectory;
   for (int i = 0; i < nr_steps; ++i) {
@@ -425,8 +426,8 @@ DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
 
     // Calculate values for next timestep!
     double v_next_i = v_i + a_start * ts;
-    if (v_next_i > v_max) {
-      a_i = (v_max - v_i) / ts;
+    if (v_next_i > v_last) {
+      a_i = (v_last - v_i) / ts;
     } else {
       a_i = a_start;
     }
@@ -438,15 +439,16 @@ DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
     traj_pt.clear_steer();
     traj_pt.mutable_path_point()->clear_dkappa();
     traj_pt.mutable_path_point()->clear_ddkappa();
-    if (s_i > optimized_last_pt.path_point().s()) {
+    if (i < nr_steps - 1 && s_i > s_last) {
       AERROR << "Optimized Trajectory was shorter than transformed start "
-                "trajectory";
+                "trajectory:"
+             << s_i << ">" << s_last;
     }
-    // if (a_i > config_.miqp_planner_config().accLonMaxLimit()) {
-    //   AERROR << "Transformed Start-Trajectory's acceleration is too high";
-    // } else if (a_i < config_.miqp_planner_config().accLonMinLimit()) {
-    //   AERROR << "Transformed Start-Trajectory's acceleration is too low";
-    // }
+    if (a_i > config_.miqp_planner_config().acc_lon_max_limit()) {
+      AERROR << "Transformed Start-Trajectory's acceleration is too high";
+    } else if (a_i < config_.miqp_planner_config().acc_lon_min_limit()) {
+      AERROR << "Transformed Start-Trajectory's acceleration is too low";
+    }
 
     AINFO << "Transformed trajectory at i=" << i << ": "
           << traj_pt.DebugString();
