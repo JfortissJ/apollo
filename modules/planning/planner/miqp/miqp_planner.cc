@@ -167,6 +167,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   AINFO << std::setprecision(15)
         << "############## MIQP Planner called at t = " << timestep;
   double current_time = timestep;
+  const double start_time = timestep;
 
   PlannerState planner_status = DeterminePlannerState(
       planning_init_point.v(), reference_line_info->SDistanceToDestination());
@@ -347,6 +348,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   AINFO << "MIQP Planner postprocess took [s]: "
         << (Clock::NowInSeconds() - current_time);
+  AINFO << "MiqpPlanner::PlanOnReferenceLine() took "
+        << (Clock::NowInSeconds() - start_time);
 
   return Status::OK();
 }
