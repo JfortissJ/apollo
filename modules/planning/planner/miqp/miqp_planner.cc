@@ -77,11 +77,10 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
     }
     path_point.set_s(s);
 
-    // if (planning_target.has_stop_point() &&
-    //     (s > planning_target.stop_point().s())) {
-    //   AERROR << "cutting off reference after s:" << s;
-    //   break;
-    // }
+    if (planning_target.has_stop_point() && (s > planning_target.stop_point().s() + 10)) {
+      AERROR << "cutting off reference after s:" << s;
+      break;
+    }
     path_points.push_back(std::move(path_point));
   }
   return path_points;
@@ -190,6 +189,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // Reference line to raw c format
   const int ref_size =
       discrete_reference_line.size();  // aka N optimization support points
+  AINFO << "Reference Line has " << ref_size << " points";
   double ref[ref_size * 2];
   for (int i = 0; i < ref_size; ++i) {
     PathPoint refPoint = discrete_reference_line.at(i);
@@ -197,20 +197,20 @@ Status MiqpPlanner::PlanOnReferenceLine(
     ref[2 * i] = refPoint.x() - X_OFFSET;
     ref[2 * i + 1] = refPoint.y() - Y_OFFSET;
   }
+  AINFO << "ReferenceLine Time [s] = " << (Clock::NowInSeconds() - current_time);
+  current_time = Clock::NowInSeconds();
 
   // Map
   std::vector<Vec2d> left_pts, right_pts;
   if (config_.miqp_planner_config().use_environment_polygon()) {
+    current_time = Clock::NowInSeconds();
     std::tie(left_pts, right_pts) = ToLeftAndRightBoundary(reference_line_info);
     const int poly_size = left_pts.size() + right_pts.size();
     double poly_pts[poly_size * 2];
     ConvertToPolyPts(left_pts, right_pts, poly_pts);
     UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
+    AINFO << "Map Processing Time [s] = " << (Clock::NowInSeconds() - current_time);
   }
-
-  AINFO << "ReferenceLine Time [s] = "
-        << (Clock::NowInSeconds() - current_time);
-  current_time = Clock::NowInSeconds();
 
   // Initial State
   double initial_state[6];
@@ -238,16 +238,21 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Add/update ego car
   if (firstrun_) {
+    current_time = Clock::NowInSeconds();
     egoCarIdx_ = AddCarCMiqpPlanner(planner_, initial_state, ref, ref_size,
                                     vDes, deltaSDes, timestep, track_ref_pos);
     firstrun_ = false;
-    AINFO << "Added ego car Time [s] = "
+    AINFO << "Added ego car, Time [s] = "
           << (Clock::NowInSeconds() - current_time);
   } else {
+    current_time = Clock::NowInSeconds();
     UpdateCarCMiqpPlanner(planner_, egoCarIdx_, initial_state, ref, ref_size,
                           timestep, track_ref_pos);
-    UpdateDesiredVelocityCMiqpPlanner(planner_, egoCarIdx_, vDes, deltaSDes);
     AINFO << "Update ego car Time [s] = "
+          << (Clock::NowInSeconds() - current_time);
+    current_time = Clock::NowInSeconds();
+    UpdateDesiredVelocityCMiqpPlanner(planner_, egoCarIdx_, vDes, deltaSDes);
+    AINFO << "UpdateDesiredVelocityCMiqpPlanner Time [s] = "
           << (Clock::NowInSeconds() - current_time);
   }
 
@@ -259,8 +264,11 @@ Status MiqpPlanner::PlanOnReferenceLine(
   // Obstacles as obstacles
   if (config_.miqp_planner_config().consider_obstacles()) {
     // TODO: is that correct or should make use of relative time?
+    current_time = Clock::NowInSeconds();
     bool success = ProcessObstacles(frame->obstacles(),
                                     planning_init_point.relative_time());
+    AINFO << "Processing Obstacles took Time [s] = "
+          << (Clock::NowInSeconds() - current_time);
     if (!success) {
       AERROR << "Processing of obstacles failed";
       return Status(ErrorCode::PLANNING_ERROR,
