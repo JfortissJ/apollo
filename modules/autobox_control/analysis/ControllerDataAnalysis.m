@@ -40,6 +40,13 @@ classdef ControllerDataAnalysis  < PlotBase
 				[~, ~, ext] = fileparts(res_);
 				if strcmp(ext,'.mat') %a ControlDesk Log
 					self.res = readControlDeskRecordings(res_);
+                    %postprocess to new control desk logger
+                    if isfield(self.res,'LocalizationBus')
+                        self.res.Localization = self.res.LocalizationBus;
+                    end
+                    if isfield(self.res,'TrajectoryBus')
+                        self.res.Trajectory = self.res.TrajectoryBus;
+                    end
 				else
 					error('If you pass a string it has to be a filename. MAT files will be interpreted as ControlDesk Logs, CSV files as ADTF SignalLogs.');
                 end

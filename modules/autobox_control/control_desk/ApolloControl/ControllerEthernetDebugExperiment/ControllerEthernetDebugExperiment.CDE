@@ -107,21 +107,6 @@
 				</item>
 				<item>
 					<Component type="key">Instrumentation</Component>
-					<Name type="key">controller.lay</Name>
-					<DisplayName type="key">controller.lay</DisplayName>
-					<Path type="key">.\Experiment Layouts</Path>
-					<Flags type="key">17472</Flags>
-					<Type type="key">10</Type>
-					<UniqueID type="key">1021848899</UniqueID>
-					<EntityID type="key">{DDD874FD-3379-4292-93F8-501438FF0FEE}</EntityID>
-					<ItemInfoDate type="key">25.03.2021 09:42:37</ItemInfoDate>
-					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
-					<ItemInfoDescr type="key"/>
-					<ItemInfoAddInfoDb type="key"/>
-					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
-				</item>
-				<item>
-					<Component type="key">Instrumentation</Component>
 					<Name type="key">SystemStatus.lay</Name>
 					<DisplayName type="key">SystemStatus.lay</DisplayName>
 					<Path type="key">.\Experiment Layouts</Path>
@@ -204,48 +189,6 @@
 						<UniqueID type="key">208188220</UniqueID>
 						<LinkedItem type="key">385428993</LinkedItem>
 						<item>
-							<Component type="key">MeasureDataManagement</Component>
-							<Flags type="key">1380</Flags>
-							<UniqueID type="key">555054194</UniqueID>
-							<LinkedItem type="key">277529822</LinkedItem>
-						</item>
-						<item>
-							<Component type="key">MeasureDataManagement</Component>
-							<Flags type="key">1380</Flags>
-							<UniqueID type="key">606428597</UniqueID>
-							<LinkedItem type="key">284265296</LinkedItem>
-						</item>
-						<item>
-							<Component type="key">MeasureDataManagement</Component>
-							<Flags type="key">1380</Flags>
-							<UniqueID type="key">765185053</UniqueID>
-							<LinkedItem type="key">234255931</LinkedItem>
-						</item>
-						<item>
-							<Component type="key">MeasureDataManagement</Component>
-							<Flags type="key">1380</Flags>
-							<UniqueID type="key">170633191</UniqueID>
-							<LinkedItem type="key">207585481</LinkedItem>
-						</item>
-						<item>
-							<Component type="key">MeasureDataManagement</Component>
-							<Flags type="key">1380</Flags>
-							<UniqueID type="key">941458573</UniqueID>
-							<LinkedItem type="key">357276155</LinkedItem>
-						</item>
-						<item>
-							<Component type="key">MeasureDataManagement</Component>
-							<Flags type="key">1380</Flags>
-							<UniqueID type="key">74505788</UniqueID>
-							<LinkedItem type="key">538189499</LinkedItem>
-						</item>
-						<item>
-							<Component type="key">MeasureDataManagement</Component>
-							<Flags type="key">1380</Flags>
-							<UniqueID type="key">1035150766</UniqueID>
-							<LinkedItem type="key">441516934</LinkedItem>
-						</item>
-						<item>
 							<Component type="key">DataSetManager</Component>
 							<Name type="key">Data Sets</Name>
 							<DisplayName type="key">Data Sets</DisplayName>
@@ -259,6 +202,60 @@
 							<ItemInfoDescr type="key"/>
 							<ItemInfoAddInfoDb type="key"/>
 							<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">617975949</UniqueID>
+							<LinkedItem type="key">346428415</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">218447481</UniqueID>
+							<LinkedItem type="key">696503865</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">177578073</UniqueID>
+							<LinkedItem type="key">385593151</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">287048336</UniqueID>
+							<LinkedItem type="key">42560833</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">1059544078</UniqueID>
+							<LinkedItem type="key">501310415</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">741675431</UniqueID>
+							<LinkedItem type="key">292897465</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">687938487</UniqueID>
+							<LinkedItem type="key">146857612</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">168121834</UniqueID>
+							<LinkedItem type="key">358666623</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">760089167</UniqueID>
+							<LinkedItem type="key">743936968</LinkedItem>
 						</item>
 					</item>
 				</item>
@@ -295,14 +292,14 @@
 				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				<item>
 					<Component type="key">MeasureDataManagement</Component>
-					<Name type="key">rec1_001.mf4</Name>
-					<DisplayName type="key">rec1_001.mf4</DisplayName>
+					<Name type="key">rec1_010.mf4</Name>
+					<DisplayName type="key">rec1_010.mf4</DisplayName>
 					<Path type="key">.\Measurement Data</Path>
 					<Flags type="key">1088</Flags>
 					<Type type="key">9</Type>
-					<UniqueID type="key">277529822</UniqueID>
-					<EntityID type="key">{73DA72EB-1148-4734-8BAE-5B667A823B46}</EntityID>
-					<ItemInfoDate type="key">29.03.2021 13:08:46</ItemInfoDate>
+					<UniqueID type="key">346428415</UniqueID>
+					<EntityID type="key">{A7AF2429-0BDC-430F-B26E-4F62EB6EA60D}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 13:49:13</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
@@ -315,14 +312,14 @@ ControlDesk version: 7.1</ItemInfoLog>
 				</item>
 				<item>
 					<Component type="key">MeasureDataManagement</Component>
-					<Name type="key">rec1_002.mf4</Name>
-					<DisplayName type="key">rec1_002.mf4</DisplayName>
+					<Name type="key">rec1_012.mf4</Name>
+					<DisplayName type="key">rec1_012.mf4</DisplayName>
 					<Path type="key">.\Measurement Data</Path>
 					<Flags type="key">1088</Flags>
 					<Type type="key">9</Type>
-					<UniqueID type="key">284265296</UniqueID>
-					<EntityID type="key">{2EF9715C-0B80-4E96-975A-216ED8A1B0AF}</EntityID>
-					<ItemInfoDate type="key">29.03.2021 13:09:03</ItemInfoDate>
+					<UniqueID type="key">696503865</UniqueID>
+					<EntityID type="key">{8430F843-1231-497D-889D-68D302DC847C}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 14:22:45</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
@@ -335,14 +332,14 @@ ControlDesk version: 7.1</ItemInfoLog>
 				</item>
 				<item>
 					<Component type="key">MeasureDataManagement</Component>
-					<Name type="key">rec1_003.mf4</Name>
-					<DisplayName type="key">rec1_003.mf4</DisplayName>
+					<Name type="key">rec1_015.mf4</Name>
+					<DisplayName type="key">rec1_015.mf4</DisplayName>
 					<Path type="key">.\Measurement Data</Path>
 					<Flags type="key">1088</Flags>
 					<Type type="key">9</Type>
-					<UniqueID type="key">234255931</UniqueID>
-					<EntityID type="key">{B145EB9E-F955-4F0E-B56E-BB99B1ADB30A}</EntityID>
-					<ItemInfoDate type="key">29.03.2021 13:09:52</ItemInfoDate>
+					<UniqueID type="key">385593151</UniqueID>
+					<EntityID type="key">{ADCA13E1-A5BE-42F8-BB5A-52FE733FED85}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 14:34:28</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
@@ -355,14 +352,14 @@ ControlDesk version: 7.1</ItemInfoLog>
 				</item>
 				<item>
 					<Component type="key">MeasureDataManagement</Component>
-					<Name type="key">rec1_004.mf4</Name>
-					<DisplayName type="key">rec1_004.mf4</DisplayName>
+					<Name type="key">rec1_016.mf4</Name>
+					<DisplayName type="key">rec1_016.mf4</DisplayName>
 					<Path type="key">.\Measurement Data</Path>
 					<Flags type="key">1088</Flags>
 					<Type type="key">9</Type>
-					<UniqueID type="key">207585481</UniqueID>
-					<EntityID type="key">{54815AA6-9C67-4441-8775-69637FE0D69F}</EntityID>
-					<ItemInfoDate type="key">29.03.2021 13:11:09</ItemInfoDate>
+					<UniqueID type="key">42560833</UniqueID>
+					<EntityID type="key">{EB773D49-45C7-4898-8DF8-D57D1DEB00A7}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 14:41:17</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
@@ -375,14 +372,14 @@ ControlDesk version: 7.1</ItemInfoLog>
 				</item>
 				<item>
 					<Component type="key">MeasureDataManagement</Component>
-					<Name type="key">rec1_005.mf4</Name>
-					<DisplayName type="key">rec1_005.mf4</DisplayName>
+					<Name type="key">rec1_017.mf4</Name>
+					<DisplayName type="key">rec1_017.mf4</DisplayName>
 					<Path type="key">.\Measurement Data</Path>
 					<Flags type="key">1088</Flags>
 					<Type type="key">9</Type>
-					<UniqueID type="key">357276155</UniqueID>
-					<EntityID type="key">{370E1B92-A45F-4F57-BE05-2CDEBCEC7626}</EntityID>
-					<ItemInfoDate type="key">29.03.2021 13:16:24</ItemInfoDate>
+					<UniqueID type="key">501310415</UniqueID>
+					<EntityID type="key">{16504359-60FD-477B-BC96-E3C0CCFF05C9}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 14:45:19</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
@@ -395,14 +392,14 @@ ControlDesk version: 7.1</ItemInfoLog>
 				</item>
 				<item>
 					<Component type="key">MeasureDataManagement</Component>
-					<Name type="key">rec1_006.mf4</Name>
-					<DisplayName type="key">rec1_006.mf4</DisplayName>
+					<Name type="key">rec1_018.mf4</Name>
+					<DisplayName type="key">rec1_018.mf4</DisplayName>
 					<Path type="key">.\Measurement Data</Path>
 					<Flags type="key">1088</Flags>
 					<Type type="key">9</Type>
-					<UniqueID type="key">538189499</UniqueID>
-					<EntityID type="key">{9700EA28-E475-4297-8FD6-7E5A0F719654}</EntityID>
-					<ItemInfoDate type="key">29.03.2021 13:16:46</ItemInfoDate>
+					<UniqueID type="key">292897465</UniqueID>
+					<EntityID type="key">{AE9D9780-E3D0-4A04-9C7D-F4EB516082E8}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 14:52:43</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
@@ -415,14 +412,54 @@ ControlDesk version: 7.1</ItemInfoLog>
 				</item>
 				<item>
 					<Component type="key">MeasureDataManagement</Component>
-					<Name type="key">rec1_007.mf4</Name>
-					<DisplayName type="key">rec1_007.mf4</DisplayName>
+					<Name type="key">rec1_019.mf4</Name>
+					<DisplayName type="key">rec1_019.mf4</DisplayName>
 					<Path type="key">.\Measurement Data</Path>
 					<Flags type="key">1088</Flags>
 					<Type type="key">9</Type>
-					<UniqueID type="key">441516934</UniqueID>
-					<EntityID type="key">{7B83D7D7-860C-4340-82DD-6F39C59998F4}</EntityID>
-					<ItemInfoDate type="key">29.03.2021 13:20:58</ItemInfoDate>
+					<UniqueID type="key">146857612</UniqueID>
+					<EntityID type="key">{BAB283BC-49E1-403A-84EF-FD11C6E8EBAD}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 14:57:02</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_020.mf4</Name>
+					<DisplayName type="key">rec1_020.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">358666623</UniqueID>
+					<EntityID type="key">{14FF11B0-BE87-4493-97A6-EA89B3576C1F}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 15:01:04</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_021.mf4</Name>
+					<DisplayName type="key">rec1_021.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">743936968</UniqueID>
+					<EntityID type="key">{7B94A043-3124-4D87-9E95-3D0BE219E8D2}</EntityID>
+					<ItemInfoDate type="key">31.03.2021 15:04:30</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
@@ -677,6 +714,246 @@ ControlDesk version: 7.1</ItemInfoLog>
 		<SortedColumn type="key">4</SortedColumn>
 		<SortAscending type="key">-1</SortAscending>
 		<SignalList>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.AccelerationRequest</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.AcousticDriverHint</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.ActivationRequest</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.CancelRequest</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.ClearanceAI</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.ClearanceStopDistance</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.Counter</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.CRC</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.OpticalDriverHint</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Acceleration_Interface.StopDistanceRequest</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.ActivationRequest</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.AdvancedSteeringAngleLimitation</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.Amplitude</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.CancelRequest</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.ClearanceSI</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.Counter</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.CRC</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.Frequency</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.SteeringAngleRequest</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.SteeringAngleRequestSign</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.SteeringTorqueRequest</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/CustomerCAN/CustomerCanData.Steering_Interface.SteeringTorqueRequestSign</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Steering.Counter</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Steering.CRC</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Steering.SteeringWheelAngle</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Steering.SteeringWheelAngleSign</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Steering.SteeringWheelSpeed</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Steering.SteeringWheelSpeedSign</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Steering.SteeringWheelTorque</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Steering.SteeringWheelTorqueSign</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
 			<Variable>
 				<Name type="key">Model Root/EthernetCommunication/ControlBus.acceleration</Name>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
@@ -1087,7 +1364,7 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<AutomaticExportFolder type="key"/>
 					<AutomaticNamingEnabled type="key">-1</AutomaticNamingEnabled>
 					<AutomaticNamingMinimunDigits type="key">3</AutomaticNamingMinimunDigits>
-					<AutomaticNamingStartIndex type="key">1</AutomaticNamingStartIndex>
+					<AutomaticNamingStartIndex type="key">22</AutomaticNamingStartIndex>
 					<Description type="key"/>
 					<FileNamePrefix type="key">rec1_</FileNamePrefix>
 					<OpenInMeasurementDataPoolEnabled type="key">0</OpenInMeasurementDataPoolEnabled>

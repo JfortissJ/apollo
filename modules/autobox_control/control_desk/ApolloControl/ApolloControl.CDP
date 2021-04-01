@@ -217,6 +217,24 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-29 19:27:20 (UTC)]
 
 Variable description reloaded on 30.03.2021 09:50:29 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
 Original file added from ..\..\autoboxmodel.sdf [2021-03-30 07:50:18 (UTC)]
+
+Variable description reloaded on 31.03.2021 09:20:55 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-31 07:17:44 (UTC)]
+
+Variable description reloaded on 31.03.2021 09:57:34 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-31 07:55:30 (UTC)]
+
+Variable description reloaded on 31.03.2021 10:10:32 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-31 08:09:14 (UTC)]
+
+Variable description reloaded on 31.03.2021 10:11:19 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-31 08:09:14 (UTC)]
+
+Variable description reloaded on 31.03.2021 13:26:59 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-31 10:06:35 (UTC)]
+
+Variable description reloaded on 31.03.2021 13:48:23 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-03-31 10:06:35 (UTC)]
 </ItemInfoLog>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
@@ -228,9 +246,9 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-30 07:50:18 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">1053757266</UniqueID>
-						<EntityID type="key">{C28C3191-9D8D-482E-9577-DFFE75712C02}</EntityID>
-						<ItemInfoDate type="key">30.03.2021 09:50:29</ItemInfoDate>
+						<UniqueID type="key">148617123</UniqueID>
+						<EntityID type="key">{F6C0EB0B-BE82-4145-8FE1-38834E104A0F}</EntityID>
+						<ItemInfoDate type="key">31.03.2021 13:48:23</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -244,9 +262,9 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-30 07:50:18 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">328999630</UniqueID>
-						<EntityID type="key">{E1C9F782-201C-4350-A4F7-6AC54A036771}</EntityID>
-						<ItemInfoDate type="key">30.03.2021 09:50:29</ItemInfoDate>
+						<UniqueID type="key">910374261</UniqueID>
+						<EntityID type="key">{2854F454-3B31-4B2E-8EEF-E2E7FE38CF0A}</EntityID>
+						<ItemInfoDate type="key">31.03.2021 13:48:23</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -260,9 +278,9 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-30 07:50:18 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">30</Type>
-						<UniqueID type="key">660980355</UniqueID>
-						<EntityID type="key">{FB3A1496-7839-4868-8696-65E85F2C01E3}</EntityID>
-						<ItemInfoDate type="key">30.03.2021 09:50:29</ItemInfoDate>
+						<UniqueID type="key">487736846</UniqueID>
+						<EntityID type="key">{2F7AE85F-4F6A-49B2-9601-5E1CB14E1A12}</EntityID>
+						<ItemInfoDate type="key">31.03.2021 13:48:23</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -276,9 +294,9 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-30 07:50:18 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">949625838</UniqueID>
-						<EntityID type="key">{845AA6FD-EA89-413A-9081-2324B10756C5}</EntityID>
-						<ItemInfoDate type="key">30.03.2021 09:50:29</ItemInfoDate>
+						<UniqueID type="key">198490937</UniqueID>
+						<EntityID type="key">{2E61756B-4EBE-4011-B1BD-BF6D0A7EBF79}</EntityID>
+						<ItemInfoDate type="key">31.03.2021 13:48:23</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
