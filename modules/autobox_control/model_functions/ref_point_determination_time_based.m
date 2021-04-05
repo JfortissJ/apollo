@@ -52,7 +52,15 @@ lmt = localization.MeasurementTime;
 tts = trajectory.timestamp_sec; 
 
 % defines max number of valid trajectory points
-trajectory_len =  min(trajectory.n_trajectory_point, length(trajectory.x)); 
+%all_zero_idx = find(trajectory.x==0 & trajectory.y==0 & trajectory.theta==0, 1, 'first');
+all_zero_idx = length(trajectory.x);
+for i=1:length(trajectory.x)
+    if(trajectory.x(i)==0 && trajectory.y(i)==0 && trajectory.theta(i)==0)
+        all_zero_idx = i;
+        break;
+    end
+end
+trajectory_len = min(min(trajectory.n_trajectory_point, all_zero_idx-1), length(trajectory.x)); 
 
 if(trajectory_len < 1)
    %print("Trajectory is empty."); 

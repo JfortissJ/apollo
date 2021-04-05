@@ -169,14 +169,14 @@
 			</item>
 		</viewflags>
 	</ProjectExperiment>
-	<XILAPIEESPort>
-		<ErrorConfigurationDocuments Version="1"/>
-	</XILAPIEESPort>
 	<SignalEditor>
 		<OpenSignalDescriptionSets Version="1"/>
 		<OpenSignalGenerators Version="1"/>
 		<Documents Version="1"/>
 	</SignalEditor>
+	<BusNavigator>
+		<Documents Version="1"/>
+	</BusNavigator>
 	<Interpreter Version="2">
 		<Project>
 			<ScriptCount type="key">0</ScriptCount>
@@ -207,7 +207,7 @@
 			</Layout6>
 		</Layouts>
 	</Instrumentation>
-	<BusNavigator>
-		<Documents Version="1"/>
-	</BusNavigator>
+	<XILAPIEESPort>
+		<ErrorConfigurationDocuments Version="1"/>
+	</XILAPIEESPort>
 </Root>

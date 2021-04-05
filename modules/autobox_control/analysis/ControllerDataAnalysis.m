@@ -57,6 +57,7 @@ classdef ControllerDataAnalysis  < PlotBase
 			end
 			self.setPlotStructName({'res'});
 			calcActive(self);
+            isValid(self);
         end
         
         %% Destructor
@@ -74,7 +75,18 @@ classdef ControllerDataAnalysis  < PlotBase
         function calcActive(self)
             self.active = 1:length(self.res.Time);
         end
-		
+        
+        %% Check if control desk log is not broken
+        function isValid(self)
+           if(sum(self.res.Localization.MeasurementTime) == 0 && ...
+              sum(self.res.ControlBus.timestamp_sec) == 0 && ...
+              sum(self.res.Trajectory.timestamp_sec) == 0)
+               disp('!! All data zero!');
+           end
+           if(length(self.res.Localization.MeasurementTime) == 1)
+               disp('!! Log empty!');
+           end
+        end
 		
 		%% Acc Steer
         function plotAccSteer(self)
@@ -171,6 +183,14 @@ classdef ControllerDataAnalysis  < PlotBase
             for number_trajectory = number_trajectory_range
                initial_time = self.res.Trajectory.timestamp_sec(number_trajectory);
                nr_points = self.res.Trajectory.n_trajectory_point(number_trajectory);
+               
+               loca_x = self.res.Localization.Pose.Position.x(number_trajectory);
+               loca_y = self.res.Localization.Pose.Position.y(number_trajectory);
+               loca_v = sqrt(self.res.Localization.Pose.LinearVelocity.x(number_trajectory)^2+...
+                   self.res.Localization.Pose.LinearVelocity.y(number_trajectory)^2);
+               loca_theta = self.res.Localization.Pose.Heading(number_trajectory);
+               loca_a = self.res.Localization.Pose.LinearAcceleration.x(number_trajectory)*cos(loca_theta);
+               loca_time = self.res.Localization.MeasurementTime(number_trajectory);
 
 
                relative_time = zeros(1,nr_points);
@@ -192,7 +212,7 @@ classdef ControllerDataAnalysis  < PlotBase
                    kappa(i) = self.res.Trajectory.kappa.(number)(number_trajectory);
                    dkappa(i) = self.res.Trajectory.dkappa.(number)(number_trajectory);
                end
-               
+
                absolute_time = relative_time+initial_time;
                [~, ideal_idx]=find(relative_time+initial_time >= self.res.Localization.MeasurementTime(number_trajectory), 1, 'first');
                
@@ -206,18 +226,21 @@ classdef ControllerDataAnalysis  < PlotBase
                subplot(4,1,2); hold on
                plot(absolute_time, x)
                plot(absolute_time(ideal_idx), x(ideal_idx), 'kx')
+               plot(loca_time, loca_x, 'ko')
                ylabel('x')
                xlabel('abslute time')
                
                subplot(4,1,3); hold on
                plot(absolute_time, y)
                plot(absolute_time(ideal_idx), y(ideal_idx), 'kx')
+               plot(loca_time, loca_y, 'ko')
                ylabel('y')
                xlabel('abslute time')
                
                subplot(4,1,4); hold on
                plot(absolute_time, wrapTo2Pi(theta))
                plot(absolute_time(ideal_idx), wrapTo2Pi(theta(ideal_idx)), 'kx')
+               plot(loca_time, wrapTo2Pi(loca_theta), 'ko')
                ylabel('theta')
                xlabel('abslute time')
                
@@ -226,12 +249,14 @@ classdef ControllerDataAnalysis  < PlotBase
                subplot(4,1,1); hold on
                plot(absolute_time, velocity)
                plot(absolute_time(ideal_idx), velocity(ideal_idx), 'kx')
+               plot(loca_time, loca_v, 'ko')
                ylabel('v')
                xlabel('abslute time')
                
                subplot(4,1,2); hold on
                plot(absolute_time, a)
                plot(absolute_time(ideal_idx), a(ideal_idx), 'kx')
+               plot(loca_time, loca_a, 'ko')
                ylabel('a')
                xlabel('abslute time')
                
@@ -275,6 +300,16 @@ classdef ControllerDataAnalysis  < PlotBase
            ss = self.res.VehicleDataCan.Steering.SteeringWheelAngleSign;
            s(ss==false) = -s(ss==false);
            plot(self.res.Time, s);        
+        end
+        
+        %% First move idx
+        function idx = getFirstMoveIdx(self)
+            movement = sqrt(diff(self.res.Localization.Pose.Position.x).^2 + diff(self.res.Localization.Pose.Position.y).^2);
+            idx = find(movement > 0.02, 1, 'first');
+            idx = idx - 20;
+            if idx < 1
+                idx = 1;
+            end
         end
 		
         
