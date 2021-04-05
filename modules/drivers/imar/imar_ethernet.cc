@@ -31,18 +31,18 @@ namespace imar {
 
 bool ImarEthernet::Init() {
   // Create writers
+  // links to topic "/apollo/localization/gps"
   gps_writer_ = node_->CreateWriter<apollo::localization::Gps>(
-      imar_conf_
-          .localization_topic());  // links to topic "/apollo/localization/gps"
+      imar_conf_.localization_topic());
+  // links to topic "/apollo/sensor/gnss/corrected_imu"
   imu_writer_ = node_->CreateWriter<apollo::localization::CorrectedImu>(
-      imar_conf_
-          .imu_topic());  // links to topic "/apollo/sensor/gnss/corrected_imu"
+      imar_conf_.imu_topic());
+  // links to topic "/apollo/sensor/fortiss_imar_status"
   imar_status_writer_ = node_->CreateWriter<apollo::drivers::FortissImarStatus>(
-      imar_conf_.imar_status_topic());  // links to topic
-                                        // "/apollo/sensor/fortiss_imar_status"
+      imar_conf_.imar_status_topic());
+  // links to "/apollo/sensor/gnss/gnss_status"
   gnss_ins_status_writer_ = node_->CreateWriter<apollo::drivers::gnss::InsStat>(
-      imar_conf_
-          .ins_status_topic());  // links to "/apollo/sensor/gnss/gnss_status"
+      imar_conf_.ins_status_topic());
 
   // Publish status
   auto imar_status = std::make_shared<apollo::drivers::FortissImarStatus>();
@@ -54,13 +54,12 @@ bool ImarEthernet::Init() {
 
 //! start socket communication
 bool ImarEthernet::ConfigureImar() {
-  //! initialize sdk
+  // initialize sdk
   p_ins_ = new insCom("iNatGPS");
   gps_data_ = new useUdpLogData();
-
-  cout << "[ConfigureImar] iNat device: " << imar_conf_.ip_address()
-       << " at TCP port " << imar_conf_.tcp_port() << " and UDP Port "
-       << imar_conf_.udp_port() << ".";
+  AINFO << "[ConfigureImar] iNat device: " << imar_conf_.ip_address()
+            << " at TCP port " << imar_conf_.tcp_port() << " and UDP Port "
+            << imar_conf_.udp_port() << ".";
   this->InitImar(this->p_ins_);
   return true;
 }
@@ -75,7 +74,7 @@ bool ImarEthernet::Start() {
 
   //! start the spin thread
   imar_thread_ptr_.reset(new std::thread(&ImarEthernet::ImarSpin, this));
-  AERROR << "[Start] Started iNat communication successfully.";
+  AINFO << "[Start] Started iNat communication successfully.";
   return true;
 }
 
@@ -93,7 +92,6 @@ std::tuple<double, double, double, double>
 ImarEthernet::ConvertEulerAnglesToQuaternion(const double yaw,
                                              const double roll,
                                              const double pitch) {
-  // Abbreviations for the various angular functions
   double cy = cos(-yaw * 0.5f);
   double sy = sin(-yaw * 0.5f);
   double cr = cos(roll * 0.5f);
@@ -155,8 +153,6 @@ void ImarEthernet::PublishSensorData() {
     // the sdk, we check long and lat. if the same -> skip
     if ((old_longitude_ != gps_data_->xcominsSol.dPos[0]) ||
         (old_lattitude_ != gps_data_->xcominsSol.dPos[1])) {
-      // AERROR << "old long: " << old_longitude_ << " old lat: " <<
-      // old_lattitude_ << "\n"; //TODO
       old_longitude_ = gps_data_->xcominsSol.dPos[0];
       old_lattitude_ = gps_data_->xcominsSol.dPos[1];
       new_gnss_data = true;
@@ -165,35 +161,14 @@ void ImarEthernet::PublishSensorData() {
       pitch = gps_data_->xcominsSol.fRPY[1];
       yaw = gps_data_->xcominsSol.fRPY[2];
 
-      // Feedback Daniel: Thats what they use in Providentia and these
-      // coordinates are stable and fused ecef -> has to be converted to utm
-      //  posx = gps_data_->xcominsPosECEF.dECEF[0] + imar_conf_.x_lever() +
-      //  imar_conf_.x_offset(); // x posy = gps_data_->xcominsPosECEF.dECEF[1]
-      //  + imar_conf_.y_lever() + imar_conf_.y_offset(); // y posz =
-      //  gps_data_->xcominsPosECEF.dECEF[2] + imar_conf_.z_lever() +
-      //  imar_conf_.z_offset(); // z
-
       vx = gps_data_->xcominsSol.fVel[0];  // x
       vy = gps_data_->xcominsSol.fVel[1];  // y
       vz = gps_data_->xcominsSol.fVel[2];  // z
-
-      // Long/Lat to UTM
-      // const double longitude = gps_data_->xcominsSol.dPos[0] * 180.0 / M_PI;
-      // const double latitude = gps_data_->xcominsSol.dPos[1] * 180.0 / M_PI;
-      // int zone;
-      // bool northp;
-      // double x, y;
-      // GeographicLib::UTMUPS::Forward(latitude, longitude, zone, northp, x,
-      // y);
-      // //string zonestr = GeographicLib::UTMUPS::EncodeZone(zone, northp);
-      // //for debugging
 
       apollo::localization::msf::UTMCoor utm_xy;
       apollo::localization::msf::FrameTransform::LatlonToUtmXY(
           gps_data_->xcominsSol.dPos[0], gps_data_->xcominsSol.dPos[1],
           &utm_xy);
-
-      // TODO test and cleanup!!!!!
 
       posx = utm_xy.x + imar_conf_.x_lever();
       posy = utm_xy.y + imar_conf_.y_lever();
@@ -290,12 +265,7 @@ void ImarEthernet::PublishSensorData() {
     pose->mutable_linear_velocity()->set_y(vy);  // y
     pose->mutable_linear_velocity()->set_z(vz);  // z
 
-    // AERROR << "pose ready to be sent, pose.x=" <<
-    // pose->mutable_position()->x();
-
-    if (gps_writer_->Write(gps)) {
-      AINFO << "sent gps message!";
-    } else {
+    if (!gps_writer_->Write(gps)) {
       AERROR << "failed to send gps message!";
     }
   }
@@ -314,11 +284,13 @@ void ImarEthernet::PublishSensorData() {
         (old_acceleration_[2] != gps_data_->xcominsSol.fAcc[2])) {
       // AERROR << "old acc0: " << old_acceleration_[0] << " old acc1: " <<
       // old_acceleration_[1] << " old acc2 " << old_acceleration_[2] << "\n";
-      // //TODO
       new_imu_data = true;
       old_acceleration_[0] = gps_data_->xcominsSol.fAcc[0];
       old_acceleration_[1] = gps_data_->xcominsSol.fAcc[1];
       old_acceleration_[2] = gps_data_->xcominsSol.fAcc[2];
+
+      // TODO rotate linear acceleration and angular velocity?
+      // TODO set euler angles of the imu pose?
 
       imu_pose->mutable_angular_velocity()->set_x(
           gps_data_->xcominsSol.fOmg[0]);  // x
@@ -359,9 +331,7 @@ void ImarEthernet::PublishSensorData() {
   // imu_pose->mutable_linear_acceleration()->x();
 
   if (new_imu_data) {
-    if (imu_writer_->Write(imu)) {
-      AINFO << "sent imu message!";
-    } else {
+    if (!imu_writer_->Write(imu)) {
       AERROR << "failed to send imu message!";
     }
   }
@@ -384,17 +354,14 @@ void ImarEthernet::ImarSpin() {
     //! read data from UDP socket
     if (-1 != p_ins_->getUdpUseData(gps_data_)) {
       if (true) {
-        // AERROR << "---------------- THE NEXT SPIN
-        // ------------------------------\n"; //TODO
         if (old_frame_count_ != gps_data_->xcominsSol.tHeader.ucFrameCnt) {
           old_frame_count_ = gps_data_->xcominsSol.tHeader.ucFrameCnt;
           // AERROR << "old frame cout is: " << old_frame_count_ <<"\n"; //TODO
-          AINFO << "Publishing NEW sensor data \n";
+          // AINFO << "Publishing NEW sensor data \n";
           PublishSensorData();
         }
       }
     }
-    // sleep(1); // TO remove if stable
   }
 }
 
