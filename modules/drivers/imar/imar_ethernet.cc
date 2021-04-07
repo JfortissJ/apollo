@@ -144,7 +144,7 @@ void ImarEthernet::PublishSensorData() {
   bool new_gnss_data = false;
 
   //  The INSRPY message contains the integration filter attitude solution in
-  //  Euler representa- tion (roll, pitch and yaw). The given Euler angles
+  //  Euler representation (roll, pitch and yaw). The given Euler angles
   //  describe the orientation of the body frame with respect to the navigation
   //  frame (NED).
   if (imar_conf_.gps_available()) {  // Regular case: gps signal is available
@@ -170,17 +170,13 @@ void ImarEthernet::PublishSensorData() {
           gps_data_->xcominsSol.dPos[0], gps_data_->xcominsSol.dPos[1],
           &utm_xy);
 
-      posx = utm_xy.x + imar_conf_.x_lever();
-      posy = utm_xy.y + imar_conf_.y_lever();
-      posz = static_cast<double>(gps_data_->xcominsSol.fAlt) +
-             imar_conf_.z_lever();
+      posx = utm_xy.x;
+      posy = utm_xy.y;
+      posz = static_cast<double>(gps_data_->xcominsSol.fAlt);
     }
 
-  } else  // irregular case, i.e. in garage
-  {
+  } else { // irregular case, i.e. in garage
     new_gnss_data = true;
-    AERROR << "Mode[!gps_available] ... integrating inertia values to "
-              "calculate pose";
 
     if (previous_gps_message_ == nullptr) {
       previous_gps_message_ = std::make_shared<apollo::localization::Gps>();
@@ -250,6 +246,22 @@ void ImarEthernet::PublishSensorData() {
   }
 
   if (new_gnss_data) {
+
+//So setzt apollo die quaternion:
+// add "@eigen", in BUILD
+  // // 2. orientation
+  // Eigen::Quaterniond q =
+  //     Eigen::AngleAxisd(ins->euler_angles().z() - 90 * M_PI / 180.0,
+  //                       Eigen::Vector3d::UnitZ()) *
+  //     Eigen::AngleAxisd(-ins->euler_angles().y(), Eigen::Vector3d::UnitX()) *
+  //     Eigen::AngleAxisd(ins->euler_angles().x(), Eigen::Vector3d::UnitY());
+  // qx = q.x;
+  // qy = q.y;
+  // qz = q.z;
+  // qw = q.w;
+
+
+
     tie(qx, qy, qz, qw) = ConvertEulerAnglesToQuaternion(yaw, roll, pitch);
 
     pose->mutable_orientation()->set_qx(qx);
@@ -282,35 +294,64 @@ void ImarEthernet::PublishSensorData() {
     if ((old_acceleration_[0] != gps_data_->xcominsSol.fAcc[0]) ||
         (old_acceleration_[1] != gps_data_->xcominsSol.fAcc[1]) ||
         (old_acceleration_[2] != gps_data_->xcominsSol.fAcc[2])) {
-      // AERROR << "old acc0: " << old_acceleration_[0] << " old acc1: " <<
-      // old_acceleration_[1] << " old acc2 " << old_acceleration_[2] << "\n";
+
       new_imu_data = true;
       old_acceleration_[0] = gps_data_->xcominsSol.fAcc[0];
       old_acceleration_[1] = gps_data_->xcominsSol.fAcc[1];
       old_acceleration_[2] = gps_data_->xcominsSol.fAcc[2];
 
-      // TODO rotate linear acceleration and angular velocity?
-      // TODO set euler angles of the imu pose?
+      // Rotation matrix to rotate acc vector and angular velocity vector from 
+      // body frame to ENU frame
 
-      imu_pose->mutable_angular_velocity()->set_x(
-          gps_data_->xcominsSol.fOmg[0]);  // x
-      imu_pose->mutable_angular_velocity()->set_y(
-          gps_data_->xcominsSol.fOmg[1]);  // y
-      imu_pose->mutable_angular_velocity()->set_z(
-          gps_data_->xcominsSol.fOmg[2]);  // z
+      // Rotation matrix
+      roll = gps_data_->xcominsSol.fRPY[0];
+      pitch = gps_data_->xcominsSol.fRPY[1];
+      yaw = gps_data_->xcominsSol.fRPY[2];
+      //TODO in the matlab proof of concept I set pitch and roll to zero!
+      const double st[] = {sin(yaw), sin(pitch), sin(roll)};
+      const double ct[] = {cos(yaw), cos(pitch), cos(roll)};
+      const double R11, R12, R13, R21, R22, R23, R31, R32, R33;
+      R11 = ct[1].*ct[0];
+      R12 = st[2].*st[1].*ct[0] - ct[2].*st[0];
+      R13 = ct[2].*st[1].*ct[0] + st[2].*st[0];
+      R21 = ct[1].*st[0];
+      R22 = st[2].*st[1].*st[0] + ct[2].*ct[0];
+      R23 = ct[2].*st[1].*st[0] - st[2].*ct[0];
+      R31 = -st[1];
+      R32 = st[2].*ct[1];
+      R33 = ct[2].*ct[1];
 
-      imu_pose->mutable_linear_acceleration()->set_x(
-          gps_data_->xcominsSol.fAcc[0]);  // x
-      imu_pose->mutable_linear_acceleration()->set_y(
-          gps_data_->xcominsSol.fAcc[1]);  // y
-      imu_pose->mutable_linear_acceleration()->set_z(
-          gps_data_->xcominsSol.fAcc[2]);  // z
+      // NOTE the -y here!
+      const double a[] = {gps_data_->xcominsSol.fAcc[0], 
+                          -gps_data_->xcominsSol.fAcc[1], 
+                          gps_data_->xcominsSol.fAcc[2]};
+
+      // Rotated Acceleration
+      const double a_trans_x = R11*a[0] + R12*a[1] + R13*a[2];
+      const double a_trans_y = R21*a[0] + R22*a[1] + R31*a[2];
+      const double a_trans_z = R31*a[0] + R32*a[1] + R33*a[2];
+
+      // TODO I am not sure about this transformation, I here atm only
+      // flip z
+      const double ang_vel_trans_x = gps_data_->xcominsSol.fOmg[0];
+      const double ang_vel_trans_y = gps_data_->xcominsSol.fOmg[1];
+      const double ang_vel_trans_z = -gps_data_->xcominsSol.fOmg[2];
+ 
+      // Fill msg   
+      imu_pose->mutable_angular_velocity()->set_x(ang_vel_trans_x);
+      imu_pose->mutable_angular_velocity()->set_y(ang_vel_trans_y);
+      imu_pose->mutable_angular_velocity()->set_z(ang_vel_trans_z);
+
+      imu_pose->mutable_linear_acceleration()->set_x(a_trans_x);
+      imu_pose->mutable_linear_acceleration()->set_y(a_trans_y);
+      imu_pose->mutable_linear_acceleration()->set_z(a_trans_z);
+
+      imu_pose->mutable_euler_angles()->set_x(roll);
+      imu_pose->mutable_euler_angles()->set_y(pitch);
+      imu_pose->mutable_euler_angles()->set_z(yaw);
     }
-  } else  // irregular case, i.e. in garage
-  {
+  } else { // irregular case, i.e. in garage
     new_imu_data = true;
-    // AERROR << "Mode[!gps_available] ... integrating inertia values to
-    // calculate imu_pose";
 
     imu_pose->mutable_angular_velocity()->set_x(
         gps_data_->xcomimuComp.fOmg[0]);  // x
@@ -327,9 +368,6 @@ void ImarEthernet::PublishSensorData() {
         gps_data_->xcomimuComp.fAcc[2]);  // z
   }
 
-  // AERROR << "imu_pose ready to be send, imu_pose.ax = " <<
-  // imu_pose->mutable_linear_acceleration()->x();
-
   if (new_imu_data) {
     if (!imu_writer_->Write(imu)) {
       AERROR << "failed to send imu message!";
@@ -344,7 +382,6 @@ void ImarEthernet::PublishSensorData() {
   }
 
   // save messages
-  // AERROR << "Last action: saving previous messages of gps and imu";
   previous_gps_message_ = gps;
   previous_imu_message_ = imu;
 }
