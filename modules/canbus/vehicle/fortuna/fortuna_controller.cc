@@ -256,8 +256,14 @@ Chassis FortunaController::chassis() {
   if(chassis_detail.has_fortuna() && chassis_detail.fortuna().has_steering() &&
     chassis_detail.fortuna().steering().has_steering_wheel_angle() &&
     chassis_detail.fortuna().steering().has_steering_wheel_angle_sign()) {
+      int sign;
+      if(chassis_detail.fortuna().steering().steering_wheel_angle_sign()) {
+        sign = -1;
+      } else {
+        sign = 1;
+      }
       const double steering_wheel_angle = chassis_detail.fortuna().steering().steering_wheel_angle() * 
-        chassis_detail.fortuna().steering().steering_wheel_angle_sign();
+        sign;
       const double steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 
         vehicle_params_.steer_ratio() * 180.0 / M_PI; // vaule should be 899 as in the ABX model; // is steer ratio really the correct value here!!!!!????
       const double steering_angle = steering_wheel_angle / 
