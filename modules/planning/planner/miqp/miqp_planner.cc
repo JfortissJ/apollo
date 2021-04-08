@@ -51,41 +51,7 @@ using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
 using apollo::planning::DiscretizedTrajectory;
 
-static const double X_OFFSET = 692000;     // TODO: move to proto file
-static const double Y_OFFSET = 5.339e+06;  // TODO: move to proto file
-
 namespace {
-
-std::vector<PathPoint> ToDiscretizedReferenceLine(
-    const std::vector<ReferencePoint>& ref_points,
-    const PlanningTarget& planning_target) {
-  double s = 0.0;
-
-  std::vector<PathPoint> path_points;
-  for (const auto& ref_point : ref_points) {
-    PathPoint path_point;
-    path_point.set_x(ref_point.x());
-    path_point.set_y(ref_point.y());
-    path_point.set_theta(ref_point.heading());
-    path_point.set_kappa(ref_point.kappa());
-    path_point.set_dkappa(ref_point.dkappa());
-
-    if (!path_points.empty()) {
-      double dx = path_point.x() - path_points.back().x();
-      double dy = path_point.y() - path_points.back().y();
-      s += std::sqrt(dx * dx + dy * dy);
-    }
-    path_point.set_s(s);
-
-    if (planning_target.has_stop_point() &&
-        (s > planning_target.stop_point().s() + 10)) {
-      AERROR << "cutting off reference after s:" << s;
-      break;
-    }
-    path_points.push_back(std::move(path_point));
-  }
-  return path_points;
-}
 
 std::pair<std::vector<Vec2d>, std::vector<Vec2d>> ToLeftAndRightBoundary(
     ReferenceLineInfo* reference_line_info) {
@@ -194,9 +160,11 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double ref[ref_size * 2];
   for (int i = 0; i < ref_size; ++i) {
     PathPoint refPoint = discrete_reference_line.at(i);
-    // AINFO << refPoint.x() - X_OFFSET<< ", " << refPoint.y() - Y_OFFSET;
-    ref[2 * i] = refPoint.x() - X_OFFSET;
-    ref[2 * i + 1] = refPoint.y() - Y_OFFSET;
+    // AINFO << refPoint.x() - config_.miqp_planner_config().pts_offset_x()<< ",
+    // " << refPoint.y() - config_.miqp_planner_config().pts_offset_y();
+    ref[2 * i] = refPoint.x() - config_.miqp_planner_config().pts_offset_x();
+    ref[2 * i + 1] =
+        refPoint.y() - config_.miqp_planner_config().pts_offset_y();
   }
   AINFO << "ReferenceLine Time [s] = "
         << (Clock::NowInSeconds() - current_time);
@@ -366,19 +334,54 @@ Status MiqpPlanner::PlanOnReferenceLine(
   return Status::OK();
 }
 
+std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
+    const std::vector<ReferencePoint>& ref_points,
+    const PlanningTarget& planning_target) {
+  double s = 0.0;
+
+  std::vector<PathPoint> path_points;
+  for (const auto& ref_point : ref_points) {
+    PathPoint path_point;
+    path_point.set_x(ref_point.x());
+    path_point.set_y(ref_point.y());
+    path_point.set_theta(ref_point.heading());
+    path_point.set_kappa(ref_point.kappa());
+    path_point.set_dkappa(ref_point.dkappa());
+
+    if (!path_points.empty()) {
+      double dx = path_point.x() - path_points.back().x();
+      double dy = path_point.y() - path_points.back().y();
+      s += std::sqrt(dx * dx + dy * dy);
+    }
+    path_point.set_s(s);
+
+    if (planning_target.has_stop_point() &&
+        (s > planning_target.stop_point().s() +
+                 config_.miqp_planner_config()
+                     .cutoff_distance_reference_after_stop())) {
+      AERROR << "cutting off reference after s:" << s;
+      break;
+    }
+    path_points.push_back(std::move(path_point));
+  }
+  return path_points;
+}
+
 DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     double traj[], int size) {
   double s = 0.0f;
-  double lastx = traj[0 + TRAJECTORY_X_IDX] + X_OFFSET;
-  double lasty = traj[0 + TRAJECTORY_Y_IDX] + Y_OFFSET;
+  double lastx =
+      traj[0 + TRAJECTORY_X_IDX] + config_.miqp_planner_config().pts_offset_x();
+  double lasty =
+      traj[0 + TRAJECTORY_Y_IDX] + config_.miqp_planner_config().pts_offset_y();
 
   DiscretizedTrajectory apollo_trajectory;
   for (int trajidx = 0; trajidx < size; ++trajidx) {
     const double time = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_TIME_IDX];
-    const double x =
-        traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_X_IDX] + X_OFFSET;
-    const double y =
-        traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_Y_IDX] + Y_OFFSET;
+    const double x = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_X_IDX] +
+                     config_.miqp_planner_config().pts_offset_x();
+    const double y = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_Y_IDX] +
+                     config_.miqp_planner_config().pts_offset_y();
     const double vx = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_VX_IDX];
     const double vy = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_VY_IDX];
     const double ax = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_AX_IDX];
@@ -486,10 +489,12 @@ void MiqpPlanner::ConvertToInitialStateSecondOrder(
   double theta = planning_init_point.path_point().theta();
   // cplex throws an exception if vel=0
   double vel = std::max(planning_init_point.v(), minimum_valid_speed_planning_);
-  initial_state[0] = planning_init_point.path_point().x() - X_OFFSET;
+  initial_state[0] = planning_init_point.path_point().x() -
+                     config_.miqp_planner_config().pts_offset_x();
   initial_state[1] = vel * cos(theta);
   initial_state[2] = planning_init_point.a() * cos(theta);
-  initial_state[3] = planning_init_point.path_point().y() - Y_OFFSET;
+  initial_state[3] = planning_init_point.path_point().y() -
+                     config_.miqp_planner_config().pts_offset_y();
   initial_state[4] = vel * sin(theta);
   initial_state[5] = planning_init_point.a() * sin(theta);
   AINFO << std::setprecision(15)
@@ -504,13 +509,15 @@ void MiqpPlanner::ConvertToPolyPts(const std::vector<Vec2d>& left_pts,
                                    double poly_pts[]) {
   int i = 0;
   for (auto it = left_pts.begin(); it != left_pts.end(); ++it) {
-    poly_pts[2 * i] = it->x() - X_OFFSET;
-    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
+    poly_pts[2 * i] = it->x() - config_.miqp_planner_config().pts_offset_x();
+    poly_pts[2 * i + 1] =
+        it->y() - config_.miqp_planner_config().pts_offset_y();
     i++;
   }
   for (auto it = right_pts.rbegin(); it != right_pts.rend(); ++it) {
-    poly_pts[2 * i] = it->x() - X_OFFSET;
-    poly_pts[2 * i + 1] = it->y() - Y_OFFSET;
+    poly_pts[2 * i] = it->x() - config_.miqp_planner_config().pts_offset_x();
+    poly_pts[2 * i + 1] =
+        it->y() - config_.miqp_planner_config().pts_offset_y();
     i++;
   }
 }
@@ -826,23 +833,27 @@ bool MiqpPlanner::FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
   if (pts.size() != 4) {
     return false;
   }
-  // AINFO << "pts(0): " << pts.at(0).x() - X_OFFSET << ", "
-  //       << pts.at(0).y() - Y_OFFSET;
-  // AINFO << "pts(1): " << pts.at(1).x() - X_OFFSET << ", "
-  //       << pts.at(1).y() - Y_OFFSET;
-  // AINFO << "pts(2): " << pts.at(2).x() - X_OFFSET << ", "
-  //       << pts.at(2).y() - Y_OFFSET;
-  // AINFO << "pts(3): " << pts.at(3).x() - X_OFFSET << ", "
-  //       << pts.at(3).y() - Y_OFFSET;
+  // AINFO << "pts(0): " << pts.at(0).x() -
+  // config_.miqp_planner_config().pts_offset_x() << ", "
+  //       << pts.at(0).y() - config_.miqp_planner_config().pts_offset_y();
+  // AINFO << "pts(1): " << pts.at(1).x() -
+  // config_.miqp_planner_config().pts_offset_x() << ", "
+  //       << pts.at(1).y() - config_.miqp_planner_config().pts_offset_y();
+  // AINFO << "pts(2): " << pts.at(2).x() -
+  // config_.miqp_planner_config().pts_offset_x() << ", "
+  //       << pts.at(2).y() - config_.miqp_planner_config().pts_offset_y();
+  // AINFO << "pts(3): " << pts.at(3).x() -
+  // config_.miqp_planner_config().pts_offset_x() << ", "
+  //       << pts.at(3).y() - config_.miqp_planner_config().pts_offset_y();
 
-  p1_x = pts.at(0).x() - X_OFFSET;
-  p1_y = pts.at(0).y() - Y_OFFSET;
-  p2_x = pts.at(1).x() - X_OFFSET;
-  p2_y = pts.at(1).y() - Y_OFFSET;
-  p3_x = pts.at(2).x() - X_OFFSET;
-  p3_y = pts.at(2).y() - Y_OFFSET;
-  p4_x = pts.at(3).x() - X_OFFSET;
-  p4_y = pts.at(3).y() - Y_OFFSET;
+  p1_x = pts.at(0).x() - config_.miqp_planner_config().pts_offset_x();
+  p1_y = pts.at(0).y() - config_.miqp_planner_config().pts_offset_y();
+  p2_x = pts.at(1).x() - config_.miqp_planner_config().pts_offset_x();
+  p2_y = pts.at(1).y() - config_.miqp_planner_config().pts_offset_y();
+  p3_x = pts.at(2).x() - config_.miqp_planner_config().pts_offset_x();
+  p3_y = pts.at(2).y() - config_.miqp_planner_config().pts_offset_y();
+  p4_x = pts.at(3).x() - config_.miqp_planner_config().pts_offset_x();
+  p4_y = pts.at(3).y() - config_.miqp_planner_config().pts_offset_y();
 
   return true;
 }
