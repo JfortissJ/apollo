@@ -69,6 +69,10 @@ class MiqpPlanner : public LatticePlanner {
       ReferenceLineInfo* reference_line_info) override;
 
  private:
+  std::vector<apollo::common::PathPoint> ToDiscretizedReferenceLine(
+      const std::vector<ReferencePoint>& ref_points,
+      const PlanningTarget& planning_target);
+
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
       double traj[], int size);
 
@@ -90,6 +94,9 @@ class MiqpPlanner : public LatticePlanner {
       std::vector<common::math::Vec2d> left_pts,
       std::vector<common::math::Vec2d> right_pts,
       const apollo::planning::DiscretizedTrajectory& ego_trajectory);
+
+  std::vector<const Obstacle*> FilterNonVirtualObstacles(
+      const std::vector<const Obstacle*>& obstacles);
 
   bool ProcessObstacles(const std::vector<const Obstacle*>& obstacles,
                         double timestep);

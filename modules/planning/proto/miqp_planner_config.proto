@@ -34,8 +34,11 @@ message MiqpPlannerConfiguration {
     optional int32 warmstart_type = 29 [default = 2];
     optional double wheelbase_add = 30 [default = 0.0];
     optional double destination_distance_stop_threshold = 31 [default = 2.0];
-    optional bool obstacle_roi_filter = 32 [default = false];
-    optional double obstacle_roi_behind_distance = 33 [default = 10.0];
-    optional bool use_start_transformation = 34 [default = true];
-    optional double acc_start_trajectory = 35 [default = 1.0];
+    optional double cutoff_distance_reference_after_stop = 32 [default = 10.0];
+    optional bool obstacle_roi_filter = 33 [default = false];
+    optional double obstacle_roi_behind_distance = 34 [default = 10.0];
+    optional bool use_start_transformation = 35 [default = true];
+    optional double acc_start_trajectory = 36 [default = 1.0];
+    optional double pts_offset_x = 37 [default = 0.0];
+    optional double pts_offset_y = 38 [default = 0.0];
 }
