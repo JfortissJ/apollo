@@ -44,6 +44,7 @@ struct MiqpPlannerSettings {
   float accLatMinMaxLimit;
   float jerkLatMinMaxLimit;
   float simplificationDistanceMap;
+  float simplificationDistanceReferenceLine;
   float bufferReference;
   float buffer_for_merging_tolerance;
   float refLineInterpInc;

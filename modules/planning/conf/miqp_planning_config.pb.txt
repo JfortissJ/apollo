@@ -35,10 +35,13 @@ miqp_planner_config: {
     warmstart_type: 2
     wheelbase_add: 0.3
     destination_distance_stop_threshold: 2.0
+    cutoff_distance_reference_after_stop: 10.0
     obstacle_roi_filter: true
     obstacle_roi_behind_distance: 10.0
     use_start_transformation: true
     acc_start_trajectory: 1.0
+    pts_offset_x: 692000
+    pts_offset_y: 5.339e+06
 }
 
 
