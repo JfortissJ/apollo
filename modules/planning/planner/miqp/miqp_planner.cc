@@ -676,6 +676,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
     s.jerkLatMinMaxLimit = 1.4;
   }
   s.simplificationDistanceMap = 0.2;
+  s.simplificationDistanceReferenceLine = 0.05;
   s.bufferReference = 1.0;
   s.buffer_for_merging_tolerance = 1.0;  // probably too high
   s.refLineInterpInc = 0.2;
