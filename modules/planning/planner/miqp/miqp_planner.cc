@@ -77,7 +77,8 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
     }
     path_point.set_s(s);
 
-    if (planning_target.has_stop_point() && (s > planning_target.stop_point().s() + 10)) {
+    if (planning_target.has_stop_point() &&
+        (s > planning_target.stop_point().s() + 10)) {
       AERROR << "cutting off reference after s:" << s;
       break;
     }
@@ -197,7 +198,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
     ref[2 * i] = refPoint.x() - X_OFFSET;
     ref[2 * i + 1] = refPoint.y() - Y_OFFSET;
   }
-  AINFO << "ReferenceLine Time [s] = " << (Clock::NowInSeconds() - current_time);
+  AINFO << "ReferenceLine Time [s] = "
+        << (Clock::NowInSeconds() - current_time);
   current_time = Clock::NowInSeconds();
 
   // Map
@@ -209,7 +211,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
     double poly_pts[poly_size * 2];
     ConvertToPolyPts(left_pts, right_pts, poly_pts);
     UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
-    AINFO << "Map Processing Time [s] = " << (Clock::NowInSeconds() - current_time);
+    AINFO << "Map Processing Time [s] = "
+          << (Clock::NowInSeconds() - current_time);
   }
 
   // Initial State
@@ -322,8 +325,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
     const double ego_width = vehicle_config.vehicle_param().width();
     const double ego_back_edge_to_center =
         vehicle_config.vehicle_param().back_edge_to_center();
+    auto obstacles_non_virtual = FilterNonVirtualObstacles(frame->obstacles());
     const bool obstacle_collision = CollisionChecker::InCollision(
-        frame->obstacles(), apollo_traj, ego_length, ego_width,
+        obstacles_non_virtual, apollo_traj, ego_length, ego_width,
         ego_back_edge_to_center);
     if (obstacle_collision) {
       AERROR << "Planning success but collision with obstacle!";
@@ -745,6 +749,21 @@ bool MiqpPlanner::EnvironmentCollision(
     }
   }
   return false;
+}
+
+std::vector<const Obstacle*> MiqpPlanner::FilterNonVirtualObstacles(
+    const std::vector<const Obstacle*>& obstacles) {
+  std::vector<const Obstacle*> obstacles_out;
+  for (const Obstacle* obstacle : obstacles) {
+    if (obstacle->IsVirtual()) {
+      AINFO << "Skipping virtual obstacle for post-collision check: "
+            << obstacle->DebugString();
+      continue;
+    } else {
+      obstacles_out.push_back(obstacle);
+    }
+    return obstacles_out;
+  }
 }
 
 bool MiqpPlanner::ProcessObstacles(

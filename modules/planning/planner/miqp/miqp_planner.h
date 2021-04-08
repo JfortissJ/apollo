@@ -91,6 +91,9 @@ class MiqpPlanner : public LatticePlanner {
       std::vector<common::math::Vec2d> right_pts,
       const apollo::planning::DiscretizedTrajectory& ego_trajectory);
 
+  std::vector<const Obstacle*> FilterNonVirtualObstacles(
+      const std::vector<const Obstacle*>& obstacles);
+
   bool ProcessObstacles(const std::vector<const Obstacle*>& obstacles,
                         double timestep);
 
