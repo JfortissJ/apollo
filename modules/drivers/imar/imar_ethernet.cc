@@ -308,18 +308,18 @@ void ImarEthernet::PublishSensorData() {
       pitch = gps_data_->xcominsSol.fRPY[1];
       yaw = gps_data_->xcominsSol.fRPY[2];
       //TODO in the matlab proof of concept I set pitch and roll to zero!
-      const double st[] = {sin(yaw), sin(pitch), sin(roll)};
-      const double ct[] = {cos(yaw), cos(pitch), cos(roll)};
-      const double R11, R12, R13, R21, R22, R23, R31, R32, R33;
-      R11 = ct[1].*ct[0];
-      R12 = st[2].*st[1].*ct[0] - ct[2].*st[0];
-      R13 = ct[2].*st[1].*ct[0] + st[2].*st[0];
-      R21 = ct[1].*st[0];
-      R22 = st[2].*st[1].*st[0] + ct[2].*ct[0];
-      R23 = ct[2].*st[1].*st[0] - st[2].*ct[0];
+      const double st[3] = {sin(yaw), sin(pitch), sin(roll)};
+      const double ct[3] = {cos(yaw), cos(pitch), cos(roll)};
+      double R11, R12, R13, R21, R22, R23, R31, R32, R33;
+      R11 = ct[1]*ct[0];
+      R12 = st[2]*st[1]*ct[0] - ct[2]*st[0];
+      R13 = ct[2]*st[1]*ct[0] + st[2]*st[0];
+      R21 = ct[1]*st[0];
+      R22 = st[2]*st[1]*st[0] + ct[2]*ct[0];
+      R23 = ct[2]*st[1]*st[0] - st[2]*ct[0];
       R31 = -st[1];
-      R32 = st[2].*ct[1];
-      R33 = ct[2].*ct[1];
+      R32 = st[2]*ct[1];
+      R33 = ct[2]*ct[1];
 
       // NOTE the -y here!
       const double a[] = {gps_data_->xcominsSol.fAcc[0], 

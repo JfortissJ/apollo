@@ -5,10 +5,10 @@ localization_topic: "/apollo/sensor/gnss/odometry"
 imu_topic: "/apollo/sensor/gnss/corrected_imu"
 imar_status_topic: "/apollo/sensor/fortiss_imar_status"
 ins_status_topic: "/apollo/sensor/gnss/ins_stat"
-x_lever : 0.018
-y_lever : 0.123
-z_lever : -0.8725
-x_offset : -4174597.0
-y_offset : -856609.0
-z_offset : -4730311.0
+x_lever : 0
+y_lever : 0
+z_lever : 0
+x_offset : 0
+y_offset : 0
+z_offset : 0
 gps_available: true
