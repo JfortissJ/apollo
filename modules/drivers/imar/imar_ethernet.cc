@@ -328,7 +328,7 @@ void ImarEthernet::PublishSensorData() {
 
       // Rotated Acceleration
       const double a_trans_x = R11*a[0] + R12*a[1] + R13*a[2];
-      const double a_trans_y = R21*a[0] + R22*a[1] + R31*a[2];
+      const double a_trans_y = R21*a[0] + R22*a[1] + R23*a[2];
       const double a_trans_z = R31*a[0] + R32*a[1] + R33*a[2];
 
       // TODO I am not sure about this transformation, I here atm only
