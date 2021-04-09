@@ -58,8 +58,8 @@ bool ImarEthernet::ConfigureImar() {
   p_ins_ = new insCom("iNatGPS");
   gps_data_ = new useUdpLogData();
   AINFO << "[ConfigureImar] iNat device: " << imar_conf_.ip_address()
-            << " at TCP port " << imar_conf_.tcp_port() << " and UDP Port "
-            << imar_conf_.udp_port() << ".";
+        << " at TCP port " << imar_conf_.tcp_port() << " and UDP Port "
+        << imar_conf_.udp_port() << ".";
   this->InitImar(this->p_ins_);
   return true;
 }
@@ -138,15 +138,11 @@ void ImarEthernet::PublishSensorData() {
   double unix_sec_gps = cyber::Time::Now().ToSecond();
   gps->mutable_header()->set_timestamp_sec(unix_sec_gps);
   auto *pose = gps->mutable_localization();
-  double qx, qy, qz, qw, roll, pitch, yaw;
+  double qx, qy, qz, qw;
   double posx, posy, posz;
   double vx, vy, vz;
   bool new_gnss_data = false;
 
-  //  The INSRPY message contains the integration filter attitude solution in
-  //  Euler representation (roll, pitch and yaw). The given Euler angles
-  //  describe the orientation of the body frame with respect to the navigation
-  //  frame (NED).
   if (imar_conf_.gps_available()) {  // Regular case: gps signal is available
 
     // check if the data is new: as there is no method to do this directly in
@@ -157,25 +153,40 @@ void ImarEthernet::PublishSensorData() {
       old_lattitude_ = gps_data_->xcominsSol.dPos[1];
       new_gnss_data = true;
 
-      roll = gps_data_->xcominsSol.fRPY[0];
-      pitch = gps_data_->xcominsSol.fRPY[1];
-      yaw = gps_data_->xcominsSol.fRPY[2];
+      // TODO I am not too sure here: is the order of pitch and roll correct?
 
-      vx = gps_data_->xcominsSol.fVel[0];  // x
-      vy = gps_data_->xcominsSol.fVel[1];  // y
-      vz = gps_data_->xcominsSol.fVel[2];  // z
+      // The given Euler angles from the imar interface describe the orientation
+      // of the body frame with respect to the navigation frame (NED).
 
+      // Convert from North/East/Down to East/North/Up and define quaternion
+      Eigen::Quaterniond q =
+          Eigen::AngleAxisd(-gps_data_->xcominsSol.fRPY[2],
+                            Eigen::Vector3d::UnitZ()) *
+          Eigen::AngleAxisd(gps_data_->xcominsSol.fRPY[0],
+                            Eigen::Vector3d::UnitX()) *
+          Eigen::AngleAxisd(gps_data_->xcominsSol.fRPY[1] + M_PI,
+                            Eigen::Vector3d::UnitY());
+      qx = q.x();
+      qy = q.y();
+      qz = q.z();
+      qw = q.w();
+
+      // No transformation, done on the inat device
+      vx = gps_data_->xcominsSol.fVel[0];
+      vy = gps_data_->xcominsSol.fVel[1];
+      vz = gps_data_->xcominsSol.fVel[2];
+
+      // Transform from Long/Lat to UTM
       apollo::localization::msf::UTMCoor utm_xy;
       apollo::localization::msf::FrameTransform::LatlonToUtmXY(
           gps_data_->xcominsSol.dPos[0], gps_data_->xcominsSol.dPos[1],
           &utm_xy);
-
       posx = utm_xy.x;
       posy = utm_xy.y;
       posz = static_cast<double>(gps_data_->xcominsSol.fAlt);
     }
 
-  } else { // irregular case, i.e. in garage
+  } else {  // irregular case, i.e. in garage
     new_gnss_data = true;
 
     if (previous_gps_message_ == nullptr) {
@@ -228,54 +239,38 @@ void ImarEthernet::PublishSensorData() {
         prev_quaternion->qx(), prev_quaternion->qy(), prev_quaternion->qz(),
         prev_quaternion->qw());
 
-    roll =
+    double roll =
         prev_roll +
         previous_imu_pose->mutable_angular_velocity()->x() *
             dt;  // +
                  // 0.5*previous_imu_pose->mutable_angular_acceleration()->x()*dt*dt;
-    pitch =
+    double pitch =
         prev_pitch +
         previous_imu_pose->mutable_angular_velocity()->y() *
             dt;  // +
                  // 0.5*previous_imu_pose->mutable_angular_acceleration()->y()*dt*dt;
-    yaw =
+    double yaw =
         prev_yaw +
         previous_imu_pose->mutable_angular_velocity()->z() *
             dt;  // +
                  // 0.5*previous_imu_pose->mutable_angular_acceleration()->z()*dt*dt;
+
+    tie(qx, qy, qz, qw) = ConvertEulerAnglesToQuaternion(yaw, roll, pitch);
   }
 
   if (new_gnss_data) {
-
-//So setzt apollo die quaternion:
-// add "@eigen", in BUILD
-  // 2. orientation
-  Eigen::Quaterniond q =
-      Eigen::AngleAxisd(-yaw,
-                        Eigen::Vector3d::UnitZ()) *
-      Eigen::AngleAxisd(roll, Eigen::Vector3d::UnitX()) *
-      Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitY()); //+M_PI
-  qx = q.x();
-  qy = q.y();
-  qz = q.z();
-  qw = q.w();
-
-
-
-    //tie(qx, qy, qz, qw) = ConvertEulerAnglesToQuaternion(yaw, roll, pitch);
-
     pose->mutable_orientation()->set_qx(qx);
     pose->mutable_orientation()->set_qy(qy);
     pose->mutable_orientation()->set_qz(qz);
     pose->mutable_orientation()->set_qw(qw);
 
-    pose->mutable_position()->set_x(posx);  // x
-    pose->mutable_position()->set_y(posy);  // y
-    pose->mutable_position()->set_z(posz);  // z
+    pose->mutable_position()->set_x(posx);
+    pose->mutable_position()->set_y(posy);
+    pose->mutable_position()->set_z(posz);
 
-    pose->mutable_linear_velocity()->set_x(vx);  // x
-    pose->mutable_linear_velocity()->set_y(vy);  // y
-    pose->mutable_linear_velocity()->set_z(vz);  // z
+    pose->mutable_linear_velocity()->set_x(vx);
+    pose->mutable_linear_velocity()->set_y(vy);
+    pose->mutable_linear_velocity()->set_z(vz);
 
     if (!gps_writer_->Write(gps)) {
       AERROR << "failed to send gps message!";
@@ -294,57 +289,34 @@ void ImarEthernet::PublishSensorData() {
     if ((old_acceleration_[0] != gps_data_->xcominsSol.fAcc[0]) ||
         (old_acceleration_[1] != gps_data_->xcominsSol.fAcc[1]) ||
         (old_acceleration_[2] != gps_data_->xcominsSol.fAcc[2])) {
-
       new_imu_data = true;
       old_acceleration_[0] = gps_data_->xcominsSol.fAcc[0];
       old_acceleration_[1] = gps_data_->xcominsSol.fAcc[1];
       old_acceleration_[2] = gps_data_->xcominsSol.fAcc[2];
 
-      // Rotation matrix to rotate acc vector and angular velocity vector from 
+      // Rotation matrix to rotate acc vector and angular velocity vector from
       // body frame to ENU frame
 
-      // Rotation matrix
-      roll = gps_data_->xcominsSol.fRPY[1];
-      pitch = gps_data_->xcominsSol.fRPY[0];
-      yaw = -gps_data_->xcominsSol.fRPY[2];
-      //TODO in the matlab proof of concept I set pitch and roll to zero!
-      const double st[] = {sin(yaw), sin(pitch), sin(roll)};
-      const double ct[] = {cos(yaw), cos(pitch), cos(roll)};
-      double R11, R12, R13, R21, R22, R23, R31, R32, R33;
-      R11 = ct[1]*ct[0];
-      R12 = st[2]*st[1]*ct[0] - ct[2]*st[0];
-      R13 = ct[2]*st[1]*ct[0] + st[2]*st[0];
-      R21 = ct[1]*st[0];
-      R22 = st[2]*st[1]*st[0] + ct[2]*ct[0];
-      R23 = ct[2]*st[1]*st[0] - st[2]*ct[0];
-      R31 = -st[1];
-      R32 = st[2]*ct[1];
-      R33 = ct[2]*ct[1];
+      // Rotate rotation matrix from North/East/Down to East/North/Up
+      float roll = gps_data_->xcominsSol.fRPY[1];
+      float pitch = gps_data_->xcominsSol.fRPY[0];
+      float yaw = -gps_data_->xcominsSol.fRPY[2];
 
+      // TODO the accelerations are currently not translated into the vehicle
+      // reference point (for position and speed, this is done on the imar
+      // device!)
 
-/*
-1.  ohne minus bis a[0] mit plus pi
-2.  ohne minus und ohne plus pi
-3.  mit minus ohne plus pi
+      // Rotated Acceleration from iNat Body Frame to Forward/left/up
+      const double a_trans_x = -gps_data_->xcominsSol.fAcc[1];
+      const double a_trans_y = gps_data_->xcominsSol.fAcc[0];
+      const double a_trans_z = gps_data_->xcominsSol.fAcc[2];
 
-*/
-      // NOTE the -y here!
-      const double a[] = {gps_data_->xcominsSol.fAcc[0], 
-                          -gps_data_->xcominsSol.fAcc[1], 
-                          -gps_data_->xcominsSol.fAcc[2]};
-
-      // Rotated Acceleration
-      const double a_trans_x = a[1];//R11*a[0] + R12*a[1] + R13*a[2];
-      const double a_trans_y = -a[0];//R21*a[0] + R22*a[1] + R23*a[2];
-      const double a_trans_z = -a[2];//R31*a[0] + R32*a[1] + R33*a[2];
-
-      // TODO I am not sure about this transformation, I here atm only
-      // flip z
+      // TODO I am not sure about this transformation
       const double ang_vel_trans_x = gps_data_->xcominsSol.fOmg[0];
       const double ang_vel_trans_y = -gps_data_->xcominsSol.fOmg[1];
       const double ang_vel_trans_z = -gps_data_->xcominsSol.fOmg[2];
- 
-      // Fill msg   
+
+      // Fill msg
       imu_pose->mutable_angular_velocity()->set_x(ang_vel_trans_x);
       imu_pose->mutable_angular_velocity()->set_y(ang_vel_trans_y);
       imu_pose->mutable_angular_velocity()->set_z(ang_vel_trans_z);
@@ -357,7 +329,7 @@ void ImarEthernet::PublishSensorData() {
       imu_pose->mutable_euler_angles()->set_y(pitch);
       imu_pose->mutable_euler_angles()->set_z(yaw);
     }
-  } else { // irregular case, i.e. in garage
+  } else {  // irregular case, i.e. in garage
     new_imu_data = true;
 
     imu_pose->mutable_angular_velocity()->set_x(
