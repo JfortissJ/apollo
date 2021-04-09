@@ -249,20 +249,20 @@ void ImarEthernet::PublishSensorData() {
 
 //So setzt apollo die quaternion:
 // add "@eigen", in BUILD
-  // // 2. orientation
-  // Eigen::Quaterniond q =
-  //     Eigen::AngleAxisd(ins->euler_angles().z() - 90 * M_PI / 180.0,
-  //                       Eigen::Vector3d::UnitZ()) *
-  //     Eigen::AngleAxisd(-ins->euler_angles().y(), Eigen::Vector3d::UnitX()) *
-  //     Eigen::AngleAxisd(ins->euler_angles().x(), Eigen::Vector3d::UnitY());
-  // qx = q.x;
-  // qy = q.y;
-  // qz = q.z;
-  // qw = q.w;
+  // 2. orientation
+  Eigen::Quaterniond q =
+      Eigen::AngleAxisd(-yaw,
+                        Eigen::Vector3d::UnitZ()) *
+      Eigen::AngleAxisd(roll, Eigen::Vector3d::UnitX()) *
+      Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitY()); //+M_PI
+  qx = q.x();
+  qy = q.y();
+  qz = q.z();
+  qw = q.w();
 
 
 
-    tie(qx, qy, qz, qw) = ConvertEulerAnglesToQuaternion(yaw, roll, pitch);
+    //tie(qx, qy, qz, qw) = ConvertEulerAnglesToQuaternion(yaw, roll, pitch);
 
     pose->mutable_orientation()->set_qx(qx);
     pose->mutable_orientation()->set_qy(qy);
@@ -304,37 +304,44 @@ void ImarEthernet::PublishSensorData() {
       // body frame to ENU frame
 
       // Rotation matrix
-      roll = gps_data_->xcominsSol.fRPY[0];
-      pitch = gps_data_->xcominsSol.fRPY[1];
-      yaw = gps_data_->xcominsSol.fRPY[2];
+      roll = gps_data_->xcominsSol.fRPY[1];
+      pitch = gps_data_->xcominsSol.fRPY[0];
+      yaw = -gps_data_->xcominsSol.fRPY[2];
       //TODO in the matlab proof of concept I set pitch and roll to zero!
       const double st[] = {sin(yaw), sin(pitch), sin(roll)};
       const double ct[] = {cos(yaw), cos(pitch), cos(roll)};
-      const double R11, R12, R13, R21, R22, R23, R31, R32, R33;
-      R11 = ct[1].*ct[0];
-      R12 = st[2].*st[1].*ct[0] - ct[2].*st[0];
-      R13 = ct[2].*st[1].*ct[0] + st[2].*st[0];
-      R21 = ct[1].*st[0];
-      R22 = st[2].*st[1].*st[0] + ct[2].*ct[0];
-      R23 = ct[2].*st[1].*st[0] - st[2].*ct[0];
+      double R11, R12, R13, R21, R22, R23, R31, R32, R33;
+      R11 = ct[1]*ct[0];
+      R12 = st[2]*st[1]*ct[0] - ct[2]*st[0];
+      R13 = ct[2]*st[1]*ct[0] + st[2]*st[0];
+      R21 = ct[1]*st[0];
+      R22 = st[2]*st[1]*st[0] + ct[2]*ct[0];
+      R23 = ct[2]*st[1]*st[0] - st[2]*ct[0];
       R31 = -st[1];
-      R32 = st[2].*ct[1];
-      R33 = ct[2].*ct[1];
+      R32 = st[2]*ct[1];
+      R33 = ct[2]*ct[1];
 
+
+/*
+1.  ohne minus bis a[0] mit plus pi
+2.  ohne minus und ohne plus pi
+3.  mit minus ohne plus pi
+
+*/
       // NOTE the -y here!
       const double a[] = {gps_data_->xcominsSol.fAcc[0], 
                           -gps_data_->xcominsSol.fAcc[1], 
-                          gps_data_->xcominsSol.fAcc[2]};
+                          -gps_data_->xcominsSol.fAcc[2]};
 
       // Rotated Acceleration
-      const double a_trans_x = R11*a[0] + R12*a[1] + R13*a[2];
-      const double a_trans_y = R21*a[0] + R22*a[1] + R31*a[2];
-      const double a_trans_z = R31*a[0] + R32*a[1] + R33*a[2];
+      const double a_trans_x = a[1];//R11*a[0] + R12*a[1] + R13*a[2];
+      const double a_trans_y = -a[0];//R21*a[0] + R22*a[1] + R23*a[2];
+      const double a_trans_z = -a[2];//R31*a[0] + R32*a[1] + R33*a[2];
 
       // TODO I am not sure about this transformation, I here atm only
       // flip z
       const double ang_vel_trans_x = gps_data_->xcominsSol.fOmg[0];
-      const double ang_vel_trans_y = gps_data_->xcominsSol.fOmg[1];
+      const double ang_vel_trans_y = -gps_data_->xcominsSol.fOmg[1];
       const double ang_vel_trans_z = -gps_data_->xcominsSol.fOmg[2];
  
       // Fill msg   
