@@ -45,6 +45,9 @@ vrotx_i = imu(:,5);
 vroty_i = imu(:,6);
 vrotz_i = imu(:,7);
 dt_i = diff(t);
+roll_i = imu(:,8);
+pitch_i = imu(:,9);
+yaw_i = imu(:,10);
 
 %%
 
@@ -75,7 +78,7 @@ lever_static = [0.018; 0.123; -0.8725];
 arotx = [diff(vrotx)./dt; 0];
 aroty = [diff(vroty)./dt; 0];
 arotz = [diff(vrotz)./dt; 0];
-l = length(t_i);
+l = min(length(t), length(t_i));
 ax_rot = zeros(l,1);
 ay_rot = zeros(l,1);
 az_rot = zeros(l,1);
@@ -83,8 +86,8 @@ eul = zeros(l,3);
 rotm_ = cell(l);
 for i=1:l
     %rotm = quat2rotm([qx(i), qy(i), qz(i), qw(i)]);
-%     eul(i,:) = quat2eul([qx(i), qy(i), qz(i), qw(i)]);
-%     rotm_{i} = eul2rotm(eul(i,:), 'XYZ');
+     eul(i,:) = quat2eul([qx(i), qy(i), qz(i), qw(i)]);
+     rotm_{i} = eul2rotm(eul(i,:), 'XYZ');
 %     rotm = rotm_{i};
     rotm = eul2rotm([h(i), 0, 0]); %GEHT!!!!!!!
     a = [ax_i(i); -ay_i(i); az_i(i)]; %GEHT!!!!!!! mit -
@@ -124,21 +127,21 @@ figure
 hold on
 title('ax')
 plot(medfilt1(ddx./dt(2:end)./dt(2:end)))
-%plot(ax_i)
+plot(medfilt1(ax))
 plot(medfilt1(dvx./dt))
-plot(medfilt1(ax_rot))
-legend('ddx/dt2', 'dv/dt', 'arot')
-ylim([-3,3])
+%plot(medfilt1(ax_rot))
+legend('ddx/dt2', 'ax loca', 'dv/dt')
+ylim([-5,5])
 
 figure
 hold on
 title('ay')
 plot(medfilt1(ddy./dt(2:end)./dt(2:end)))
-%plot(ay_i)
+plot(medfilt1(ay))
 plot(medfilt1(dvy./dt))
-plot(medfilt1(ay_rot))
-legend('ddy/dt2', 'dv/dt', 'arot')
-ylim([-3,3])
+%plot(medfilt1(ay_rot))
+legend('ddy/dt2', 'ay_loca', 'dv/dt')
+ylim([-5,5])
 
 figure
 hold on
@@ -178,5 +181,14 @@ plot(t_i-t_i(1), vrotx_i)
 plot(t_i-t_i(1), vroty_i)
 plot(t_i-t_i(1), vrotz_i)
 legend('x','y','z')
+
+%%
+figure
+hold on
+plot(roll_i)
+plot(pitch_i)
+plot(yaw_i)
+plot(h-pi/2)
+legend('roll', 'pitch', 'yaw', 'loca heading')
 
 
