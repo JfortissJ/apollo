@@ -367,6 +367,24 @@ std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
   return path_points;
 }
 
+void MiqpPlanner::FillTimeDerivativesInApolloTrajectory(
+    DiscretizedTrajectory& traj) const {
+  for (int i = 0; i < traj.size() - 1; ++i) {
+    double diff_t = (traj[i + 1].relative_time() - traj[i].relative_time());
+
+    double diff_v = (traj[i + 1].v() - traj[i].v());
+    double a = diff_v / diff_t;
+    traj[i].set_a(a);
+
+    double diff_kappa = (traj[i + 1].mutable_path_point()->kappa() -
+                         traj[i].mutable_path_point()->kappa());
+    double dkappa = diff_kappa / diff_t;
+    traj[i].mutable_path_point()->set_dkappa(dkappa);
+  }
+  traj[traj.size() - 1].set_a(0.0);
+  traj[traj.size() - 1].mutable_path_point()->set_dkappa(0.0);
+}
+
 DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     double traj[], int size) {
   double s = 0.0f;
@@ -404,17 +422,21 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     // trajectory_point.mutable_path_point()->set_dkappa(dkappa);
     // trajectory_point.mutable_path_point()->set_dkappa(ddkappa);
     trajectory_point.set_v(v);
-    trajectory_point.set_a(a);
+    // trajectory_point.set_a(a);
     // trajectory_point.set_da(jerk);
     trajectory_point.set_relative_time(time);
-    AINFO << "Planned trajectory at i=" << trajidx << ": "
-          << trajectory_point.DebugString();
     apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
 
     lastx = x;
     lasty = y;
   }
 
+  FillTimeDerivativesInApolloTrajectory(apollo_trajectory);
+
+  for (int trajidx = 0; trajidx < size; ++trajidx) {
+    AINFO << "Planned trajectory at i=" << trajidx << ": "
+          << apollo_trajectory[trajidx].DebugString();
+  }
   return apollo_trajectory;
 }
 

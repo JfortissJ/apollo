@@ -73,6 +73,8 @@ class MiqpPlanner : public LatticePlanner {
       const std::vector<ReferencePoint>& ref_points,
       const PlanningTarget& planning_target);
 
+  void FillTimeDerivativesInApolloTrajectory(DiscretizedTrajectory& traj) const;
+
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
       double traj[], int size);
 
