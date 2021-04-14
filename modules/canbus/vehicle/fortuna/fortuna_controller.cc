@@ -132,6 +132,10 @@ bool FortunaController::Start() {
   const auto &update_func = [this] { SecurityDogThreadFunc(); };
   thread_.reset(new std::thread(update_func));
 
+  // Start in AutoDrive Mode: as we enable/disable from the autobox
+  // we set apollo in to autodrive per default.
+  EnableAutoMode();
+
   return true;
 }
 
