@@ -408,7 +408,8 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     // const double uy = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UY_IDX];
     const double theta = atan2(vy, vx);
     const double v = vx / cos(theta);
-    const double a = ax / cos(theta);
+    // const double a = ax / cos(theta); // probably wrong
+    const double a = cos(theta) * ax + sin(M_PI_4 - theta) * ay; // TODO: check
     s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
     const double kappa =
         (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
@@ -422,7 +423,7 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     // trajectory_point.mutable_path_point()->set_dkappa(dkappa);
     // trajectory_point.mutable_path_point()->set_dkappa(ddkappa);
     trajectory_point.set_v(v);
-    // trajectory_point.set_a(a);
+    trajectory_point.set_a(a);
     // trajectory_point.set_da(jerk);
     trajectory_point.set_relative_time(time);
     apollo_trajectory.AppendTrajectoryPoint(trajectory_point);
