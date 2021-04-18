@@ -2,7 +2,7 @@
 <Root>
 	<ProjectExperiment>
 		<window>
-			<RelativeDocumentPlacement type="key">1:m 1 Instrumentation|010867e6-b1d4-4361-8dca-43a159e6a62c/5:m 2 Instrumentation|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3:m 3 Instrumentation|aee80459-8c13-4109-a330-2a68a57f77a0/4:m 4 Instrumentation|016c5644-2fc0-4e7f-ba67-9069195da219/1:m 5 Instrumentation|94280714-a281-4583-9879-7045e11ef700/6:m 0 Instrumentation|530257e0-9dd7-4c8c-af26-acdb51a53091/0:</RelativeDocumentPlacement>
+			<RelativeDocumentPlacement type="key">1:m 2 Instrumentation|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3:m 1 Instrumentation|010867e6-b1d4-4361-8dca-43a159e6a62c/5:m 3 Instrumentation|aee80459-8c13-4109-a330-2a68a57f77a0/4:m 4 Instrumentation|016c5644-2fc0-4e7f-ba67-9069195da219/1:m 5 Instrumentation|94280714-a281-4583-9879-7045e11ef700/6:m 0 Instrumentation|530257e0-9dd7-4c8c-af26-acdb51a53091/0:</RelativeDocumentPlacement>
 		</window>
 		<viewflags>
 			<Name type="key">ControllerEthernetDebugExperiment.CDE</Name>
@@ -50,45 +50,137 @@
 						<ViewFlags type="key">1</ViewFlags>
 						<item>
 							<Name type="key">autoboxmodel.sdf</Name>
-							<ViewFlags type="key">1</ViewFlags>
+							<ViewFlags type="key">5</ViewFlags>
+							<item>
+								<Name type="key">rec1_031.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_032.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_033.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_034.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_035.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_036.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_037.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_038.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_039.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_040.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
 							<item>
 								<Name type="key">Data Sets</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_010.mf4</Name>
+								<Name type="key">rec1_041.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_012.mf4</Name>
+								<Name type="key">rec1_042.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_015.mf4</Name>
+								<Name type="key">rec1_043.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_016.mf4</Name>
+								<Name type="key">rec1_044.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_017.mf4</Name>
+								<Name type="key">rec1_045.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_018.mf4</Name>
+								<Name type="key">rec1_046.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_019.mf4</Name>
+								<Name type="key">rec1_047.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_020.mf4</Name>
+								<Name type="key">rec1_048.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 							<item>
-								<Name type="key">rec1_021.mf4</Name>
+								<Name type="key">rec1_049.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_050.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_051.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_052.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_053.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_054.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_055.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_056.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_057.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_058.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_059.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_060.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_061.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_062.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 						</item>
@@ -102,39 +194,131 @@
 					<Name type="key">Measurement Data</Name>
 					<ViewFlags type="key">1</ViewFlags>
 					<item>
-						<Name type="key">rec1_010.mf4</Name>
+						<Name type="key">rec1_031.mf4</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">rec1_012.mf4</Name>
+						<Name type="key">rec1_032.mf4</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">rec1_015.mf4</Name>
+						<Name type="key">rec1_033.mf4</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">rec1_016.mf4</Name>
-						<ViewFlags type="key">5</ViewFlags>
-					</item>
-					<item>
-						<Name type="key">rec1_017.mf4</Name>
+						<Name type="key">rec1_034.mf4</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">rec1_018.mf4</Name>
+						<Name type="key">rec1_035.mf4</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">rec1_019.mf4</Name>
+						<Name type="key">rec1_036.mf4</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">rec1_020.mf4</Name>
+						<Name type="key">rec1_037.mf4</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">rec1_021.mf4</Name>
+						<Name type="key">rec1_038.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_039.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_040.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_041.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_042.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_043.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_044.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_045.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_046.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_047.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_048.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_049.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_050.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_051.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_052.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_053.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_054.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_055.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_056.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_057.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_058.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_059.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_060.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_061.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_062.mf4</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 				</item>

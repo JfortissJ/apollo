@@ -38,7 +38,7 @@ elems(1).Description = '';
 
 elems(2) = Simulink.BusElement;
 elems(2).Name = 'x';
-elems(2).Dimensions = 1000;
+elems(2).Dimensions = 100;
 elems(2).DimensionsMode = 'Fixed';
 elems(2).DataType = 'double';
 elems(2).SampleTime = -1;
@@ -50,7 +50,7 @@ elems(2).Description = '';
 
 elems(3) = Simulink.BusElement;
 elems(3).Name = 'y';
-elems(3).Dimensions = 1000;
+elems(3).Dimensions = 100;
 elems(3).DimensionsMode = 'Fixed';
 elems(3).DataType = 'double';
 elems(3).SampleTime = -1;
@@ -62,7 +62,7 @@ elems(3).Description = '';
 
 elems(4) = Simulink.BusElement;
 elems(4).Name = 'z';
-elems(4).Dimensions = 1000;
+elems(4).Dimensions = 100;
 elems(4).DimensionsMode = 'Fixed';
 elems(4).DataType = 'double';
 elems(4).SampleTime = -1;
@@ -74,7 +74,7 @@ elems(4).Description = '';
 
 elems(5) = Simulink.BusElement;
 elems(5).Name = 'theta';
-elems(5).Dimensions = 1000;
+elems(5).Dimensions = 100;
 elems(5).DimensionsMode = 'Fixed';
 elems(5).DataType = 'double';
 elems(5).SampleTime = -1;
@@ -86,7 +86,7 @@ elems(5).Description = '';
 
 elems(6) = Simulink.BusElement;
 elems(6).Name = 'kappa';
-elems(6).Dimensions = 1000;
+elems(6).Dimensions = 100;
 elems(6).DimensionsMode = 'Fixed';
 elems(6).DataType = 'double';
 elems(6).SampleTime = -1;
@@ -98,7 +98,7 @@ elems(6).Description = sprintf('curvature on the x-y planning');
 
 elems(7) = Simulink.BusElement;
 elems(7).Name = 'dkappa';
-elems(7).Dimensions = 1000;
+elems(7).Dimensions = 100;
 elems(7).DimensionsMode = 'Fixed';
 elems(7).DataType = 'double';
 elems(7).SampleTime = -1;
@@ -110,7 +110,7 @@ elems(7).Description = sprintf('derivative of kappa');
 
 elems(8) = Simulink.BusElement;
 elems(8).Name = 'ddkappa';
-elems(8).Dimensions = 1000;
+elems(8).Dimensions = 100;
 elems(8).DimensionsMode = 'Fixed';
 elems(8).DataType = 'double';
 elems(8).SampleTime = -1;
@@ -122,7 +122,7 @@ elems(8).Description = sprintf('derivative of derivative of kappa');
 
 elems(9) = Simulink.BusElement;
 elems(9).Name = 's';
-elems(9).Dimensions = 1000;
+elems(9).Dimensions = 100;
 elems(9).DimensionsMode = 'Fixed';
 elems(9).DataType = 'double';
 elems(9).SampleTime = -1;
@@ -134,7 +134,7 @@ elems(9).Description = sprintf('accumulated distance from beginning of the path'
 
 elems(10) = Simulink.BusElement;
 elems(10).Name = 'v';
-elems(10).Dimensions = 1000;
+elems(10).Dimensions = 100;
 elems(10).DimensionsMode = 'Fixed';
 elems(10).DataType = 'double';
 elems(10).SampleTime = -1;
@@ -146,7 +146,7 @@ elems(10).Description = '';
 
 elems(11) = Simulink.BusElement;
 elems(11).Name = 'a';
-elems(11).Dimensions = 1000;
+elems(11).Dimensions = 100;
 elems(11).DimensionsMode = 'Fixed';
 elems(11).DataType = 'double';
 elems(11).SampleTime = -1;
@@ -158,7 +158,7 @@ elems(11).Description = '';
 
 elems(12) = Simulink.BusElement;
 elems(12).Name = 'relative_time';
-elems(12).Dimensions = 1000;
+elems(12).Dimensions = 100;
 elems(12).DimensionsMode = 'Fixed';
 elems(12).DataType = 'double';
 elems(12).SampleTime = -1;

@@ -99,12 +99,21 @@ classdef ControllerDataAnalysis  < PlotBase
            title('acc');
            acc = sqrt(self.res.Localization.Pose.LinearAcceleration.x.^2+self.res.Localization.Pose.LinearAcceleration.y.^2);
            plot(self.res.Time(self.active), acc(self.active));
-%            plot(self.res.Time(self.active), self.res.CustomerCanData.Acceleration_Interface.AccelerationRequest(self.active));
+           plot(self.res.Time(self.active), self.res.VehicleCANData.Motion.LongitudinalAcceleration(self.active));
+           plot(self.res.Time(self.active), self.res.acc_limited(self.active));
+           legend('ist loca', 'ist can', 'control command')
            
            subplot(2,1,2);
            hold on
            title('steering')
-           plot(self.res.Time(self.active), self.res.CustomerCanData.Steering_Interface.SteeringAngleRequest(self.active));
+           steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 852.7216;
+           steer = self.res.VehicleCANData.Steering.SteeringWheelAngle(self.active)/steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain;
+           sign=cast(self.res.VehicleCANData.Steering.SteeringWheelAngleSign(self.active),'like', steer);
+           sign(sign==1) = -1;
+           sign(sign==0) = 1;
+           plot(self.res.Time(self.active), steer.*sign);
+           plot(self.res.Time(self.active), self.res.steering_angle_limited(self.active));
+           legend('can', 'control command')
         end
         
         %% Loca
@@ -131,8 +140,7 @@ classdef ControllerDataAnalysis  < PlotBase
            hold on
            title('v')
            v = sqrt(self.res.Localization.Pose.LinearVelocity.x(self.active).^2 + self.res.Localization.Pose.LinearVelocity.y(self.active).^2);
-           %plot(self.res.Time(self.active), v);
-           plot(v);
+           plot(self.res.Time(self.active), v);
            
            subplot(5,1,5);
            hold on
@@ -170,6 +178,12 @@ classdef ControllerDataAnalysis  < PlotBase
         end
         
         %% Trajectory
+        function plotTrajectoryRangeFromTime(self, starttime, endtime)
+            idx0 = self.getIdxFromTime(starttime);
+            idx1 = self.getIdxFromTime(endtime);
+            self.plotTrajectoryRange([idx0:idx1]);
+        end
+        
         function plotTrajectoryRange(self, number_trajectory_range)
            self.doNextPlot(); clf; hold on;
            set(gcf, 'Name', 'Trajectory1');
@@ -189,7 +203,7 @@ classdef ControllerDataAnalysis  < PlotBase
                loca_v = sqrt(self.res.Localization.Pose.LinearVelocity.x(number_trajectory)^2+...
                    self.res.Localization.Pose.LinearVelocity.y(number_trajectory)^2);
                loca_theta = self.res.Localization.Pose.Heading(number_trajectory);
-               loca_a = self.res.Localization.Pose.LinearAcceleration.x(number_trajectory)*cos(loca_theta);
+               loca_a = self.res.Localization.Pose.LinearAcceleration.x(number_trajectory)/cos(loca_theta);
                loca_time = self.res.Localization.MeasurementTime(number_trajectory);
 
 
@@ -202,7 +216,7 @@ classdef ControllerDataAnalysis  < PlotBase
                kappa = zeros(1, nr_points);
                dkappa = zeros(1,nr_points);
                for i=1:nr_points
-                   number = ['i',num2str(i-1,'%03d')];
+                   number = ['i',num2str(i-1,'%02d')]; %or 02d if 100pts
                    relative_time(i) = self.res.Trajectory.relative_time.(number)(number_trajectory);
                    x(i) = self.res.Trajectory.x.(number)(number_trajectory);
                    y(i) = self.res.Trajectory.y.(number)(number_trajectory);
@@ -281,10 +295,10 @@ classdef ControllerDataAnalysis  < PlotBase
            subplot(211); hold on
            t = self.res.Trajectory.timestamp_sec(:);
            t(t==0) = nan;
-           plot(self.res.Time(:), t);    
            l=self.res.Localization.MeasurementTime(:);
            l(l<=0.001) = nan;
-           plot(self.res.Time, l); 
+           plot(self.res.Time, t-l(1));    
+           plot(self.res.Time, l-l(1)); 
            subplot(212); hold on
            plot(self.res.Time(2:end), diff(t));
            plot(self.res.Time(2:end), diff(l));
@@ -296,10 +310,36 @@ classdef ControllerDataAnalysis  < PlotBase
         function plotSteeringAngleCan(self)
            self.doNextPlot(); clf; hold on;
            set(gcf, 'Name', 'Steering Angle Can');
-           s = self.res.VehicleDataCan.Steering.SteeringWheelAngle;
-           ss = self.res.VehicleDataCan.Steering.SteeringWheelAngleSign;
+           s = self.res.VehicleCANData.Steering.SteeringWheelAngle;
+           ss = self.res.VehicleCANData.Steering.SteeringWheelAngleSign;
            s(ss==false) = -s(ss==false);
            plot(self.res.Time, s);        
+        end
+        
+        %% Tracking Error
+        function plotTrackingError(self)
+            self.doNextPlot(); clf; hold on;
+           set(gcf, 'Name', 'Tracking Errors');
+           subplot(411); hold on
+           plot(self.res.Time(self.active), self.res.TrackingError.e_n(self.active));
+           title('e_n')
+           subplot(412); hold on
+           plot(self.res.Time(self.active), self.res.TrackingError.e_t(self.active));
+           title('e_t')
+           subplot(413); hold on
+           plot(self.res.Time(self.active), self.res.TrackingError.e_psi(self.active));
+           title('e_psi')
+           subplot(414); hold on
+           plot(self.res.Time(self.active), self.res.TrackingError.e_v(self.active));
+           title('e_v')
+        end
+        %% Matching idxs
+        function plotMatchingIdxs(self)
+            self.doNextPlot(); clf; hold on;
+            plot(self.res.Time(self.active), self.res.idx_larger(self.active));
+            plot(self.res.Time(self.active), self.res.idx_smaller(self.active));
+            plot(self.res.Time(self.active), self.res.interp_factor(self.active));
+            legend('idx lager', 'idx smaller', 'interpolation factor');
         end
         
         %% First move idx
@@ -309,6 +349,14 @@ classdef ControllerDataAnalysis  < PlotBase
             idx = idx - 20;
             if idx < 1
                 idx = 1;
+            end
+        end
+        
+        %%Get index from time
+        function idx = getIdxFromTime(self, t)
+            idx = zeros(size(t));
+            for i=1:length(t)
+                idx(i) = find(self.res.Time <= t(i), 1, 'last');
             end
         end
 		

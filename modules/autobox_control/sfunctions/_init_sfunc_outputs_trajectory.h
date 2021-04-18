@@ -36,7 +36,7 @@
 #define APOLLO_TRAJECTORY_N_POINTS 15
 #define APOLLO_TRAJECTORY_DDKAPPA 16
 
-#define BUS_MAX_ARRAY_SIZE 1000
+#define BUS_MAX_ARRAY_SIZE 100
 
 #include "common/macro.h"
 

@@ -235,6 +235,18 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-31 10:06:35 (UTC)]
 
 Variable description reloaded on 31.03.2021 13:48:23 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
 Original file added from ..\..\autoboxmodel.sdf [2021-03-31 10:06:35 (UTC)]
+
+Variable description reloaded on 13.04.2021 09:50:56 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-04-13 07:49:13 (UTC)]
+
+Variable description reloaded on 13.04.2021 17:30:23 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-04-13 15:30:01 (UTC)]
+
+Variable description reloaded on 15.04.2021 07:38:52 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-04-15 05:38:12 (UTC)]
+
+Variable description reloaded on 15.04.2021 14:59:16 (C:\Users\kessler\Documents\fav\apollo_opensource\modules\autobox_control\autoboxmodel.sdf)
+Original file added from ..\..\autoboxmodel.sdf [2021-04-15 12:53:42 (UTC)]
 </ItemInfoLog>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
@@ -246,9 +258,9 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-31 10:06:35 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">148617123</UniqueID>
-						<EntityID type="key">{F6C0EB0B-BE82-4145-8FE1-38834E104A0F}</EntityID>
-						<ItemInfoDate type="key">31.03.2021 13:48:23</ItemInfoDate>
+						<UniqueID type="key">788809393</UniqueID>
+						<EntityID type="key">{3D9BF25B-7F2D-4E8F-8514-0A5E170815B0}</EntityID>
+						<ItemInfoDate type="key">15.04.2021 14:59:16</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -262,9 +274,9 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-31 10:06:35 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">910374261</UniqueID>
-						<EntityID type="key">{2854F454-3B31-4B2E-8EEF-E2E7FE38CF0A}</EntityID>
-						<ItemInfoDate type="key">31.03.2021 13:48:23</ItemInfoDate>
+						<UniqueID type="key">68769565</UniqueID>
+						<EntityID type="key">{1DFF6BB9-B034-4E4B-B744-2042C415FB96}</EntityID>
+						<ItemInfoDate type="key">15.04.2021 14:59:16</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -278,9 +290,9 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-31 10:06:35 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">30</Type>
-						<UniqueID type="key">487736846</UniqueID>
-						<EntityID type="key">{2F7AE85F-4F6A-49B2-9601-5E1CB14E1A12}</EntityID>
-						<ItemInfoDate type="key">31.03.2021 13:48:23</ItemInfoDate>
+						<UniqueID type="key">40696432</UniqueID>
+						<EntityID type="key">{8A663956-73B8-4F87-8C43-F58913AD4088}</EntityID>
+						<ItemInfoDate type="key">15.04.2021 14:59:16</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
@@ -294,9 +306,9 @@ Original file added from ..\..\autoboxmodel.sdf [2021-03-31 10:06:35 (UTC)]
 						<Flags type="key">18692</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
 						<Type type="key">4</Type>
-						<UniqueID type="key">198490937</UniqueID>
-						<EntityID type="key">{2E61756B-4EBE-4011-B1BD-BF6D0A7EBF79}</EntityID>
-						<ItemInfoDate type="key">31.03.2021 13:48:23</ItemInfoDate>
+						<UniqueID type="key">115698898</UniqueID>
+						<EntityID type="key">{9EB3AA3C-91E1-4D3A-8149-B91D11F7BFB2}</EntityID>
+						<ItemInfoDate type="key">15.04.2021 14:59:16</ItemInfoDate>
 						<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 						<ItemInfoDescr type="key"/>
 						<ItemInfoAddInfoDb type="key"/>
