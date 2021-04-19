@@ -34,4 +34,8 @@ apollo_control_timeout = 10;
 % Below this speed shift time of the first trajpoint to the current time
 trajectory_timeshift_speed_threshold = 0.5;
 
+% The controller will not be set active until the throttle has once
+% exceeded this amount (and a new traj is received afterwards)
+acc_active_throttle_percentage = 0.2;
+
 

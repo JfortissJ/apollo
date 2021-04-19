@@ -234,7 +234,7 @@ classdef ControllerDataAnalysis  < PlotBase
                subplot(4,1,1); hold on
                plot(absolute_time,relative_time);
                plot(absolute_time(ideal_idx), relative_time(ideal_idx), 'kx')
-               xlabel('abslute time')
+               xlabel('absolute time')
                ylabel('relative time')
                
                subplot(4,1,2); hold on
@@ -242,21 +242,21 @@ classdef ControllerDataAnalysis  < PlotBase
                plot(absolute_time(ideal_idx), x(ideal_idx), 'kx')
                plot(loca_time, loca_x, 'ko')
                ylabel('x')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,3); hold on
                plot(absolute_time, y)
                plot(absolute_time(ideal_idx), y(ideal_idx), 'kx')
                plot(loca_time, loca_y, 'ko')
                ylabel('y')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,4); hold on
                plot(absolute_time, wrapTo2Pi(theta))
                plot(absolute_time(ideal_idx), wrapTo2Pi(theta(ideal_idx)), 'kx')
                plot(loca_time, wrapTo2Pi(loca_theta), 'ko')
                ylabel('theta')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                figure(h2)
                
@@ -265,26 +265,26 @@ classdef ControllerDataAnalysis  < PlotBase
                plot(absolute_time(ideal_idx), velocity(ideal_idx), 'kx')
                plot(loca_time, loca_v, 'ko')
                ylabel('v')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,2); hold on
                plot(absolute_time, a)
                plot(absolute_time(ideal_idx), a(ideal_idx), 'kx')
                plot(loca_time, loca_a, 'ko')
                ylabel('a')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,3); hold on
                plot(absolute_time, kappa)
                plot(absolute_time(ideal_idx), kappa(ideal_idx), 'kx')
                ylabel('kappa')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,4); hold on
                plot(absolute_time, dkappa)
                plot(absolute_time(ideal_idx), dkappa(ideal_idx), 'kx')
                ylabel('dkappa')
-               xlabel('abslute time')
+               xlabel('absolute time')
             end
         end
         

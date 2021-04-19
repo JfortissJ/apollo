@@ -19,9 +19,10 @@
 % Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ref, idx_larger, idx_smaller, interp_factor, time, time_smaller, time_larger, lmt, tts] = ...
+function [ref, idx_larger, idx_smaller, interp_factor, time, time_smaller, time_larger, lmt, tts, distance_to_end] = ...
     ref_point_determination_time_based(trajectory, localization, idx_matching_strategy)
 
+distance_to_end = 0;
 time_smaller = 0;
 time_larger = 0;
 
@@ -86,6 +87,7 @@ if idx_matching_strategy == 1 || idx_matching_strategy == 3
             ref.s = trajectory.s(trajectory_len);
             ref.v = trajectory.v(trajectory_len);
             ref.a = trajectory.a(trajectory_len);
+            distance_to_end = trajectory.s(trajectory_len) - ref.s;
             return;
         end
     end
@@ -186,5 +188,7 @@ elseif idx_matching_strategy == 2
     ref.v = trajectory.v(idx_larger);
     ref.a = trajectory.a(idx_larger);  
 end
+
+distance_to_end = trajectory.s(trajectory_len) - ref.s;
   
 return;
