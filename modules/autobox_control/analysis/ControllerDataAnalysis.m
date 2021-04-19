@@ -195,36 +195,63 @@ classdef ControllerDataAnalysis  < PlotBase
 
 %            number_trajectory = 200; % i.e. first trajectory that get's published
             for number_trajectory = number_trajectory_range
-               initial_time = self.res.Trajectory.timestamp_sec(number_trajectory);
-               nr_points = self.res.Trajectory.n_trajectory_point(number_trajectory);
+                
+               if iscell(self.res.Trajectory)
+                % data from apollo bag
+                
+                   initial_time = self.res.Trajectory{number_trajectory}.initial_time(1);
+                   relative_time = self.res.Trajectory{number_trajectory}.relative_time;
+                   
+                   x= self.res.Trajectory{number_trajectory}.x;
+                   y = self.res.Trajectory{number_trajectory}.y;
+                   theta= self.res.Trajectory{number_trajectory}.theta;
+                   velocity = self.res.Trajectory{number_trajectory}.v;
+                   a = self.res.Trajectory{number_trajectory}.a;
+                   kappa = self.res.Trajectory{number_trajectory}.kappa;
+                   dkappa = self.res.Trajectory{number_trajectory}.dkappa;
+                   
+                   idx_L = find(self.res.Localization.MeasurementTime>initial_time(1));
+                   idx_matched_traj = idx_L(1);
+                   loca_x = self.res.Localization.Pose.Position.x(idx_matched_traj);
+                   loca_y = self.res.Localization.Pose.Position.y(idx_matched_traj);
+                   loca_v = sqrt(self.res.Localization.Pose.LinearVelocity.x(idx_matched_traj)^2+...
+                       self.res.Localization.Pose.LinearVelocity.y(idx_matched_traj)^2);
+                   loca_theta = self.res.Localization.Pose.Heading(idx_matched_traj);
+                   loca_a = self.res.Localization.Pose.LinearAcceleration.x(idx_matched_traj)/cos(loca_theta);
+                   loca_time = self.res.Localization.MeasurementTime(idx_matched_traj);
                
-               loca_x = self.res.Localization.Pose.Position.x(number_trajectory);
-               loca_y = self.res.Localization.Pose.Position.y(number_trajectory);
-               loca_v = sqrt(self.res.Localization.Pose.LinearVelocity.x(number_trajectory)^2+...
-                   self.res.Localization.Pose.LinearVelocity.y(number_trajectory)^2);
-               loca_theta = self.res.Localization.Pose.Heading(number_trajectory);
-               loca_a = self.res.Localization.Pose.LinearAcceleration.x(number_trajectory)/cos(loca_theta);
-               loca_time = self.res.Localization.MeasurementTime(number_trajectory);
+               else
+                   initial_time = self.res.Trajectory.timestamp_sec(number_trajectory);
+                   nr_points = self.res.Trajectory.n_trajectory_point(number_trajectory);
 
+                   loca_x = self.res.Localization.Pose.Position.x(number_trajectory);
+                   loca_y = self.res.Localization.Pose.Position.y(number_trajectory);
+                   loca_v = sqrt(self.res.Localization.Pose.LinearVelocity.x(number_trajectory)^2+...
+                        self.res.Localization.Pose.LinearVelocity.y(number_trajectory)^2);
+                   loca_theta = self.res.Localization.Pose.Heading(number_trajectory);
+                   loca_a = self.res.Localization.Pose.LinearAcceleration.x(number_trajectory)/cos(loca_theta);
+                   loca_time = self.res.Localization.MeasurementTime(number_trajectory);
+                    
 
-               relative_time = zeros(1,nr_points);
-               x = zeros(1,nr_points);
-               y = zeros(1,nr_points);
-               theta = zeros(1,nr_points);
-               velocity = zeros(1,nr_points);
-               a = zeros(1,nr_points);
-               kappa = zeros(1, nr_points);
-               dkappa = zeros(1,nr_points);
-               for i=1:nr_points
-                   number = ['i',num2str(i-1,'%02d')]; %or 02d if 100pts
-                   relative_time(i) = self.res.Trajectory.relative_time.(number)(number_trajectory);
-                   x(i) = self.res.Trajectory.x.(number)(number_trajectory);
-                   y(i) = self.res.Trajectory.y.(number)(number_trajectory);
-                   theta(i) = self.res.Trajectory.theta.(number)(number_trajectory);
-                   velocity(i) = self.res.Trajectory.v.(number)(number_trajectory);
-                   a(i) = self.res.Trajectory.a.(number)(number_trajectory);
-                   kappa(i) = self.res.Trajectory.kappa.(number)(number_trajectory);
-                   dkappa(i) = self.res.Trajectory.dkappa.(number)(number_trajectory);
+                   relative_time = zeros(1,nr_points);
+                   x = zeros(1,nr_points);
+                   y = zeros(1,nr_points);
+                   theta = zeros(1,nr_points);
+                   velocity = zeros(1,nr_points);
+                   a = zeros(1,nr_points);
+                   kappa = zeros(1, nr_points);
+                   dkappa = zeros(1,nr_points);
+                   for i=1:nr_points
+                       number = ['i',num2str(i-1,'%02d')]; %or 02d if 100pts
+                       relative_time(i) = self.res.Trajectory.relative_time.(number)(number_trajectory);
+                       x(i) = self.res.Trajectory.x.(number)(number_trajectory);
+                       y(i) = self.res.Trajectory.y.(number)(number_trajectory);
+                       theta(i) = self.res.Trajectory.theta.(number)(number_trajectory);
+                       velocity(i) = self.res.Trajectory.v.(number)(number_trajectory);
+                       a(i) = self.res.Trajectory.a.(number)(number_trajectory);
+                       kappa(i) = self.res.Trajectory.kappa.(number)(number_trajectory);
+                       dkappa(i) = self.res.Trajectory.dkappa.(number)(number_trajectory);
+                   end
                end
 
                absolute_time = relative_time+initial_time;
