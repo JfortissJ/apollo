@@ -60,6 +60,18 @@ elems(3).Max = [];
 elems(3).DocUnits = '';
 elems(3).Description = '';
 
+elems(4) = Simulink.BusElement;
+elems(4).Name = 'distance_to_end';
+elems(4).Dimensions = [1 1];
+elems(4).DimensionsMode = 'Fixed';
+elems(4).DataType = 'double';
+elems(4).SampleTime = -1;
+elems(4).Complexity = 'real';
+elems(4).Min = [];
+elems(4).Max = [];
+elems(4).DocUnits = '';
+elems(4).Description = '';
+
 ControlCommands = Simulink.Bus;
 ControlCommands.HeaderFile = '';
 ControlCommands.Description = '';
