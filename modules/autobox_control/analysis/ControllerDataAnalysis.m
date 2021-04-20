@@ -97,11 +97,13 @@ classdef ControllerDataAnalysis  < PlotBase
            subplot(2,1,1);
            hold on
            title('acc');
-           acc = sqrt(self.res.Localization.Pose.LinearAcceleration.x.^2+self.res.Localization.Pose.LinearAcceleration.y.^2);
+           %acc = sqrt(self.res.Localization.Pose.LinearAcceleration.x.^2+self.res.Localization.Pose.LinearAcceleration.y.^2);
+           acc = self.res.Localization.Pose.LinearAcceleration.x./cos(self.res.Localization.Pose.Heading);
            plot(self.res.Time(self.active), acc(self.active));
            plot(self.res.Time(self.active), self.res.VehicleCANData.Motion.LongitudinalAcceleration(self.active));
            plot(self.res.Time(self.active), self.res.acc_limited(self.active));
-           legend('ist loca', 'ist can', 'control command')
+           plot(self.res.Time(self.active), self.res.controller_active(self.active));
+           legend('ist loca', 'ist can', 'control command', 'controller active')
            
            subplot(2,1,2);
            hold on
@@ -113,7 +115,8 @@ classdef ControllerDataAnalysis  < PlotBase
            sign(sign==0) = 1;
            plot(self.res.Time(self.active), steer.*sign);
            plot(self.res.Time(self.active), self.res.steering_angle_limited(self.active));
-           legend('can', 'control command')
+           plot(self.res.Time(self.active), self.res.controller_active(self.active));
+           legend('can', 'control command', 'controller active')
         end
         
         %% Loca
@@ -140,7 +143,11 @@ classdef ControllerDataAnalysis  < PlotBase
            hold on
            title('v')
            v = sqrt(self.res.Localization.Pose.LinearVelocity.x(self.active).^2 + self.res.Localization.Pose.LinearVelocity.y(self.active).^2);
+           v1 = self.res.Localization.Pose.LinearVelocity.x(self.active)./cos(self.res.Localization.Pose.Heading(self.active));
+           v2 = self.res.Localization.Pose.LinearVelocity.y(self.active)./sin(self.res.Localization.Pose.Heading(self.active));
            plot(self.res.Time(self.active), v);
+           plot(self.res.Time(self.active), v1);
+           plot(self.res.Time(self.active), v2);
            
            subplot(5,1,5);
            hold on
@@ -291,6 +298,7 @@ classdef ControllerDataAnalysis  < PlotBase
                plot(absolute_time, velocity)
                plot(absolute_time(ideal_idx), velocity(ideal_idx), 'kx')
                plot(loca_time, loca_v, 'ko')
+               plot([loca_time, absolute_time(1)], [loca_v, velocity(1)], 'k-')
                ylabel('v')
                xlabel('absolute time')
                
