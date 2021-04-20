@@ -249,21 +249,6 @@
 							<LinkedItem type="key">195321295</LinkedItem>
 						</item>
 						<item>
-							<Component type="key">DataSetManager</Component>
-							<Name type="key">Data Sets</Name>
-							<DisplayName type="key">Data Sets</DisplayName>
-							<Path type="key">.\Data Sets</Path>
-							<Flags type="key">65798</Flags>
-							<ExtendedFlags type="key">132</ExtendedFlags>
-							<Type type="key">3</Type>
-							<UniqueID type="key">908251763</UniqueID>
-							<EntityID type="key">{DD4D52BD-00EC-4389-9D29-C9F605EF2F5D}</EntityID>
-							<ItemInfoDate type="key">19.10.2020 15:53:05</ItemInfoDate>
-							<ItemInfoDescr type="key"/>
-							<ItemInfoAddInfoDb type="key"/>
-							<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
-						</item>
-						<item>
 							<Component type="key">MeasureDataManagement</Component>
 							<Flags type="key">1380</Flags>
 							<UniqueID type="key">116711249</UniqueID>
@@ -395,6 +380,39 @@
 							<UniqueID type="key">194506830</UniqueID>
 							<LinkedItem type="key">188907369</LinkedItem>
 						</item>
+						<item>
+							<Component type="key">DataSetManager</Component>
+							<Name type="key">Data Sets</Name>
+							<DisplayName type="key">Data Sets</DisplayName>
+							<Path type="key">.\Data Sets</Path>
+							<Flags type="key">65798</Flags>
+							<ExtendedFlags type="key">132</ExtendedFlags>
+							<Type type="key">3</Type>
+							<UniqueID type="key">908251763</UniqueID>
+							<EntityID type="key">{DD4D52BD-00EC-4389-9D29-C9F605EF2F5D}</EntityID>
+							<ItemInfoDate type="key">19.10.2020 15:53:05</ItemInfoDate>
+							<ItemInfoDescr type="key"/>
+							<ItemInfoAddInfoDb type="key"/>
+							<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">190640577</UniqueID>
+							<LinkedItem type="key">948230691</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">968113598</UniqueID>
+							<LinkedItem type="key">904423863</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">64449342</UniqueID>
+							<LinkedItem type="key">247919245</LinkedItem>
+						</item>
 					</item>
 				</item>
 			</item>
@@ -519,12 +537,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{8B7609A6-39D6-4862-88B9-4AAE15343F42}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 13:35:58</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -539,12 +557,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{DA4FE930-E44D-4758-8B33-EC470B1F45E8}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 13:37:46</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -559,12 +577,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{4B8E6C16-3757-4CD4-845F-47C19DD5BFC2}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 14:07:53</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -579,12 +597,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{B64B6CA1-14A7-4332-A120-D93DD51838EB}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 14:11:48</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -599,12 +617,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{550772AE-928F-4963-8E94-676F8A1C7526}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 14:37:37</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -619,12 +637,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{407ECFBC-92D9-43E3-91FD-7914A9166559}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 14:38:55</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -639,12 +657,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{1D076B45-202F-4AA1-B9B4-15055F2E0DA1}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 15:07:36</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -659,12 +677,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{8B88BEEB-5D98-46D6-BD0F-31F42B9B1ACC}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 15:17:43</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -679,12 +697,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{BCE23992-B76A-4DAF-8584-E9B275F2C93C}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 15:18:22</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -699,12 +717,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{45B71000-5DB7-4FE8-A767-B85BB399614F}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 15:19:49</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -719,12 +737,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{36B9D90D-D496-477E-AC55-E45C0D7686A2}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 15:20:31</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -739,12 +757,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{8F978746-5828-4255-A28B-E65EB8C27828}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 15:51:40</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -759,12 +777,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{B573AEBF-FA5A-4BD8-BD69-E4E101086891}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 15:53:37</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -779,12 +797,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{C25A957C-0F8D-4545-B76F-581E2E75EF40}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:00:04</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -799,12 +817,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{668E8B73-738F-474E-BB74-CCF1653A53BE}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:02:08</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -819,12 +837,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{378C8249-FB6E-445A-8DA4-1DCBE8073011}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:04:25</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -839,12 +857,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{DF7983EE-4107-403F-856A-6C552773E633}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:06:56</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -859,12 +877,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{310F40DB-73EB-4028-917E-E42D736B52D3}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:08:21</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -879,12 +897,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{ABFF8E57-8271-43BF-B5FD-84653D10F62E}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:08:57</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -899,12 +917,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{A96C74D3-1108-45E8-A6FA-93143BAFB96B}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:11:26</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -919,12 +937,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{BCCA55BB-EADD-4E7E-B10E-6FE875854B93}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:14:34</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -939,12 +957,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{B3D12622-820E-4B3C-AF97-C1A0D94ED470}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:17:38</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -959,12 +977,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{76676EC8-7012-436D-9136-7A94948EB1D2}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:23:22</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -979,12 +997,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{D79130E9-6EA6-4B95-AEB9-E64EE4D3D2CF}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:29:55</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -999,12 +1017,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{A33AE328-D743-4CFD-8754-2D8ADEB9C57F}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:32:33</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -1019,12 +1037,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{D06AFBAA-E1C5-42DA-84FF-B6C654324F2B}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:35:33</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -1039,12 +1057,12 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<EntityID type="key">{48729E02-28B3-488E-B4D8-94951B1AB57A}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:38:46</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
 Variable description: autoboxmodel.sdf
     Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
 ControlDesk version: 7.1</ItemInfoLog>
-					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				</item>
@@ -1058,6 +1076,66 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<UniqueID type="key">188907369</UniqueID>
 					<EntityID type="key">{689BCCAA-D91F-43DD-9DF6-D6DB4BAEA364}</EntityID>
 					<ItemInfoDate type="key">15.04.2021 16:43:10</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_063.mf4</Name>
+					<DisplayName type="key">rec1_063.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">948230691</UniqueID>
+					<EntityID type="key">{A8CD5DF5-D26D-429F-A475-5669428223C1}</EntityID>
+					<ItemInfoDate type="key">20.04.2021 10:24:55</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_064.mf4</Name>
+					<DisplayName type="key">rec1_064.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">904423863</UniqueID>
+					<EntityID type="key">{5352D4C7-C47A-4BCE-B6B8-B0A742B00FA1}</EntityID>
+					<ItemInfoDate type="key">20.04.2021 10:28:58</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_065.mf4</Name>
+					<DisplayName type="key">rec1_065.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">247919245</UniqueID>
+					<EntityID type="key">{C66ED133-2E35-4A5C-88C7-E8D1BD8C5847}</EntityID>
+					<ItemInfoDate type="key">20.04.2021 10:44:09</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoLog type="key">
 Software revision: autoboxmodel.sdf, autoboxmodel.ppc
@@ -1312,6 +1390,22 @@ ControlDesk version: 7.1</ItemInfoLog>
 		<SortedColumn type="key">4</SortedColumn>
 		<SortAscending type="key">-1</SortAscending>
 		<SignalList>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/controller_active</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/distance_to_end</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
 			<Variable>
 				<Name type="key">Model Root/AutoboxControl/limit out signals/acc limited</Name>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
@@ -1658,6 +1752,70 @@ ControlDesk version: 7.1</ItemInfoLog>
 			</Variable>
 			<Variable>
 				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Motion.YawRateSign</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.ActualTorqueEngine</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.Counter</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.CRC</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.EngineRunning</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.EngineSpeed</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.Gear</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.RequestedTorqueEngine</Name>
+				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.ThrottlePedalPos</Name>
 				<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
@@ -2138,13 +2296,31 @@ ControlDesk version: 7.1</ItemInfoLog>
 					<AutomaticExportFolder type="key"/>
 					<AutomaticNamingEnabled type="key">-1</AutomaticNamingEnabled>
 					<AutomaticNamingMinimunDigits type="key">3</AutomaticNamingMinimunDigits>
-					<AutomaticNamingStartIndex type="key">63</AutomaticNamingStartIndex>
+					<AutomaticNamingStartIndex type="key">66</AutomaticNamingStartIndex>
 					<Description type="key"/>
 					<FileNamePrefix type="key">rec1_</FileNamePrefix>
 					<OpenInMeasurementDataPoolEnabled type="key">0</OpenInMeasurementDataPoolEnabled>
 					<RecordingFileType type="key">ASAM MDF 4.1 Files (*.mf4)</RecordingFileType>
 				</StorageInformation>
 				<SignalList>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/controller_active</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/distance_to_end</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
 					<Variable>
 						<Name type="key">Model Root/AutoboxControl/limit out signals/acc limited</Name>
 						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
@@ -2534,6 +2710,78 @@ ControlDesk version: 7.1</ItemInfoLog>
 					</Variable>
 					<Variable>
 						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Motion.YawRateSign</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.ActualTorqueEngine</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.Counter</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.CRC</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.EngineRunning</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.EngineSpeed</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.Gear</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.RequestedTorqueEngine</Name>
+						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleCAN/VehicleCANData.Powertrain_1.ThrottlePedalPos</Name>
 						<Platform type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Platform>
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
