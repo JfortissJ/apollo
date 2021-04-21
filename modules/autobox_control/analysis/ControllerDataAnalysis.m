@@ -239,7 +239,17 @@ classdef ControllerDataAnalysis  < PlotBase
                    loca_a = self.res.Localization.Pose.LinearAcceleration.x(number_trajectory)/cos(loca_theta);
                    loca_time = self.res.Localization.MeasurementTime(number_trajectory);
                     
-
+                   ref_time = ...
+                       ((self.res.time_larger(number_trajectory) - self.res.time_smaller(number_trajectory)).*self.res.interp_factor(number_trajectory)) + ...
+                       self.res.time_smaller(number_trajectory) + initial_time;
+                   ref_x = self.res.Reference.x(number_trajectory);
+                   ref_y = self.res.Reference.y(number_trajectory);
+                   ref_v = self.res.Reference.v(number_trajectory);
+                   ref_theta = self.res.Reference.theta(number_trajectory);
+                   ref_kappa = self.res.Reference.kappa(number_trajectory);
+                   ref_a = self.res.Reference.a(number_trajectory);
+                   
+                   
                    relative_time = zeros(1,nr_points);
                    x = zeros(1,nr_points);
                    y = zeros(1,nr_points);
@@ -267,28 +277,30 @@ classdef ControllerDataAnalysis  < PlotBase
                figure(h1)
                subplot(4,1,1); hold on
                plot(absolute_time,relative_time);
-               plot(absolute_time(ideal_idx), relative_time(ideal_idx), 'kx')
                xlabel('absolute time')
                ylabel('relative time')
                
                subplot(4,1,2); hold on
                plot(absolute_time, x)
-               plot(absolute_time(ideal_idx), x(ideal_idx), 'kx')
+               plot(ref_time, ref_x, 'kx')
                plot(loca_time, loca_x, 'ko')
+               plot([loca_time, ref_time], [loca_x, ref_x], 'k-')
                ylabel('x')
                xlabel('absolute time')
                
                subplot(4,1,3); hold on
                plot(absolute_time, y)
-               plot(absolute_time(ideal_idx), y(ideal_idx), 'kx')
+               plot(ref_time, ref_y, 'kx')
                plot(loca_time, loca_y, 'ko')
+               plot([loca_time, ref_time], [loca_y, ref_y], 'k-')
                ylabel('y')
                xlabel('absolute time')
                
                subplot(4,1,4); hold on
                plot(absolute_time, wrapTo2Pi(theta))
-               plot(absolute_time(ideal_idx), wrapTo2Pi(theta(ideal_idx)), 'kx')
+               plot(ref_time, wrapTo2Pi(ref_theta), 'kx')
                plot(loca_time, wrapTo2Pi(loca_theta), 'ko')
+               plot([loca_time, ref_time], [wrapTo2Pi(loca_theta), wrapTo2Pi(ref_theta)], 'k-')
                ylabel('theta')
                xlabel('absolute time')
                
@@ -296,22 +308,26 @@ classdef ControllerDataAnalysis  < PlotBase
                
                subplot(4,1,1); hold on
                plot(absolute_time, velocity)
-               plot(absolute_time(ideal_idx), velocity(ideal_idx), 'kx')
+               plot(ref_time, ref_v, 'kx')
                plot(loca_time, loca_v, 'ko')
-               plot([loca_time, absolute_time(1)], [loca_v, velocity(1)], 'k-')
+               plot([loca_time, ref_time], [loca_v, ref_v], 'k-')
                ylabel('v')
                xlabel('absolute time')
                
                subplot(4,1,2); hold on
                plot(absolute_time, a)
-               plot(absolute_time(ideal_idx), a(ideal_idx), 'kx')
+               plot(ref_time, ref_a, 'kx')
                plot(loca_time, loca_a, 'ko')
+               plot([loca_time, ref_time], [loca_a, ref_a], 'k-')
                ylabel('a')
                xlabel('absolute time')
                
                subplot(4,1,3); hold on
                plot(absolute_time, kappa)
-               plot(absolute_time(ideal_idx), kappa(ideal_idx), 'kx')
+               plot(ref_time, ref_kappa, 'kx')
+               %compute loca kappa from loca?
+               %plot(loca_time, loca_kappa, 'ko')
+               %plot([loca_time, ref_time], [loca_kappa, ref_kappa], 'k-')
                ylabel('kappa')
                xlabel('absolute time')
                
