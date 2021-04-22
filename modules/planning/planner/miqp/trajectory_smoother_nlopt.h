@@ -73,26 +73,21 @@ class TrajectorySmootherNLOpt {
   explicit TrajectorySmootherNLOpt();
   virtual ~TrajectorySmootherNLOpt() = default;
 
-  // TODO(@Klemens): Heuns Method, fill block matrices A_
-  // x0: state at t=0 -> from vehicle state
-  // u: initial input vector -> chosen by optimizer
-  // X: stacked state vector over time
-  // dXdU
-  void IntegrateModel(const Eigen::VectorXd& x0, const Eigen::VectorXd& u,
-                      const size_t num_integration_steps, Eigen::VectorXd& X,
-                      Eigen::MatrixXd& dXdU);
-
-  // TODO(@Tobias)
   int Optimize();
 
   // initialize the optimization problem
   // initialize _X_ref, lb und ub of inputs, _x0
   // TODO(@Klemens)
-  void InitializeProblem(double initial_steering = 0.0f);
+  // TODO what is the best interface for the input traj? custom matrix? apollo
+  // adctraj format?
+  void InitializeProblem(const int subsampling,
+                         const Eigen::MatrixXd& miqp_trajectory,
+                         double initial_steering = 0.0f);
 
-  // TODO(@Tobias), wrapper?
+  // TODO(@Tobias)
   // take care of different length of reference -> only use costs on reference
   // at pts where there is one
+  // has to be public due to the function pointer wrapper
   double ObjectiveFunction(unsigned n, const double* x, double* grad);
 
   // bounds on acc and steering
@@ -103,6 +98,16 @@ class TrajectorySmootherNLOpt {
                                   const double* x, double* grad);
 
   std::vector<double>& GetInputVector() { return u_; }
+
+ private:
+  // TODO(@Klemens): Heuns Method, fill block matrices A_
+  // x0: state at t=0 -> from vehicle state
+  // u: initial input vector -> chosen by optimizer
+  // X: stacked state vector over time
+  // dXdU
+  void IntegrateModel(const Eigen::VectorXd& x0, const Eigen::VectorXd& u,
+                      const size_t num_integration_steps, Eigen::VectorXd& X,
+                      Eigen::MatrixXd& dXdU);
 
  private:
   // stores the positions of the reference
@@ -124,7 +129,7 @@ class TrajectorySmootherNLOpt {
   Eigen::Vector3d currB_;
   Eigen::VectorXd last_u_;
 
-  // why is this all using vector, not eigen? -> tk: because of the nlopt api. 
+  // why is this all using vector, not eigen? -> tk: because of the nlopt api.
   std::vector<double> u_;
 
   double j_opt_;

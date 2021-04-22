@@ -32,7 +32,8 @@ TEST(TrajectorySmootherNLOpt, Constructor) {
 
 TEST(TrajectorySmootherNLOpt, Optimize) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
-  tsm.InitializeProblem(0);
+  Eigen::MatrixXd tmp;
+  tsm.InitializeProblem(1, tmp, 0);
   int status = tsm.Optimize();
   EXPECT_EQ(5, status);
 }

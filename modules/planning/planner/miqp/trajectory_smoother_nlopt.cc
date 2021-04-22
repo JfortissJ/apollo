@@ -48,18 +48,23 @@ void nlopt_equality_constraint_wrapper(unsigned m, double* result, unsigned n,
 namespace apollo {
 namespace planning {
 
-TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {}
+TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
+  // Set costs
 
-void TrajectorySmootherNLOpt::InitializeProblem(double initial_steering) {
-  // set sizes
-  problem_size_ = 2;
   num_ineq_constr_ = 0;
   num_eq_constr_ = 0;
-  u_.resize(2);
-  // set x0
-  // set u0 or leave u0 open???
-  // set costs
-  // set reference
+}
+
+void TrajectorySmootherNLOpt::InitializeProblem(
+    const int subsampling, const Eigen::MatrixXd& miqp_trajectory,
+    double initial_steering) {
+  // set sizes
+  problem_size_ = 2;  // size(miqp_traj)*subsampling*2
+  u_.resize(problem_size_);
+
+  // set x0 using the reference traj
+  // set reference from input
+  // set u0: start values for the optimizer
 
   // set lower bound vector
   // set upper bound vector
@@ -114,7 +119,6 @@ int TrajectorySmootherNLOpt::Optimize() {
     return status_;
   }
 
-  AINFO << "NlOpt Status: " << status_;
   switch (status_) {
     case nlopt::SUCCESS:
       AINFO << "Generic success return value.";
@@ -157,9 +161,11 @@ int TrajectorySmootherNLOpt::Optimize() {
   //   }
 
   if (status_ > 0) {
-    AINFO << "Smoothing optimization successful.";
+    AINFO << "Smoothing optimization successful."
+          << " NlOpt Status: " << status_;
   } else {
-    AERROR << "Smoothing optimization failed.";
+    AERROR << "Smoothing optimization failed."
+           << " NlOpt Status: " << status_;
   }
   return status_;
 }
