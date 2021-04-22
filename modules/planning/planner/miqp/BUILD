@@ -23,4 +23,22 @@ cc_library(
     data = ["@miqp_planner//:cplex_models_filegroup"],
 )
 
+cc_library(
+    name = "trajectory_smoother_nlopt",
+    srcs = ["trajectory_smoother_nlopt.cc"],
+    hdrs = ["trajectory_smoother_nlopt.h"],
+    deps = [
+        "//cyber/common:log",
+        "@nlopt",
+        "@eigen",
+    ]
+)
+
+cc_test(
+    name = "trajectory_smoother_nlopt_test",
+    srcs = ["trajectory_smoother_nlopt_test.cc"],
+    deps = ["@gtest//:main",
+            ":trajectory_smoother_nlopt",],
+)
+
 cpplint()

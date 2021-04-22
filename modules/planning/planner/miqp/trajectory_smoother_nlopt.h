@@ -26,8 +26,8 @@ namespace planning {
 
 class TrajectorySmootherNLOpt {
  public:
-  struct Parameters {
-    Parameters();
+  struct ProblemParameters {
+    ProblemParameters() {}
     // costs for deviation from the initial reference
     double cost_offset_x;
     double cost_offset_y;
@@ -83,12 +83,12 @@ class TrajectorySmootherNLOpt {
                       Eigen::MatrixXd& dXdU);
 
   // TODO(@Tobias)
-  void Optimize();
+  int Optimize();
 
   // initialize the optimization problem
   // initialize _X_ref, lb und ub of inputs, _x0
   // TODO(@Klemens)
-  void initializeProblem(double initial_steering = 0.0f);
+  void InitializeProblem(double initial_steering = 0.0f);
 
   // TODO(@Tobias), wrapper?
   // take care of different length of reference -> only use costs on reference
@@ -124,7 +124,7 @@ class TrajectorySmootherNLOpt {
   Eigen::Vector3d currB_;
   Eigen::VectorXd last_u_;
 
-  // why is this all using vector, not eigen?
+  // why is this all using vector, not eigen? -> tk: because of the nlopt api. 
   std::vector<double> u_;
 
   double j_opt_;
@@ -138,6 +138,7 @@ class TrajectorySmootherNLOpt {
   size_t num_ineq_constr_;  // TODO(@Klemens) which ones?
   size_t num_eq_constr_;    // TODO(@Klemens) which ones?
   SolverParameters solver_params_;
+  ProblemParameters params_;
 };
 
 }  // namespace planning

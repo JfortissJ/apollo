@@ -27,7 +27,14 @@ namespace planning {
 
 TEST(TrajectorySmootherNLOpt, Constructor) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
-  EXPECT_NEAR(-1.0, -1.0, 1e-5);
+  EXPECT_NE(&tsm, nullptr);
+}
+
+TEST(TrajectorySmootherNLOpt, Optimize) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  tsm.InitializeProblem(0);
+  int status = tsm.Optimize();
+  EXPECT_EQ(5, status);
 }
 
 // TEST 1: Integration Model
