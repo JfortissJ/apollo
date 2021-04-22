@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 fortiss GmbH
+ * Copyright 2021 fortiss GmbH
  * Authors: Tobias Kessler, Klemens Esterle
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,17 +15,14 @@
  * limitations under the License.
  *****************************************************************************/
 
-#pragma once
+#include "modules/planning/planner/miqp/trajectory_smoother_nlopt.h"
+
+#include <nlopt.h>
 
 namespace apollo {
 namespace planning {
 
-class TrajectorySmoother {
- public:
-  explicit TrajectorySmoother();
-
-  virtual ~TrajectorySmoother() = default;
-};
+TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() { nlopt_opt opt; }
 
 }  // namespace planning
 }  // namespace apollo

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 fortiss GmbH
+ * Copyright 2021 fortiss GmbH
  * Authors: Tobias Kessler, Klemens Esterle
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +15,26 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "modules/planning/planner/miqp/trajectory_smoother.h"
 
-#include <nlopt.h>
+#include "modules/planning/planner/miqp/trajectory_smoother_nlopt.h"
+
+#include <cmath>
+
+#include "gtest/gtest.h"
 
 namespace apollo {
 namespace planning {
 
-TrajectorySmoother::TrajectorySmoother() { nlopt_opt opt; }
+TEST(TrajectorySmootherNLOpt, Constructor) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  EXPECT_NEAR(-1.0, -1.0, 1e-5);
+}
+
+// TEST 1: Integration Model
+
+// Test 2: Constraint Checking
+
+// Test 3: Optimization
 
 }  // namespace planning
 }  // namespace apollo
