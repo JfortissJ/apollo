@@ -81,12 +81,30 @@ TEST(TrajectorySmootherNLOpt, model_f) {
   TrajectorySmootherNLOpt::Vector6d x_out;
   tsm.model_f(x, u, h, x_out);
 
+  // assertion values come from verified model in test_model.m
   EXPECT_NEAR(x_out(0), 0.1, 1e-9);
   EXPECT_NEAR(x_out(1), 0.0, 1e-9);
   EXPECT_NEAR(x_out(2), 0.0025, 1e-9);
   EXPECT_NEAR(x_out(3), 1.001, 1e-9);
   EXPECT_NEAR(x_out(4), 0.02, 1e-9);
   EXPECT_NEAR(x_out(5), 0.05, 1e-9);
+}
+
+TEST(TrajectorySmootherNLOpt, IntegrateModel) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt::Vector6d x0;
+  x0 << 0.0, 0.0, 0.0, 1.0, 0.0, 0.0;
+  size_t num_integration_steps = 1;
+  Eigen::VectorXd u;
+  u.resize(2,3);
+  u << 0.2, 0.5, 0.2, 0.5, 0.2, 0.5;
+  const double h = 0.1;
+  Eigen::VectorXd X;
+  Eigen::MatrixXd dXdU;
+  tsm.IntegrateModel(x0, u, num_integration_steps, h, X, dXdU);
+  std::cout << X << std::endl;
+  std::cout << dXdU << std::endl;
+  EXPECT_TRUE(false);
 }
 
 // TEST 1: Integration Model

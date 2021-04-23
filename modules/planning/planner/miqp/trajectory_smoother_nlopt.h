@@ -125,7 +125,7 @@ class TrajectorySmootherNLOpt {
   // u: initial input vector -> chosen by optimizer
   // X: stacked state vector over time
   // dXdU
-  void IntegrateModel(const Eigen::VectorXd& x0, const Eigen::VectorXd& u,
+  void IntegrateModel(const Vector6d& x0, const Eigen::VectorXd& u,
                       const size_t num_integration_steps, const double h, Eigen::VectorXd& X,
                       Eigen::MatrixXd& dXdU);
   void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d & x_out);

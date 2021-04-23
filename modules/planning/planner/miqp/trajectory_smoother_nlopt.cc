@@ -241,7 +241,7 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
 void TrajectorySmootherNLOpt::EqualityConstraintFunction(
     unsigned m, double* result, unsigned n, const double* x, double* grad) {}
 
-void TrajectorySmootherNLOpt::IntegrateModel(const Eigen::VectorXd& x0,
+void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
                                              const Eigen::VectorXd& u,
                                              const size_t num_integration_steps,
                                              const double h, Eigen::VectorXd& X,
