@@ -110,14 +110,18 @@ class TrajectorySmootherNLOpt {
   // X: stacked state vector over time
   // dXdU
   void IntegrateModel(const Eigen::VectorXd& x0, const Eigen::VectorXd& u,
-                      const size_t num_integration_steps, Eigen::VectorXd& X,
+                      const size_t num_integration_steps, const double h, Eigen::VectorXd& X,
                       Eigen::MatrixXd& dXdU);
-
  private:
+  void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d & x_out);
+  void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h, Matrix6d& dfdx_out);
+  void model_dfdjerk(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d& dfdjerk_out);
+  void model_dfdxi(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d& dfdxi_out);
+
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
   // stores the initial state
-  Eigen::VectorXd x0_;
+  Vector6d x0_;
 
   // stores the currently integrated trajectory
   Eigen::VectorXd X_;
@@ -127,10 +131,10 @@ class TrajectorySmootherNLOpt {
 
   // TODO (@Klemens): agree with Tobias on integration method!
   Eigen::MatrixXd A_;
-  Eigen::Vector3d currx_;
-  Eigen::Matrix3d currA_;
-  Eigen::Vector3d currH_;
-  Eigen::Vector3d currB_;
+  Vector6d currx_;
+  Matrix6d currA_;
+  Vector6d currH_;
+  Vector6d currB_;
   Eigen::VectorXd last_u_;
 
   // why is this all using vector, not eigen? -> tk: because of the nlopt api.

@@ -194,11 +194,12 @@ void TrajectorySmootherNLOpt::EqualityConstraintFunction(
 void TrajectorySmootherNLOpt::IntegrateModel(const Eigen::VectorXd& x0,
                                              const Eigen::VectorXd& u,
                                              const size_t num_integration_steps,
+                                             const double h, 
                                              Eigen::VectorXd& X,
                                              Eigen::MatrixXd& dXdU) {
 
 	const size_t dimX = 6;
-	const size_t dimU = 1; // change to 2?
+	const size_t dimU = 2;
 	const size_t N = num_integration_steps;
 
 	X.resize(dimX*N);
@@ -206,12 +207,11 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Eigen::VectorXd& x0,
 
 	A_.resize(dimX*N, dimX);
 	A_.fill(0.0f);
-	A_.block<6,6>(0,0) = Matrix3d::Identity(); // TODO: change Matrix3d
+	A_.block<6,6>(0,0) = Eigen::MatrixXd::Identity(6,6);
 
 	dXdU.resize(dimX*N, dimU*N + 1);
 	dXdU.fill(0.0f);
 
-	
 	size_t row_idx, row_idx_before, u_idx;
 
 	for(size_t i = 1; i < N ; ++i)
@@ -219,26 +219,26 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Eigen::VectorXd& x0,
 		row_idx = i*dimX;
 		row_idx_before = (i-1)*dimX;
 
-		model_f(X.block<6,1>(row_idx_before,0),u(i-1),h,currx_);
-		model_dfdx(X.block<6,1>(row_idx_before,0),u(i-1),h,currA_);
-		model_dfdkappa(X.block<6,1>(row_idx_before,0),u(i-1),h,currB_);
-		model_dfdh(X.block<6,1>(row_idx_before,0),u(i-1),h,currH_);
+		// model_f(X.block<6,1>(row_idx_before,0),u.col(i-1),h,currx_);
+		// model_dfdx(X.block<6,1>(row_idx_before,0),u.row(i-1),h,currA_);
+		// model_dfdjerk(X.block<6,1>(row_idx_before,0),u.row(i-1),h,currB_);
+		// model_dfdxi(X.block<6,1>(row_idx_before,0),u.row(i-1),h,currH_);
 
-		X.block<6,1>(row_idx,0) = currx_;
-		A_.block<6,6>(row_idx, 0) = currA_ * A_.block<6,6>(row_idx_before,0);
-		dXdU.block<6,1>(row_idx,(i-1)*dimU) = currB_;
-		dXdU.block<6,1>(row_idx, dimU*N) = currA_ * dXdU.block<6,1>(row_idx_before, dimU*N) + currH_;
+		// X.block<6,1>(row_idx,0) = currx_;
+		// A_.block<6,6>(row_idx, 0) = currA_ * A_.block<6,6>(row_idx_before,0);
+		// dXdU.block<6,1>(row_idx,(i-1)*dimU) = currB_;
+		// dXdU.block<6,1>(row_idx, dimU*N) = currA_ * dXdU.block<6,1>(row_idx_before, dimU*N) + currH_;
 
-		for (size_t n = 1; n < i; ++n)
-		{
-			u_idx = (n-1)*dimU;
-			dXdU.block<6,1>(row_idx,u_idx) = currA_ * dXdU.block<6,1>(row_idx_before,u_idx);
-		}
+		// for (size_t n = 1; n < i; ++n)
+		// {
+		// 	u_idx = (n-1)*dimU;
+		// 	dXdU.block<6,1>(row_idx,u_idx) = currA_ * dXdU.block<6,1>(row_idx_before,u_idx);
+		// }
 	}
 }
 
 
-void PathOptimizerNLOpt::model_f(const Vector6d & x, const double u, const double h, Vector6d & x_out)
+void TrajectorySmootherNLOpt::model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d & x_out)
 {
   const double sinth = sin(x(STATES::THETA));
   const double costh = cos(x(STATES::THETA));
@@ -256,7 +256,7 @@ void PathOptimizerNLOpt::model_f(const Vector6d & x, const double u, const doubl
 	x_out << x1, y1, theta1, v1, a1, kappa1;
 }
 
-void PathOptimizerNLOpt::model_dfdx(const Vector6d & x, const double u, const double h, Matrix6d& dfdx_out)
+void TrajectorySmootherNLOpt::model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h, Matrix6d& dfdx_out)
 {
   const double sinth = sin(x(STATES::THETA));
   const double costh = cos(x(STATES::THETA));
@@ -276,25 +276,25 @@ void PathOptimizerNLOpt::model_dfdx(const Vector6d & x, const double u, const do
   
   const double dx1_dkappa0 = -0.5*pow(h,2)*x(STATES::V)*c1*sin(c2);
   const double dy1_dkappa0 = 0.5*pow(h,2)*x(STATES::V)*c1*cos(c2);
-  const double dth1_kappa0 = h*x(STATES::V)+0.5*pow(h,2)*x(INPUTS::A);
+  const double dth1_dkappa0 = h*x(STATES::V)+0.5*pow(h,2)*x(STATES::A);
 
   dfdx_out << 1,    0,    dx1_dth0,   dx1_dv0,    dx1_da0,    dx1_dkappa0,
               0,    1,    dy1_dth0,   dy1_dv0,    dy1_da0,    dy1_dkappa0,
               0,    0,    1,          dth1_dv0,   dth1_da0,   dth1_dkappa0,
-              0,    0,    0,          1           h,          0,
+              0,    0,    0,          1,          h,          0,
               0,    0,    0,          0,          1,          0,
               0,    0,    0,          0,          0,          1;
 }
 
 
-void PathOptimizerNLOpt::model_dfdjerk( const Vector6d & x, const double u, const double h, Vector6d& dfdjerk_out )
+void TrajectorySmootherNLOpt::model_dfdjerk( const Vector6d & x, const Eigen::Vector2d& u, const double h, Vector6d& dfdjerk_out )
 {
   dfdjerk_out << 0, 0, 0, 0.5*h*h, h, 0;
 }
 
-void PathOptimizerNLOpt::model_dfdkappa( const Vector6d & x, const double u, const double h, Vector6d& dfdkappa_out )
+void TrajectorySmootherNLOpt::model_dfdxi( const Vector6d & x, const Eigen::Vector2d& u, const double h, Vector6d& dfdxi_out )
 {
-  dfdh_kappa << 0, 0, 0.5*pow(h,2)*x(STATES::V) + 0.5*pow(h,3)*x(STATES::A), 0, 0, h;
+  dfdxi_out << 0, 0, 0.5*pow(h,2)*x(STATES::V) + 0.5*pow(h,3)*x(STATES::A), 0, 0, h;
 }
 
 
