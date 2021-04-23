@@ -59,6 +59,23 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
   EXPECT_EQ(5, status);
 }
 
+TEST(TrajectorySmootherNLOpt, model_f) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt::Vector6d x;
+  x << 0.0, 0.0, 0.0, 1.0, 0.0, 0.0;
+  const Eigen::Vector2d u = Eigen::Vector2d(0.2, 0.5);
+  const double h = 0.1;
+  TrajectorySmootherNLOpt::Vector6d x_out;
+  tsm.model_f(x, u, h, x_out);
+
+  EXPECT_NEAR(x_out(0), 0.1, 1e-9);
+  EXPECT_NEAR(x_out(1), 0.0, 1e-9);
+  EXPECT_NEAR(x_out(2), 0.0025, 1e-9);
+  EXPECT_NEAR(x_out(3), 1.001, 1e-9);
+  EXPECT_NEAR(x_out(4), 0.02, 1e-9);
+  EXPECT_NEAR(x_out(5), 0.05, 1e-9);
+}
+
 // TEST 1: Integration Model
 
 // Test 2: Constraint Checking

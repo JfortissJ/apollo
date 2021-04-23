@@ -294,7 +294,7 @@ void TrajectorySmootherNLOpt::model_f(const Vector6d& x,
   const double theta1 = x(STATES::THETA) +
                         0.5 * h * x(STATES::V) * x(STATES::KAPPA) +
                         0.5 * h * c1 * c3;
-  const double v1 = x(STATES::V) + 0.5 * h * x(STATES::A) + 0.5 * c4;
+  const double v1 = x(STATES::V) + 0.5 * h * x(STATES::A) + 0.5 * h * c4;
   const double a1 = c4;
   const double kappa1 = c3;
   x_out << x1, y1, theta1, v1, a1, kappa1;
