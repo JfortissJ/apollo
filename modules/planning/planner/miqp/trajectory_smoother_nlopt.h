@@ -145,6 +145,7 @@ class TrajectorySmootherNLOpt {
   size_t num_eq_constr_;    // TODO(@Klemens) which ones?
   SolverParameters solver_params_;
   ProblemParameters params_;
+  bool ready_to_optimize_;
 
   //Indices and sizes of our model
   enum STATES {
