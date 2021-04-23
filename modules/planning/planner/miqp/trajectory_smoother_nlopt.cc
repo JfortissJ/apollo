@@ -60,25 +60,70 @@ TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
 void TrajectorySmootherNLOpt::InitializeProblem(
     const int subsampling, const DiscretizedTrajectory& input_trajectory,
     double initial_steering) {
-  // set sizes
+  ready_to_optimize_ = false;
   const int input_traj_size = input_trajectory.size();
+  if (input_traj_size < 1) {
+    AERROR << "Empty input trajectory!";
+    return;
+  }
+  if (input_traj_size == 1) {
+    AINFO << "Input trajectory has only one point, no need for smoothing!";
+    return;
+  }
 
-  problem_size_ = 2;  // input_traj_size*subsampling*INPUTS::SIZE_INPUTS;
+  // set problem size
+  int nr_intermediate_pts = (input_traj_size - 1) * subsampling;
+  problem_size_ = (input_traj_size + nr_intermediate_pts) * INPUTS::INPUTS_SIZE;
   u_.resize(problem_size_);
 
   // set x0 using the reference traj
-  
+  x0_[STATES::X] = input_trajectory.front().path_point().x();
+  x0_[STATES::Y] = input_trajectory.front().path_point().y();
+  x0_[STATES::THETA] = input_trajectory.front().path_point().theta();
+  x0_[STATES::V] = input_trajectory.front().v();
+  x0_[STATES::A] = input_trajectory.front().a();
+  x0_[STATES::KAPPA] = input_trajectory.front().path_point().kappa();
 
   // set reference from input
+  X_ref_.resize(input_traj_size * STATES::STATES_SIZE);
+  int offset = 0;
+  for (auto& pt : input_trajectory) {
+    X_ref_[offset + STATES::X] = pt.path_point().x();
+    X_ref_[offset + STATES::Y] = pt.path_point().y();
+    X_ref_[offset + STATES::THETA] = pt.path_point().theta();
+    X_ref_[offset + STATES::V] = pt.v();
+    X_ref_[offset + STATES::A] = pt.a();
+    X_ref_[offset + STATES::KAPPA] = pt.path_point().kappa();
+    offset += STATES::STATES_SIZE;
+  }
+
   // set u0: start values for the optimizer
+  // choose the intermediate points with the same jerk and xi as the previous
+  // input point
+  for (int idx_input = 0; idx_input < input_traj_size; ++idx_input) {
+    for (int idx_subsample = 0; idx_subsample < subsampling; ++idx_subsample) {
+      int idx = idx_input + idx_subsample;
+      u_[idx + INPUTS::J] = input_trajectory.at(idx_input).da();
+      u_[idx + INPUTS::XI] =
+          input_trajectory.at(idx_input).path_point().dkappa();
+    }
+  }
 
   // set lower bound vector
+  lower_bound_.resize(problem_size_);
   // set upper bound vector
+  upper_bound_.resize(problem_size_);
 
   status_ = 0;
+  ready_to_optimize_ = true;
 }
 
 int TrajectorySmootherNLOpt::Optimize() {
+  if (!ready_to_optimize_) {
+    AERROR << "Optimization Problem was not initialized!";
+    return -100;
+  }
+
   // Initialize the optimization problem
   nlopt::opt opt(solver_params_.algorithm, problem_size_);
 
