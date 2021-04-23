@@ -246,19 +246,17 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Eigen::VectorXd& x0,
                                              const size_t num_integration_steps,
                                              const double h, Eigen::VectorXd& X,
                                              Eigen::MatrixXd& dXdU) {
-  const size_t dimX = 6;
-  const size_t dimU = 2;
+  constexpr size_t dimX = STATES::STATES_SIZE;
+  constexpr size_t dimU = INPUTS::INPUTS_SIZE;
   const size_t N = num_integration_steps;
 
   X.resize(dimX * N);
-  X.block<6, 1>(0, 0) = x0;
+  X.block<dimX, 1>(0, 0) = x0;
 
-  A_.resize(dimX * N, dimX);
-  A_.fill(0.0f);
-  A_.block<6, 6>(0, 0) = Eigen::MatrixXd::Identity(6, 6);
-
-  dXdU.resize(dimX * N, dimU * N + 1);
+  dXdU.resize(dimX * N, dimU * N);
   dXdU.fill(0.0f);
+
+  currB_.resize(dimX, dimU);
 
   size_t row_idx, row_idx_before, u_idx;
 
@@ -266,23 +264,21 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Eigen::VectorXd& x0,
     row_idx = i * dimX;
     row_idx_before = (i - 1) * dimX;
 
-    // model_f(X.block<6,1>(row_idx_before,0),u.col(i-1),h,currx_);
-    // model_dfdx(X.block<6,1>(row_idx_before,0),u.row(i-1),h,currA_);
-    // model_dfdjerk(X.block<6,1>(row_idx_before,0),u.row(i-1),h,currB_);
-    // model_dfdxi(X.block<6,1>(row_idx_before,0),u.row(i-1),h,currH_);
+    const Vector6d& x_before = X.block<dimX, 1>(row_idx_before, 0);
+    model_f(x_before, u.col(i - 1), h, currx_);
+    model_dfdx(x_before, u.col(i - 1), h, currA_);
+    model_dfdu(x_before, u.col(i - 1), h, currB_);
 
-    // X.block<6,1>(row_idx,0) = currx_;
-    // A_.block<6,6>(row_idx, 0) = currA_ * A_.block<6,6>(row_idx_before,0);
-    // dXdU.block<6,1>(row_idx,(i-1)*dimU) = currB_;
-    // dXdU.block<6,1>(row_idx, dimU*N) = currA_ *
-    // dXdU.block<6,1>(row_idx_before, dimU*N) + currH_;
+    X.block<dimX, 1>(row_idx, 0) = currx_;
+    dXdU.block<dimX, dimU>(row_idx, (i - 1) * dimU) = currB_;
+    dXdU.block<dimX, dimU>(row_idx, dimU * N) =
+        currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * N);
 
-    // for (size_t n = 1; n < i; ++n)
-    // {
-    // 	u_idx = (n-1)*dimU;
-    // 	dXdU.block<6,1>(row_idx,u_idx) = currA_ *
-    // dXdU.block<6,1>(row_idx_before,u_idx);
-    // }
+    for (size_t n = 1; n < i; ++n) {
+      u_idx = (n - 1) * dimU;
+      dXdU.block<dimX, dimU>(row_idx, u_idx) =
+          currA_ * dXdU.block<dimX, dimU>(row_idx_before, u_idx);
+    }
   }
 }
 
@@ -342,17 +338,11 @@ void TrajectorySmootherNLOpt::model_dfdx(const Vector6d& x,
       0, 0, 0, 1, h, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1;
 }
 
-void TrajectorySmootherNLOpt::model_dfdjerk(const Vector6d& x,
-                                            const Eigen::Vector2d& u,
-                                            const double h,
-                                            Vector6d& dfdjerk_out) {
-  dfdjerk_out << 0, 0, 0, 0.5 * h * h, h, 0;
-}
-
-void TrajectorySmootherNLOpt::model_dfdxi(const Vector6d& x,
-                                          const Eigen::Vector2d& u,
-                                          const double h, Vector6d& dfdxi_out) {
-  dfdxi_out << 0, 0,
+void TrajectorySmootherNLOpt::model_dfdu(const Vector6d& x,
+                                         const Eigen::Vector2d& u,
+                                         const double h,
+                                         Eigen::MatrixXd& dfdxi_out) {
+  dfdxi_out << 0, 0, 0, 0.5 * h * h, h, 0, 0, 0,
       0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A), 0, 0, h;
 }
 
