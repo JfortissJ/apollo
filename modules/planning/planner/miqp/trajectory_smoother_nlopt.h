@@ -115,8 +115,7 @@ class TrajectorySmootherNLOpt {
  private:
   void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d & x_out);
   void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h, Matrix6d& dfdx_out);
-  void model_dfdjerk(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d& dfdjerk_out);
-  void model_dfdxi(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d& dfdxi_out);
+  void model_dfdu( const Vector6d& x, const Eigen::Vector2d& u, const double h, Eigen::MatrixXd& dfdxi_out);
 
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
@@ -129,13 +128,10 @@ class TrajectorySmootherNLOpt {
   // optimization
   Eigen::MatrixXd dXdU_;
 
-  // TODO (@Klemens): agree with Tobias on integration method!
-  Eigen::MatrixXd A_;
   Vector6d currx_;
   Matrix6d currA_;
-  Vector6d currH_;
-  Vector6d currB_;
-  Eigen::VectorXd last_u_;
+  Eigen::MatrixXd currB_; // dimX x dimU
+  Eigen::MatrixXd last_u_;
 
   // why is this all using vector, not eigen? -> tk: because of the nlopt api.
   std::vector<double> u_;
