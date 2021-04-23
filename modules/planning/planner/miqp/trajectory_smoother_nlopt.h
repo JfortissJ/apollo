@@ -18,6 +18,7 @@
 #pragma once
 
 #include <nlopt.hpp>
+#include "modules/planning/common/trajectory/discretized_trajectory.h"
 
 #include "Eigen/Dense"
 
@@ -84,7 +85,7 @@ class TrajectorySmootherNLOpt {
   // TODO what is the best interface for the input traj? custom matrix? apollo
   // adctraj format?
   void InitializeProblem(const int subsampling,
-                         const Eigen::MatrixXd& miqp_trajectory,
+                         const DiscretizedTrajectory& input_trajectory,
                          double initial_steering = 0.0f);
 
   // TODO(@Tobias)
@@ -116,7 +117,7 @@ class TrajectorySmootherNLOpt {
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
   // stores the initial state
-  Eigen::Vector3d x0_;  // TODO(@Klemens): we have more than length 3!
+  Eigen::VectorXd x0_;
 
   // stores the currently integrated trajectory
   Eigen::VectorXd X_;
@@ -147,6 +148,23 @@ class TrajectorySmootherNLOpt {
   size_t num_eq_constr_;    // TODO(@Klemens) which ones?
   SolverParameters solver_params_;
   ProblemParameters params_;
+
+  //Indices and sizes of our model
+  enum STATES {
+    X = 0,
+    Y = 1,
+    THETA = 2,
+    V = 3,
+    A = 4,
+    KAPPA = 5,
+    STATES_SIZE = 6
+  };
+
+  enum INPUTS {
+    J = 0,
+    XI = 1,
+    INPUTS_SIZE = 2
+  };
 };
 
 }  // namespace planning

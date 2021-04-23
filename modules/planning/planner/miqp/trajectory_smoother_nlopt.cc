@@ -49,20 +49,26 @@ namespace apollo {
 namespace planning {
 
 TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
-  // Set costs
+  // TODO Set costs
+
+  x0_.resize(STATES::STATES_SIZE);
 
   num_ineq_constr_ = 0;
   num_eq_constr_ = 0;
 }
 
 void TrajectorySmootherNLOpt::InitializeProblem(
-    const int subsampling, const Eigen::MatrixXd& miqp_trajectory,
+    const int subsampling, const DiscretizedTrajectory& input_trajectory,
     double initial_steering) {
   // set sizes
-  problem_size_ = 2;  // size(miqp_traj)*subsampling*2
+  const int input_traj_size = input_trajectory.size();
+
+  problem_size_ = 2;  // input_traj_size*subsampling*INPUTS::SIZE_INPUTS;
   u_.resize(problem_size_);
 
   // set x0 using the reference traj
+  
+
   // set reference from input
   // set u0: start values for the optimizer
 
