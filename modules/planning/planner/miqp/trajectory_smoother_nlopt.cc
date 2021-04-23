@@ -109,10 +109,15 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     }
   }
 
-  // set lower bound vector
+  // set lower and upper bound vector
   lower_bound_.resize(problem_size_);
-  // set upper bound vector
   upper_bound_.resize(problem_size_);
+  for (int idx = 0; idx < problem_size_; idx += 2) {
+    lower_bound_.at(idx + INPUTS::J) = params_.lower_bound_jerk;
+    lower_bound_.at(idx + INPUTS::XI) = params_.lower_bound_curvature_change;
+    upper_bound_.at(idx + INPUTS::J) = params_.upper_bound_jerk;
+    upper_bound_.at(idx + INPUTS::XI) = params_.upper_bound_curvature_change;
+  }
 
   status_ = 0;
   ready_to_optimize_ = true;
