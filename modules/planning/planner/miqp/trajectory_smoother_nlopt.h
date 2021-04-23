@@ -120,22 +120,24 @@ class TrajectorySmootherNLOpt {
 
   std::vector<double>& GetInputVector() { return u_; }
 
- private:
   // TODO(@Klemens): Heuns Method, fill block matrices A_
   // x0: state at t=0 -> from vehicle state
   // u: initial input vector -> chosen by optimizer
   // X: stacked state vector over time
   // dXdU
-  void IntegrateModel(const Eigen::VectorXd& x0, const Eigen::VectorXd& u,
+  void IntegrateModel(const Vector6d& x0, const Eigen::VectorXd& u,
                       const size_t num_integration_steps, const double h, Eigen::VectorXd& X,
                       Eigen::MatrixXd& dXdU);
 
   void CalculateCommonDataIfNecessary( const Eigen::VectorXd & u );
- private:
-  void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d & x_out);
-  void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h, Matrix6d& dfdx_out);
-  void model_dfdu( const Vector6d& x, const Eigen::Vector2d& u, const double h, Eigen::MatrixXd& dfdxi_out);
 
+  void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d & x_out);
+
+  void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h, Matrix6d& dfdx_out);
+
+  void model_dfdu( const Vector6d& x, const Eigen::Vector2d& u, const double h, Eigen::MatrixXd& dfdxi_out);
+ 
+ private:
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
   // stores the initial state
