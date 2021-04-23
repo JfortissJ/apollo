@@ -29,6 +29,7 @@ cc_library(
     hdrs = ["trajectory_smoother_nlopt.h"],
     deps = [
         "//cyber/common:log",
+        "//modules/planning/common/trajectory:discretized_trajectory",
         "@nlopt",
         "@eigen",
     ]
