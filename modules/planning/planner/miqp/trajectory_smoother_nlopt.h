@@ -28,20 +28,37 @@ namespace planning {
 class TrajectorySmootherNLOpt {
  public:
   struct ProblemParameters {
-    ProblemParameters() {}
+    ProblemParameters() : 
+    cost_offset_x(1),
+    cost_offset_y(1),
+    cost_offset_theta(0.1),
+    cost_offset_v(1.0/0.5),
+    cost_curvature(0.1),
+    cost_acceleration(1.0/0.5/0.5),
+    cost_curvature_change(0.5),
+    cost_acceleration_change(0.5),
+    lower_bound_jerk(-1),
+    upper_bound_jerk(1),
+    lower_bound_curvature_change(-1),
+    upper_bound_curvature_change(1) {}
     // costs for deviation from the initial reference
     double cost_offset_x;
     double cost_offset_y;
     double cost_offset_theta;
     double cost_offset_v;
     // costs on absolute values
-    double cost_steering;
+    double cost_curvature;
     double cost_acceleration;
     // costs on input
-    double cost_steering_change;  // xi
+    double cost_curvature_change;  // xi
     double cost_acceleration_change;
-    // tolerances for the initial and final steering
-    double steering_tolerance;
+    // tolerances for the initial and final curvature
+    double curvature_tolerance;
+    // upper and lower bounds
+    double lower_bound_jerk;
+    double upper_bound_jerk;
+    double lower_bound_curvature_change;
+    double upper_bound_curvature_change;
   };
 
   struct SolverParameters {
