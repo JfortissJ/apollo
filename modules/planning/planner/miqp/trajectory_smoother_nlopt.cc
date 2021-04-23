@@ -48,6 +48,8 @@ void nlopt_equality_constraint_wrapper(unsigned m, double* result, unsigned n,
 namespace apollo {
 namespace planning {
 
+using namespace Eigen;
+
 TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
   // TODO Set costs
 
@@ -61,19 +63,21 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     const int subsampling, const DiscretizedTrajectory& input_trajectory,
     double initial_steering) {
   ready_to_optimize_ = false;
-  const int input_traj_size = input_trajectory.size();
-  if (input_traj_size < 1) {
+  input_traj_size_ = input_trajectory.size();
+  subsampling_ = subsampling;
+  if (input_traj_size_ < 1) {
     AERROR << "Empty input trajectory!";
     return;
   }
-  if (input_traj_size == 1) {
+  if (input_traj_size_ == 1) {
     AINFO << "Input trajectory has only one point, no need for smoothing!";
     return;
   }
 
   // set problem size
-  int nr_intermediate_pts = (input_traj_size - 1) * subsampling;
-  problem_size_ = (input_traj_size + nr_intermediate_pts) * INPUTS::INPUTS_SIZE;
+  int nr_intermediate_pts = (input_traj_size_ - 1) * subsampling_;
+  problem_size_ =
+      (input_traj_size_ + nr_intermediate_pts) * INPUTS::INPUTS_SIZE;
   u_.resize(problem_size_);
 
   // set x0 using the reference traj
@@ -85,7 +89,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   x0_[STATES::KAPPA] = input_trajectory.front().path_point().kappa();
 
   // set reference from input
-  X_ref_.resize(input_traj_size * STATES::STATES_SIZE);
+  X_ref_.resize(input_traj_size_ * STATES::STATES_SIZE);
   int offset = 0;
   for (auto& pt : input_trajectory) {
     X_ref_[offset + STATES::X] = pt.path_point().x();
@@ -100,11 +104,20 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   // set u0: start values for the optimizer
   // choose the intermediate points with the same jerk and xi as the previous
   // input point
-  for (int idx_input = 0; idx_input < input_traj_size; ++idx_input) {
-    for (int idx_subsample = 0; idx_subsample < subsampling; ++idx_subsample) {
-      int idx = idx_input + idx_subsample;
-      u_[idx + INPUTS::J] = input_trajectory.at(idx_input).da();
-      u_[idx + INPUTS::XI] =
+  int idx_u = 0;
+  for (int idx_input = 0; idx_input < input_traj_size_; ++idx_input) {
+    // not at the last idx --> do subsampling
+    if (idx_input < input_traj_size_ - 1) {
+      for (int idx_subsample = 0; idx_subsample < subsampling_;
+           ++idx_subsample) {
+        u_[idx_u + INPUTS::J] = input_trajectory.at(idx_input).da();
+        u_[idx_u + INPUTS::XI] =
+            input_trajectory.at(idx_input).path_point().dkappa();
+        idx_u += INPUTS::INPUTS_SIZE;
+      }
+    } else {  // dont subsample last point
+      u_[idx_u + INPUTS::J] = input_trajectory.at(idx_input).da();
+      u_[idx_u + INPUTS::XI] =
           input_trajectory.at(idx_input).path_point().dkappa();
     }
   }
@@ -112,7 +125,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   // set lower and upper bound vector
   lower_bound_.resize(problem_size_);
   upper_bound_.resize(problem_size_);
-  for (int idx = 0; idx < problem_size_; idx += 2) {
+  for (size_t idx = 0; idx < problem_size_; idx += 2) {
     lower_bound_.at(idx + INPUTS::J) = params_.lower_bound_jerk;
     lower_bound_.at(idx + INPUTS::XI) = params_.lower_bound_curvature_change;
     upper_bound_.at(idx + INPUTS::J) = params_.upper_bound_jerk;
@@ -228,11 +241,90 @@ int TrajectorySmootherNLOpt::Optimize() {
 
 double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
                                                   double* grad) {
-  if (grad) {
-    grad[0] = 0.0;
-    grad[1] = 0.5 / sqrt(x[1]);
+//   // example problem
+//   if (grad) {
+//     grad[0] = 0.0;
+//     grad[1] = 0.5 / sqrt(x[1]);
+//   }
+//   return sqrt(x[1]);
+
+  double J = 0;
+  Map<const VectorXd> u_eigen(x, n);
+  Map<VectorXd> grad_eigen(grad, n);
+  if (grad != NULL) {
+    grad_eigen.fill(0);
   }
-  return sqrt(x[1]);
+
+  CalculateCommonDataIfNecessary(u_eigen);
+
+  // Costs on reference deviation and states
+  // differences vector: for x,y,theta,v compute state-ref for each
+  // non-subsampled point absolute vector: for a,kappa copy the value from X_
+  const int size_state_vector = X_.rows();
+  VectorXd difference;
+  difference.setZero(size_state_vector);
+  VectorXd absolute;
+  absolute.setZero(size_state_vector);
+  VectorXd difference_costs;
+  difference_costs.setZero(size_state_vector);
+  VectorXd absolute_costs;
+  absolute_costs.setZero(size_state_vector);
+  Vector6d costs_state;
+  costs_state << params_.cost_offset_x, params_.cost_offset_y,
+      params_.cost_offset_theta, params_.cost_offset_v,
+      params_.cost_acceleration, params_.cost_curvature;
+  for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
+    if (idx % (subsampling_ + 1) == 0) {               // not a subsampled step
+      for (int element = 0; element < 4; ++element) {  // only for x,y,theta,v
+        difference[idx * STATES::STATES_SIZE + element] =
+            X_[idx * STATES::STATES_SIZE + element] -
+            X_ref_[idx / (subsampling_ + 1) + element];
+        difference_costs[idx * STATES::STATES_SIZE + element] =
+            costs_state[element];
+      }
+      absolute[idx * STATES::STATES_SIZE + STATES::A] =
+          X_[idx / (subsampling_ + 1) + STATES::A];
+      absolute_costs[idx * STATES::STATES_SIZE + STATES::A] =
+          costs_state[STATES::A];
+      absolute[idx * STATES::STATES_SIZE + STATES::KAPPA] =
+          X_[idx / (subsampling_ + 1) + STATES::KAPPA];
+      absolute_costs[idx * STATES::STATES_SIZE + STATES::KAPPA] =
+          costs_state[STATES::KAPPA];
+    }
+  }
+
+  // Costs on inputs
+  VectorXd absolute_inputs;
+  absolute_inputs.setZero(n);
+  VectorXd costs_inputs;
+  costs_inputs.setZero(n);
+  for (int idx = 0; idx < static_cast<int>(n) / INPUTS::INPUTS_SIZE; ++idx) {
+    if (idx % (subsampling_ + 1) == 0) {  // not a subsampled step
+      absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
+          u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::J];
+      absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
+          u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::XI];
+      costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
+          params_.cost_acceleration_change;
+      costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
+          params_.cost_curvature_change;
+    }
+  }
+
+  // Compute cost term
+  J += difference.transpose() * difference.cwiseProduct(difference_costs);
+  J += absolute.transpose() * absolute.cwiseProduct(absolute_costs);
+  J += absolute_inputs.transpose() * absolute_inputs.cwiseProduct(costs_inputs);
+
+  // Gradients: Derivate of J
+  if (grad != NULL) {
+    grad_eigen +=
+        2 * dXdU_.transpose() * difference.cwiseProduct(difference_costs);
+    grad_eigen += 2 * dXdU_.transpose() * absolute.cwiseProduct(absolute_costs);
+    grad_eigen += 2 * absolute_inputs.cwiseProduct(costs_inputs);
+  }
+
+  return J;
 }
 
 void TrajectorySmootherNLOpt::InequalityConstraintFunction(
@@ -344,6 +436,14 @@ void TrajectorySmootherNLOpt::model_dfdu(const Vector6d& x,
                                          Eigen::MatrixXd& dfdxi_out) {
   dfdxi_out << 0, 0, 0, 0.5 * h * h, h, 0, 0, 0,
       0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A), 0, 0, h;
+}
+
+void TrajectorySmootherNLOpt::CalculateCommonDataIfNecessary(
+    const Eigen::VectorXd& u) {
+  if (u != last_u_ || last_u_.size() != u.size()) {
+    last_u_ = u;
+    IntegrateModel(x0_, u, u.rows() - 1, u(u.rows() - 1), X_, dXdU_);
+  }
 }
 
 }  // namespace planning

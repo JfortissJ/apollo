@@ -129,6 +129,8 @@ class TrajectorySmootherNLOpt {
   void IntegrateModel(const Eigen::VectorXd& x0, const Eigen::VectorXd& u,
                       const size_t num_integration_steps, const double h, Eigen::VectorXd& X,
                       Eigen::MatrixXd& dXdU);
+
+  void CalculateCommonDataIfNecessary( const Eigen::VectorXd & u );
  private:
   void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d & x_out);
   void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h, Matrix6d& dfdx_out);
@@ -148,7 +150,7 @@ class TrajectorySmootherNLOpt {
   Vector6d currx_;
   Matrix6d currA_;
   Eigen::MatrixXd currB_; // dimX x dimU
-  Eigen::MatrixXd last_u_;
+  Eigen::VectorXd last_u_;
 
   // why is this all using vector, not eigen? -> tk: because of the nlopt api.
   std::vector<double> u_;
@@ -166,6 +168,8 @@ class TrajectorySmootherNLOpt {
   SolverParameters solver_params_;
   ProblemParameters params_;
   bool ready_to_optimize_;
+  int input_traj_size_;
+  int subsampling_;
 
   //Indices and sizes of our model
   enum STATES {
