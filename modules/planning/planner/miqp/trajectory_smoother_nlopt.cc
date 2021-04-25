@@ -19,6 +19,8 @@
 
 #include <nlopt.h>
 
+#include <iostream>
+
 #include "cyber/common/log.h"
 
 // Create function pointers for nlopt outside the namespace
@@ -76,9 +78,17 @@ void TrajectorySmootherNLOpt::InitializeProblem(
 
   // set problem size
   int nr_intermediate_pts = (input_traj_size_ - 1) * subsampling_;
-  problem_size_ =
-      (input_traj_size_ + nr_intermediate_pts) * INPUTS::INPUTS_SIZE;
+  nr_integration_steps_ = input_traj_size_ + nr_intermediate_pts;
+  problem_size_ = nr_integration_steps_ * INPUTS::INPUTS_SIZE;
   u_.resize(problem_size_);
+  last_u_.resize(problem_size_);
+  // x_ is resized in IntegrateModel()
+
+  stepsize_ = input_trajectory.at(1).relative_time() -
+              input_trajectory.at(0).relative_time();
+  if (subsampling_ > 0) {
+    stepsize_ = stepsize_ / subsampling_;
+  }
 
   // set x0 using the reference traj
   x0_[STATES::X] = input_trajectory.front().path_point().x();
@@ -241,12 +251,12 @@ int TrajectorySmootherNLOpt::Optimize() {
 
 double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
                                                   double* grad) {
-//   // example problem
-//   if (grad) {
-//     grad[0] = 0.0;
-//     grad[1] = 0.5 / sqrt(x[1]);
-//   }
-//   return sqrt(x[1]);
+  //   // example problem
+  //   if (grad) {
+  //     grad[0] = 0.0;
+  //     grad[1] = 0.5 / sqrt(x[1]);
+  //   }
+  //   return sqrt(x[1]);
 
   double J = 0;
   Map<const VectorXd> u_eigen(x, n);
@@ -356,18 +366,27 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
     row_idx = i * dimX;
     row_idx_before = (i - 1) * dimX;
 
+    // TODO Klemens & Tobias: u is a dimU x N vector and not a matrix...!
+    Eigen::Vector2d u_curr =
+        u.block<dimU, 1>(i * dimU, 0);  // was: u.col(i - 1)
+
     const Vector6d& x_before = X.block<dimX, 1>(row_idx_before, 0);
-    model_f(x_before, u.col(i - 1), h, currx_);
-    model_dfdx(x_before, u.col(i - 1), h, currA_);
-    model_dfdu(x_before, u.col(i - 1), h, currB_);
+    model_f(x_before, u_curr, h, currx_);
+    model_dfdx(x_before, u_curr, h, currA_);
+    model_dfdu(x_before, u_curr, h, currB_);
 
     X.block<dimX, 1>(row_idx, 0) = currx_;
     dXdU.block<dimX, dimU>(row_idx, (i - 1) * dimU) = currB_;
-    dXdU.block<dimX, dimU>(row_idx, dimU * N) =
-        currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * N);
 
-    for (size_t n = 1; n < i; ++n) {
-      u_idx = (n - 1) * dimU;
+    // TODO Klemens & Tobias: N-1 here was N. but this does not make sense to me
+    // + it crashes of course....
+    std::cerr << "dXdU = " << dXdU << std::endl;
+    std::cerr << "N = " << N << "row idx = " << row_idx;
+    dXdU.block<dimX, dimU>(row_idx, dimU * (N - 1)) =
+        currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * (N - 1));
+
+    for (size_t idx_n = 1; idx_n < i; ++idx_n) {
+      u_idx = (idx_n - 1) * dimU;
       dXdU.block<dimX, dimU>(row_idx, u_idx) =
           currA_ * dXdU.block<dimX, dimU>(row_idx_before, u_idx);
     }
@@ -442,7 +461,7 @@ void TrajectorySmootherNLOpt::CalculateCommonDataIfNecessary(
     const Eigen::VectorXd& u) {
   if (u != last_u_ || last_u_.size() != u.size()) {
     last_u_ = u;
-    IntegrateModel(x0_, u, u.rows() - 1, u(u.rows() - 1), X_, dXdU_);
+    IntegrateModel(x0_, u, nr_integration_steps_, stepsize_, X_, dXdU_);
   }
 }
 

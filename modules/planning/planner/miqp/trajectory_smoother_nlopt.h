@@ -172,6 +172,8 @@ class TrajectorySmootherNLOpt {
   bool ready_to_optimize_;
   int input_traj_size_;
   int subsampling_;
+  double stepsize_;
+  int nr_integration_steps_;
 
   //Indices and sizes of our model
   enum STATES {
