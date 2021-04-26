@@ -20,7 +20,9 @@
 #include <cmath>
 
 #include "cyber/common/file.h"
+#include "gflags/gflags.h"
 #include "gtest/gtest.h"
+#include "modules/planning/common/trajectory/publishable_trajectory.h"
 #include "modules/planning/proto/planning.pb.h"
 
 namespace apollo {
@@ -85,7 +87,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
                                               &trajectory));
   DiscretizedTrajectory traj_in(trajectory);
   const double dt_in = 1.0;
-  const double T_in = (traj_in.NumOfPoints()-1)*dt_in;
+  const double T_in = (traj_in.NumOfPoints() - 1) * dt_in;
 
   // OPTIMIZER
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
@@ -98,22 +100,19 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
           << traj_opt[trajidx].DebugString();
   }
 
+  apollo::planning::PublishableTrajectory publishable_trajectory(0.0, traj_opt);
+  ADCTrajectory traj_pb;
+  publishable_trajectory.PopulateTrajectoryProtobuf(&traj_pb);
+
+  // This will dump the optimized trajectory. Analysis is possible using the
+  // matlab script analyze_smoother.m
+  const std::string txt_file =
+      "modules/planning/planner/miqp/miqp_testdata/sqp_traj_out.pb.txt";
+  apollo::cyber::common::SetProtoToASCIIFile(traj_pb, txt_file);
+
   EXPECT_DOUBLE_EQ(traj_in.GetTemporalLength(), T_in);
   EXPECT_DOUBLE_EQ(traj_opt.GetTemporalLength(), T_in);
 
-  // auto p1 = discretized_trajectory.Evaluate(4.0);
-  // EXPECT_DOUBLE_EQ(p1.path_point().x(), 587263.01182131236);
-  // EXPECT_DOUBLE_EQ(p1.path_point().y(), 4140966.5720794979);
-  // EXPECT_DOUBLE_EQ(p1.relative_time(), 4.0);
-  // EXPECT_DOUBLE_EQ(p1.v(), 5.4412586837131443);
-
-  // // auto k1 = discretized_trajectory.QueryLowerBoundPoint(2.12);
-  // // EXPECT_EQ(k1, 62);
-
-  // // auto k2 = discretized_trajectory.QueryNearestPoint({587264.0, 4140966.2});
-  // // EXPECT_EQ(k2, 80);
-
-  // // EXPECT_EQ(discretized_trajectory.NumOfPoints(), 121);
 }
 
 TEST(TrajectorySmootherNLOpt, model_f) {
