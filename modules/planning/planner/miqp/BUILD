@@ -35,11 +35,19 @@ cc_library(
     ]
 )
 
+filegroup(
+    name = "miqp_testdata",
+    srcs = glob([
+        "miqp_testdata/**",
+    ]),
+)
+
 cc_test(
     name = "trajectory_smoother_nlopt_test",
     srcs = ["trajectory_smoother_nlopt_test.cc"],
     deps = ["@gtest//:main",
-            ":trajectory_smoother_nlopt",],
+            ":trajectory_smoother_nlopt"],
+    data = [":miqp_testdata"]
 )
 
 cpplint()

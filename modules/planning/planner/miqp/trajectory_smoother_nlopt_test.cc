@@ -19,6 +19,7 @@
 
 #include <cmath>
 
+#include "cyber/common/file.h"
 #include "gtest/gtest.h"
 #include "modules/planning/proto/planning.pb.h"
 
@@ -72,7 +73,33 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
           << traj_opt[trajidx].DebugString();
   }
-  EXPECT_GT(status, 5);
+  EXPECT_GT(status, 1);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
+  const std::string path_of_standard_trajectory =
+      "modules/planning/planner/miqp/miqp_testdata/test_trajectory_miqp.pb.txt";
+  ADCTrajectory trajectory;
+  EXPECT_TRUE(cyber::common::GetProtoFromFile(path_of_standard_trajectory,
+                                              &trajectory));
+  DiscretizedTrajectory discretized_trajectory(trajectory);
+  // EXPECT_DOUBLE_EQ(discretized_trajectory.GetTemporalLength(),
+  //                  7.9999999999999885);
+  // EXPECT_DOUBLE_EQ(discretized_trajectory.GetSpatialLength(),
+  //                  44.752319202675167);
+  // auto p1 = discretized_trajectory.Evaluate(4.0);
+  // EXPECT_DOUBLE_EQ(p1.path_point().x(), 587263.01182131236);
+  // EXPECT_DOUBLE_EQ(p1.path_point().y(), 4140966.5720794979);
+  // EXPECT_DOUBLE_EQ(p1.relative_time(), 4.0);
+  // EXPECT_DOUBLE_EQ(p1.v(), 5.4412586837131443);
+
+  // auto k1 = discretized_trajectory.QueryLowerBoundPoint(2.12);
+  // EXPECT_EQ(k1, 62);
+
+  // auto k2 = discretized_trajectory.QueryNearestPoint({587264.0, 4140966.2});
+  // EXPECT_EQ(k2, 80);
+
+  // EXPECT_EQ(discretized_trajectory.NumOfPoints(), 121);
 }
 
 TEST(TrajectorySmootherNLOpt, model_f) {
@@ -101,13 +128,13 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelConstInput) {
   size_t dimX = 6;
   size_t num_integration_steps = 3;
   Eigen::VectorXd u;
-  u.resize(dimU*num_integration_steps);
+  u.resize(dimU * num_integration_steps);
   u << 0.2, 0.5, 0.2, 0.5, 0.2, 0.5;
   const double h = 0.1;
   Eigen::VectorXd X;
   Eigen::MatrixXd dXdU;
   tsm.IntegrateModel(x0, u, num_integration_steps, h, X, dXdU);
-  
+
   EXPECT_NEAR(X(0), 0, 1e-9);
   EXPECT_NEAR(X(1), 0, 1e-9);
   EXPECT_NEAR(X(2), 0, 1e-9);
@@ -115,19 +142,19 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelConstInput) {
   EXPECT_NEAR(X(4), 0, 1e-9);
   EXPECT_NEAR(X(5), 0, 1e-9);
 
-  EXPECT_NEAR(X(1*dimX + 0), 0.1000, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 1), 0, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 2), 0.0025, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 3), 1.0010, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 4), 0.0200, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 5), 0.0500, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 0), 0.1000, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 1), 0, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 2), 0.0025, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 3), 1.0010, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 4), 0.0200, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 5), 0.0500, 1e-9);
 
-  EXPECT_NEAR(X(2*dimX + 0), 0.200198431250459, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 1), 5.014970864425282e-4, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 2), 0.0100175, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 3), 1.004, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 4), 0.04, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 5), 0.1, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 0), 0.200198431250459, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 1), 5.014970864425282e-4, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 2), 0.0100175, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 3), 1.004, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 4), 0.04, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 5), 0.1, 1e-9);
 }
 
 TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
@@ -138,7 +165,7 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
   size_t dimX = 6;
   size_t num_integration_steps = 3;
   Eigen::VectorXd u;
-  u.resize(dimU*num_integration_steps);
+  u.resize(dimU * num_integration_steps);
   u << 0.2, 0.5, 0.3, 0.6, 0.1, 0.4;
   const double h = 0.1;
   Eigen::VectorXd X;
@@ -146,7 +173,7 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
   tsm.IntegrateModel(x0, u, num_integration_steps, h, X, dXdU);
   std::cout << "X:" << std::endl << X << std::endl;
   std::cout << "dXdU:" << std::endl << dXdU << std::endl;
-  
+
   EXPECT_NEAR(X(0), 0, 1e-9);
   EXPECT_NEAR(X(1), 0, 1e-9);
   EXPECT_NEAR(X(2), 0, 1e-9);
@@ -154,19 +181,19 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
   EXPECT_NEAR(X(4), 0, 1e-9);
   EXPECT_NEAR(X(5), 0, 1e-9);
 
-  EXPECT_NEAR(X(1*dimX + 0), 0.1000, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 1), 0, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 2), 0.0025, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 3), 1.001, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 4), 0.02, 1e-9);
-  EXPECT_NEAR(X(1*dimX + 5), 0.05, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 0), 0.1000, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 1), 0, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 2), 0.0025, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 3), 1.001, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 4), 0.02, 1e-9);
+  EXPECT_NEAR(X(1 * dimX + 5), 0.05, 1e-9);
 
-  EXPECT_NEAR(X(2*dimX + 0), 0.200198431250459, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 1), 5.014970864425282e-04, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 2), 0.010519, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 3), 1.0045, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 4), 0.05, 1e-9);
-  EXPECT_NEAR(X(2*dimX + 5), 0.11, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 0), 0.200198431250459, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 1), 5.014970864425282e-04, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 2), 0.010519, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 3), 1.0045, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 4), 0.05, 1e-9);
+  EXPECT_NEAR(X(2 * dimX + 5), 0.11, 1e-9);
 }
 
 // TEST 1: Integration Model
