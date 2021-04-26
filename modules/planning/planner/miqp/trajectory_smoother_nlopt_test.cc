@@ -73,7 +73,7 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
           << traj_opt[trajidx].DebugString();
   }
-  EXPECT_GT(status, 1);
+  EXPECT_GT(status, 0);
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
@@ -91,7 +91,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
   tsm.InitializeProblem(0, traj_in, 0);
   int status = tsm.Optimize();
-  EXPECT_GT(status, 1);
+  EXPECT_GT(status, 0);
   auto traj_opt = tsm.GetOptimizedTrajectory();
   for (int trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
