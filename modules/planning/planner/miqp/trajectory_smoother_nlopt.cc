@@ -259,18 +259,20 @@ DiscretizedTrajectory TrajectorySmootherNLOpt::GetOptimizedTrajectory() {
   DiscretizedTrajectory traj;
   const int size_state_vector = X_.rows();
   for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
-      common::TrajectoryPoint tp;
-      tp.mutable_path_point()->set_x(X_[idx * STATES::STATES_SIZE + STATES::X]);
-      tp.mutable_path_point()->set_y(X_[idx * STATES::STATES_SIZE + STATES::Y]);
-      tp.mutable_path_point()->set_s(0); // TODO
-      tp.mutable_path_point()->set_theta(X_[idx * STATES::STATES_SIZE + STATES::THETA]);
-      tp.mutable_path_point()->set_kappa(X_[idx * STATES::STATES_SIZE + STATES::KAPPA]);
-      tp.mutable_path_point()->set_dkappa(0); // TODO
-      tp.set_v(X_[idx * STATES::STATES_SIZE + STATES::V]);
-      tp.set_a(X_[idx * STATES::STATES_SIZE + STATES::A]);
-      tp.set_da(0); // TODO
-      tp.set_relative_time(idx*stepsize_); // start with 0 or reference(t(0))?
-      traj.AppendTrajectoryPoint(tp);
+    common::TrajectoryPoint tp;
+    tp.mutable_path_point()->set_x(X_[idx * STATES::STATES_SIZE + STATES::X]);
+    tp.mutable_path_point()->set_y(X_[idx * STATES::STATES_SIZE + STATES::Y]);
+    tp.mutable_path_point()->set_s(0);  // TODO
+    tp.mutable_path_point()->set_theta(
+        X_[idx * STATES::STATES_SIZE + STATES::THETA]);
+    tp.mutable_path_point()->set_kappa(
+        X_[idx * STATES::STATES_SIZE + STATES::KAPPA]);
+    tp.mutable_path_point()->set_dkappa(0);  // TODO
+    tp.set_v(X_[idx * STATES::STATES_SIZE + STATES::V]);
+    tp.set_a(X_[idx * STATES::STATES_SIZE + STATES::A]);
+    tp.set_da(0);                           // TODO
+    tp.set_relative_time(idx * stepsize_);  // start with 0 or reference(t(0))?
+    traj.AppendTrajectoryPoint(tp);
   }
   return traj;
 }
@@ -451,10 +453,10 @@ void TrajectorySmootherNLOpt::model_dfdx(const Vector6d& x,
   const double dy1_dth0 =
       0.5 * h * x(STATES::V) * costh + 0.5 * h * c1 * cos(c2);
 
-  const double dx1_dv0 =
-      0.5 * h * costh + 0.5 * h * cos(c2) - 0.5 * h * c1 * sin(c2);
-  const double dy1_dv0 =
-      0.5 * h * sinth + 0.5 * h * sin(c2) + 0.5 * h * c1 * cos(c2);
+  const double dx1_dv0 = 0.5 * h * costh + 0.5 * h * cos(c2) -
+                         0.5 * pow(h, 2) * x(STATES::KAPPA) * c1 * sin(c2);
+  const double dy1_dv0 = 0.5 * h * sinth + 0.5 * h * sin(c2) +
+                         0.5 * pow(h, 2) * x(STATES::KAPPA) * c1 * cos(c2);
   const double dth1_dv0 =
       h * x(STATES::KAPPA) + 0.5 * pow(h, 2) * u(INPUTS::XI);
 
@@ -476,7 +478,7 @@ void TrajectorySmootherNLOpt::model_dfdu(const Vector6d& x,
                                          const Eigen::Vector2d& u,
                                          const double h,
                                          Eigen::MatrixXd& dfdxi_out) {
-  dfdxi_out << 0, 0, 0, 0.5 * h * h, h, 0, 0, 0,
+  dfdxi_out << 0, 0, 0, 0.5 * pow(h, 2), h, 0, 0, 0,
       0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A), 0, 0, h;
 }
 
