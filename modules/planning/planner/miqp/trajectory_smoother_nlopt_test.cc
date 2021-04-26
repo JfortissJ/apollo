@@ -90,21 +90,82 @@ TEST(TrajectorySmootherNLOpt, model_f) {
   EXPECT_NEAR(x_out(5), 0.05, 1e-9);
 }
 
-TEST(TrajectorySmootherNLOpt, IntegrateModel) {
+TEST(TrajectorySmootherNLOpt, IntegrateModelConstInput) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
   TrajectorySmootherNLOpt::Vector6d x0;
   x0 << 0.0, 0.0, 0.0, 1.0, 0.0, 0.0;
-  size_t num_integration_steps = 1;
+  size_t dimU = 2;
+  size_t dimX = 6;
+  size_t num_integration_steps = 3;
   Eigen::VectorXd u;
-  u.resize(2,3);
+  u.resize(dimU*num_integration_steps);
   u << 0.2, 0.5, 0.2, 0.5, 0.2, 0.5;
   const double h = 0.1;
   Eigen::VectorXd X;
   Eigen::MatrixXd dXdU;
   tsm.IntegrateModel(x0, u, num_integration_steps, h, X, dXdU);
-  std::cout << X << std::endl;
-  std::cout << dXdU << std::endl;
+  
+  EXPECT_NEAR(X(0), 0, 1e-9);
+  EXPECT_NEAR(X(1), 0, 1e-9);
+  EXPECT_NEAR(X(2), 0, 1e-9);
+  EXPECT_NEAR(X(3), 1, 1e-9);
+  EXPECT_NEAR(X(4), 0, 1e-9);
+  EXPECT_NEAR(X(5), 0, 1e-9);
+
+  EXPECT_NEAR(X(1*dimX + 0), 0.1000, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 1), 0, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 2), 0.0025, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 3), 1.0010, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 4), 0.0200, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 5), 0.0500, 1e-9);
+
+  EXPECT_NEAR(X(2*dimX + 0), 0.200198431250459, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 1), 5.014970864425282e-4, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 2), 0.0100175, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 3), 1.004, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 4), 0.04, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 5), 0.1, 1e-9);
   EXPECT_TRUE(false);
+
+}
+
+TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt::Vector6d x0;
+  x0 << 0.0, 0.0, 0.0, 1.0, 0.0, 0.0;
+  size_t dimU = 2;
+  size_t dimX = 6;
+  size_t num_integration_steps = 3;
+  Eigen::VectorXd u;
+  u.resize(dimU*num_integration_steps);
+  u << 0.2, 0.5, 0.3, 0.6, 0.1, 0.4;
+  const double h = 0.1;
+  Eigen::VectorXd X;
+  Eigen::MatrixXd dXdU;
+  tsm.IntegrateModel(x0, u, num_integration_steps, h, X, dXdU);
+  std::cout << "X:" << std::endl << X << std::endl;
+  std::cout << "dXdU:" << std::endl << dXdU << std::endl;
+  
+  EXPECT_NEAR(X(0), 0, 1e-9);
+  EXPECT_NEAR(X(1), 0, 1e-9);
+  EXPECT_NEAR(X(2), 0, 1e-9);
+  EXPECT_NEAR(X(3), 1, 1e-9);
+  EXPECT_NEAR(X(4), 0, 1e-9);
+  EXPECT_NEAR(X(5), 0, 1e-9);
+
+  EXPECT_NEAR(X(1*dimX + 0), 0.1000, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 1), 0, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 2), 0.0025, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 3), 1.001, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 4), 0.02, 1e-9);
+  EXPECT_NEAR(X(1*dimX + 5), 0.05, 1e-9);
+
+  EXPECT_NEAR(X(2*dimX + 0), 0.200198431250459, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 1), 5.014970864425282e-04, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 2), 0.010519, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 3), 1.0045, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 4), 0.05, 1e-9);
+  EXPECT_NEAR(X(2*dimX + 5), 0.11, 1e-9);
 }
 
 // TEST 1: Integration Model
