@@ -77,29 +77,43 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
+  // INPUT DATA
   const std::string path_of_standard_trajectory =
       "modules/planning/planner/miqp/miqp_testdata/test_trajectory_miqp.pb.txt";
   ADCTrajectory trajectory;
   EXPECT_TRUE(cyber::common::GetProtoFromFile(path_of_standard_trajectory,
                                               &trajectory));
-  DiscretizedTrajectory discretized_trajectory(trajectory);
-  // EXPECT_DOUBLE_EQ(discretized_trajectory.GetTemporalLength(),
-  //                  7.9999999999999885);
-  // EXPECT_DOUBLE_EQ(discretized_trajectory.GetSpatialLength(),
-  //                  44.752319202675167);
+  DiscretizedTrajectory traj_in(trajectory);
+  const double dt_in = 1.0;
+  const double T_in = (traj_in.NumOfPoints()-1)*dt_in;
+
+  // OPTIMIZER
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  tsm.InitializeProblem(0, traj_in, 0);
+  int status = tsm.Optimize();
+  EXPECT_GT(status, 1);
+  auto traj_opt = tsm.GetOptimizedTrajectory();
+  for (int trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
+    AINFO << "Smoothed trajectory at i=" << trajidx << ": "
+          << traj_opt[trajidx].DebugString();
+  }
+
+  EXPECT_DOUBLE_EQ(traj_in.GetTemporalLength(), T_in);
+  EXPECT_DOUBLE_EQ(traj_opt.GetTemporalLength(), T_in);
+
   // auto p1 = discretized_trajectory.Evaluate(4.0);
   // EXPECT_DOUBLE_EQ(p1.path_point().x(), 587263.01182131236);
   // EXPECT_DOUBLE_EQ(p1.path_point().y(), 4140966.5720794979);
   // EXPECT_DOUBLE_EQ(p1.relative_time(), 4.0);
   // EXPECT_DOUBLE_EQ(p1.v(), 5.4412586837131443);
 
-  // auto k1 = discretized_trajectory.QueryLowerBoundPoint(2.12);
-  // EXPECT_EQ(k1, 62);
+  // // auto k1 = discretized_trajectory.QueryLowerBoundPoint(2.12);
+  // // EXPECT_EQ(k1, 62);
 
-  // auto k2 = discretized_trajectory.QueryNearestPoint({587264.0, 4140966.2});
-  // EXPECT_EQ(k2, 80);
+  // // auto k2 = discretized_trajectory.QueryNearestPoint({587264.0, 4140966.2});
+  // // EXPECT_EQ(k2, 80);
 
-  // EXPECT_EQ(discretized_trajectory.NumOfPoints(), 121);
+  // // EXPECT_EQ(discretized_trajectory.NumOfPoints(), 121);
 }
 
 TEST(TrajectorySmootherNLOpt, model_f) {
