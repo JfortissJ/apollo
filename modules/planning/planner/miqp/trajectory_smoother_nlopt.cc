@@ -249,6 +249,26 @@ int TrajectorySmootherNLOpt::Optimize() {
   return status_;
 }
 
+DiscretizedTrajectory TrajectorySmootherNLOpt::GetOptimizedTrajectory() {
+  DiscretizedTrajectory traj;
+  const int size_state_vector = X_.rows();
+  for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
+      common::TrajectoryPoint tp;
+      tp.mutable_path_point()->set_x(X_[idx * STATES::STATES_SIZE + STATES::X]);
+      tp.mutable_path_point()->set_y(X_[idx * STATES::STATES_SIZE + STATES::Y]);
+      tp.mutable_path_point()->set_s(0); // TODO
+      tp.mutable_path_point()->set_theta(X_[idx * STATES::STATES_SIZE + STATES::THETA]);
+      tp.mutable_path_point()->set_kappa(X_[idx * STATES::STATES_SIZE + STATES::KAPPA]);
+      tp.mutable_path_point()->set_dkappa(0); // TODO
+      tp.set_v(X_[idx * STATES::STATES_SIZE + STATES::V]);
+      tp.set_a(X_[idx * STATES::STATES_SIZE + STATES::A]);
+      tp.set_da(0); // TODO
+      tp.set_relative_time(idx*stepsize_); // start with 0 or reference(t(0))?
+      traj.AppendTrajectoryPoint(tp);
+  }
+  return traj;
+}
+
 double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
                                                   double* grad) {
   //   // example problem

@@ -105,6 +105,8 @@ class TrajectorySmootherNLOpt {
                          const DiscretizedTrajectory& input_trajectory,
                          double initial_steering = 0.0f);
 
+	DiscretizedTrajectory GetOptimizedTrajectory();
+  
   // TODO(@Tobias)
   // take care of different length of reference -> only use costs on reference
   // at pts where there is one

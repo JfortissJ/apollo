@@ -48,7 +48,6 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
   tp1.mutable_path_point()->set_theta(0);
   tp1.mutable_path_point()->set_kappa(0);
   tp1.mutable_path_point()->set_dkappa(0);
-  tp1.mutable_path_point()->set_dkappa(0);
   tp1.set_v(0);
   tp1.set_a(0);
   tp1.set_da(0);
@@ -61,7 +60,6 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
   tp2.mutable_path_point()->set_theta(0);
   tp2.mutable_path_point()->set_kappa(0);
   tp2.mutable_path_point()->set_dkappa(0);
-  tp2.mutable_path_point()->set_dkappa(0);
   tp2.set_v(1);
   tp2.set_a(1);
   tp2.set_da(0);
@@ -69,7 +67,12 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
   traj.AppendTrajectoryPoint(tp2);
   tsm.InitializeProblem(0, traj, 0);
   int status = tsm.Optimize();
-  EXPECT_GT(status, 0);
+  auto traj_opt = tsm.GetOptimizedTrajectory();
+  for (int trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
+    AINFO << "Smoothed trajectory at i=" << trajidx << ": "
+          << traj_opt[trajidx].DebugString();
+  }
+  EXPECT_GT(status, 5);
 }
 
 TEST(TrajectorySmootherNLOpt, model_f) {
