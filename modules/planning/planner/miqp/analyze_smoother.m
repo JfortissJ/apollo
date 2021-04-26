@@ -18,44 +18,51 @@ subplot(4,1,2)
 hold on
 plot(miqp_traj.relative_time, miqp_traj.a, '-.')
 plot(sqp_traj.relative_time, sqp_traj.a)
-legend('miqp_traj', 'sqp_traj')
+legend('miqp', 'sqp')
 ylabel('a')
 
 subplot(4,1,3)
 hold on
 plot(miqp_traj.relative_time, miqp_traj.v, '-.')
 plot(sqp_traj.relative_time, sqp_traj.v)
-legend('miqp_traj', 'sqp_traj')
+legend('miqp', 'sqp')
 ylabel('v')
 
 subplot(4,1,4)
 hold on
 plot(miqp_traj.relative_time, miqp_traj.s, '-.')
 plot(sqp_traj.relative_time, sqp_traj.s)
-legend('miqp_traj', 'sqp_traj')
+legend('miqp', 'sqp')
 ylabel('s')
 
 figure
-subplot(3,1,1)
+subplot(4,1,1)
 hold on
 plot(miqp_traj.relative_time, miqp_traj.x, '-.')
 plot(sqp_traj.relative_time, sqp_traj.x)
-legend('miqp_traj', 'sqp_traj')
+legend('miqp', 'sqp')
 ylabel('x')
 
-subplot(3,1,2)
+subplot(4,1,2)
 hold on
 plot(miqp_traj.relative_time, miqp_traj.y, '-.')
 plot(sqp_traj.relative_time, sqp_traj.y)
-legend('miqp_traj', 'sqp_traj')
+legend('miqp', 'sqp')
 ylabel('y')
 
-subplot(3,1,3)
+subplot(4,1,3)
 hold on
 plot(miqp_traj.relative_time, miqp_traj.theta, '-.')
 plot(sqp_traj.relative_time, sqp_traj.theta)
-legend('miqp_traj', 'sqp_traj')
+legend('miqp', 'sqp')
 ylabel('theta')
+
+subplot(4,1,4)
+hold on
+plot(miqp_traj.relative_time, miqp_traj.kappa, '-.')
+plot(sqp_traj.relative_time, sqp_traj.kappa)
+legend('miqp', 'sqp')
+ylabel('kappa')
 
 %%
 function [t] = ReadTrajectory(rootpath, filename)

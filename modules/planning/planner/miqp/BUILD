@@ -46,7 +46,8 @@ cc_test(
     name = "trajectory_smoother_nlopt_test",
     srcs = ["trajectory_smoother_nlopt_test.cc"],
     deps = ["@gtest//:main",
-            ":trajectory_smoother_nlopt"],
+            ":trajectory_smoother_nlopt",
+            "//modules/planning/common/trajectory:publishable_trajectory"],
     data = [":miqp_testdata"]
 )
 
