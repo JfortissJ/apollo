@@ -31,16 +31,16 @@ class TrajectorySmootherNLOpt {
     ProblemParameters() : 
     cost_offset_x(1),
     cost_offset_y(1),
-    cost_offset_theta(0.1),
-    cost_offset_v(1.0/0.5),
-    cost_curvature(0.1),
-    cost_acceleration(1.0/0.5/0.5),
-    cost_curvature_change(0.5),
-    cost_acceleration_change(0.5),
-    lower_bound_jerk(-1),
-    upper_bound_jerk(1),
-    lower_bound_curvature_change(-1),
-    upper_bound_curvature_change(1) {}
+    cost_offset_theta(0),
+    cost_offset_v(0),
+    cost_curvature(0),
+    cost_acceleration(0),
+    cost_curvature_change(0),
+    cost_acceleration_change(0),
+    lower_bound_jerk(-0.5),
+    upper_bound_jerk(0.5),
+    lower_bound_curvature_change(-0.1),
+    upper_bound_curvature_change(0.1) {}
     // costs for deviation from the initial reference
     double cost_offset_x;
     double cost_offset_y;
@@ -96,20 +96,12 @@ class TrajectorySmootherNLOpt {
 
   int Optimize();
 
-  // initialize the optimization problem
-  // initialize _X_ref, lb und ub of inputs, _x0
-  // TODO(@Klemens)
-  // TODO what is the best interface for the input traj? custom matrix? apollo
-  // adctraj format?
   void InitializeProblem(const int subsampling,
                          const DiscretizedTrajectory& input_trajectory,
                          double initial_steering = 0.0f);
 
 	DiscretizedTrajectory GetOptimizedTrajectory();
   
-  // TODO(@Tobias)
-  // take care of different length of reference -> only use costs on reference
-  // at pts where there is one
   // has to be public due to the function pointer wrapper
   double ObjectiveFunction(unsigned n, const double* x, double* grad);
 
@@ -122,11 +114,11 @@ class TrajectorySmootherNLOpt {
 
   std::vector<double>& GetInputVector() { return u_; }
 
-  // TODO(@Klemens): Heuns Method, fill block matrices A_
+  // Heuns Method, fill block matrices A_
   // x0: state at t=0 -> from vehicle state
   // u: initial input vector -> chosen by optimizer
   // X: stacked state vector over time
-  // dXdU
+  // dXdU: X derived by u
   void IntegrateModel(const Vector6d& x0, const Eigen::VectorXd& u,
                       const size_t num_integration_steps, const double h, Eigen::VectorXd& X,
                       Eigen::MatrixXd& dXdU);
@@ -176,6 +168,7 @@ class TrajectorySmootherNLOpt {
   int subsampling_;
   double stepsize_;
   int nr_integration_steps_;
+  double initial_time_;
 
   //Indices and sizes of our model
   enum STATES {

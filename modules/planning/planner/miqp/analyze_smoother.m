@@ -3,8 +3,8 @@ close all
 clear all
 
 rootpath = 'miqp_testdata'
-miqp_traj = ReadTrajectory(rootpath, 'test_trajectory_miqp.pb.txt')
-sqp_traj = ReadTrajectory(rootpath, 'sqp_traj_out.pb.txt')
+miqp_traj = ReadTrajectory(rootpath, 'test_trajectory_miqp_from_standstill.pb.txt')
+sqp_traj = ReadTrajectory(rootpath, 'sqp_out_test_trajectory_miqp_from_standstill.pb.txt')
 
 figure
 subplot(4,1,1)
@@ -30,10 +30,10 @@ ylabel('v')
 
 subplot(4,1,4)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.s, '-.')
-plot(sqp_traj.relative_time, sqp_traj.s)
+plot(miqp_traj.relative_time, miqp_traj.dkappa, '-.')
+plot(sqp_traj.relative_time, sqp_traj.dkappa)
 legend('miqp', 'sqp')
-ylabel('s')
+ylabel('dkappa')
 
 figure
 subplot(4,1,1)
@@ -63,6 +63,7 @@ plot(miqp_traj.relative_time, miqp_traj.kappa, '-.')
 plot(sqp_traj.relative_time, sqp_traj.kappa)
 legend('miqp', 'sqp')
 ylabel('kappa')
+
 
 %%
 function [t] = ReadTrajectory(rootpath, filename)

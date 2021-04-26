@@ -89,6 +89,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   if (subsampling_ > 0) {
     stepsize_ = stepsize_ / subsampling_;
   }
+  initial_time_ = input_trajectory.at(0).relative_time();
 
   // set x0 using the reference traj
   x0_[STATES::X] = input_trajectory.front().path_point().x();
@@ -258,33 +259,38 @@ int TrajectorySmootherNLOpt::Optimize() {
 DiscretizedTrajectory TrajectorySmootherNLOpt::GetOptimizedTrajectory() {
   DiscretizedTrajectory traj;
   const int size_state_vector = X_.rows();
+  double s = 0.0f;
+  double lastx = X_[STATES::X];
+  double lasty = X_[STATES::Y];
   for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
     common::TrajectoryPoint tp;
-    tp.mutable_path_point()->set_x(X_[idx * STATES::STATES_SIZE + STATES::X]);
-    tp.mutable_path_point()->set_y(X_[idx * STATES::STATES_SIZE + STATES::Y]);
-    tp.mutable_path_point()->set_s(0);  // TODO
+    const double x = X_[idx * STATES::STATES_SIZE + STATES::X];
+    const double y = X_[idx * STATES::STATES_SIZE + STATES::Y];
+    tp.mutable_path_point()->set_x(x);
+    tp.mutable_path_point()->set_y(y);
+    s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
+    tp.mutable_path_point()->set_s(s);
     tp.mutable_path_point()->set_theta(
         X_[idx * STATES::STATES_SIZE + STATES::THETA]);
     tp.mutable_path_point()->set_kappa(
         X_[idx * STATES::STATES_SIZE + STATES::KAPPA]);
-    tp.mutable_path_point()->set_dkappa(0);  // TODO
     tp.set_v(X_[idx * STATES::STATES_SIZE + STATES::V]);
     tp.set_a(X_[idx * STATES::STATES_SIZE + STATES::A]);
-    tp.set_da(0);                           // TODO
-    tp.set_relative_time(idx * stepsize_);  // start with 0 or reference(t(0))?
+    // TODO do we have to use idx-1 for the inputs?
+    tp.set_da(u_[idx * INPUTS::INPUTS_SIZE + INPUTS::J]);
+    tp.mutable_path_point()->set_dkappa(u_[idx * INPUTS::INPUTS_SIZE + INPUTS::XI]);
+    tp.set_relative_time(initial_time_ + idx * stepsize_);
     traj.AppendTrajectoryPoint(tp);
+    lastx = x;
+    lasty = y;
   }
   return traj;
 }
 
 double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
                                                   double* grad) {
-  //   // example problem
-  //   if (grad) {
-  //     grad[0] = 0.0;
-  //     grad[1] = 0.5 / sqrt(x[1]);
-  //   }
-  //   return sqrt(x[1]);
+
+  //TODO optimize computation time: only compute values if the respective cost terms are nonzero!
 
   double J = 0;
   Map<const VectorXd> u_eigen(x, n);
@@ -365,7 +371,9 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
     unsigned m, double* result, unsigned n, const double* x, double* grad) {}
 
 void TrajectorySmootherNLOpt::EqualityConstraintFunction(
-    unsigned m, double* result, unsigned n, const double* x, double* grad) {}
+    unsigned m, double* result, unsigned n, const double* x, double* grad) {
+  // TODO Fix u0 here!
+}
 
 void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
                                              const Eigen::VectorXd& u,
@@ -400,9 +408,6 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
     X.block<dimX, 1>(row_idx, 0) = currx_;
     dXdU.block<dimX, dimU>(row_idx, (i - 1) * dimU) = currB_;
 
-    // std::cerr << "dXdU = " << dXdU << std::endl;
-    // std::cerr << "N = " << N << ",row idx = " << row_idx << ",i = " << i
-    //           << std::endl;
     dXdU.block<dimX, dimU>(row_idx, dimU * (N - 1)) =
         currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * (N - 1));
 
