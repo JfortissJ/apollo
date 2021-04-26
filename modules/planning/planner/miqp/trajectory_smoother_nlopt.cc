@@ -355,7 +355,7 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
   X.resize(dimX * N);
   X.block<dimX, 1>(0, 0) = x0;
 
-  dXdU.resize(dimX * N, dimU * (N + 1));
+  dXdU.resize(dimX * N, dimU * N);
   dXdU.fill(0.0f);
 
   currB_.resize(dimX, dimU);
@@ -366,20 +366,21 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
     row_idx = i * dimX;
     row_idx_before = (i - 1) * dimX;
 
-    Eigen::Vector2d u_before = u.block<dimU, 1>((i-1) * dimU, 0);
+    Eigen::Vector2d u_curr = u.block<dimU, 1>((i - 1) * dimU, 0);
 
     const Vector6d& x_before = X.block<dimX, 1>(row_idx_before, 0);
-    model_f(x_before, u_before, h, currx_);
-    model_dfdx(x_before, u_before, h, currA_);
-    model_dfdu(x_before, u_before, h, currB_);
+    model_f(x_before, u_curr, h, currx_);
+    model_dfdx(x_before, u_curr, h, currA_);
+    model_dfdu(x_before, u_curr, h, currB_);
 
     X.block<dimX, 1>(row_idx, 0) = currx_;
     dXdU.block<dimX, dimU>(row_idx, (i - 1) * dimU) = currB_;
 
     std::cerr << "dXdU = " << dXdU << std::endl;
-    std::cerr << "N = " << N << "row idx = " << row_idx;
-    dXdU.block<dimX, dimU>(row_idx, dimU * N) =
-        currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * N);
+    std::cerr << "N = " << N << ",row idx = " << row_idx << ",i = " << i
+              << std::endl;
+    dXdU.block<dimX, dimU>(row_idx, dimU * (N - 1)) =
+        currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * (N - 1));
 
     for (size_t idx_n = 1; idx_n < i; ++idx_n) {
       u_idx = (idx_n - 1) * dimU;
