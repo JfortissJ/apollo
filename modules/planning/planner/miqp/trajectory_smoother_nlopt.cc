@@ -312,22 +312,18 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
       params_.cost_offset_theta, params_.cost_offset_v,
       params_.cost_acceleration, params_.cost_curvature;
   for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
-    if (idx % (subsampling_ + 1) == 0) {               // not a subsampled step
+    if (idx % (subsampling_ + 1) == 0) {  // not a subsampled step
+      size_t idx_vec = idx * STATES::STATES_SIZE;
+      size_t idx_vec_sub = idx / (subsampling_ + 1) * STATES::STATES_SIZE;
       for (int element = 0; element < 4; ++element) {  // only for x,y,theta,v
-        difference[idx * STATES::STATES_SIZE + element] =
-            X_[idx * STATES::STATES_SIZE + element] -
-            X_ref_[idx / (subsampling_ + 1) + element];
-        difference_costs[idx * STATES::STATES_SIZE + element] =
-            costs_state[element];
+        difference[idx_vec + element] =
+            X_[idx_vec + element] - X_ref_[idx_vec_sub + element];
+        difference_costs[idx_vec + element] = costs_state[element];
       }
-      absolute[idx * STATES::STATES_SIZE + STATES::A] =
-          X_[idx / (subsampling_ + 1) + STATES::A];
-      absolute_costs[idx * STATES::STATES_SIZE + STATES::A] =
-          costs_state[STATES::A];
-      absolute[idx * STATES::STATES_SIZE + STATES::KAPPA] =
-          X_[idx / (subsampling_ + 1) + STATES::KAPPA];
-      absolute_costs[idx * STATES::STATES_SIZE + STATES::KAPPA] =
-          costs_state[STATES::KAPPA];
+      absolute[idx_vec + STATES::A] = X_[idx_vec + STATES::A];
+      absolute_costs[idx_vec + STATES::A] = costs_state[STATES::A];
+      absolute[idx_vec + STATES::KAPPA] = X_[idx_vec + STATES::KAPPA];
+      absolute_costs[idx_vec + STATES::KAPPA] = costs_state[STATES::KAPPA];
     }
   }
 
@@ -404,9 +400,9 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
     X.block<dimX, 1>(row_idx, 0) = currx_;
     dXdU.block<dimX, dimU>(row_idx, (i - 1) * dimU) = currB_;
 
-    std::cerr << "dXdU = " << dXdU << std::endl;
-    std::cerr << "N = " << N << ",row idx = " << row_idx << ",i = " << i
-              << std::endl;
+    // std::cerr << "dXdU = " << dXdU << std::endl;
+    // std::cerr << "N = " << N << ",row idx = " << row_idx << ",i = " << i
+    //           << std::endl;
     dXdU.block<dimX, dimU>(row_idx, dimU * (N - 1)) =
         currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * (N - 1));
 
