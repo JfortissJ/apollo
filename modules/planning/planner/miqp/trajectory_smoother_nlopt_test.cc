@@ -125,8 +125,6 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelConstInput) {
   EXPECT_NEAR(X(2*dimX + 3), 1.004, 1e-9);
   EXPECT_NEAR(X(2*dimX + 4), 0.04, 1e-9);
   EXPECT_NEAR(X(2*dimX + 5), 0.1, 1e-9);
-  EXPECT_TRUE(false);
-
 }
 
 TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
