@@ -192,6 +192,12 @@ int TrajectorySmootherNLOpt::Optimize() {
     status_ = static_cast<int>(opt.optimize(u_, j_opt_));
   } catch (nlopt::roundoff_limited ex) {
     AWARN << "Roundoff limited exception:" << ex.what();
+  } catch (std::bad_alloc ex) {
+    AWARN << "Out of memory exception:" << ex.what();
+  } catch (std::invalid_argument ex) {
+    AWARN << "Invalid argument exception:" << ex.what();
+  } catch (std::runtime_error ex) {
+    AWARN << "Generic failure exception:" << ex.what();
   } catch (std::exception ex) {
     AERROR << "Unhandled Exception while optimization: " << ex.what();
     status_ = -11;
