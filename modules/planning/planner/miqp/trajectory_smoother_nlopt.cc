@@ -80,8 +80,6 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   int nr_intermediate_pts = (input_traj_size_ - 1) * subsampling_;
   nr_integration_steps_ = input_traj_size_ + nr_intermediate_pts;
   problem_size_ = nr_integration_steps_ * INPUTS::INPUTS_SIZE;
-  u_.resize(problem_size_);
-  last_u_.resize(problem_size_);
   // x_ is resized in IntegrateModel()
 
   stepsize_ = input_trajectory.at(1).relative_time() -
@@ -110,6 +108,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     offset += STATES::STATES_SIZE;
   }
 
+  u_.resize(problem_size_);
+  last_u_.resize(problem_size_);
   // set u0: start values for the optimizer
   // choose the intermediate points with the same jerk and xi as the previous
   // input point
@@ -117,11 +117,12 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   for (int idx_input = 0; idx_input < input_traj_size_; ++idx_input) {
     // not at the last idx --> do subsampling
     if (idx_input < input_traj_size_ - 1) {
-      for (int idx_subsample = 0; idx_subsample < subsampling_;
+      for (int idx_subsample = 0; idx_subsample <= subsampling_;
            ++idx_subsample) {
-        u_[idx_u + INPUTS::J] = input_trajectory.at(idx_input).da();
+        u_[idx_u + INPUTS::J] =
+            BoundedJerk(input_trajectory.at(idx_input).da());
         u_[idx_u + INPUTS::XI] =
-            input_trajectory.at(idx_input).path_point().dkappa();
+            BoundedCurvatureChange(input_trajectory.at(idx_input).path_point().dkappa());
         idx_u += INPUTS::INPUTS_SIZE;
       }
     } else {  // dont subsample last point
@@ -486,6 +487,16 @@ void TrajectorySmootherNLOpt::CalculateCommonDataIfNecessary(
     last_u_ = u;
     IntegrateModel(x0_, u, nr_integration_steps_, stepsize_, X_, dXdU_);
   }
+}
+
+double TrajectorySmootherNLOpt::BoundedJerk(const double val) {
+  return std::max(std::min(val, params_.upper_bound_jerk),
+                  params_.lower_bound_jerk);
+}
+
+double TrajectorySmootherNLOpt::BoundedCurvatureChange(const double val) {
+  return std::max(std::min(val, params_.upper_bound_curvature_change),
+                  params_.lower_bound_curvature_change);
 }
 
 }  // namespace planning

@@ -132,6 +132,11 @@ class TrajectorySmootherNLOpt {
   void model_dfdu( const Vector6d& x, const Eigen::Vector2d& u, const double h, Eigen::MatrixXd& dfdxi_out);
  
  private:
+
+  double BoundedJerk(const double val);
+
+  double BoundedCurvatureChange(const double val);
+
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
   // stores the initial state
