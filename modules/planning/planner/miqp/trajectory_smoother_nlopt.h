@@ -18,9 +18,9 @@
 #pragma once
 
 #include <nlopt.hpp>
-#include "modules/planning/common/trajectory/discretized_trajectory.h"
 
 #include "Eigen/Dense"
+#include "modules/planning/common/trajectory/discretized_trajectory.h"
 
 namespace apollo {
 namespace planning {
@@ -28,19 +28,19 @@ namespace planning {
 class TrajectorySmootherNLOpt {
  public:
   struct ProblemParameters {
-    ProblemParameters() : 
-    cost_offset_x(1),
-    cost_offset_y(1),
-    cost_offset_theta(0),
-    cost_offset_v(0),
-    cost_curvature(0),
-    cost_acceleration(0),
-    cost_curvature_change(0),
-    cost_acceleration_change(0),
-    lower_bound_jerk(-0.5),
-    upper_bound_jerk(0.5),
-    lower_bound_curvature_change(-0.1),
-    upper_bound_curvature_change(0.1) {}
+    ProblemParameters()
+        : cost_offset_x(1),
+          cost_offset_y(1),
+          cost_offset_theta(0),
+          cost_offset_v(0),
+          cost_curvature(0),
+          cost_acceleration(0),
+          cost_curvature_change(0),
+          cost_acceleration_change(0),
+          lower_bound_jerk(-0.5),
+          upper_bound_jerk(0.5),
+          lower_bound_curvature_change(-0.1),
+          upper_bound_curvature_change(0.1) {}
     // costs for deviation from the initial reference
     double cost_offset_x;
     double cost_offset_y;
@@ -88,8 +88,8 @@ class TrajectorySmootherNLOpt {
     size_t max_num_evals;
   };
 
-  typedef Eigen::Matrix<double,6,1> Vector6d;
-  typedef Eigen::Matrix<double,6,6> Matrix6d;
+  typedef Eigen::Matrix<double, 6, 1> Vector6d;
+  typedef Eigen::Matrix<double, 6, 6> Matrix6d;
 
   explicit TrajectorySmootherNLOpt();
   virtual ~TrajectorySmootherNLOpt() = default;
@@ -100,8 +100,8 @@ class TrajectorySmootherNLOpt {
                          const DiscretizedTrajectory& input_trajectory,
                          double initial_steering = 0.0f);
 
-	DiscretizedTrajectory GetOptimizedTrajectory();
-  
+  DiscretizedTrajectory GetOptimizedTrajectory();
+
   // has to be public due to the function pointer wrapper
   double ObjectiveFunction(unsigned n, const double* x, double* grad);
 
@@ -120,22 +120,30 @@ class TrajectorySmootherNLOpt {
   // X: stacked state vector over time
   // dXdU: X derived by u
   void IntegrateModel(const Vector6d& x0, const Eigen::VectorXd& u,
-                      const size_t num_integration_steps, const double h, Eigen::VectorXd& X,
-                      Eigen::MatrixXd& dXdU);
+                      const size_t num_integration_steps, const double h,
+                      Eigen::VectorXd& X, Eigen::MatrixXd& dXdU);
 
-  void CalculateCommonDataIfNecessary( const Eigen::VectorXd & u );
+  void CalculateCommonDataIfNecessary(const Eigen::VectorXd& u);
 
-  void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h, Vector6d & x_out);
+  void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h,
+               Vector6d& x_out);
 
-  void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h, Matrix6d& dfdx_out);
+  void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h,
+                  Matrix6d& dfdx_out);
 
-  void model_dfdu( const Vector6d& x, const Eigen::Vector2d& u, const double h, Eigen::MatrixXd& dfdxi_out);
- 
+  void model_dfdu(const Vector6d& x, const Eigen::Vector2d& u, const double h,
+                  Eigen::MatrixXd& dfdxi_out);
+
+  void DebugDumpX() const;
+
+  void DebugDumpXref() const;
+
+  void DebugDumpU() const;
+
  private:
+  double BoundedJerk(const double val) const;
 
-  double BoundedJerk(const double val);
-
-  double BoundedCurvatureChange(const double val);
+  double BoundedCurvatureChange(const double val) const;
 
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
@@ -150,7 +158,7 @@ class TrajectorySmootherNLOpt {
 
   Vector6d currx_;
   Matrix6d currA_;
-  Eigen::MatrixXd currB_; // dimX x dimU
+  Eigen::MatrixXd currB_;  // dimX x dimU
   Eigen::VectorXd last_u_;
 
   // why is this all using vector, not eigen? -> tk: because of the nlopt api.
@@ -176,7 +184,7 @@ class TrajectorySmootherNLOpt {
   int nr_integration_steps_;
   double initial_time_;
 
-  //Indices and sizes of our model
+  // Indices and sizes of our model
   enum STATES {
     X = 0,
     Y = 1,
@@ -187,11 +195,7 @@ class TrajectorySmootherNLOpt {
     STATES_SIZE = 6
   };
 
-  enum INPUTS {
-    J = 0,
-    XI = 1,
-    INPUTS_SIZE = 2
-  };
+  enum INPUTS { J = 0, XI = 1, INPUTS_SIZE = 2 };
 };
 
 }  // namespace planning

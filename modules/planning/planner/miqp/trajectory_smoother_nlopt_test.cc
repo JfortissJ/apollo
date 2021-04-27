@@ -48,6 +48,9 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file, in
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
           << traj_opt[trajidx].DebugString();
   }
+  tsm.DebugDumpU();
+  tsm.DebugDumpX();
+  tsm.DebugDumpXref();
 
   apollo::planning::PublishableTrajectory publishable_trajectory(0.0, traj_opt);
   ADCTrajectory traj_pb;
@@ -124,6 +127,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFileSubsampling) {
   const std::string input_file = "test_trajectory_miqp.pb.txt";
   int subsampling = 1; // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+  EXPECT_FALSE(true);
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileStartDriving) {

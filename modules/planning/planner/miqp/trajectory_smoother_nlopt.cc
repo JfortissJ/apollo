@@ -500,12 +500,39 @@ void TrajectorySmootherNLOpt::CalculateCommonDataIfNecessary(
   }
 }
 
-double TrajectorySmootherNLOpt::BoundedJerk(const double val) {
+void TrajectorySmootherNLOpt::DebugDumpX() const {
+  std::cout << "X = [ \n";
+  for (size_t i = 0; i < X_.rows(); i++) {
+    std::cout << X_(i);
+    if (i != X_.rows() - 1) std::cout << ", \n";
+  }
+  std::cout << "]\n\n";
+}
+
+void TrajectorySmootherNLOpt::DebugDumpXref() const {
+  std::cout << "X_ref = [ \n";
+  for (size_t i = 0; i < X_ref_.rows(); i++) {
+    std::cout << X_ref_(i);
+    if (i != X_ref_.rows() - 1) std::cout << ", \n";
+  }
+  std::cout << "]\n\n";
+}
+
+void TrajectorySmootherNLOpt::DebugDumpU() const {
+  std::cout << "u = [ \n";
+  for (size_t i = 0; i < last_u_.rows(); ++i) {
+    std::cout << last_u_(i);
+    if (i != last_u_.rows() - 1) std::cout << ", \n";
+  }
+  std::cout << "]\n\n";
+}
+
+double TrajectorySmootherNLOpt::BoundedJerk(const double val) const {
   return std::max(std::min(val, params_.upper_bound_jerk),
                   params_.lower_bound_jerk);
 }
 
-double TrajectorySmootherNLOpt::BoundedCurvatureChange(const double val) {
+double TrajectorySmootherNLOpt::BoundedCurvatureChange(const double val) const {
   return std::max(std::min(val, params_.upper_bound_curvature_change),
                   params_.lower_bound_curvature_change);
 }
