@@ -803,8 +803,8 @@ std::vector<const Obstacle*> MiqpPlanner::FilterNonVirtualObstacles(
     } else {
       obstacles_out.push_back(obstacle);
     }
-    return obstacles_out;
   }
+  return obstacles_out;
 }
 
 bool MiqpPlanner::ProcessObstacles(
