@@ -158,6 +158,7 @@ class TrajectorySmootherNLOpt {
 
   double j_opt_;
   int status_;
+  int numevals_;
   std::vector<double> lower_bound_;
   std::vector<double> upper_bound_;
   std::vector<double> ineq_constraint_tol_;

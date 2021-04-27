@@ -30,6 +30,7 @@ cc_library(
     deps = [
         "//cyber/common:log",
         "//modules/planning/common/trajectory:discretized_trajectory",
+        "//modules/common/time:time",
         "@nlopt",
         "@eigen",
     ]

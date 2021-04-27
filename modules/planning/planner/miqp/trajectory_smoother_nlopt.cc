@@ -22,6 +22,7 @@
 #include <iostream>
 
 #include "cyber/common/log.h"
+#include "modules/common/time/time.h"
 
 // Create function pointers for nlopt outside the namespace
 double nlopt_objective_wrapper(unsigned n, const double* x, double* grad,
@@ -51,6 +52,7 @@ namespace apollo {
 namespace planning {
 
 using namespace Eigen;
+using apollo::common::time::Clock;
 
 TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
   // TODO Set costs
@@ -59,6 +61,7 @@ TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
 
   num_ineq_constr_ = 0;
   num_eq_constr_ = 0;
+  numevals_ = 0;
 }
 
 void TrajectorySmootherNLOpt::InitializeProblem(
@@ -121,8 +124,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
            ++idx_subsample) {
         u_[idx_u + INPUTS::J] =
             BoundedJerk(input_trajectory.at(idx_input).da());
-        u_[idx_u + INPUTS::XI] =
-            BoundedCurvatureChange(input_trajectory.at(idx_input).path_point().dkappa());
+        u_[idx_u + INPUTS::XI] = BoundedCurvatureChange(
+            input_trajectory.at(idx_input).path_point().dkappa());
         idx_u += INPUTS::INPUTS_SIZE;
       }
     } else {  // dont subsample last point
@@ -187,6 +190,9 @@ int TrajectorySmootherNLOpt::Optimize() {
                                  eq_constraint_tol_);
   }
 
+  AINFO << "Starting smoothing optimization";
+  double current_time = Clock::NowInSeconds();
+
   // Optimization
   try {
     status_ = static_cast<int>(opt.optimize(u_, j_opt_));
@@ -203,6 +209,10 @@ int TrajectorySmootherNLOpt::Optimize() {
     status_ = -11;
     return status_;
   }
+
+  AINFO << "Smoothing optimization finished with final cost of " << j_opt_
+        << " in " << (Clock::NowInSeconds() - current_time) << "s and with "
+        << numevals_ << " iterations";
 
   switch (status_) {
     case nlopt::SUCCESS:
@@ -364,6 +374,7 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
     grad_eigen += 2 * absolute_inputs.cwiseProduct(costs_inputs);
   }
 
+  numevals_ += 1;
   return J;
 }
 
