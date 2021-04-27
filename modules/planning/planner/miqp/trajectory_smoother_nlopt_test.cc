@@ -28,7 +28,8 @@
 namespace apollo {
 namespace planning {
 
-void OptimizeFromFileHelper(std::string path_to_file, std::string input_file, int subsampling) {
+void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
+                            int subsampling) {
   const std::string path_of_standard_trajectory =
       path_to_file + "/" + input_file;
   ADCTrajectory trajectory;
@@ -58,7 +59,8 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file, in
 
   // This will dump the optimized trajectory. Analysis is possible using the
   // matlab script analyze_smoother.m
-  const std::string txt_file = path_to_file + "/" + "sqp_out_"  + std::to_string(subsampling) + "_" + input_file;
+  const std::string txt_file = path_to_file + "/" + "sqp_out_" +
+                               std::to_string(subsampling) + "_" + input_file;
   apollo::cyber::common::SetProtoToASCIIFile(traj_pb, txt_file);
 
   EXPECT_DOUBLE_EQ(traj_in.GetTemporalLength(), T_in);
@@ -115,24 +117,68 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
   EXPECT_GT(status, 0);
 }
 
+TEST(TrajectorySmootherNLOpt, PlanningInitPoint) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  DiscretizedTrajectory traj;
+  common::TrajectoryPoint tp1;
+  tp1.mutable_path_point()->set_x(0);
+  tp1.mutable_path_point()->set_y(0);
+  tp1.mutable_path_point()->set_s(0);
+  tp1.mutable_path_point()->set_theta(0);
+  tp1.mutable_path_point()->set_kappa(0);
+  tp1.mutable_path_point()->set_dkappa(0);
+  tp1.set_v(0);
+  tp1.set_a(0);
+  tp1.set_da(0);
+  tp1.set_relative_time(0);
+  traj.AppendTrajectoryPoint(tp1);
+  common::TrajectoryPoint tp2;
+  tp2.mutable_path_point()->set_x(5);
+  tp2.mutable_path_point()->set_y(0);
+  tp2.mutable_path_point()->set_s(5);
+  tp2.mutable_path_point()->set_theta(0);
+  tp2.mutable_path_point()->set_kappa(0);
+  tp2.mutable_path_point()->set_dkappa(0);
+  tp2.set_v(1);
+  tp2.set_a(1);
+  tp2.set_da(0);
+  tp2.set_relative_time(5);
+  traj.AppendTrajectoryPoint(tp2);
+  auto planning_init_point = tp1;
+  planning_init_point.mutable_path_point()->set_kappa(0.1);
+  tsm.InitializeProblem(0, traj, planning_init_point);
+  int status = tsm.Optimize();
+  auto traj_opt = tsm.GetOptimizedTrajectory();
+  for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
+    AINFO << "Smoothed trajectory at i=" << trajidx << ": "
+          << traj_opt[trajidx].DebugString();
+  }
+  EXPECT_GT(status, 0);
+  EXPECT_FLOAT_EQ(traj_opt.at(0).path_point().kappa(),
+                  planning_init_point.path_point().kappa());
+}
+
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
-  const std::string path_to_file = "modules/planning/planner/miqp/miqp_testdata";
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp.pb.txt";
-  int subsampling = 0; // no subsampling
+  int subsampling = 0;  // no subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileSubsampling) {
-  const std::string path_to_file = "modules/planning/planner/miqp/miqp_testdata";
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp.pb.txt";
-  int subsampling = 1; // subsampling
+  int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileStartDriving) {
-  const std::string path_to_file = "modules/planning/planner/miqp/miqp_testdata";
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_from_standstill.pb.txt";
-  int subsampling = 0; // no subsampling
+  int subsampling = 0;  // no subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
