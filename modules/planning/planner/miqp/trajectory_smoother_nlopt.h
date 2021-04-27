@@ -140,6 +140,8 @@ class TrajectorySmootherNLOpt {
 
   void DebugDumpU() const;
 
+  int GetNumEvals() const { return numevals_; }
+
  private:
   double BoundedJerk(const double val) const;
 

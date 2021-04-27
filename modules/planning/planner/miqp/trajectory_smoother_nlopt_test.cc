@@ -44,6 +44,7 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   tsm.InitializeProblem(subsampling, traj_in, traj_in.front());
   int status = tsm.Optimize();
   EXPECT_GT(status, 0);
+  EXPECT_LT(status, 5); // 5 ... NLOPT_MAXEVAL_REACHED
   auto traj_opt = tsm.GetOptimizedTrajectory();
   for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
@@ -115,6 +116,7 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
           << traj_opt[trajidx].DebugString();
   }
   EXPECT_GT(status, 0);
+  EXPECT_GT(tsm.GetNumEvals(), 1);
 }
 
 TEST(TrajectorySmootherNLOpt, PlanningInitPoint) {
