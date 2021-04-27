@@ -35,6 +35,7 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/constraint_checker/constraint_checker.h"
+#include "modules/planning/planner/miqp/trajectory_smoother_nlopt.h"
 
 namespace apollo {
 namespace planning {
@@ -369,7 +370,7 @@ std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
 
 void MiqpPlanner::FillTimeDerivativesInApolloTrajectory(
     DiscretizedTrajectory& traj) const {
-  for (int i = 0; i < traj.size() - 1; ++i) {
+  for (size_t i = 0; i < traj.size() - 1; ++i) {
     double diff_t = (traj[i + 1].relative_time() - traj[i].relative_time());
 
     double diff_v = (traj[i + 1].v() - traj[i].v());
@@ -409,7 +410,7 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     const double theta = atan2(vy, vx);
     const double v = vx / cos(theta);
     // const double a = ax / cos(theta); // probably wrong
-    const double a = cos(theta) * ax + sin(M_PI_4 - theta) * ay; // TODO: check
+    const double a = cos(theta) * ax + sin(M_PI_4 - theta) * ay;  // TODO: check
     s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
     const double kappa =
         (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
@@ -448,7 +449,9 @@ DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
   const double nr_steps = config_.miqp_planner_config().nr_steps();
   double u_i = 1.0;  // TODO  PARAMETER!!!
   double v_i = planning_init_point.v();
-  double a_i = planning_init_point.a(); //TODO make sure this is a reasonable value in the car!
+  double a_i =
+      planning_init_point
+          .a();  // TODO make sure this is a reasonable value in the car!
   double s_i = optimized_traj.TrajectoryPointAt(0).path_point().s();
   double t_i = optimized_traj.TrajectoryPointAt(0).relative_time();
   const TrajectoryPoint optimized_last_pt =
@@ -1020,6 +1023,22 @@ void MiqpPlanner::CreateStopTrajectory(
           << " x = " << planning_init_point.path_point().x()
           << " y = " << planning_init_point.path_point().y()
           << "with end point at t = " << time << " x = " << x << " y = " << y;
+  }
+}
+
+std::pair<bool, apollo::planning::DiscretizedTrajectory> MiqpPlanner::SmoothTrajectory(
+    const apollo::planning::DiscretizedTrajectory& traj_in,
+    const common::TrajectoryPoint& planning_init_point) {
+  int subsampling = 0;
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  tsm.InitializeProblem(subsampling, traj_in, planning_init_point);
+  int status = tsm.Optimize();
+  DiscretizedTrajectory traj_out;
+  if (status > 0) {
+    return {true, tsm.GetOptimizedTrajectory()};
+  } else {
+    AERROR << "Trajectory Smoothing Failed!";
+    return {false, traj_in};
   }
 }
 

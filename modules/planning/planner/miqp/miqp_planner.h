@@ -120,6 +120,10 @@ class MiqpPlanner : public LatticePlanner {
   void CreateStopTrajectory(const common::TrajectoryPoint& planning_init_point,
                             ReferenceLineInfo* reference_line_info);
 
+  std::pair<bool, apollo::planning::DiscretizedTrajectory> SmoothTrajectory(
+      const apollo::planning::DiscretizedTrajectory& traj_in,
+      const common::TrajectoryPoint& planning_init_point);
+
  private:
   CMiqpPlanner planner_;
   bool firstrun_;
