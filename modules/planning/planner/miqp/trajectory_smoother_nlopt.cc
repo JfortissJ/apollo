@@ -66,7 +66,7 @@ TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
 
 void TrajectorySmootherNLOpt::InitializeProblem(
     const int subsampling, const DiscretizedTrajectory& input_trajectory,
-    double initial_steering) {
+    const common::TrajectoryPoint& planning_init_point) {
   ready_to_optimize_ = false;
   input_traj_size_ = input_trajectory.size();
   subsampling_ = subsampling;

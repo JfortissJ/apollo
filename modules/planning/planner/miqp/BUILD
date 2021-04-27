@@ -17,6 +17,7 @@ cc_library(
         "//modules/planning/planner",
         "//modules/planning/planner/lattice:lattice_planner",
         "//modules/planning/proto:planning_proto",
+        ":trajectory_smoother_nlopt",
         "@miqp_planner//:miqp_c_api",
         "@cplex",
     ],

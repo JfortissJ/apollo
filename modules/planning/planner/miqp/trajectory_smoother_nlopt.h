@@ -98,7 +98,7 @@ class TrajectorySmootherNLOpt {
 
   void InitializeProblem(const int subsampling,
                          const DiscretizedTrajectory& input_trajectory,
-                         double initial_steering = 0.0f);
+                         const common::TrajectoryPoint& planning_init_point);
 
 	DiscretizedTrajectory GetOptimizedTrajectory();
   
