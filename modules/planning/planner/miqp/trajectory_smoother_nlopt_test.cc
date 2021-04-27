@@ -36,7 +36,7 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   EXPECT_TRUE(cyber::common::GetProtoFromFile(path_of_standard_trajectory,
                                               &trajectory));
   DiscretizedTrajectory traj_in(trajectory);
-  const double dt_in = 1.0;
+  const double dt_in = traj_in.at(1).relative_time() - traj_in.at(0).relative_time();
   const double T_in = (traj_in.NumOfPoints() - 1) * dt_in;
 
   // OPTIMIZER
@@ -278,11 +278,13 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
   EXPECT_NEAR(X(2 * dimX + 5), 0.11, 1e-9);
 }
 
-// TEST 1: Integration Model
+TEST(TrajectorySmootherNLOpt, OptimizeFromFileSZero) {
+  const std::string path_to_file = "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_reproduce_szero.pb.txt";
+  int subsampling = 0; // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
 
-// Test 2: Constraint Checking
-
-// Test 3: Optimization
 
 }  // namespace planning
 }  // namespace apollo

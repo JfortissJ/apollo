@@ -7,7 +7,7 @@ miqp_planner_config: {
     nr_regions: 16
     max_velocity_fitting: 10
     use_environment_polygon: true
-    consider_obstacles: true
+    consider_obstacles: false
     close_to_end_distance: 1.0
     collision_radius_add: 0.3
     jerk_weight: 1.0
@@ -20,7 +20,7 @@ miqp_planner_config: {
     jerk_lat_min_max_limit: 1.4
     nr_steps: 10
     nr_neighbouring_possible_regions: 0
-    ts: 0.5
+    ts: 1.0
     max_solution_time: 3
     relative_mip_gap_tolerance: 0.1
     mipemphasis: 0
@@ -42,6 +42,7 @@ miqp_planner_config: {
     acc_start_trajectory: 1.0
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06
+    use_smoothing: true
 }
 
 

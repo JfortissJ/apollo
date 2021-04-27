@@ -1,0 +1,123 @@
+header {
+  module_name: "planning"
+}
+trajectory_point {
+  path_point {
+  x: 692939.07833339728
+  y: 5339064.138689518
+  theta: -0.50471087092835043
+  kappa: 0
+  s: 0
+}
+v: 0
+a: 0
+relative_time: 0
+}
+trajectory_point {
+  path_point {
+  x: 692939.09642022976
+  y: 5339064.1283505494
+  theta: -0.50646444423721748
+  kappa: -0.0067420351190726991
+  s: 0.020833333333333332
+}
+v: 0.125
+a: 0.5
+relative_time: 0.5
+}
+trajectory_point {
+  path_point {
+  x: 692939.22302805656
+  y: 5339064.0559777692
+  theta: -0.51873945739928651
+  kappa: -0.053936280952581607
+  s: 0.16666666666666669
+}
+v: 0.5
+a: 1
+relative_time: 1
+}
+trajectory_point {
+  path_point {
+  x: 692939.56490212667
+  y: 5339063.8566390434
+  theta: -0.55286834116575667
+  kappa: -0.15297572449998312
+  s: 0.5625
+}
+v: 1.125
+a: 1
+relative_time: 1.5
+}
+trajectory_point {
+  path_point {
+  x: 692940.13762217492
+  y: 5339063.4763733447
+  theta: -0.59922954792629923
+  kappa: -0.017573755806905685
+  s: 1.25
+}
+v: 1.625
+a: 1
+relative_time: 2
+}
+trajectory_point {
+  path_point {
+  x: 692940.91829032672
+  y: 5339062.9575056573
+  theta: -0.56889104040425442
+  kappa: 0.087405053317302042
+  s: 2.1875
+}
+v: 2.125
+a: 1
+relative_time: 2.5
+}
+trajectory_point {
+  path_point {
+  x: 692941.93584887683
+  y: 5339062.3458455773
+  theta: -0.51845400767180294
+  kappa: 0.075428963235901439
+  s: 3.375
+}
+v: 2.625
+a: 1
+relative_time: 3
+}
+trajectory_point {
+  path_point {
+  x: 692943.19792255748
+  y: 5339061.6579477293
+  theta: -0.4816798522155894
+  kappa: 0.046417113780632263
+  s: 4.8125
+}
+v: 3.125
+a: 1
+relative_time: 3.5
+}
+trajectory_point {
+  path_point {
+  x: 692944.70300371968
+  y: 5339060.8949014768
+  theta: -0.45989142662530114
+  kappa: 0.028515581478525228
+  s: 6.5
+}
+v: 3.6191025544613873
+a: 0
+relative_time: 4
+}
+trajectory_point {
+  path_point {
+  x: 692946.33077155275
+  y: 5339060.1044739448
+  theta: -0.44633933353362121
+  kappa: 0.02067493326290647
+  s: 8.3095512772306943
+}
+v: 3.6191025544613873
+a: 0
+relative_time: 4.5
+}

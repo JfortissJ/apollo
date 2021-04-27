@@ -41,4 +41,5 @@ message MiqpPlannerConfiguration {
     optional double acc_start_trajectory = 36 [default = 1.0];
     optional double pts_offset_x = 37 [default = 0.0];
     optional double pts_offset_y = 38 [default = 0.0];
+    optional bool use_smoothing = 39 [default = false];
 }
