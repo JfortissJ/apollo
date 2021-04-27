@@ -28,7 +28,7 @@
 namespace apollo {
 namespace planning {
 
-void OptimizeFromFileHelper(std::string path_to_file, std::string input_file) {
+void OptimizeFromFileHelper(std::string path_to_file, std::string input_file, int subsampling) {
   const std::string path_of_standard_trajectory =
       path_to_file + "/" + input_file;
   ADCTrajectory trajectory;
@@ -40,7 +40,7 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file) {
 
   // OPTIMIZER
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
-  tsm.InitializeProblem(0, traj_in, 0);
+  tsm.InitializeProblem(subsampling, traj_in, 0);
   int status = tsm.Optimize();
   EXPECT_GT(status, 0);
   auto traj_opt = tsm.GetOptimizedTrajectory();
@@ -55,7 +55,7 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file) {
 
   // This will dump the optimized trajectory. Analysis is possible using the
   // matlab script analyze_smoother.m
-  const std::string txt_file = path_to_file + "/" + "sqp_out_" + input_file;
+  const std::string txt_file = path_to_file + "/" + "sqp_out_"  + std::to_string(subsampling) + "_" + input_file;
   apollo::cyber::common::SetProtoToASCIIFile(traj_pb, txt_file);
 
   EXPECT_DOUBLE_EQ(traj_in.GetTemporalLength(), T_in);
@@ -115,13 +115,22 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
   const std::string path_to_file = "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp.pb.txt";
-  OptimizeFromFileHelper(path_to_file, input_file);
+  int subsampling = 0; // no subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
+
+// TEST(TrajectorySmootherNLOpt, OptimizeFromFileSubsampling) {
+//   const std::string path_to_file = "modules/planning/planner/miqp/miqp_testdata";
+//   const std::string input_file = "test_trajectory_miqp.pb.txt";
+//   int subsampling = 1; // subsampling
+//   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+// }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileStartDriving) {
   const std::string path_to_file = "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_from_standstill.pb.txt";
-  OptimizeFromFileHelper(path_to_file, input_file);
+  int subsampling = 0; // no subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
 TEST(TrajectorySmootherNLOpt, model_f) {
