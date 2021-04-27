@@ -86,9 +86,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
 
   stepsize_ = input_trajectory.at(1).relative_time() -
               input_trajectory.at(0).relative_time();
-  if (subsampling_ > 0) {
-    stepsize_ = stepsize_ / subsampling_;
-  }
+  stepsize_ = stepsize_ / (subsampling_ + 1);
   initial_time_ = input_trajectory.at(0).relative_time();
 
   // set x0 using the reference traj
@@ -278,7 +276,8 @@ DiscretizedTrajectory TrajectorySmootherNLOpt::GetOptimizedTrajectory() {
     tp.set_a(X_[idx * STATES::STATES_SIZE + STATES::A]);
     // TODO do we have to use idx-1 for the inputs?
     tp.set_da(u_[idx * INPUTS::INPUTS_SIZE + INPUTS::J]);
-    tp.mutable_path_point()->set_dkappa(u_[idx * INPUTS::INPUTS_SIZE + INPUTS::XI]);
+    tp.mutable_path_point()->set_dkappa(
+        u_[idx * INPUTS::INPUTS_SIZE + INPUTS::XI]);
     tp.set_relative_time(initial_time_ + idx * stepsize_);
     traj.AppendTrajectoryPoint(tp);
     lastx = x;
@@ -289,8 +288,8 @@ DiscretizedTrajectory TrajectorySmootherNLOpt::GetOptimizedTrajectory() {
 
 double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
                                                   double* grad) {
-
-  //TODO optimize computation time: only compute values if the respective cost terms are nonzero!
+  // TODO optimize computation time: only compute values if the respective cost
+  // terms are nonzero!
 
   double J = 0;
   Map<const VectorXd> u_eigen(x, n);
@@ -371,9 +370,7 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
     unsigned m, double* result, unsigned n, const double* x, double* grad) {}
 
 void TrajectorySmootherNLOpt::EqualityConstraintFunction(
-    unsigned m, double* result, unsigned n, const double* x, double* grad) {
-  // TODO Fix u0 here!
-}
+    unsigned m, double* result, unsigned n, const double* x, double* grad) {}
 
 void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
                                              const Eigen::VectorXd& u,
