@@ -40,11 +40,11 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file, in
 
   // OPTIMIZER
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
-  tsm.InitializeProblem(subsampling, traj_in, 0);
+  tsm.InitializeProblem(subsampling, traj_in, traj_in.front());
   int status = tsm.Optimize();
   EXPECT_GT(status, 0);
   auto traj_opt = tsm.GetOptimizedTrajectory();
-  for (int trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
+  for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
           << traj_opt[trajidx].DebugString();
   }
@@ -73,7 +73,7 @@ TEST(TrajectorySmootherNLOpt, Constructor) {
 TEST(TrajectorySmootherNLOpt, Optimize_Empty) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
   DiscretizedTrajectory tmp;
-  tsm.InitializeProblem(1, tmp, 0);
+  tsm.InitializeProblem(1, tmp, common::TrajectoryPoint());
   int status = tsm.Optimize();
   EXPECT_EQ(-100, status);
 }
@@ -105,10 +105,10 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
   tp2.set_da(0);
   tp2.set_relative_time(5);
   traj.AppendTrajectoryPoint(tp2);
-  tsm.InitializeProblem(0, traj, 0);
+  tsm.InitializeProblem(0, traj, tp1);
   int status = tsm.Optimize();
   auto traj_opt = tsm.GetOptimizedTrajectory();
-  for (int trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
+  for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
           << traj_opt[trajidx].DebugString();
   }
