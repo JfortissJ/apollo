@@ -323,7 +323,13 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Planning success -> publish trajectory
-  reference_line_info->SetTrajectory(apollo_traj);
+  if(config_.miqp_planner_config().use_smoothing()) {
+    auto smoothed_apollo_trajectory =
+      SmoothTrajectory(apollo_traj, planning_init_point);
+  reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
+  } else {
+    reference_line_info->SetTrajectory(apollo_traj);
+  }
   reference_line_info->SetCost(0);  // TODO necessary?
   reference_line_info->SetDrivable(true);
 
@@ -1026,7 +1032,8 @@ void MiqpPlanner::CreateStopTrajectory(
   }
 }
 
-std::pair<bool, apollo::planning::DiscretizedTrajectory> MiqpPlanner::SmoothTrajectory(
+std::pair<bool, apollo::planning::DiscretizedTrajectory>
+MiqpPlanner::SmoothTrajectory(
     const apollo::planning::DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point) {
   int subsampling = 0;
@@ -1035,7 +1042,12 @@ std::pair<bool, apollo::planning::DiscretizedTrajectory> MiqpPlanner::SmoothTraj
   int status = tsm.Optimize();
   DiscretizedTrajectory traj_out;
   if (status > 0) {
-    return {true, tsm.GetOptimizedTrajectory()};
+    auto traj = tsm.GetOptimizedTrajectory();
+    for (int idx = 0; idx < traj.size(); ++idx) {
+      AINFO << "Smoothed trajectory at idx = " << idx << " : "
+            << traj.at(idx).DebugString();
+    }
+    return {true, traj};
   } else {
     AERROR << "Trajectory Smoothing Failed!";
     return {false, traj_in};
