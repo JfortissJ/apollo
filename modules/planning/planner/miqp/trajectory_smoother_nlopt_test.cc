@@ -127,7 +127,6 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFileSubsampling) {
   const std::string input_file = "test_trajectory_miqp.pb.txt";
   int subsampling = 1; // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
-  EXPECT_FALSE(true);
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileStartDriving) {
