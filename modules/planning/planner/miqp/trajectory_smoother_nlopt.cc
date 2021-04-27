@@ -79,29 +79,35 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     return;
   }
 
+  // replace first point by planning_init_point (which is the current or
+  // predicted state of the vehicle) to use a reasonable kappa during standstill
+  // and to mitigate transformation issues
+  DiscretizedTrajectory modified_input_trajectory = input_trajectory;
+  modified_input_trajectory.at(0) = planning_init_point;
+
   // set problem size
   int nr_intermediate_pts = (input_traj_size_ - 1) * subsampling_;
   nr_integration_steps_ = input_traj_size_ + nr_intermediate_pts;
   problem_size_ = nr_integration_steps_ * INPUTS::INPUTS_SIZE;
   // x_ is resized in IntegrateModel()
 
-  stepsize_ = input_trajectory.at(1).relative_time() -
-              input_trajectory.at(0).relative_time();
+  stepsize_ = modified_input_trajectory.at(1).relative_time() -
+              modified_input_trajectory.at(0).relative_time();
   stepsize_ = stepsize_ / (subsampling_ + 1);
-  initial_time_ = input_trajectory.at(0).relative_time();
+  initial_time_ = modified_input_trajectory.at(0).relative_time();
 
   // set x0 using the reference traj
-  x0_[STATES::X] = input_trajectory.front().path_point().x();
-  x0_[STATES::Y] = input_trajectory.front().path_point().y();
-  x0_[STATES::THETA] = input_trajectory.front().path_point().theta();
-  x0_[STATES::V] = input_trajectory.front().v();
-  x0_[STATES::A] = input_trajectory.front().a();
-  x0_[STATES::KAPPA] = input_trajectory.front().path_point().kappa();
+  x0_[STATES::X] = modified_input_trajectory.front().path_point().x();
+  x0_[STATES::Y] = modified_input_trajectory.front().path_point().y();
+  x0_[STATES::THETA] = modified_input_trajectory.front().path_point().theta();
+  x0_[STATES::V] = modified_input_trajectory.front().v();
+  x0_[STATES::A] = modified_input_trajectory.front().a();
+  x0_[STATES::KAPPA] = modified_input_trajectory.front().path_point().kappa();
 
   // set reference from input
   X_ref_.resize(input_traj_size_ * STATES::STATES_SIZE);
   int offset = 0;
-  for (auto& pt : input_trajectory) {
+  for (auto& pt : modified_input_trajectory) {
     X_ref_[offset + STATES::X] = pt.path_point().x();
     X_ref_[offset + STATES::Y] = pt.path_point().y();
     X_ref_[offset + STATES::THETA] = pt.path_point().theta();
@@ -123,15 +129,15 @@ void TrajectorySmootherNLOpt::InitializeProblem(
       for (int idx_subsample = 0; idx_subsample <= subsampling_;
            ++idx_subsample) {
         u_[idx_u + INPUTS::J] =
-            BoundedJerk(input_trajectory.at(idx_input).da());
+            BoundedJerk(modified_input_trajectory.at(idx_input).da());
         u_[idx_u + INPUTS::XI] = BoundedCurvatureChange(
-            input_trajectory.at(idx_input).path_point().dkappa());
+            modified_input_trajectory.at(idx_input).path_point().dkappa());
         idx_u += INPUTS::INPUTS_SIZE;
       }
     } else {  // dont subsample last point
-      u_[idx_u + INPUTS::J] = input_trajectory.at(idx_input).da();
+      u_[idx_u + INPUTS::J] = modified_input_trajectory.at(idx_input).da();
       u_[idx_u + INPUTS::XI] =
-          input_trajectory.at(idx_input).path_point().dkappa();
+          modified_input_trajectory.at(idx_input).path_point().dkappa();
     }
   }
 
