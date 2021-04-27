@@ -494,13 +494,19 @@ void TrajectorySmootherNLOpt::model_dfdu(const Vector6d& x,
                                          const Eigen::Vector2d& u,
                                          const double h,
                                          Eigen::MatrixXd& dfdxi_out) {
-  dfdxi_out << 0, 0, 0, 0.5 * pow(h, 2), h, 0, 0, 0,
-      0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A), 0, 0, h;
+  // dfdxi_out << 0, 0, 0, 0.5 * pow(h, 2), h, 0, 0, 0,
+  //     0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A), 0, 0, h;
+  dfdxi_out.setZero(6,2);
+  dfdxi_out(3,0) = 0.5 * pow(h, 2);
+  dfdxi_out(4,0) = h;
+  dfdxi_out(2,1) = 0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A);
+  dfdxi_out(5,1) = h;
+  
 }
 
 void TrajectorySmootherNLOpt::CalculateCommonDataIfNecessary(
     const Eigen::VectorXd& u) {
-  if (u != last_u_ || last_u_.size() != u.size()) {
+  if (last_u_.size() != u.size() || u != last_u_ || last_u_.isZero()) {
     last_u_ = u;
     IntegrateModel(x0_, u, nr_integration_steps_, stepsize_, X_, dXdU_);
   }
