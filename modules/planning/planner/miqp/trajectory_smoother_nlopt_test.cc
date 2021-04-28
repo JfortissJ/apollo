@@ -29,22 +29,34 @@ namespace apollo {
 namespace planning {
 
 void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
-                            int subsampling) {
+                            int subsampling,
+                            std::string startpoint_string = "") {
   const std::string path_of_standard_trajectory =
       path_to_file + "/" + input_file;
   ADCTrajectory trajectory;
   EXPECT_TRUE(cyber::common::GetProtoFromFile(path_of_standard_trajectory,
                                               &trajectory));
   DiscretizedTrajectory traj_in(trajectory);
-  const double dt_in = traj_in.at(1).relative_time() - traj_in.at(0).relative_time();
+  const double dt_in =
+      traj_in.at(1).relative_time() - traj_in.at(0).relative_time();
   const double T_in = (traj_in.NumOfPoints() - 1) * dt_in;
+
+  const std::string path_to_startpoint_file =
+      path_to_file + "/" + startpoint_string;
+  apollo::common::TrajectoryPoint start_point;
+  if (startpoint_string.empty()) {
+    start_point = traj_in.front();
+  } else {
+    EXPECT_TRUE(
+        cyber::common::GetProtoFromFile(path_to_startpoint_file, &start_point));
+  }
 
   // OPTIMIZER
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
-  tsm.InitializeProblem(subsampling, traj_in, traj_in.front());
+  tsm.InitializeProblem(subsampling, traj_in, start_point);
   int status = tsm.Optimize();
   EXPECT_GT(status, 0);
-  EXPECT_LT(status, 5); // 5 ... NLOPT_MAXEVAL_REACHED
+  EXPECT_LT(status, 5);  // 5 ... NLOPT_MAXEVAL_REACHED
   auto traj_opt = tsm.GetOptimizedTrajectory();
   for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
@@ -116,7 +128,7 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
           << traj_opt[trajidx].DebugString();
   }
   EXPECT_GT(status, 0);
-  EXPECT_LT(status, 5); // 5 ... NLOPT_MAXEVAL_REACHED
+  EXPECT_LT(status, 5);  // 5 ... NLOPT_MAXEVAL_REACHED
   EXPECT_GT(tsm.GetNumEvals(), 1);
 }
 
@@ -288,12 +300,23 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileSZero) {
-  const std::string path_to_file = "modules/planning/planner/miqp/miqp_testdata";
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_reproduce_szero.pb.txt";
-  int subsampling = 0; // subsampling
+  int subsampling = 0;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
+TEST(TrajectorySmootherNLOpt, OptimizeFromFileMaxStepsStart) {
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_reproduce_invalid_start.pb.txt";
+  const std::string start_point_file =
+      "startpoint_reproduce_invalid_start.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling,
+                         start_point_file);
+}
 
 }  // namespace planning
 }  // namespace apollo
