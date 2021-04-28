@@ -453,7 +453,7 @@ DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
     const DiscretizedTrajectory& optimized_traj) {
   const double ts = config_.miqp_planner_config().ts();
   const double nr_steps = config_.miqp_planner_config().nr_steps();
-  double u_i = 1.0;  // TODO  PARAMETER!!!
+  double u_i = 0.5;  // TODO  PARAMETER!!!
   double v_i = planning_init_point.v();
   double a_i =
       planning_init_point
@@ -1043,7 +1043,6 @@ MiqpPlanner::SmoothTrajectory(
   tsm.InitializeProblem(subsampling, traj_in, planning_init_point);
   AINFO << "Planning init point is " << planning_init_point.DebugString();
   int status = tsm.Optimize();
-  DiscretizedTrajectory traj_out;
   if (status > 0) {
     auto traj = tsm.GetOptimizedTrajectory();
     for (int idx = 0; idx < traj.size(); ++idx) {
