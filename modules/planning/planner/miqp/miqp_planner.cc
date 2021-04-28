@@ -1036,9 +1036,10 @@ std::pair<bool, apollo::planning::DiscretizedTrajectory>
 MiqpPlanner::SmoothTrajectory(
     const apollo::planning::DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point) {
-  int subsampling = 0;
+  int subsampling = 1;
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
   tsm.InitializeProblem(subsampling, traj_in, planning_init_point);
+  AINFO << "Planning init point is " << planning_init_point.DebugString();
   int status = tsm.Optimize();
   DiscretizedTrajectory traj_out;
   if (status > 0) {
