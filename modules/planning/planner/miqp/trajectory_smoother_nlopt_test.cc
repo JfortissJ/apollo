@@ -185,6 +185,14 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFileStartDriving) {
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
+TEST(TrajectorySmootherNLOpt, OptimizeFromFileInCurve) {
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_in_curve.pb.txt";
+  int subsampling = 1;  // no subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
 TEST(TrajectorySmootherNLOpt, model_f) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
   TrajectorySmootherNLOpt::Vector6d x;
