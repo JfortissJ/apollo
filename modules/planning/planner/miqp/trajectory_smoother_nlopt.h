@@ -32,15 +32,17 @@ class TrajectorySmootherNLOpt {
         : cost_offset_x(1),
           cost_offset_y(1),
           cost_offset_theta(0),
-          cost_offset_v(0),
-          cost_curvature(0),
+          cost_offset_v(1),
+          cost_curvature(1),
           cost_acceleration(0),
-          cost_curvature_change(0),
-          cost_acceleration_change(0),
+          cost_curvature_change(1e-1),
+          cost_acceleration_change(1e-1),
           lower_bound_jerk(-0.5),
           upper_bound_jerk(0.5),
-          lower_bound_curvature_change(-0.1),
-          upper_bound_curvature_change(0.1) {}
+          tol_jerk(1e-2),
+          lower_bound_curvature_change(-0.2),
+          upper_bound_curvature_change(0.2),
+          tol_curvature_change(1e-2) {}
     // costs for deviation from the initial reference
     double cost_offset_x;
     double cost_offset_y;
@@ -57,8 +59,10 @@ class TrajectorySmootherNLOpt {
     // upper and lower bounds
     double lower_bound_jerk;
     double upper_bound_jerk;
+    double tol_jerk;
     double lower_bound_curvature_change;
     double upper_bound_curvature_change;
+    double tol_curvature_change;
   };
 
   struct SolverParameters {
@@ -91,6 +95,8 @@ class TrajectorySmootherNLOpt {
   typedef Eigen::Matrix<double, 6, 1> Vector6d;
   typedef Eigen::Matrix<double, 6, 6> Matrix6d;
 
+  explicit TrajectorySmootherNLOpt(const double pts_offset_x,
+                                   const double pts_offset_y);
   explicit TrajectorySmootherNLOpt();
   virtual ~TrajectorySmootherNLOpt() = default;
 
@@ -185,6 +191,9 @@ class TrajectorySmootherNLOpt {
   double stepsize_;
   int nr_integration_steps_;
   double initial_time_;
+
+  double pts_offset_x_;
+  double pts_offset_y_;
 
   // Indices and sizes of our model
   enum STATES {

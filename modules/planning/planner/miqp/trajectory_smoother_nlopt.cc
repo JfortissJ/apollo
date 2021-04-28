@@ -22,8 +22,8 @@
 #include <iostream>
 
 #include "cyber/common/log.h"
-#include "modules/common/time/time.h"
 #include "modules/common/math/math_utils.h"
+#include "modules/common/time/time.h"
 
 // Create function pointers for nlopt outside the namespace
 double nlopt_objective_wrapper(unsigned n, const double* x, double* grad,
@@ -55,7 +55,9 @@ namespace planning {
 using namespace Eigen;
 using apollo::common::time::Clock;
 
-TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
+TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(const double pts_offset_x,
+                                                 const double pts_offset_y)
+    : pts_offset_x_(pts_offset_x), pts_offset_y_(pts_offset_y) {
   // TODO Set costs
 
   x0_.resize(STATES::STATES_SIZE);
@@ -64,6 +66,9 @@ TrajectorySmootherNLOpt::TrajectorySmootherNLOpt() {
   num_eq_constr_ = 0;
   numevals_ = 0;
 }
+
+TrajectorySmootherNLOpt::TrajectorySmootherNLOpt()
+    : TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(0.0, 0.0) {}
 
 void TrajectorySmootherNLOpt::InitializeProblem(
     const int subsampling, const DiscretizedTrajectory& input_trajectory,
@@ -98,8 +103,10 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   initial_time_ = modified_input_trajectory.at(0).relative_time();
 
   // set x0 using the reference traj
-  x0_[STATES::X] = modified_input_trajectory.front().path_point().x();
-  x0_[STATES::Y] = modified_input_trajectory.front().path_point().y();
+  x0_[STATES::X] =
+      modified_input_trajectory.front().path_point().x() - pts_offset_x_;
+  x0_[STATES::Y] =
+      modified_input_trajectory.front().path_point().y() - pts_offset_y_;
   x0_[STATES::THETA] = modified_input_trajectory.front().path_point().theta();
   x0_[STATES::V] = modified_input_trajectory.front().v();
   x0_[STATES::A] = modified_input_trajectory.front().a();
@@ -109,8 +116,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   X_ref_.resize(input_traj_size_ * STATES::STATES_SIZE);
   int offset = 0;
   for (auto& pt : modified_input_trajectory) {
-    X_ref_[offset + STATES::X] = pt.path_point().x();
-    X_ref_[offset + STATES::Y] = pt.path_point().y();
+    X_ref_[offset + STATES::X] = pt.path_point().x() - pts_offset_x_;
+    X_ref_[offset + STATES::Y] = pt.path_point().y() - pts_offset_y_;
     X_ref_[offset + STATES::THETA] = pt.path_point().theta();
     X_ref_[offset + STATES::V] = pt.v();
     X_ref_[offset + STATES::A] = pt.a();
@@ -123,24 +130,24 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   // set u0: start values for the optimizer
   // choose the intermediate points with the same jerk and xi as the previous
   // input point
-  int idx_u = 0;
-  for (int idx_input = 0; idx_input < input_traj_size_; ++idx_input) {
-    // not at the last idx --> do subsampling
-    if (idx_input < input_traj_size_ - 1) {
-      for (int idx_subsample = 0; idx_subsample <= subsampling_;
-           ++idx_subsample) {
-        u_[idx_u + INPUTS::J] =
-            BoundedJerk(modified_input_trajectory.at(idx_input).da());
-        u_[idx_u + INPUTS::XI] = BoundedCurvatureChange(
-            modified_input_trajectory.at(idx_input).path_point().dkappa());
-        idx_u += INPUTS::INPUTS_SIZE;
-      }
-    } else {  // dont subsample last point
-      u_[idx_u + INPUTS::J] = modified_input_trajectory.at(idx_input).da();
-      u_[idx_u + INPUTS::XI] =
-          modified_input_trajectory.at(idx_input).path_point().dkappa();
-    }
-  }
+  // int idx_u = 0;
+  // for (int idx_input = 0; idx_input < input_traj_size_; ++idx_input) {
+  //   // not at the last idx --> do subsampling
+  //   if (idx_input < input_traj_size_ - 1) {
+  //     for (int idx_subsample = 0; idx_subsample <= subsampling_;
+  //          ++idx_subsample) {
+  //       u_[idx_u + INPUTS::J] =
+  //           BoundedJerk(modified_input_trajectory.at(idx_input).da());
+  //       u_[idx_u + INPUTS::XI] = BoundedCurvatureChange(
+  //           modified_input_trajectory.at(idx_input).path_point().dkappa());
+  //       idx_u += INPUTS::INPUTS_SIZE;
+  //     }
+  //   } else {  // dont subsample last point
+  //     u_[idx_u + INPUTS::J] = modified_input_trajectory.at(idx_input).da();
+  //     u_[idx_u + INPUTS::XI] =
+  //         modified_input_trajectory.at(idx_input).path_point().dkappa();
+  //   }
+  // }
 
   // set lower and upper bound vector
   lower_bound_.resize(problem_size_);
@@ -282,8 +289,8 @@ DiscretizedTrajectory TrajectorySmootherNLOpt::GetOptimizedTrajectory() {
     common::TrajectoryPoint tp;
     const double x = X_[idx * STATES::STATES_SIZE + STATES::X];
     const double y = X_[idx * STATES::STATES_SIZE + STATES::Y];
-    tp.mutable_path_point()->set_x(x);
-    tp.mutable_path_point()->set_y(y);
+    tp.mutable_path_point()->set_x(x + pts_offset_x_);
+    tp.mutable_path_point()->set_y(y + pts_offset_y_);
     s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
     tp.mutable_path_point()->set_s(s);
     tp.mutable_path_point()->set_theta(
@@ -335,19 +342,19 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
       params_.cost_offset_theta, params_.cost_offset_v,
       params_.cost_acceleration, params_.cost_curvature;
   for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
-    if (idx % (subsampling_ + 1) == 0) {  // not a subsampled step
-      size_t idx_vec = idx * STATES::STATES_SIZE;
-      size_t idx_vec_sub = idx / (subsampling_ + 1) * STATES::STATES_SIZE;
+    size_t idx_vec = idx * STATES::STATES_SIZE;
+    size_t idx_vec_sub = idx / (subsampling_ + 1) * STATES::STATES_SIZE;
+    if (idx % (subsampling_ + 1) == 0) {               // not a subsampled step
       for (int element = 0; element < 4; ++element) {  // only for x,y,theta,v
         difference[idx_vec + element] =
             X_[idx_vec + element] - X_ref_[idx_vec_sub + element];
         difference_costs[idx_vec + element] = costs_state[element];
       }
-      absolute[idx_vec + STATES::A] = X_[idx_vec + STATES::A];
-      absolute_costs[idx_vec + STATES::A] = costs_state[STATES::A];
-      absolute[idx_vec + STATES::KAPPA] = X_[idx_vec + STATES::KAPPA];
-      absolute_costs[idx_vec + STATES::KAPPA] = costs_state[STATES::KAPPA];
     }
+    absolute[idx_vec + STATES::A] = X_[idx_vec + STATES::A];
+    absolute_costs[idx_vec + STATES::A] = costs_state[STATES::A];
+    absolute[idx_vec + STATES::KAPPA] = X_[idx_vec + STATES::KAPPA];
+    absolute_costs[idx_vec + STATES::KAPPA] = costs_state[STATES::KAPPA];
   }
 
   // Costs on inputs
@@ -356,16 +363,14 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
   VectorXd costs_inputs;
   costs_inputs.setZero(n);
   for (int idx = 0; idx < static_cast<int>(n) / INPUTS::INPUTS_SIZE; ++idx) {
-    if (idx % (subsampling_ + 1) == 0) {  // not a subsampled step
-      absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
-          u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::J];
-      absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
-          u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::XI];
-      costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
-          params_.cost_acceleration_change;
-      costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
-          params_.cost_curvature_change;
-    }
+    absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
+        u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::J];
+    absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
+        u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::XI];
+    costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
+        params_.cost_acceleration_change;
+    costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
+        params_.cost_curvature_change;
   }
 
   // Compute cost term
@@ -542,13 +547,15 @@ void TrajectorySmootherNLOpt::DebugDumpU() const {
 }
 
 double TrajectorySmootherNLOpt::BoundedJerk(const double val) const {
-  return std::max(std::min(val, params_.upper_bound_jerk),
-                  params_.lower_bound_jerk);
+  return std::max(std::min(val, params_.upper_bound_jerk - params_.tol_jerk),
+                  params_.lower_bound_jerk + params_.tol_jerk);
 }
 
 double TrajectorySmootherNLOpt::BoundedCurvatureChange(const double val) const {
-  return std::max(std::min(val, params_.upper_bound_curvature_change),
-                  params_.lower_bound_curvature_change);
+  return std::max(
+      std::min(val, params_.upper_bound_curvature_change -
+                        params_.tol_curvature_change),
+      params_.lower_bound_curvature_change + params_.tol_curvature_change);
 }
 
 }  // namespace planning
