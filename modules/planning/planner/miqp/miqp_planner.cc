@@ -323,10 +323,10 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Planning success -> publish trajectory
-  if(config_.miqp_planner_config().use_smoothing()) {
+  if (config_.miqp_planner_config().use_smoothing()) {
     auto smoothed_apollo_trajectory =
-      SmoothTrajectory(apollo_traj, planning_init_point);
-  reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
+        SmoothTrajectory(apollo_traj, planning_init_point);
+    reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
   } else {
     reference_line_info->SetTrajectory(apollo_traj);
   }
@@ -1037,18 +1037,25 @@ MiqpPlanner::SmoothTrajectory(
     const apollo::planning::DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point) {
   int subsampling = 1;
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm =
+      TrajectorySmootherNLOpt(config_.miqp_planner_config().pts_offset_x(),
+                              config_.miqp_planner_config().pts_offset_y());
   tsm.InitializeProblem(subsampling, traj_in, planning_init_point);
   AINFO << "Planning init point is " << planning_init_point.DebugString();
   int status = tsm.Optimize();
   DiscretizedTrajectory traj_out;
-  if (status > 0 && tsm.ValidateSmoothingSolution()) {
+  if (status > 0) {
     auto traj = tsm.GetOptimizedTrajectory();
     for (int idx = 0; idx < traj.size(); ++idx) {
       AINFO << "Smoothed trajectory at idx = " << idx << " : "
             << traj.at(idx).DebugString();
     }
-    return {true, traj};
+    if (tsm.ValidateSmoothingSolution()) {
+      return {true, traj};
+    } else {
+      AERROR << "Trajectory Smoothing Not Valid!";
+      return {false, traj_in};
+    }
   } else {
     AERROR << "Trajectory Smoothing Failed!";
     return {false, traj_in};
