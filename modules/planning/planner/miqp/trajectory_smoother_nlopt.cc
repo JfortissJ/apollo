@@ -23,6 +23,7 @@
 
 #include "cyber/common/log.h"
 #include "modules/common/time/time.h"
+#include "modules/common/math/math_utils.h"
 
 // Create function pointers for nlopt outside the namespace
 double nlopt_objective_wrapper(unsigned n, const double* x, double* grad,
@@ -448,9 +449,9 @@ void TrajectorySmootherNLOpt::model_f(const Vector6d& x,
       x(STATES::X) + 0.5 * h * x(STATES::V) * costh + 0.5 * h * c1 * cos(c2);
   const double y1 =
       x(STATES::Y) + 0.5 * h * x(STATES::V) * sinth + 0.5 * h * c1 * sin(c2);
-  const double theta1 = x(STATES::THETA) +
-                        0.5 * h * x(STATES::V) * x(STATES::KAPPA) +
-                        0.5 * h * c1 * c3;
+  const double theta1 = common::math::NormalizeAngle(
+      x(STATES::THETA) + 0.5 * h * x(STATES::V) * x(STATES::KAPPA) +
+      0.5 * h * c1 * c3);
   const double v1 = x(STATES::V) + 0.5 * h * x(STATES::A) + 0.5 * h * c4;
   const double a1 = c4;
   const double kappa1 = c3;
@@ -495,13 +496,14 @@ void TrajectorySmootherNLOpt::model_dfdu(const Vector6d& x,
                                          const double h,
                                          Eigen::MatrixXd& dfdxi_out) {
   // dfdxi_out << 0, 0, 0, 0.5 * pow(h, 2), h, 0, 0, 0,
-  //     0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A), 0, 0, h;
-  dfdxi_out.setZero(6,2);
-  dfdxi_out(3,0) = 0.5 * pow(h, 2);
-  dfdxi_out(4,0) = h;
-  dfdxi_out(2,1) = 0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A);
-  dfdxi_out(5,1) = h;
-  
+  //     0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A), 0, 0,
+  //     h;
+  dfdxi_out.setZero(6, 2);
+  dfdxi_out(3, 0) = 0.5 * pow(h, 2);
+  dfdxi_out(4, 0) = h;
+  dfdxi_out(2, 1) =
+      0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A);
+  dfdxi_out(5, 1) = h;
 }
 
 void TrajectorySmootherNLOpt::CalculateCommonDataIfNecessary(
