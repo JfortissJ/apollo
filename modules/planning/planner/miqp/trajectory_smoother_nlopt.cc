@@ -341,49 +341,76 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
   costs_state << params_.cost_offset_x, params_.cost_offset_y,
       params_.cost_offset_theta, params_.cost_offset_v,
       params_.cost_acceleration, params_.cost_curvature;
+  bool any_difference_term =
+      (params_.cost_offset_x != 0) || (params_.cost_offset_y != 0) ||
+      (params_.cost_offset_theta != 0) || (params_.cost_offset_v != 0);
+  bool any_absolute_term =
+      (params_.cost_acceleration != 0) || (params_.cost_curvature != 0);
   for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
     size_t idx_vec = idx * STATES::STATES_SIZE;
     size_t idx_vec_sub = idx / (subsampling_ + 1) * STATES::STATES_SIZE;
-    if (idx % (subsampling_ + 1) == 0) {               // not a subsampled step
-      for (int element = 0; element < 4; ++element) {  // only for x,y,theta,v
-        difference[idx_vec + element] =
-            X_[idx_vec + element] - X_ref_[idx_vec_sub + element];
-        difference_costs[idx_vec + element] = costs_state[element];
+    if (any_difference_term) {
+      if (idx % (subsampling_ + 1) == 0) {  // not a subsampled step
+        for (int element = 0; element < 4; ++element) {  // only for x,y,theta,v
+          difference[idx_vec + element] =
+              X_[idx_vec + element] - X_ref_[idx_vec_sub + element];
+          difference_costs[idx_vec + element] = costs_state[element];
+        }
       }
     }
-    absolute[idx_vec + STATES::A] = X_[idx_vec + STATES::A];
-    absolute_costs[idx_vec + STATES::A] = costs_state[STATES::A];
-    absolute[idx_vec + STATES::KAPPA] = X_[idx_vec + STATES::KAPPA];
-    absolute_costs[idx_vec + STATES::KAPPA] = costs_state[STATES::KAPPA];
+    if (any_absolute_term) {
+      absolute[idx_vec + STATES::A] = X_[idx_vec + STATES::A];
+      absolute_costs[idx_vec + STATES::A] = costs_state[STATES::A];
+      absolute[idx_vec + STATES::KAPPA] = X_[idx_vec + STATES::KAPPA];
+      absolute_costs[idx_vec + STATES::KAPPA] = costs_state[STATES::KAPPA];
+    }
   }
 
   // Costs on inputs
   VectorXd absolute_inputs;
-  absolute_inputs.setZero(n);
   VectorXd costs_inputs;
-  costs_inputs.setZero(n);
-  for (int idx = 0; idx < static_cast<int>(n) / INPUTS::INPUTS_SIZE; ++idx) {
-    absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
-        u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::J];
-    absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
-        u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::XI];
-    costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
-        params_.cost_acceleration_change;
-    costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
-        params_.cost_curvature_change;
+  bool any_absolute_input_term =
+      (params_.cost_acceleration_change) || (params_.cost_curvature_change);
+  if (any_absolute_input_term) {
+    absolute_inputs.setZero(n);
+    costs_inputs.setZero(n);
+    for (int idx = 0; idx < static_cast<int>(n) / INPUTS::INPUTS_SIZE; ++idx) {
+      absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
+          u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::J];
+      absolute_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
+          u_eigen[idx * INPUTS::INPUTS_SIZE + INPUTS::XI];
+      costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::J] =
+          params_.cost_acceleration_change;
+      costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
+          params_.cost_curvature_change;
+    }
   }
 
   // Compute cost term
-  J += difference.transpose() * difference.cwiseProduct(difference_costs);
-  J += absolute.transpose() * absolute.cwiseProduct(absolute_costs);
-  J += absolute_inputs.transpose() * absolute_inputs.cwiseProduct(costs_inputs);
+  if (any_difference_term) {
+    J += difference.transpose() * difference.cwiseProduct(difference_costs);
+  }
+  if (any_absolute_term) {
+    J += absolute.transpose() * absolute.cwiseProduct(absolute_costs);
+  }
+  if (any_absolute_input_term) {
+    J += absolute_inputs.transpose() *
+         absolute_inputs.cwiseProduct(costs_inputs);
+  }
 
   // Gradients: Derivate of J
   if (grad != NULL) {
-    grad_eigen +=
-        2 * dXdU_.transpose() * difference.cwiseProduct(difference_costs);
-    grad_eigen += 2 * dXdU_.transpose() * absolute.cwiseProduct(absolute_costs);
-    grad_eigen += 2 * absolute_inputs.cwiseProduct(costs_inputs);
+    if (any_difference_term) {
+      grad_eigen +=
+          2 * dXdU_.transpose() * difference.cwiseProduct(difference_costs);
+    }
+    if (any_absolute_term) {
+      grad_eigen +=
+          2 * dXdU_.transpose() * absolute.cwiseProduct(absolute_costs);
+    }
+    if (any_absolute_input_term) {
+      grad_eigen += 2 * absolute_inputs.cwiseProduct(costs_inputs);
+    }
   }
 
   numevals_ += 1;
