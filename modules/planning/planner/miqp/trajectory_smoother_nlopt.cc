@@ -546,6 +546,52 @@ void TrajectorySmootherNLOpt::DebugDumpU() const {
   std::cout << "]\n\n";
 }
 
+bool TrajectorySmootherNLOpt::CheckConstraints() const {
+  const int size_state_vector = X_.rows();
+  for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
+    double kappa = X_[idx * STATES::STATES_SIZE + STATES::KAPPA];
+    double a = X_[idx * STATES::STATES_SIZE + STATES::A];
+    double j = u_[idx * INPUTS::INPUTS_SIZE + INPUTS::J];
+    double xi = u_[idx * INPUTS::INPUTS_SIZE + INPUTS::XI];
+    if (kappa > params_.upper_bound_curvature ||
+        kappa < params_.lower_bound_curvature) {
+      AERROR << "solution.kappa = " << kappa << " exceeds bounds";
+      return false;
+    } else if (a > params_.upper_bound_acceleration ||
+               a < params_.lower_bound_acceleration) {
+      AERROR << "solution.a = " << a << " exceeds bounds";
+      return false;
+    } else if (j > params_.upper_bound_jerk || j < params_.lower_bound_jerk) {
+      AERROR << "solution.jerk = " << j << " exceeds bounds";
+      return false;
+    } else if (xi > params_.upper_bound_curvature_change ||
+               xi < params_.lower_bound_curvature_change) {
+      AERROR << "solution.curvature_change = " << xi << " exceeds bounds";
+      return false;
+    }
+  }
+  return true;
+}
+
+bool TrajectorySmootherNLOpt::ValidateSmoothingSolution() const {
+  if (status_ < 0 || status_ > 4) {
+    AERROR << "Smoothing solution invalid due to solver's return value = "
+           << status_;
+    return false;
+  } else if (j_opt_ > 100) {
+    AERROR << "Smoothing solution invalid due to j_opt_ = " << j_opt_
+           << " > j_max";
+    return false;
+  } else if (numevals_ < 2) {
+    AERROR << "Smoothing solution invalid due to num_eval < num_eval_min";
+    return false;
+  } else if (CheckConstraints() == false) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 double TrajectorySmootherNLOpt::BoundedJerk(const double val) const {
   return std::max(std::min(val, params_.upper_bound_jerk - params_.tol_jerk),
                   params_.lower_bound_jerk + params_.tol_jerk);

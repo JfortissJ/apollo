@@ -37,6 +37,10 @@ class TrajectorySmootherNLOpt {
           cost_acceleration(0),
           cost_curvature_change(1e-1),
           cost_acceleration_change(1e-1),
+          lower_bound_acceleration(-8.0),
+          upper_bound_acceleration(4.0),
+          lower_bound_curvature(-0.2),
+          upper_bound_curvature(0.2),
           lower_bound_jerk(-0.5),
           upper_bound_jerk(0.5),
           tol_jerk(1e-2),
@@ -57,6 +61,10 @@ class TrajectorySmootherNLOpt {
     // tolerances for the initial and final curvature
     double curvature_tolerance;
     // upper and lower bounds
+    double lower_bound_acceleration;
+    double upper_bound_acceleration;
+    double lower_bound_curvature;
+    double upper_bound_curvature;
     double lower_bound_jerk;
     double upper_bound_jerk;
     double tol_jerk;
@@ -147,6 +155,10 @@ class TrajectorySmootherNLOpt {
   void DebugDumpU() const;
 
   int GetNumEvals() const { return numevals_; }
+
+  bool CheckConstraints() const;
+
+  bool ValidateSmoothingSolution() const;
 
  private:
   double BoundedJerk(const double val) const;

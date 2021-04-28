@@ -1042,7 +1042,7 @@ MiqpPlanner::SmoothTrajectory(
   AINFO << "Planning init point is " << planning_init_point.DebugString();
   int status = tsm.Optimize();
   DiscretizedTrajectory traj_out;
-  if (status > 0) {
+  if (status > 0 && tsm.ValidateSmoothingSolution()) {
     auto traj = tsm.GetOptimizedTrajectory();
     for (int idx = 0; idx < traj.size(); ++idx) {
       AINFO << "Smoothed trajectory at idx = " << idx << " : "
