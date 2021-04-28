@@ -108,7 +108,7 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
   tp2.set_da(0);
   tp2.set_relative_time(5);
   traj.AppendTrajectoryPoint(tp2);
-  tsm.InitializeProblem(0, traj, tp1);
+  tsm.InitializeProblem(3, traj, tp1);
   int status = tsm.Optimize();
   auto traj_opt = tsm.GetOptimizedTrajectory();
   for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
@@ -116,6 +116,7 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
           << traj_opt[trajidx].DebugString();
   }
   EXPECT_GT(status, 0);
+  EXPECT_LT(status, 5); // 5 ... NLOPT_MAXEVAL_REACHED
   EXPECT_GT(tsm.GetNumEvals(), 1);
 }
 
