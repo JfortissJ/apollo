@@ -1049,9 +1049,9 @@ MiqpPlanner::SmoothTrajectory(
     const apollo::planning::DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point) {
   int subsampling = 1;
-  TrajectorySmootherNLOpt tsm =
-      TrajectorySmootherNLOpt(config_.miqp_planner_config().pts_offset_x(),
-                              config_.miqp_planner_config().pts_offset_y());
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt(
+      logdir_.c_str(), config_.miqp_planner_config().pts_offset_x(),
+      config_.miqp_planner_config().pts_offset_y());
   tsm.InitializeProblem(subsampling, traj_in, planning_init_point);
   AINFO << "Planning init point is " << planning_init_point.DebugString();
   int status = tsm.Optimize();
