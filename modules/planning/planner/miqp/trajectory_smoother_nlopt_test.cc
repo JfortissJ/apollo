@@ -231,10 +231,30 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135507) {
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135518) {
-  // Not sure, if this is a reasonable test, as transformed input is already crap
+  // Not sure, if this is a reasonable test, as transformed input is already
+  // crap
   const std::string path_to_file =
       "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210429-135518.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135518_Orig) {
+  // Corresponds to OptimizeFromFile20210429135518, but operates on original
+  // miqp trajectory, and not the transformed one
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file =
+      "test_trajectory_miqp_20210429-135518_orig.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429133659) {
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210429-133659.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
