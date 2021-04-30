@@ -322,6 +322,12 @@ Status MiqpPlanner::PlanOnReferenceLine(
         TransformationStartFromStandstill(planning_init_point, old_traj);
   }
 
+  if (planner_status == START_TRAJECTORY &&
+      config_.miqp_planner_config().use_start_sqp_only()) {
+    AINFO << "Using SQP for start trajectory";
+    // TODO:
+  }
+
   // Planning success -> publish trajectory
   if (config_.miqp_planner_config().use_smoothing()) {
     auto smoothed_apollo_trajectory =
@@ -458,7 +464,8 @@ DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
   double a_i =
       planning_init_point
           .a();  // TODO make sure this is a reasonable value in the car!
-  double s_i = optimized_traj.TrajectoryPointAt(0).path_point().s();
+  const double s_0 = optimized_traj.TrajectoryPointAt(0).path_point().s();
+  double s_i = s_0;
   double t_i = optimized_traj.TrajectoryPointAt(0).relative_time();
   const TrajectoryPoint optimized_last_pt =
       optimized_traj.TrajectoryPointAt(optimized_traj.NumOfPoints() - 1);
@@ -470,6 +477,11 @@ DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
   for (int i = 0; i < nr_steps; ++i) {
     // AINFO << "i = " << i << " s_i = " << s_i << " v_i = " << v_i << " a_i = "
     // << a_i << " u_i = " << u_i;
+    if ((s_i - s_0) > optimized_traj.GetSpatialLength()) {
+      AERROR << "Spatial Length in Transformation was reached, ending "
+                "trajectory early";
+      break;
+    }
     TrajectoryPoint traj_pt = optimized_traj.EvaluateAtS(s_i);
     traj_pt.set_v(v_i);
     traj_pt.set_a(a_i);
