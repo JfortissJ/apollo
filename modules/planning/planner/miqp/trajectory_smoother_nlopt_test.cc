@@ -57,6 +57,7 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   int status = tsm.Optimize();
   EXPECT_GT(status, 0);
   EXPECT_LT(status, 5);  // 5 ... NLOPT_MAXEVAL_REACHED
+  EXPECT_TRUE(tsm.ValidateSmoothingSolution());
   auto traj_opt = tsm.GetOptimizedTrajectory();
   for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
@@ -202,6 +203,14 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFileInCurve) {
       "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_in_curve.pb.txt";
   int subsampling = 1;  // no subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135504) {
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210429-135504.pb.txt";
+  int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
