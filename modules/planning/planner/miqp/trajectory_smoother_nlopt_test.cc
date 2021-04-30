@@ -214,6 +214,14 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135504) {
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135505) {
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210429-135505.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
 TEST(TrajectorySmootherNLOpt, model_f) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
   TrajectorySmootherNLOpt::Vector6d x;
