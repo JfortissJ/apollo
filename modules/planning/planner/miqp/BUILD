@@ -30,8 +30,10 @@ cc_library(
     hdrs = ["trajectory_smoother_nlopt.h"],
     deps = [
         "//cyber/common:log",
+        "//modules/planning/common/trajectory:publishable_trajectory",
         "//modules/planning/common/trajectory:discretized_trajectory",
         "//modules/common/time:time",
+        "//cyber/logger:logger_util",
         "@nlopt",
         "@eigen",
     ]
@@ -49,7 +51,6 @@ cc_test(
     srcs = ["trajectory_smoother_nlopt_test.cc"],
     deps = ["@gtest//:main",
             ":trajectory_smoother_nlopt",
-            "//modules/planning/common/trajectory:publishable_trajectory",
             "//modules/common/math:geometry"],
     data = [":miqp_testdata"]
 )
