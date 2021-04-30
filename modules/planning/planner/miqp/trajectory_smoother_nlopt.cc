@@ -633,7 +633,7 @@ bool TrajectorySmootherNLOpt::CheckConstraints() const {
 
 bool TrajectorySmootherNLOpt::ValidateSmoothingSolution() const {
   bool valid = true;
-  if (status_ < 0 || status_ > 4) {
+  if (status_ < 0 || status_ > 5) {
     AERROR << "Smoothing solution invalid due to solver's return value = "
            << status_;
     valid = false;
