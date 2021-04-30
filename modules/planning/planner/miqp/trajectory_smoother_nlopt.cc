@@ -136,6 +136,11 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   x0_[STATES::A] = modified_input_trajectory_.front().a();
   x0_[STATES::KAPPA] = modified_input_trajectory_.front().path_point().kappa();
 
+  if (x0_[STATES::KAPPA] > params_.upper_bound_curvature ||
+      x0_[STATES::KAPPA] < params_.lower_bound_curvature) {
+    AERROR << "Initial kappa exceeds bounds";
+  }
+
   // set reference from input
   X_ref_.resize(input_traj_size_ * STATES::STATES_SIZE);
   int offset = 0;
@@ -604,12 +609,14 @@ bool TrajectorySmootherNLOpt::CheckConstraints() const {
     double a = X_[idx * STATES::STATES_SIZE + STATES::A];
     double j = u_[idx * INPUTS::INPUTS_SIZE + INPUTS::J];
     double xi = u_[idx * INPUTS::INPUTS_SIZE + INPUTS::XI];
-    if (kappa > params_.upper_bound_curvature ||
-        kappa < params_.lower_bound_curvature) {
+    // evaluate acc and kappa only at idx>0, as that's what the optimizer can
+    // influence
+    if ((idx > 0) && (kappa > params_.upper_bound_curvature ||
+                      kappa < params_.lower_bound_curvature)) {
       AERROR << "solution.kappa = " << kappa << " exceeds bounds";
       return false;
-    } else if (a > params_.upper_bound_acceleration ||
-               a < params_.lower_bound_acceleration) {
+    } else if ((idx > 0) && (a > params_.upper_bound_acceleration ||
+                             a < params_.lower_bound_acceleration)) {
       AERROR << "solution.a = " << a << " exceeds bounds";
       return false;
     } else if (j > params_.upper_bound_jerk || j < params_.lower_bound_jerk) {
