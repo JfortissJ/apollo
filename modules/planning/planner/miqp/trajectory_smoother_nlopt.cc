@@ -19,11 +19,15 @@
 
 #include <nlopt.h>
 
+#include <iomanip>
 #include <iostream>
 
+#include "cyber/common/file.h"
 #include "cyber/common/log.h"
+#include "cyber/logger/logger_util.h"
 #include "modules/common/math/math_utils.h"
 #include "modules/common/time/time.h"
+#include "modules/planning/common/trajectory/publishable_trajectory.h"
 
 // Create function pointers for nlopt outside the namespace
 double nlopt_objective_wrapper(unsigned n, const double* x, double* grad,
@@ -49,15 +53,35 @@ void nlopt_equality_constraint_wrapper(unsigned m, double* result, unsigned n,
   obj->EqualityConstraintFunction(m, result, n, x, grad);
 }
 
+std::string GetTimeString() {
+  // from cyber/logger/log_file_object.cc
+  struct ::tm tm_time;
+  const time_t timestamp =
+      static_cast<time_t>(apollo::common::time::Clock::NowInSeconds());
+  localtime_r(&timestamp, &tm_time);
+  std::ostringstream time_pid_stream;
+  time_pid_stream.fill('0');
+  time_pid_stream << 1900 + tm_time.tm_year << std::setw(2)
+                  << 1 + tm_time.tm_mon << std::setw(2) << tm_time.tm_mday
+                  << '-' << std::setw(2) << tm_time.tm_hour << std::setw(2)
+                  << tm_time.tm_min << std::setw(2) << tm_time.tm_sec << '.'
+                  << apollo::cyber::logger::GetMainThreadPid();
+  return time_pid_stream.str();
+}
+
 namespace apollo {
 namespace planning {
 
 using namespace Eigen;
 using apollo::common::time::Clock;
 
-TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(const double pts_offset_x,
+TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(const char logdir[],
+                                                 const double pts_offset_x,
                                                  const double pts_offset_y)
-    : pts_offset_x_(pts_offset_x), pts_offset_y_(pts_offset_y) {
+    : logdir_(logdir),
+      pts_offset_x_(pts_offset_x),
+      pts_offset_y_(pts_offset_y),
+      modified_input_trajectory_() {
   // TODO Set costs
 
   x0_.resize(STATES::STATES_SIZE);
@@ -67,8 +91,8 @@ TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(const double pts_offset_x,
   numevals_ = 0;
 }
 
-TrajectorySmootherNLOpt::TrajectorySmootherNLOpt()
-    : TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(0.0, 0.0) {}
+TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(const char logdir[])
+    : TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(logdir, 0.0, 0.0) {}
 
 void TrajectorySmootherNLOpt::InitializeProblem(
     const int subsampling, const DiscretizedTrajectory& input_trajectory,
@@ -88,8 +112,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   // replace first point by planning_init_point (which is the current or
   // predicted state of the vehicle) to use a reasonable kappa during standstill
   // and to mitigate transformation issues
-  DiscretizedTrajectory modified_input_trajectory = input_trajectory;
-  modified_input_trajectory.at(0) = planning_init_point;
+  modified_input_trajectory_ = input_trajectory;
+  modified_input_trajectory_.at(0) = planning_init_point;
 
   // set problem size
   int nr_intermediate_pts = (input_traj_size_ - 1) * subsampling_;
@@ -97,25 +121,25 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   problem_size_ = nr_integration_steps_ * INPUTS::INPUTS_SIZE;
   // x_ is resized in IntegrateModel()
 
-  stepsize_ = modified_input_trajectory.at(1).relative_time() -
-              modified_input_trajectory.at(0).relative_time();
+  stepsize_ = modified_input_trajectory_.at(1).relative_time() -
+              modified_input_trajectory_.at(0).relative_time();
   stepsize_ = stepsize_ / (subsampling_ + 1);
-  initial_time_ = modified_input_trajectory.at(0).relative_time();
+  initial_time_ = modified_input_trajectory_.at(0).relative_time();
 
   // set x0 using the reference traj
   x0_[STATES::X] =
-      modified_input_trajectory.front().path_point().x() - pts_offset_x_;
+      modified_input_trajectory_.front().path_point().x() - pts_offset_x_;
   x0_[STATES::Y] =
-      modified_input_trajectory.front().path_point().y() - pts_offset_y_;
-  x0_[STATES::THETA] = modified_input_trajectory.front().path_point().theta();
-  x0_[STATES::V] = modified_input_trajectory.front().v();
-  x0_[STATES::A] = modified_input_trajectory.front().a();
-  x0_[STATES::KAPPA] = modified_input_trajectory.front().path_point().kappa();
+      modified_input_trajectory_.front().path_point().y() - pts_offset_y_;
+  x0_[STATES::THETA] = modified_input_trajectory_.front().path_point().theta();
+  x0_[STATES::V] = modified_input_trajectory_.front().v();
+  x0_[STATES::A] = modified_input_trajectory_.front().a();
+  x0_[STATES::KAPPA] = modified_input_trajectory_.front().path_point().kappa();
 
   // set reference from input
   X_ref_.resize(input_traj_size_ * STATES::STATES_SIZE);
   int offset = 0;
-  for (auto& pt : modified_input_trajectory) {
+  for (auto& pt : modified_input_trajectory_) {
     X_ref_[offset + STATES::X] = pt.path_point().x() - pts_offset_x_;
     X_ref_[offset + STATES::Y] = pt.path_point().y() - pts_offset_y_;
     X_ref_[offset + STATES::THETA] = pt.path_point().theta();
@@ -137,15 +161,15 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   //     for (int idx_subsample = 0; idx_subsample <= subsampling_;
   //          ++idx_subsample) {
   //       u_[idx_u + INPUTS::J] =
-  //           BoundedJerk(modified_input_trajectory.at(idx_input).da());
+  //           BoundedJerk(modified_input_trajectory_.at(idx_input).da());
   //       u_[idx_u + INPUTS::XI] = BoundedCurvatureChange(
-  //           modified_input_trajectory.at(idx_input).path_point().dkappa());
+  //           modified_input_trajectory_.at(idx_input).path_point().dkappa());
   //       idx_u += INPUTS::INPUTS_SIZE;
   //     }
   //   } else {  // dont subsample last point
-  //     u_[idx_u + INPUTS::J] = modified_input_trajectory.at(idx_input).da();
+  //     u_[idx_u + INPUTS::J] = modified_input_trajectory_.at(idx_input).da();
   //     u_[idx_u + INPUTS::XI] =
-  //         modified_input_trajectory.at(idx_input).path_point().dkappa();
+  //         modified_input_trajectory_.at(idx_input).path_point().dkappa();
   //   }
   // }
 
@@ -601,22 +625,30 @@ bool TrajectorySmootherNLOpt::CheckConstraints() const {
 }
 
 bool TrajectorySmootherNLOpt::ValidateSmoothingSolution() const {
+  bool valid = true;
   if (status_ < 0 || status_ > 4) {
     AERROR << "Smoothing solution invalid due to solver's return value = "
            << status_;
-    return false;
+    valid = false;
   } else if (j_opt_ > 100) {
     AERROR << "Smoothing solution invalid due to j_opt_ = " << j_opt_
            << " > j_max";
-    return false;
+    valid = false;
   } else if (numevals_ < 2) {
     AERROR << "Smoothing solution invalid due to num_eval < num_eval_min";
-    return false;
+    valid = false;
   } else if (CheckConstraints() == false) {
-    return false;
-  } else {
-    return true;
+    valid = false;
   }
+  if (!valid) {
+    const std::string& time_pid_string = GetTimeString();
+    const std::string& file_name = "trajectory_smoother_" + time_pid_string +
+                                   "_" + std::to_string(subsampling_) +
+                                   ".pb.txt";
+    SaveDiscretizedTrajectoryToFile(modified_input_trajectory_, logdir_,
+                                    file_name);
+  }
+  return valid;
 }
 
 double TrajectorySmootherNLOpt::BoundedJerk(const double val) const {
@@ -629,6 +661,19 @@ double TrajectorySmootherNLOpt::BoundedCurvatureChange(const double val) const {
       std::min(val, params_.upper_bound_curvature_change -
                         params_.tol_curvature_change),
       params_.lower_bound_curvature_change + params_.tol_curvature_change);
+}
+
+void SaveDiscretizedTrajectoryToFile(
+    const apollo::planning::DiscretizedTrajectory& traj,
+    const std::string& path_to_file, const std::string& file_name) {
+  apollo::planning::PublishableTrajectory publishable_trajectory(0.0, traj);
+  apollo::planning::ADCTrajectory traj_pb;
+  publishable_trajectory.PopulateTrajectoryProtobuf(&traj_pb);
+
+  // This will dump the optimized trajectory. Analysis is possible using the
+  // matlab script analyze_smoother.m
+  const std::string txt_file = path_to_file + "/" + file_name;
+  apollo::cyber::common::SetProtoToASCIIFile(traj_pb, txt_file);
 }
 
 }  // namespace planning

@@ -103,9 +103,10 @@ class TrajectorySmootherNLOpt {
   typedef Eigen::Matrix<double, 6, 1> Vector6d;
   typedef Eigen::Matrix<double, 6, 6> Matrix6d;
 
-  explicit TrajectorySmootherNLOpt(const double pts_offset_x,
+  explicit TrajectorySmootherNLOpt(const char logdir[],
+                                   const double pts_offset_x,
                                    const double pts_offset_y);
-  explicit TrajectorySmootherNLOpt();
+  explicit TrajectorySmootherNLOpt(const char logdir[]);
   virtual ~TrajectorySmootherNLOpt() = default;
 
   int Optimize();
@@ -204,8 +205,10 @@ class TrajectorySmootherNLOpt {
   int nr_integration_steps_;
   double initial_time_;
 
+  std::string logdir_;
   double pts_offset_x_;
   double pts_offset_y_;
+  DiscretizedTrajectory modified_input_trajectory_;
 
   // Indices and sizes of our model
   enum STATES {
@@ -220,6 +223,10 @@ class TrajectorySmootherNLOpt {
 
   enum INPUTS { J = 0, XI = 1, INPUTS_SIZE = 2 };
 };
+
+void SaveDiscretizedTrajectoryToFile(
+    const apollo::planning::DiscretizedTrajectory& traj,
+    const std::string& path_to_file, const std::string& file_name);
 
 }  // namespace planning
 }  // namespace apollo

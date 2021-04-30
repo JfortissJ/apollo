@@ -52,7 +52,7 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   }
 
   // OPTIMIZER
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   tsm.InitializeProblem(subsampling, traj_in, start_point);
   int status = tsm.Optimize();
   EXPECT_GT(status, 0);
@@ -67,27 +67,20 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   tsm.DebugDumpX();
   tsm.DebugDumpXref();
 
-  apollo::planning::PublishableTrajectory publishable_trajectory(0.0, traj_opt);
-  ADCTrajectory traj_pb;
-  publishable_trajectory.PopulateTrajectoryProtobuf(&traj_pb);
-
-  // This will dump the optimized trajectory. Analysis is possible using the
-  // matlab script analyze_smoother.m
-  const std::string txt_file = path_to_file + "/" + "sqp_out_" +
-                               std::to_string(subsampling) + "_" + input_file;
-  apollo::cyber::common::SetProtoToASCIIFile(traj_pb, txt_file);
+  const std::string file_name = "sqp_out_" + std::to_string(subsampling) + "_" + input_file;
+  SaveDiscretizedTrajectoryToFile(traj_opt, path_to_file, file_name);
 
   EXPECT_DOUBLE_EQ(traj_in.GetTemporalLength(), T_in);
   EXPECT_DOUBLE_EQ(traj_opt.GetTemporalLength(), T_in);
 }
 
 TEST(TrajectorySmootherNLOpt, Constructor) {
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   EXPECT_NE(&tsm, nullptr);
 }
 
 TEST(TrajectorySmootherNLOpt, Optimize_Empty) {
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   DiscretizedTrajectory tmp;
   tsm.InitializeProblem(1, tmp, common::TrajectoryPoint());
   int status = tsm.Optimize();
@@ -95,7 +88,7 @@ TEST(TrajectorySmootherNLOpt, Optimize_Empty) {
 }
 
 TEST(TrajectorySmootherNLOpt, Optimize1) {
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   DiscretizedTrajectory traj;
   common::TrajectoryPoint tp1;
   tp1.mutable_path_point()->set_x(0);
@@ -134,7 +127,7 @@ TEST(TrajectorySmootherNLOpt, Optimize1) {
 }
 
 TEST(TrajectorySmootherNLOpt, PlanningInitPoint) {
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   DiscretizedTrajectory traj;
   common::TrajectoryPoint tp1;
   tp1.mutable_path_point()->set_x(0);
@@ -260,7 +253,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429133659) {
 }
 
 TEST(TrajectorySmootherNLOpt, model_f) {
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   TrajectorySmootherNLOpt::Vector6d x;
   x << 0.0, 0.0, 0.0, 1.0, 0.0, 0.0;
   const Eigen::Vector2d u = Eigen::Vector2d(0.2, 0.5);
@@ -278,7 +271,7 @@ TEST(TrajectorySmootherNLOpt, model_f) {
 }
 
 TEST(TrajectorySmootherNLOpt, IntegrateModelConstInput) {
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   TrajectorySmootherNLOpt::Vector6d x0;
   x0 << 0.0, 0.0, 0.0, 1.0, 0.0, 0.0;
   size_t dimU = 2;
@@ -315,7 +308,7 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelConstInput) {
 }
 
 TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
-  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt();
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   TrajectorySmootherNLOpt::Vector6d x0;
   x0 << 0.0, 0.0, 0.0, 1.0, 0.0, 0.0;
   size_t dimU = 2;
