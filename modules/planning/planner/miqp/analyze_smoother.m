@@ -1,69 +1,76 @@
 clc
-close all
+% close all
 clear all
 
 rootpath = 'miqp_testdata'
-miqp_traj = ReadTrajectory(rootpath, 'test_trajectory_miqp_from_standstill.pb.txt')
-sqp_traj = ReadTrajectory(rootpath, 'sqp_out_test_trajectory_miqp_from_standstill.pb.txt')
+input_file = 'test_trajectory_miqp_20210429-135518.pb.txt'
+subsampling = 1
+miqp_traj = ReadTrajectory(rootpath, input_file)
+sqp_traj = ReadTrajectory(rootpath, ['sqp_out_', num2str(subsampling), '_', input_file])
 
 figure
 subplot(4,1,1)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.da, '-.')
-plot(sqp_traj.relative_time, sqp_traj.da)
+plot(miqp_traj.relative_time, miqp_traj.da, 'o-.')
+plot(sqp_traj.relative_time, sqp_traj.da, 'x-')
 legend('miqp_traj', 'sqp_traj')
 ylabel('jerk')
 
 subplot(4,1,2)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.a, '-.')
-plot(sqp_traj.relative_time, sqp_traj.a)
+plot(miqp_traj.relative_time, miqp_traj.a, 'o-.')
+plot(sqp_traj.relative_time, sqp_traj.a, 'x-')
 legend('miqp', 'sqp')
 ylabel('a')
 
 subplot(4,1,3)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.v, '-.')
-plot(sqp_traj.relative_time, sqp_traj.v)
+plot(miqp_traj.relative_time, miqp_traj.v, 'o-.')
+plot(sqp_traj.relative_time, sqp_traj.v, 'x-')
 legend('miqp', 'sqp')
 ylabel('v')
 
 subplot(4,1,4)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.dkappa, '-.')
-plot(sqp_traj.relative_time, sqp_traj.dkappa)
+plot(miqp_traj.relative_time, miqp_traj.dkappa, 'o-.')
+plot(sqp_traj.relative_time, sqp_traj.dkappa, 'x-')
 legend('miqp', 'sqp')
 ylabel('dkappa')
 
 figure
 subplot(4,1,1)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.x, '-.')
-plot(sqp_traj.relative_time, sqp_traj.x)
+plot(miqp_traj.relative_time, miqp_traj.x - miqp_traj.x(1), 'o-.')
+plot(sqp_traj.relative_time, sqp_traj.x - sqp_traj.x(1), 'x-')
 legend('miqp', 'sqp')
 ylabel('x')
 
 subplot(4,1,2)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.y, '-.')
-plot(sqp_traj.relative_time, sqp_traj.y)
+plot(miqp_traj.relative_time, miqp_traj.y - miqp_traj.y(1), 'o-.')
+plot(sqp_traj.relative_time, sqp_traj.y - sqp_traj.y(1), 'x-')
 legend('miqp', 'sqp')
 ylabel('y')
 
 subplot(4,1,3)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.theta, '-.')
-plot(sqp_traj.relative_time, sqp_traj.theta)
+plot(miqp_traj.relative_time, miqp_traj.theta, 'o-.')
+plot(sqp_traj.relative_time, sqp_traj.theta, 'x-')
 legend('miqp', 'sqp')
 ylabel('theta')
 
 subplot(4,1,4)
 hold on
-plot(miqp_traj.relative_time, miqp_traj.kappa, '-.')
+plot(miqp_traj.relative_time, miqp_traj.kappa, 'o-.')
 plot(sqp_traj.relative_time, sqp_traj.kappa)
 legend('miqp', 'sqp')
 ylabel('kappa')
 
+figure
+plot(miqp_traj.x - miqp_traj.x(1), miqp_traj.y - miqp_traj.y(1), 'o-.')
+hold on
+plot(sqp_traj.x - sqp_traj.x(1), sqp_traj.y - sqp_traj.y(1), 'x-')
+axis equal
 
 %%
 function [t] = ReadTrajectory(rootpath, filename)
@@ -71,6 +78,7 @@ parameterstring = fileread(fullfile(rootpath, filename));
 
 x = [];
 y = [];
+z = [];
 theta = [];
 kappa = [];
 s = [];
@@ -91,6 +99,7 @@ parameterstring=regexprep(parameterstring,'path_point {','');
 parameterstring=regexprep(parameterstring,'}','');
 parameterstring = strrep(parameterstring, 'x: ','x = [x,');
 parameterstring = strrep(parameterstring, 'y: ','y = [y,');
+parameterstring = strrep(parameterstring, 'z: ','z = [z,');
 parameterstring = strrep(parameterstring, 'theta: ','theta = [theta,');
 parameterstring = strrep(parameterstring, 'dkappa: ','dkappa = [dkappa,');
 parameterstring = strrep(parameterstring, 'kappa: ','kappa = [kappa,');
@@ -124,6 +133,9 @@ end
 
 if isempty(da)
     da = nan*relative_time;
+end
+if isempty(dkappa)
+    dkappa = nan*relative_time;
 end
 
 t.x = x
