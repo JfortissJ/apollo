@@ -6,7 +6,7 @@ standard_planning_config {
 miqp_planner_config: {
     nr_regions: 16
     max_velocity_fitting: 10
-    use_environment_polygon: true
+    use_environment_polygon: false
     consider_obstacles: false
     close_to_end_distance: 1.0
     collision_radius_add: 0.3
@@ -39,6 +39,7 @@ miqp_planner_config: {
     obstacle_roi_filter: true
     obstacle_roi_behind_distance: 10.0
     use_start_transformation: true
+    use_start_sqp_only: false
     acc_start_trajectory: 1.0
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06

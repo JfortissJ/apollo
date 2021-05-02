@@ -38,8 +38,9 @@ message MiqpPlannerConfiguration {
     optional bool obstacle_roi_filter = 33 [default = false];
     optional double obstacle_roi_behind_distance = 34 [default = 10.0];
     optional bool use_start_transformation = 35 [default = true];
-    optional double acc_start_trajectory = 36 [default = 1.0];
-    optional double pts_offset_x = 37 [default = 0.0];
-    optional double pts_offset_y = 38 [default = 0.0];
-    optional bool use_smoothing = 39 [default = false];
+    optional bool use_start_sqp_only = 36 [default = true];
+    optional double acc_start_trajectory = 37 [default = 1.0];
+    optional double pts_offset_x = 38 [default = 0.0];
+    optional double pts_offset_y = 39 [default = 0.0];
+    optional bool use_smoothing = 40 [default = false];
 }
