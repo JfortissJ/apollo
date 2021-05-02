@@ -323,22 +323,27 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Planning success -> publish trajectory
+  Status return_status;
   if (config_.miqp_planner_config().use_smoothing()) {
     auto smoothed_apollo_trajectory =
         SmoothTrajectory(apollo_traj, planning_init_point);
     reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
+    reference_line_info->SetCost(0);  // TODO necessary?
+    reference_line_info->SetDrivable(true);
+    return_status = Status::OK();
   } else {
-    reference_line_info->SetTrajectory(apollo_traj);
+    // reference_line_info->SetTrajectory(apollo_traj);
+    // reference_line_info->SetCost(0);  // TODO necessary?
+    // reference_line_info->SetDrivable(true);
+    return_status = Status(ErrorCode::PLANNING_ERROR, "Smoothing failed!");
   }
-  reference_line_info->SetCost(0);  // TODO necessary?
-  reference_line_info->SetDrivable(true);
 
   AINFO << "MIQP Planner postprocess took [s]: "
         << (Clock::NowInSeconds() - current_time);
   AINFO << "MiqpPlanner::PlanOnReferenceLine() took "
         << (Clock::NowInSeconds() - start_time);
 
-  return Status::OK();
+  return return_status;
 }
 
 std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
