@@ -280,8 +280,8 @@ void ImarEthernet::PublishSensorData() {
   //! IMU
   using apollo::localization::CorrectedImu;
   auto imu = std::make_shared<CorrectedImu>();
-  double unix_sec_imu = cyber::Time::Now().ToSecond();
-  imu->mutable_header()->set_timestamp_sec(unix_sec_imu);
+  // use gps timestamp here to make sure IMU and GPS have exactly the same time
+  imu->mutable_header()->set_timestamp_sec(unix_sec_gps);
   auto *imu_pose = imu->mutable_imu();
   bool new_imu_data = false;
 
