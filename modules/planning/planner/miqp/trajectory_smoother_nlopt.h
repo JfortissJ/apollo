@@ -173,6 +173,9 @@ class TrajectorySmootherNLOpt {
 
   // stores the currently integrated trajectory
   Eigen::VectorXd X_;
+  Eigen::VectorXd X_ub_;
+  Eigen::VectorXd X_lb_;
+  Eigen::MatrixXd C_kappa_;
   // stores the gradient of the trajectory w.r.t. to the inputs of the
   // optimization
   Eigen::MatrixXd dXdU_;
