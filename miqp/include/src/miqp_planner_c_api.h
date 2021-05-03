@@ -55,6 +55,10 @@ void GetRawCMiqpTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
                                        double start_time, double* trajectory,
                                        int& size);
 
+void GetRawCLastReferenceTrajectoryCMiqpPlaner(CMiqpPlanner c_miqp_planner,
+                                               int carIdx, double start_time,
+                                               double* trajectory, int& size);
+                                               
 bool UpdateConvexifiedMapCMiqpPlaner(CMiqpPlanner c_miqp_planner,
                                      double poly_pts[], const int poly_size);
 

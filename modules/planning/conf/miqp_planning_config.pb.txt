@@ -27,7 +27,7 @@ miqp_planner_config: {
     relobjdif: 0.5
     minimum_region_change_speed: 1
     additional_steps_for_reference_longer_horizon: 6
-    delta_s_desired: 5
+    delta_s_desired: 1
     distance_stop_before: 1
     distance_start_slowdown: 15
     use_sos: false
@@ -39,7 +39,7 @@ miqp_planner_config: {
     obstacle_roi_filter: true
     obstacle_roi_behind_distance: 10.0
     use_start_transformation: true
-    use_start_sqp_only: false
+    use_start_sqp_only: true
     acc_start_trajectory: 1.0
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06

@@ -249,25 +249,31 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Plan
-  current_time = Clock::NowInSeconds();
-  bool success = PlanCMiqpPlanner(planner_, timestep);
-  AINFO << "Miqp planning Time [s] = "
-        << (Clock::NowInSeconds() - current_time);
-  current_time = Clock::NowInSeconds();
+  if (planner_status == PlannerState::START_TRAJECTORY) {
+    AINFO << "Start Trajectory, using reference instead of miqp solution";
+    GetRawCLastReferenceTrajectoryCMiqpPlaner(
+        planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
+  } else {
+    current_time = Clock::NowInSeconds();
+    bool success = PlanCMiqpPlanner(planner_, timestep);
+    AINFO << "Miqp planning Time [s] = "
+          << (Clock::NowInSeconds() - current_time);
+    current_time = Clock::NowInSeconds();
 
-  // Planning failed
-  if (!success) {
-    AINFO << "Planning failed";
-    // TODO Generate some error trajectory
-    return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
+    // Planning failed
+    if (!success) {
+      AINFO << "Planning failed";
+      // TODO Generate some error trajectory
+      return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
+    }
+
+    // Get trajectory from miqp planner
+    AINFO << "Planning Success!";
+    // trajectories shall start at t=0 with an offset of
+    // planning_init_point.relative_time()
+    GetRawCMiqpTrajectoryCMiqpPlanner(
+        planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
   }
-
-  // Get trajectory from miqp planner
-  AINFO << "Planning Success!";
-  // trajectories shall start at t=0 with an offset of
-  // planning_init_point.relative_time()
-  GetRawCMiqpTrajectoryCMiqpPlanner(
-      planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
   DiscretizedTrajectory apollo_traj =
       RawCTrajectoryToApolloTrajectory(traj, size);
   CutoffTrajectoryAtV(apollo_traj, minimum_valid_speed_planning_);
@@ -315,7 +321,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   if (planner_status == START_TRAJECTORY &&
-      config_.miqp_planner_config().use_start_transformation()) {
+      config_.miqp_planner_config().use_start_transformation() &&
+      !config_.miqp_planner_config().use_start_sqp_only()) {
     AINFO << "Transforming Trajectory to start from standstill";
     DiscretizedTrajectory old_traj = std::move(apollo_traj);
     apollo_traj =
@@ -544,14 +551,13 @@ void MiqpPlanner::ConvertToInitialStateSecondOrder(
 
   double theta = planning_init_point.path_point().theta();
   // cplex throws an exception if vel=0
-  double vel = std::max(planning_init_point.v(), minimum_valid_speed_planning_);
   initial_state[0] = planning_init_point.path_point().x() -
                      config_.miqp_planner_config().pts_offset_x();
-  initial_state[1] = vel * cos(theta);
+  initial_state[1] = planning_init_point.v() * cos(theta);
   initial_state[2] = planning_init_point.a() * cos(theta);
   initial_state[3] = planning_init_point.path_point().y() -
                      config_.miqp_planner_config().pts_offset_y();
-  initial_state[4] = vel * sin(theta);
+  initial_state[4] = planning_init_point.v() * sin(theta);
   initial_state[5] = planning_init_point.a() * sin(theta);
   AINFO << std::setprecision(15)
         << "initial state in miqp = x:" << initial_state[0]
