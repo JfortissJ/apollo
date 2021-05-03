@@ -190,8 +190,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
 
   X_lb_.resize(STATES::STATES_SIZE * nr_integration_steps_);
   X_ub_.resize(STATES::STATES_SIZE * nr_integration_steps_);
-  Eigen::MatrixXd C_kappa0;
-  C_kappa0.setZero(STATES::STATES_SIZE * nr_integration_steps_,
+  C_kappa_.setZero(STATES::STATES_SIZE * nr_integration_steps_,
                    nr_integration_steps_);
   offset = 0;
   for (size_t idx = 0; idx < nr_integration_steps_; ++idx) {
@@ -207,17 +206,10 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     X_ub_[offset + STATES::V] = 1e3;
     X_ub_[offset + STATES::A] = 1e3;
     X_ub_[offset + STATES::KAPPA] = 0.2;
-    C_kappa0(offset + STATES::KAPPA, idx) = 1;
+    C_kappa_(offset + STATES::KAPPA, idx) = 1;
 
     offset += STATES::STATES_SIZE;
   }
-  C_kappa_.setZero(STATES::STATES_SIZE * nr_integration_steps_,
-                   nr_integration_steps_ * 2);
-  C_kappa_.block(0, 0, STATES::STATES_SIZE * nr_integration_steps_,
-                 nr_integration_steps_) = C_kappa0;
-  C_kappa_.block(0, nr_integration_steps_,
-                 STATES::STATES_SIZE * nr_integration_steps_,
-                 nr_integration_steps_) = -C_kappa0;
   num_ineq_constr_ =
       2 * nr_integration_steps_;  // upper and lower bound for kappa
 
@@ -486,22 +478,21 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
   Map<MatrixXd> grad_eigen(grad, n, m);
   if (grad != NULL) grad_eigen.fill(0);
   const size_t nr_is = nr_integration_steps_;
+  constexpr size_t nr_inputs = 2;
   Map<VectorXd> cineq_eigen(result, m);
 
   CalculateCommonDataIfNecessary(u_eigen);
 
-  cineq_eigen = X_.transpose() * C_kappa_;
   // upper bounds
-  cineq_eigen.topRows(nr_is) =
-      cineq_eigen.topRows(nr_is) -
-      (X_ub_.transpose() * C_kappa_.leftCols(nr_is)).transpose();
+  cineq_eigen.topRows(nr_is) = (X_ - X_ub_).transpose() * C_kappa_;
   // lower bounds
-  cineq_eigen.bottomRows(nr_is) =
-      cineq_eigen.bottomRows(nr_is) -
-      (X_lb_.transpose() * C_kappa_.rightCols(nr_is)).transpose();
-
+  cineq_eigen.bottomRows(nr_is) = (-X_ + X_lb_).transpose() * C_kappa_;
+  std::cout << "cineq_eigen\n" << cineq_eigen << std::endl;
+  
   if (grad != NULL) {
-    grad_eigen = dXdU_.transpose() * C_kappa_;
+    grad_eigen.leftCols(nr_is) = dXdU_.transpose() * C_kappa_;
+    grad_eigen.rightCols(nr_is) = -dXdU_.transpose() * C_kappa_;
+    std::cout << "grad_eigen\n" << grad_eigen << std::endl;
   }
 }
 
