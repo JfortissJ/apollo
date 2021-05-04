@@ -355,7 +355,7 @@ void ImarEthernet::PublishSensorData() {
 
   if (new_gnss_data || new_imu_data) {
     auto ins_status = std::make_shared<apollo::drivers::gnss::InsStat>();
-    ins_status->mutable_header()->set_timestamp_sec(unix_sec_imu);
+    ins_status->mutable_header()->set_timestamp_sec(unix_sec_gps);
     // TODO: also set status fields?
     gnss_ins_status_writer_->Write(ins_status);
   }
