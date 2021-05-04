@@ -436,9 +436,13 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     // const double a = ax / cos(theta); // probably wrong
     const double a = cos(theta) * ax + sin(M_PI_4 - theta) * ay;  // TODO: check
     s += sqrt(pow(x - lastx, 2) + pow(y - lasty, 2));
-    const double kappa =
+    double kappa;
+    if ((vx * vx + vy * vy) < 1e-3) {
+      kappa = 0;
+    } else {
+      kappa =
         (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
-
+    }
     TrajectoryPoint trajectory_point;
     trajectory_point.mutable_path_point()->set_x(x);
     trajectory_point.mutable_path_point()->set_y(y);
@@ -549,15 +553,16 @@ void MiqpPlanner::ConvertToInitialStateSecondOrder(
         << ", a:" << planning_init_point.a()
         << ", theta:" << planning_init_point.path_point().theta();
 
+  double vel = std::max(planning_init_point.v(), 0.1);
   double theta = planning_init_point.path_point().theta();
   // cplex throws an exception if vel=0
   initial_state[0] = planning_init_point.path_point().x() -
                      config_.miqp_planner_config().pts_offset_x();
-  initial_state[1] = planning_init_point.v() * cos(theta);
+  initial_state[1] = vel * cos(theta);
   initial_state[2] = planning_init_point.a() * cos(theta);
   initial_state[3] = planning_init_point.path_point().y() -
                      config_.miqp_planner_config().pts_offset_y();
-  initial_state[4] = planning_init_point.v() * sin(theta);
+  initial_state[4] = vel * sin(theta);
   initial_state[5] = planning_init_point.a() * sin(theta);
   AINFO << std::setprecision(15)
         << "initial state in miqp = x:" << initial_state[0]
