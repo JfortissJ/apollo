@@ -154,6 +154,7 @@ void FortunaController::Stop() {
 
 Chassis FortunaController::chassis() {
   chassis_.Clear();
+  EnableAutoMode();
 
   ChassisDetail chassis_detail;
   message_manager_->GetSensorData(&chassis_detail);
