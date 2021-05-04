@@ -480,7 +480,6 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
   Map<MatrixXd> grad_eigen(grad, n, m);
   if (grad != NULL) grad_eigen.fill(0);
   const size_t nr_is = nr_integration_steps_;
-  constexpr size_t nr_inputs = 2;
   Map<VectorXd> cineq_eigen(result, m);
 
   CalculateCommonDataIfNecessary(u_eigen);
@@ -489,12 +488,12 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
   cineq_eigen.topRows(nr_is) = (X_ - X_ub_).transpose() * C_kappa_;
   // lower bounds
   cineq_eigen.bottomRows(nr_is) = (-X_ + X_lb_).transpose() * C_kappa_;
-  std::cout << "cineq_eigen\n" << cineq_eigen << std::endl;
+  // std::cout << "cineq_eigen\n" << cineq_eigen << std::endl;
 
   if (grad != NULL) {
     grad_eigen.leftCols(nr_is) = dXdU_.transpose() * C_kappa_;
     grad_eigen.rightCols(nr_is) = -dXdU_.transpose() * C_kappa_;
-    std::cout << "grad_eigen\n" << grad_eigen << std::endl;
+    // std::cout << "grad_eigen\n" << grad_eigen << std::endl;
   }
 }
 
