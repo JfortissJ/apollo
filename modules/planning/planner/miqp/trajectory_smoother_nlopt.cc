@@ -188,6 +188,33 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     upper_bound_.at(idx + INPUTS::XI) = params_.upper_bound_curvature_change;
   }
 
+  X_lb_.resize(STATES::STATES_SIZE * nr_integration_steps_);
+  X_ub_.resize(STATES::STATES_SIZE * nr_integration_steps_);
+  C_kappa_.setZero(STATES::STATES_SIZE * nr_integration_steps_,
+                   nr_integration_steps_);
+  offset = 0;
+  for (size_t idx = 0; idx < nr_integration_steps_; ++idx) {
+    X_lb_[offset + STATES::X] = -1e3;
+    X_lb_[offset + STATES::Y] = -1e3;
+    X_lb_[offset + STATES::THETA] = -1e3;
+    X_lb_[offset + STATES::V] = -1e3;
+    X_lb_[offset + STATES::A] = -1e3;
+    X_lb_[offset + STATES::KAPPA] = -0.2;
+    X_ub_[offset + STATES::X] = 1e3;
+    X_ub_[offset + STATES::Y] = 1e3;
+    X_ub_[offset + STATES::THETA] = 1e3;
+    X_ub_[offset + STATES::V] = 1e3;
+    X_ub_[offset + STATES::A] = 1e3;
+    X_ub_[offset + STATES::KAPPA] = 0.2;
+    if (offset > 0) { // no constraints for the initial point
+      C_kappa_(offset + STATES::KAPPA, idx) = 1;
+    }
+
+    offset += STATES::STATES_SIZE;
+  }
+  num_ineq_constr_ =
+      2 * nr_integration_steps_;  // upper and lower bound for kappa
+
   status_ = 0;
   ready_to_optimize_ = true;
 }
@@ -447,7 +474,29 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
 }
 
 void TrajectorySmootherNLOpt::InequalityConstraintFunction(
-    unsigned m, double* result, unsigned n, const double* x, double* grad) {}
+    unsigned m, double* result, unsigned n, const double* x, double* grad) {
+  // map input values to eigen vectors
+  Map<const VectorXd> u_eigen(x, n);
+  Map<MatrixXd> grad_eigen(grad, n, m);
+  if (grad != NULL) grad_eigen.fill(0);
+  const size_t nr_is = nr_integration_steps_;
+  constexpr size_t nr_inputs = 2;
+  Map<VectorXd> cineq_eigen(result, m);
+
+  CalculateCommonDataIfNecessary(u_eigen);
+
+  // upper bounds
+  cineq_eigen.topRows(nr_is) = (X_ - X_ub_).transpose() * C_kappa_;
+  // lower bounds
+  cineq_eigen.bottomRows(nr_is) = (-X_ + X_lb_).transpose() * C_kappa_;
+  std::cout << "cineq_eigen\n" << cineq_eigen << std::endl;
+
+  if (grad != NULL) {
+    grad_eigen.leftCols(nr_is) = dXdU_.transpose() * C_kappa_;
+    grad_eigen.rightCols(nr_is) = -dXdU_.transpose() * C_kappa_;
+    std::cout << "grad_eigen\n" << grad_eigen << std::endl;
+  }
+}
 
 void TrajectorySmootherNLOpt::EqualityConstraintFunction(
     unsigned m, double* result, unsigned n, const double* x, double* grad) {}
@@ -613,18 +662,20 @@ bool TrajectorySmootherNLOpt::CheckConstraints() const {
     // influence
     if ((idx > 0) && (kappa > params_.upper_bound_curvature ||
                       kappa < params_.lower_bound_curvature)) {
-      AERROR << "solution.kappa = " << kappa << " exceeds bounds";
+      AERROR << "solution.kappa = " << kappa << " exceeds bounds at idx "
+             << idx;
       return false;
     } else if ((idx > 0) && (a > params_.upper_bound_acceleration ||
                              a < params_.lower_bound_acceleration)) {
-      AERROR << "solution.a = " << a << " exceeds bounds";
+      AERROR << "solution.a = " << a << " exceeds bounds at idx " << idx;
       return false;
     } else if (j > params_.upper_bound_jerk || j < params_.lower_bound_jerk) {
-      AERROR << "solution.jerk = " << j << " exceeds bounds";
+      AERROR << "solution.jerk = " << j << " exceeds bounds at idx " << idx;
       return false;
     } else if (xi > params_.upper_bound_curvature_change ||
                xi < params_.lower_bound_curvature_change) {
-      AERROR << "solution.curvature_change = " << xi << " exceeds bounds";
+      AERROR << "solution.curvature_change = " << xi
+             << " exceeds bounds at idx " << idx;
       return false;
     }
   }
