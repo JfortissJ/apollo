@@ -340,15 +340,19 @@ Status MiqpPlanner::PlanOnReferenceLine(
   if (config_.miqp_planner_config().use_smoothing()) {
     auto smoothed_apollo_trajectory =
         SmoothTrajectory(apollo_traj, planning_init_point);
-    reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
+    if(smoothed_apollo_trajectory.first) {
+      reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
+      reference_line_info->SetCost(0);  // TODO necessary?
+      reference_line_info->SetDrivable(true);
+      return_status = Status::OK();
+    } else {
+      return_status = Status(ErrorCode::PLANNING_ERROR, "Smoothing failed!");
+    }
+  } else {
+    reference_line_info->SetTrajectory(apollo_traj);
     reference_line_info->SetCost(0);  // TODO necessary?
     reference_line_info->SetDrivable(true);
     return_status = Status::OK();
-  } else {
-    // reference_line_info->SetTrajectory(apollo_traj);
-    // reference_line_info->SetCost(0);  // TODO necessary?
-    // reference_line_info->SetDrivable(true);
-    return_status = Status(ErrorCode::PLANNING_ERROR, "Smoothing failed!");
   }
 
   AINFO << "MIQP Planner postprocess took [s]: "
@@ -1081,7 +1085,7 @@ MiqpPlanner::SmoothTrajectory(
       return {true, traj};
     } else {
       AERROR << "Trajectory Smoothing Not Valid!";
-      return {false, traj_in};
+      return {false, traj};
     }
   } else {
     AERROR << "Trajectory Smoothing Failed!";
