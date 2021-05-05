@@ -261,6 +261,33 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210503140734) {
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504123902) {
+  // Starting from stillstand, smoothing trajectory from reference generator
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210504-123902.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504124154) {
+  // Starting from stillstand, smoothing trajectory from reference generator
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210504-124154.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504124308) {
+  // Starting from stillstand, smoothing trajectory from reference generator
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210504-124308.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
 TEST(TrajectorySmootherNLOpt, model_f) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   TrajectorySmootherNLOpt::Vector6d x;
