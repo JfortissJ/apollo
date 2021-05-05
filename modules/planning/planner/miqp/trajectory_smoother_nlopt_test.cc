@@ -73,12 +73,13 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   tsm.InitializeProblem(subsampling, traj_in, start_point);
   int status = tsm.Optimize();
 
-  // OPTIMIZER with infinite max_time termination
+  // OPTIMIZER with infinite max_time and max_num_eval termination
   TrajectorySmootherNLOpt tsm2 = TrajectorySmootherNLOpt("/apollo/data/log/");
-  tsm2.InitializeProblem(subsampling, traj_in, start_point);
   auto params = tsm2.GetSolverParameters();
   params.max_time = 1e4;
-  tsm.SetSolverParameters(params);
+  params.max_num_evals = 1e3;
+  tsm2.SetSolverParameters(params);
+  tsm2.InitializeProblem(subsampling, traj_in, start_point);
   int status2 = tsm2.Optimize();
 
   CompareTrajectories(tsm.GetOptimizedTrajectory(), tsm2.GetOptimizedTrajectory());
