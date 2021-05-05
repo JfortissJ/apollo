@@ -175,17 +175,27 @@ class TrajectorySmootherNLOpt {
     solver_params_ = params;
   }
 
- private:
+  ProblemParameters GetProblemParameters() { return params_; }
+
   double BoundedJerk(const double val) const;
+
+  bool IsJerkWithinBounds(const double j) const;
 
   double BoundedCurvatureChange(const double val) const;
 
+  bool IsCurvatureChangeWithinBounds(const double xi) const;
+
   double BoundedAcceleration(const double val) const;
+
+  bool IsAccelerationWithinBounds(const double a) const;
 
   double BoundedCurvature(const double val) const;
 
+  bool IsCurvatureWithinBounds(const double kappa) const;
+
   void CalculateJthreshold();
 
+ private:
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
   // stores the initial state
@@ -254,6 +264,9 @@ void SaveDiscretizedTrajectoryToFile(
 
 double BoundValue(const double v, const double vmax, const double vmin,
                   const double tol);
+
+double InterpolateWithinBounds(int idx0, double v0, int idx1, double v1,
+                               int idx);
 
 }  // namespace planning
 }  // namespace apollo
