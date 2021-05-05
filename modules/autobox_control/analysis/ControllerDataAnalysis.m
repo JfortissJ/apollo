@@ -184,6 +184,52 @@ classdef ControllerDataAnalysis  < PlotBase
            
         end
         
+        function plotLocaVsReference(self)
+            self.doNextPlot(); clf; hold on;
+           set(gcf, 'Name', 'Localization vs. Reference');
+           
+           subplot(5,1,1);
+           hold on
+           title('x');
+           plot(self.res.Time(self.active), self.res.Localization.Pose.Position.x(self.active));
+           plot(self.res.Time(self.active), self.res.Reference.x(self.active));
+           legend('Loca', 'Ref');
+           
+           subplot(5,1,2);
+           hold on
+           title('y')
+           plot(self.res.Time(self.active), self.res.Localization.Pose.Position.y(self.active));
+           plot(self.res.Time(self.active), self.res.Reference.y(self.active));
+           legend('Loca', 'Ref');
+           
+           subplot(5,1,3);
+           hold on
+           title('theta')
+           plot(self.res.Time(self.active), wrapTo2Pi(self.res.Localization.Pose.Heading(self.active)));
+           plot(self.res.Time(self.active), wrapTo2Pi(self.res.Reference.theta(self.active)));
+           legend('Loca', 'Ref');
+           
+           subplot(5,1,4);
+           hold on
+           title('v')
+           v = sqrt(self.res.Localization.Pose.LinearVelocity.x(self.active).^2 + self.res.Localization.Pose.LinearVelocity.y(self.active).^2);
+           plot(self.res.Time(self.active), v);
+           plot(self.res.Time(self.active), self.res.Reference.v(self.active));
+           legend('Loca', 'Ref');
+           
+           subplot(5,1,5);
+           hold on
+           title('kappa')
+           ss = self.res.VehicleCANData.Steering.SteeringWheelAngleSign;
+           kappa_is = tan(self.res.VehicleCANData.Steering.SteeringWheelAngle./852.7216)./2.786;
+           kappa_is(ss==true) = -kappa_is(ss==true);
+           plot(self.res.Time(self.active), kappa_is);
+           plot(self.res.Time(self.active), self.res.Reference.kappa(self.active));
+           legend('CAN', 'Ref');
+           
+           
+        end
+        
         %% Trajectory
         function plotTrajectoryRangeFromTime(self, starttime, endtime)
             idx0 = self.getIdxFromTime(starttime);
@@ -199,6 +245,9 @@ classdef ControllerDataAnalysis  < PlotBase
            self.doNextPlot(); clf; hold on;
            set(gcf, 'Name', 'Trajectory2');
            h2 = gcf;
+           
+           x_offset = self.res.Localization.Pose.Position.x(number_trajectory_range(1));
+           y_offset = self.res.Localization.Pose.Position.y(number_trajectory_range(1));
 
 %            number_trajectory = 200; % i.e. first trajectory that get's published
             for number_trajectory = number_trajectory_range
@@ -281,18 +330,18 @@ classdef ControllerDataAnalysis  < PlotBase
                ylabel('relative time')
                
                subplot(4,1,2); hold on
-               plot(absolute_time, x)
-               plot(ref_time, ref_x, 'kx')
-               plot(loca_time, loca_x, 'ko')
-               plot([loca_time, ref_time], [loca_x, ref_x], 'k-')
+               plot(absolute_time, x-x_offset)
+               plot(ref_time, ref_x-x_offset, 'kx')
+               plot(loca_time, loca_x-x_offset, 'ko')
+               plot([loca_time, ref_time], [loca_x-x_offset, ref_x-x_offset], 'k-')
                ylabel('x')
                xlabel('absolute time')
                
                subplot(4,1,3); hold on
-               plot(absolute_time, y)
-               plot(ref_time, ref_y, 'kx')
-               plot(loca_time, loca_y, 'ko')
-               plot([loca_time, ref_time], [loca_y, ref_y], 'k-')
+               plot(absolute_time, y-y_offset)
+               plot(ref_time, ref_y-y_offset, 'kx')
+               plot(loca_time, loca_y-y_offset, 'ko')
+               plot([loca_time, ref_time], [loca_y-y_offset, ref_y-y_offset], 'k-')
                ylabel('y')
                xlabel('absolute time')
                
@@ -326,8 +375,11 @@ classdef ControllerDataAnalysis  < PlotBase
                plot(absolute_time, kappa)
                plot(ref_time, ref_kappa, 'kx')
                %compute loca kappa from loca?
-               %plot(loca_time, loca_kappa, 'ko')
-               %plot([loca_time, ref_time], [loca_kappa, ref_kappa], 'k-')
+               ss = self.res.VehicleCANData.Steering.SteeringWheelAngleSign(number_trajectory);
+               kappa_is = tan(self.res.VehicleCANData.Steering.SteeringWheelAngle(number_trajectory)/852.7216)/2.786;
+               kappa_is(ss==true) = -kappa_is(ss==true);
+               plot(loca_time, kappa_is, 'ko')
+               plot([loca_time, ref_time], [kappa_is, ref_kappa], 'k-')
                ylabel('kappa')
                xlabel('absolute time')
                
