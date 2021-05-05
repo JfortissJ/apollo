@@ -138,7 +138,14 @@ void TrajectorySmootherNLOpt::InitializeProblem(
 
   if (x0_[STATES::KAPPA] > params_.upper_bound_curvature ||
       x0_[STATES::KAPPA] < params_.lower_bound_curvature) {
-    AERROR << "Initial kappa exceeds bounds";
+    AERROR << "Initial kappa exceeds bounds, bounding...";
+    x0_[STATES::KAPPA] = BoundedCurvature(x0_[STATES::KAPPA]);
+  }
+
+  if (x0_[STATES::KAPPA] > params_.upper_bound_acceleration ||
+      x0_[STATES::KAPPA] < params_.lower_bound_acceleration) {
+    AERROR << "Initial acceleration exceeds bounds, bounding...";
+    x0_[STATES::A] = BoundedAcceleration(x0_[STATES::A]);
   }
 
   // set reference from input
@@ -206,7 +213,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     X_ub_[offset + STATES::V] = 1e3;
     X_ub_[offset + STATES::A] = 1e3;
     X_ub_[offset + STATES::KAPPA] = 0.2;
-    if (offset > 0) { // no constraints for the initial point
+    if (offset > 0) {  // no constraints for the initial point
       C_kappa_(offset + STATES::KAPPA, idx) = 1;
     }
 
@@ -232,6 +239,7 @@ int TrajectorySmootherNLOpt::Optimize() {
   opt.set_xtol_rel(solver_params_.x_tol_rel);
   opt.set_xtol_abs(solver_params_.x_tol_abs);
   opt.set_maxeval(solver_params_.max_num_evals);
+  opt.set_maxtime(solver_params_.max_time);
 
   // Upper and lower bound on u
   if (!lower_bound_.empty()) {
@@ -299,6 +307,9 @@ int TrajectorySmootherNLOpt::Optimize() {
       break;
     case nlopt::MAXEVAL_REACHED:
       AINFO << "Optimization stopped because maxeval was reached.";
+      break;
+    case nlopt::MAXTIME_REACHED:
+      AINFO << "Optimization stopped because maxtime was reached.";
       break;
     case nlopt::INVALID_ARGS:
       AWARN << "Invalid arguments (e.g. lower bounds are bigger than upper "
@@ -683,7 +694,7 @@ bool TrajectorySmootherNLOpt::CheckConstraints() const {
 
 bool TrajectorySmootherNLOpt::ValidateSmoothingSolution() const {
   bool valid = true;
-  if (status_ < 0 || status_ > 5) {
+  if (status_ < 0 || status_ > 6) {
     AERROR << "Smoothing solution invalid due to solver's return value = "
            << status_;
     valid = false;
@@ -709,15 +720,24 @@ bool TrajectorySmootherNLOpt::ValidateSmoothingSolution() const {
 }
 
 double TrajectorySmootherNLOpt::BoundedJerk(const double val) const {
-  return std::max(std::min(val, params_.upper_bound_jerk - params_.tol_jerk),
-                  params_.lower_bound_jerk + params_.tol_jerk);
+  return BoundValue(val, params_.upper_bound_jerk, params_.lower_bound_jerk,
+                    params_.tol_jerk);
 }
 
 double TrajectorySmootherNLOpt::BoundedCurvatureChange(const double val) const {
-  return std::max(
-      std::min(val, params_.upper_bound_curvature_change -
-                        params_.tol_curvature_change),
-      params_.lower_bound_curvature_change + params_.tol_curvature_change);
+  return BoundValue(val, params_.upper_bound_curvature_change,
+                    params_.lower_bound_curvature_change,
+                    params_.tol_curvature_change);
+}
+
+double TrajectorySmootherNLOpt::BoundedAcceleration(const double val) const {
+  return BoundValue(val, params_.upper_bound_acceleration,
+                    params_.lower_bound_acceleration, params_.tol_acceleration);
+}
+
+double TrajectorySmootherNLOpt::BoundedCurvature(const double val) const {
+  return BoundValue(val, params_.upper_bound_curvature,
+                    params_.lower_bound_curvature, params_.tol_curvature);
 }
 
 void SaveDiscretizedTrajectoryToFile(
@@ -731,6 +751,11 @@ void SaveDiscretizedTrajectoryToFile(
   // matlab script analyze_smoother.m
   const std::string txt_file = path_to_file + "/" + file_name;
   apollo::cyber::common::SetProtoToASCIIFile(traj_pb, txt_file);
+}
+
+double BoundValue(const double v, const double vmax, const double vmin,
+                  const double tol) {
+  return std::max(std::min(v, vmax - tol), vmin + tol);
 }
 
 }  // namespace planning

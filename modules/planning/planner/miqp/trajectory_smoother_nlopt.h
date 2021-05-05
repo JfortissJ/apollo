@@ -29,18 +29,20 @@ class TrajectorySmootherNLOpt {
  public:
   struct ProblemParameters {
     ProblemParameters()
-        : cost_offset_x(1),
-          cost_offset_y(1),
+        : cost_offset_x(1e1),
+          cost_offset_y(1e1),
           cost_offset_theta(0),
-          cost_offset_v(1),
-          cost_curvature(1),
+          cost_offset_v(1e1),
+          cost_curvature(1e1),
           cost_acceleration(0),
-          cost_curvature_change(1e-1),
-          cost_acceleration_change(1e-1),
+          cost_curvature_change(2e0),
+          cost_acceleration_change(2e0),
           lower_bound_acceleration(-8.0),
           upper_bound_acceleration(4.0),
+          tol_acceleration(1e-2),
           lower_bound_curvature(-0.2),
           upper_bound_curvature(0.2),
+          tol_curvature(1e-2),
           lower_bound_jerk(-0.75),
           upper_bound_jerk(0.75),
           tol_jerk(1e-2),
@@ -63,8 +65,10 @@ class TrajectorySmootherNLOpt {
     // upper and lower bounds
     double lower_bound_acceleration;
     double upper_bound_acceleration;
+    double tol_acceleration;
     double lower_bound_curvature;
     double upper_bound_curvature;
+    double tol_curvature;
     double lower_bound_jerk;
     double upper_bound_jerk;
     double tol_jerk;
@@ -77,12 +81,13 @@ class TrajectorySmootherNLOpt {
    public:
     SolverParameters()
         : algorithm(nlopt::LD_SLSQP),
-        // : algorithm(nlopt::LN_BOBYQA),
+          // : algorithm(nlopt::LN_BOBYQA),
           x_tol_rel(1e-6),
           x_tol_abs(1e-6),
           ineq_const_tol(1e-4),
           eq_const_tol(1e-4),
-          max_num_evals(1000) {}
+          max_num_evals(1000),
+          max_time(0.2) {}
 
     // algorithm to use for optimization. check NLOPT Documentation
     // http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms
@@ -99,6 +104,8 @@ class TrajectorySmootherNLOpt {
     double eq_const_tol;
     // maximum number of function evaluations
     size_t max_num_evals;
+    // maximum time
+    double max_time;
   };
 
   typedef Eigen::Matrix<double, 6, 1> Vector6d;
@@ -167,6 +174,10 @@ class TrajectorySmootherNLOpt {
 
   double BoundedCurvatureChange(const double val) const;
 
+  double BoundedAcceleration(const double val) const;
+
+  double BoundedCurvature(const double val) const;
+
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
   // stores the initial state
@@ -231,6 +242,9 @@ class TrajectorySmootherNLOpt {
 void SaveDiscretizedTrajectoryToFile(
     const apollo::planning::DiscretizedTrajectory& traj,
     const std::string& path_to_file, const std::string& file_name);
+
+double BoundValue(const double v, const double vmax, const double vmin,
+                  const double tol);
 
 }  // namespace planning
 }  // namespace apollo
