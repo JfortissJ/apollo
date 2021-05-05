@@ -82,12 +82,12 @@ class TrajectorySmootherNLOpt {
     SolverParameters()
         : algorithm(nlopt::LD_SLSQP),
           // : algorithm(nlopt::LN_BOBYQA),
-          x_tol_rel(1e-6),
-          x_tol_abs(1e-6),
+          x_tol_rel(1e-4),
+          x_tol_abs(1e-4),
           ineq_const_tol(1e-4),
           eq_const_tol(1e-4),
-          max_num_evals(1000),
-          max_time(0.2) {}
+          max_num_evals(100),
+          max_time(0.1) {}
 
     // algorithm to use for optimization. check NLOPT Documentation
     // http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms
@@ -169,6 +169,12 @@ class TrajectorySmootherNLOpt {
 
   bool ValidateSmoothingSolution() const;
 
+  SolverParameters GetSolverParameters() { return solver_params_; }
+
+  void SetSolverParameters(const SolverParameters& params) {
+    solver_params_ = params;
+  }
+
  private:
   double BoundedJerk(const double val) const;
 
@@ -177,6 +183,8 @@ class TrajectorySmootherNLOpt {
   double BoundedAcceleration(const double val) const;
 
   double BoundedCurvature(const double val) const;
+
+  void CalculateJthreshold();
 
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
@@ -201,6 +209,7 @@ class TrajectorySmootherNLOpt {
   std::vector<double> u_;
 
   double j_opt_;
+  double j_threshold_;
   int status_;
   int numevals_;
   std::vector<double> lower_bound_;

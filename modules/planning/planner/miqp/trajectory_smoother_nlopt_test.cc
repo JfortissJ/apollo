@@ -28,6 +28,23 @@
 namespace apollo {
 namespace planning {
 
+void CompareTrajectories(DiscretizedTrajectory traj1, DiscretizedTrajectory traj2) {
+  EXPECT_EQ(traj1.size(), traj2.size());
+  
+  for (int idx = 0; idx < traj1.size(); ++idx) {
+    auto tp1 = traj1.at(idx);
+    auto tp2 = traj2.at(idx);
+
+    EXPECT_NEAR(tp1.path_point().x(), tp2.path_point().x(), 0.3);
+    EXPECT_NEAR(tp1.path_point().y(), tp2.path_point().y(), 0.3);
+    EXPECT_NEAR(tp1.path_point().theta(), tp2.path_point().theta(), 0.3);
+    EXPECT_NEAR(tp1.path_point().kappa(), tp2.path_point().kappa(), 0.2);
+    EXPECT_NEAR(tp1.path_point().s(), tp2.path_point().s(), 0.3);
+    EXPECT_NEAR(tp1.v(), tp2.v(), 0.1);
+    EXPECT_NEAR(tp1.a(), tp2.a(), 0.2);
+  }
+}
+
 void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
                             int subsampling,
                             std::string startpoint_string = "") {
@@ -55,8 +72,19 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   tsm.InitializeProblem(subsampling, traj_in, start_point);
   int status = tsm.Optimize();
+
+  // OPTIMIZER with infinite max_time termination
+  TrajectorySmootherNLOpt tsm2 = TrajectorySmootherNLOpt("/apollo/data/log/");
+  tsm2.InitializeProblem(subsampling, traj_in, start_point);
+  auto params = tsm2.GetSolverParameters();
+  params.max_time = 1e4;
+  tsm.SetSolverParameters(params);
+  int status2 = tsm2.Optimize();
+
+  CompareTrajectories(tsm.GetOptimizedTrajectory(), tsm2.GetOptimizedTrajectory());
+
   EXPECT_GT(status, 0);
-  EXPECT_LT(status, 5);  // 5 ... NLOPT_MAXEVAL_REACHED
+  EXPECT_LT(status, 7);  // 5 ... NLOPT_MAXEVAL_REACHED
   EXPECT_TRUE(tsm.ValidateSmoothingSolution());
   auto traj_opt = tsm.GetOptimizedTrajectory();
   for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
@@ -67,7 +95,8 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   tsm.DebugDumpX();
   tsm.DebugDumpXref();
 
-  const std::string file_name = "sqp_out_" + std::to_string(subsampling) + "_" + input_file;
+  const std::string file_name =
+      "sqp_out_" + std::to_string(subsampling) + "_" + input_file;
   SaveDiscretizedTrajectoryToFile(traj_opt, path_to_file, file_name);
 
   EXPECT_DOUBLE_EQ(traj_in.GetTemporalLength(), T_in);
@@ -257,6 +286,17 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210503140734) {
   const std::string path_to_file =
       "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210503-140734.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504121851) {
+  // Starting from stillstand, smoothing trajectory from reference generator
+  // there is quite an offset between the initial state and the rest of the
+  // reference
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210504-121851.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }

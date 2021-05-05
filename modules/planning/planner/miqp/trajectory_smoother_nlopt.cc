@@ -222,6 +222,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   num_ineq_constr_ =
       2 * nr_integration_steps_;  // upper and lower bound for kappa
 
+  CalculateJthreshold();
+
   status_ = 0;
   ready_to_optimize_ = true;
 }
@@ -698,9 +700,9 @@ bool TrajectorySmootherNLOpt::ValidateSmoothingSolution() const {
     AERROR << "Smoothing solution invalid due to solver's return value = "
            << status_;
     valid = false;
-  } else if (j_opt_ > 100) {
+  } else if (j_opt_ > j_threshold_) {
     AERROR << "Smoothing solution invalid due to j_opt_ = " << j_opt_
-           << " > j_max";
+           << " > j_max = " << j_threshold_;
     valid = false;
   } else if (numevals_ < 2) {
     AERROR << "Smoothing solution invalid due to num_eval < num_eval_min";
@@ -738,6 +740,30 @@ double TrajectorySmootherNLOpt::BoundedAcceleration(const double val) const {
 double TrajectorySmootherNLOpt::BoundedCurvature(const double val) const {
   return BoundValue(val, params_.upper_bound_curvature,
                     params_.lower_bound_curvature, params_.tol_curvature);
+}
+
+void TrajectorySmootherNLOpt::CalculateJthreshold() {
+  j_threshold_ = 0;
+  // costs for deviation from the initial reference
+  j_threshold_ +=
+      input_traj_size_ * params_.cost_offset_x * 3.0;  // 3.0m deviation
+  j_threshold_ +=
+      input_traj_size_ * params_.cost_offset_y * 3.0;  // 3.0m deviation
+  j_threshold_ += input_traj_size_ * params_.cost_offset_theta * 0.2;
+  j_threshold_ +=
+      input_traj_size_ * params_.cost_offset_v * 3.0;  // 3.0m/s deviation
+
+  // costs on absolute values
+  j_threshold_ += nr_integration_steps_ * params_.cost_curvature *
+                  params_.upper_bound_curvature;
+  j_threshold_ += nr_integration_steps_ * params_.cost_acceleration *
+                  params_.upper_bound_acceleration;
+  // costs on input
+  j_threshold_ += nr_integration_steps_ * params_.cost_curvature_change *
+                  params_.upper_bound_curvature_change;
+  j_threshold_ += nr_integration_steps_ * params_.cost_acceleration_change *
+                  params_.upper_bound_jerk;
+  AINFO << "j_threshold is set to " << j_threshold_;
 }
 
 void SaveDiscretizedTrajectoryToFile(
