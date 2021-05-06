@@ -81,13 +81,12 @@ class TrajectorySmootherNLOpt {
    public:
     SolverParameters()
         : algorithm(nlopt::LD_SLSQP),
-          // : algorithm(nlopt::LN_BOBYQA),
-          x_tol_rel(1e-4),
-          x_tol_abs(1e-4),
+          x_tol_rel(1e-6),
+          x_tol_abs(1e-6),
           ineq_const_tol(1e-4),
           eq_const_tol(1e-4),
-          max_num_evals(100),
-          max_time(0.1) {}
+          max_num_evals(1000),
+          max_time(0.05) {}
 
     // algorithm to use for optimization. check NLOPT Documentation
     // http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms
