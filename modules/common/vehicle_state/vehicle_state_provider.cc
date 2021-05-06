@@ -86,7 +86,7 @@ Status VehicleStateProvider::Update(
                                       ->GetConfig()
                                       .vehicle_param()
                                       .max_steer_angle();
-    const double kappa =
+    double kappa =
         tan(steering_angle) / common::VehicleConfigHelper::Instance()
                                   ->GetConfig()
                                   .vehicle_param()
