@@ -20,6 +20,7 @@
 #include <nlopt.hpp>
 
 #include "Eigen/Dense"
+#include "Eigen/SparseCore"
 #include "modules/planning/common/trajectory/discretized_trajectory.h"
 
 namespace apollo {
@@ -204,7 +205,7 @@ class TrajectorySmootherNLOpt {
   Eigen::VectorXd X_;
   Eigen::VectorXd X_ub_;
   Eigen::VectorXd X_lb_;
-  Eigen::MatrixXd C_kappa_;
+  Eigen::SparseMatrix<double> C_kappa_;
   // stores the gradient of the trajectory w.r.t. to the inputs of the
   // optimization
   Eigen::MatrixXd dXdU_;

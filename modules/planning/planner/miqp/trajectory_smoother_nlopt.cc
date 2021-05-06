@@ -197,8 +197,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
 
   X_lb_.resize(STATES::STATES_SIZE * nr_integration_steps_);
   X_ub_.resize(STATES::STATES_SIZE * nr_integration_steps_);
-  C_kappa_.setZero(STATES::STATES_SIZE * nr_integration_steps_,
-                   nr_integration_steps_);
+  C_kappa_.resize(STATES::STATES_SIZE * nr_integration_steps_,
+                  nr_integration_steps_);
   offset = 0;
   for (size_t idx = 0; idx < nr_integration_steps_; ++idx) {
     X_lb_[offset + STATES::X] = -1e3;
@@ -214,7 +214,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     X_ub_[offset + STATES::A] = 1e3;
     X_ub_[offset + STATES::KAPPA] = 0.2;
     if (offset > 0) {  // no constraints for the initial point
-      C_kappa_(offset + STATES::KAPPA, idx) = 1;
+      C_kappa_.insert(offset + STATES::KAPPA, idx) = 1;
     }
 
     offset += STATES::STATES_SIZE;
@@ -517,8 +517,7 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
 
   if (grad != NULL) {
     grad_eigen.leftCols(nr_is) = dXdU_.transpose() * C_kappa_;
-    grad_eigen.rightCols(nr_is) = -dXdU_.transpose() * C_kappa_;
-    // std::cout << "grad_eigen\n" << grad_eigen << std::endl;
+    grad_eigen.rightCols(nr_is) = -dXdU_.transpose() * C_kappa_;    
   }
 }
 
