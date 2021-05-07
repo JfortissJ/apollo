@@ -20,6 +20,7 @@
 #include <nlopt.hpp>
 
 #include "Eigen/Dense"
+#include "Eigen/SparseCore"
 #include "modules/planning/common/trajectory/discretized_trajectory.h"
 
 namespace apollo {
@@ -33,9 +34,9 @@ class TrajectorySmootherNLOpt {
           cost_offset_y(1e1),
           cost_offset_theta(0),
           cost_offset_v(1e1),
-          cost_curvature(1e1),
+          cost_curvature(1e2),
           cost_acceleration(0),
-          cost_curvature_change(2e0),
+          cost_curvature_change(2e1),
           cost_acceleration_change(2e0),
           lower_bound_acceleration(-8.0),
           upper_bound_acceleration(4.0),
@@ -81,13 +82,12 @@ class TrajectorySmootherNLOpt {
    public:
     SolverParameters()
         : algorithm(nlopt::LD_SLSQP),
-          // : algorithm(nlopt::LN_BOBYQA),
-          x_tol_rel(1e-4),
-          x_tol_abs(1e-4),
+          x_tol_rel(1e-6),
+          x_tol_abs(1e-6),
           ineq_const_tol(1e-4),
           eq_const_tol(1e-4),
-          max_num_evals(100),
-          max_time(0.1) {}
+          max_num_evals(1000),
+          max_time(0.05) {}
 
     // algorithm to use for optimization. check NLOPT Documentation
     // http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms
@@ -175,17 +175,27 @@ class TrajectorySmootherNLOpt {
     solver_params_ = params;
   }
 
- private:
+  ProblemParameters GetProblemParameters() { return params_; }
+
   double BoundedJerk(const double val) const;
+
+  bool IsJerkWithinBounds(const double j) const;
 
   double BoundedCurvatureChange(const double val) const;
 
+  bool IsCurvatureChangeWithinBounds(const double xi) const;
+
   double BoundedAcceleration(const double val) const;
+
+  bool IsAccelerationWithinBounds(const double a) const;
 
   double BoundedCurvature(const double val) const;
 
+  bool IsCurvatureWithinBounds(const double kappa) const;
+
   void CalculateJthreshold();
 
+ private:
   // stores the positions of the reference
   Eigen::VectorXd X_ref_;
   // stores the initial state
@@ -195,7 +205,7 @@ class TrajectorySmootherNLOpt {
   Eigen::VectorXd X_;
   Eigen::VectorXd X_ub_;
   Eigen::VectorXd X_lb_;
-  Eigen::MatrixXd C_kappa_;
+  Eigen::SparseMatrix<double> C_kappa_;
   // stores the gradient of the trajectory w.r.t. to the inputs of the
   // optimization
   Eigen::MatrixXd dXdU_;
@@ -254,6 +264,9 @@ void SaveDiscretizedTrajectoryToFile(
 
 double BoundValue(const double v, const double vmax, const double vmin,
                   const double tol);
+
+double InterpolateWithinBounds(int idx0, double v0, int idx1, double v1,
+                               int idx);
 
 }  // namespace planning
 }  // namespace apollo

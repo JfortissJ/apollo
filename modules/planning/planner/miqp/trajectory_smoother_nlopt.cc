@@ -197,8 +197,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
 
   X_lb_.resize(STATES::STATES_SIZE * nr_integration_steps_);
   X_ub_.resize(STATES::STATES_SIZE * nr_integration_steps_);
-  C_kappa_.setZero(STATES::STATES_SIZE * nr_integration_steps_,
-                   nr_integration_steps_);
+  C_kappa_.resize(STATES::STATES_SIZE * nr_integration_steps_,
+                  nr_integration_steps_);
   offset = 0;
   for (size_t idx = 0; idx < nr_integration_steps_; ++idx) {
     X_lb_[offset + STATES::X] = -1e3;
@@ -214,7 +214,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     X_ub_[offset + STATES::A] = 1e3;
     X_ub_[offset + STATES::KAPPA] = 0.2;
     if (offset > 0) {  // no constraints for the initial point
-      C_kappa_(offset + STATES::KAPPA, idx) = 1;
+      C_kappa_.insert(offset + STATES::KAPPA, idx) = 1;
     }
 
     offset += STATES::STATES_SIZE;
@@ -415,6 +415,10 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
       (params_.cost_offset_theta != 0) || (params_.cost_offset_v != 0);
   bool any_absolute_term =
       (params_.cost_acceleration != 0) || (params_.cost_curvature != 0);
+
+  // int idx0 = 3;
+  // int idx1 = 15;
+
   for (int idx = 0; idx < size_state_vector / STATES::STATES_SIZE; ++idx) {
     size_t idx_vec = idx * STATES::STATES_SIZE;
     size_t idx_vec_sub = idx / (subsampling_ + 1) * STATES::STATES_SIZE;
@@ -424,6 +428,8 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
           difference[idx_vec + element] =
               X_[idx_vec + element] - X_ref_[idx_vec_sub + element];
           difference_costs[idx_vec + element] = costs_state[element];
+          // difference_costs[idx_vec + element] = InterpolateWithinBounds(idx0,
+          // 0.1*costs_state[element], idx1, 1.0*costs_state[element], idx);
         }
       }
     }
@@ -432,6 +438,9 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
       absolute_costs[idx_vec + STATES::A] = costs_state[STATES::A];
       absolute[idx_vec + STATES::KAPPA] = X_[idx_vec + STATES::KAPPA];
       absolute_costs[idx_vec + STATES::KAPPA] = costs_state[STATES::KAPPA];
+      // absolute_costs[idx_vec + STATES::KAPPA] =
+      // InterpolateWithinBounds(idx0, 2.0*costs_state[STATES::KAPPA],
+      // idx1, 1.0*costs_state[STATES::KAPPA], idx);
     }
   }
 
@@ -452,6 +461,9 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
           params_.cost_acceleration_change;
       costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
           params_.cost_curvature_change;
+      // costs_inputs[idx * INPUTS::INPUTS_SIZE + INPUTS::XI] =
+      //     InterpolateWithinBounds(idx0, 2.0*params_.cost_curvature_change,
+      //     idx1, 1.0*params_.cost_curvature_change, idx);
     }
   }
 
@@ -505,8 +517,7 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
 
   if (grad != NULL) {
     grad_eigen.leftCols(nr_is) = dXdU_.transpose() * C_kappa_;
-    grad_eigen.rightCols(nr_is) = -dXdU_.transpose() * C_kappa_;
-    // std::cout << "grad_eigen\n" << grad_eigen << std::endl;
+    grad_eigen.rightCols(nr_is) = -dXdU_.transpose() * C_kappa_;    
   }
 }
 
@@ -672,22 +683,17 @@ bool TrajectorySmootherNLOpt::CheckConstraints() const {
     double xi = u_[idx * INPUTS::INPUTS_SIZE + INPUTS::XI];
     // evaluate acc and kappa only at idx>0, as that's what the optimizer can
     // influence
-    if ((idx > 0) && (kappa > params_.upper_bound_curvature ||
-                      kappa < params_.lower_bound_curvature)) {
-      AERROR << "solution.kappa = " << kappa << " exceeds bounds at idx "
-             << idx;
+    if ((idx > 0) && !IsCurvatureWithinBounds(kappa)) {
+      AERROR << "solution exceeds bounds at idx " << idx;
       return false;
-    } else if ((idx > 0) && (a > params_.upper_bound_acceleration ||
-                             a < params_.lower_bound_acceleration)) {
-      AERROR << "solution.a = " << a << " exceeds bounds at idx " << idx;
+    } else if ((idx > 0) && !IsAccelerationWithinBounds(a)) {
+      AERROR << "solution exceeds bounds at idx " << idx;
       return false;
-    } else if (j > params_.upper_bound_jerk || j < params_.lower_bound_jerk) {
-      AERROR << "solution.jerk = " << j << " exceeds bounds at idx " << idx;
+    } else if (!IsJerkWithinBounds(j)) {
+      AERROR << "solution exceeds bounds at idx " << idx;
       return false;
-    } else if (xi > params_.upper_bound_curvature_change ||
-               xi < params_.lower_bound_curvature_change) {
-      AERROR << "solution.curvature_change = " << xi
-             << " exceeds bounds at idx " << idx;
+    } else if (!IsCurvatureChangeWithinBounds(xi)) {
+      AERROR << "solution exceeds bounds at idx " << idx;
       return false;
     }
   }
@@ -726,10 +732,33 @@ double TrajectorySmootherNLOpt::BoundedJerk(const double val) const {
                     params_.tol_jerk);
 }
 
+bool TrajectorySmootherNLOpt::IsJerkWithinBounds(const double j) const {
+  if (std::isgreater(j, params_.upper_bound_jerk + params_.tol_jerk) ||
+      std::isless(j, params_.lower_bound_jerk - params_.tol_jerk)) {
+    AERROR << "solution.jerk = " << j << " exceeds bounds";
+    return false;
+  } else {
+    return true;
+  }
+}
+
 double TrajectorySmootherNLOpt::BoundedCurvatureChange(const double val) const {
   return BoundValue(val, params_.upper_bound_curvature_change,
                     params_.lower_bound_curvature_change,
                     params_.tol_curvature_change);
+}
+
+bool TrajectorySmootherNLOpt::IsCurvatureChangeWithinBounds(
+    const double xi) const {
+  if (std::isgreater(xi, params_.upper_bound_curvature_change +
+                             params_.tol_curvature_change) ||
+      std::isless(xi, params_.lower_bound_curvature_change -
+                          params_.tol_curvature_change)) {
+    AERROR << "solution.curvature_change = " << xi << " exceeds bounds";
+    return false;
+  } else {
+    return true;
+  }
 }
 
 double TrajectorySmootherNLOpt::BoundedAcceleration(const double val) const {
@@ -737,9 +766,34 @@ double TrajectorySmootherNLOpt::BoundedAcceleration(const double val) const {
                     params_.lower_bound_acceleration, params_.tol_acceleration);
 }
 
+bool TrajectorySmootherNLOpt::IsAccelerationWithinBounds(const double a) const {
+  if (std::isgreater(
+          a, params_.upper_bound_acceleration + params_.tol_acceleration) ||
+      std::isless(
+          a, params_.lower_bound_acceleration - params_.tol_acceleration)) {
+    AERROR << "solution.acceleration = " << a << " exceeds bounds";
+    return false;
+  } else {
+    return true;
+  }
+}
+
 double TrajectorySmootherNLOpt::BoundedCurvature(const double val) const {
   return BoundValue(val, params_.upper_bound_curvature,
                     params_.lower_bound_curvature, params_.tol_curvature);
+}
+
+bool TrajectorySmootherNLOpt::IsCurvatureWithinBounds(
+    const double kappa) const {
+  if (std::isgreater(kappa,
+                     params_.upper_bound_curvature + params_.tol_curvature) ||
+      std::isless(kappa,
+                  params_.lower_bound_curvature - params_.tol_curvature)) {
+    AERROR << "solution.kappa = " << kappa << " exceeds bounds";
+    return false;
+  } else {
+    return true;
+  }
 }
 
 void TrajectorySmootherNLOpt::CalculateJthreshold() {
@@ -782,6 +836,19 @@ void SaveDiscretizedTrajectoryToFile(
 double BoundValue(const double v, const double vmax, const double vmin,
                   const double tol) {
   return std::max(std::min(v, vmax - tol), vmin + tol);
+}
+
+double InterpolateWithinBounds(int idx0, double v0, int idx1, double v1,
+                               int idx) {
+  if (idx < idx0) {
+    return v0;
+  } else if (idx > idx1) {
+    return v1;
+  } else {
+    double m = (v0 - v1) / (idx0 - idx1);
+    double n = v1 - m * idx1;
+    return m * idx + n;
+  }
 }
 
 }  // namespace planning

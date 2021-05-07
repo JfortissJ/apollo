@@ -28,9 +28,10 @@
 namespace apollo {
 namespace planning {
 
-void CompareTrajectories(DiscretizedTrajectory traj1, DiscretizedTrajectory traj2) {
+void CompareTrajectories(DiscretizedTrajectory traj1,
+                         DiscretizedTrajectory traj2) {
   EXPECT_EQ(traj1.size(), traj2.size());
-  
+
   for (int idx = 0; idx < traj1.size(); ++idx) {
     auto tp1 = traj1.at(idx);
     auto tp2 = traj2.at(idx);
@@ -40,8 +41,8 @@ void CompareTrajectories(DiscretizedTrajectory traj1, DiscretizedTrajectory traj
     EXPECT_NEAR(tp1.path_point().theta(), tp2.path_point().theta(), 0.3);
     EXPECT_NEAR(tp1.path_point().kappa(), tp2.path_point().kappa(), 0.2);
     EXPECT_NEAR(tp1.path_point().s(), tp2.path_point().s(), 0.3);
-    EXPECT_NEAR(tp1.v(), tp2.v(), 0.1);
-    EXPECT_NEAR(tp1.a(), tp2.a(), 0.2);
+    EXPECT_NEAR(tp1.v(), tp2.v(), 0.3);
+    EXPECT_NEAR(tp1.a(), tp2.a(), 0.3);
   }
 }
 
@@ -82,7 +83,8 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
   tsm2.InitializeProblem(subsampling, traj_in, start_point);
   int status2 = tsm2.Optimize();
 
-  CompareTrajectories(tsm.GetOptimizedTrajectory(), tsm2.GetOptimizedTrajectory());
+  CompareTrajectories(tsm.GetOptimizedTrajectory(),
+                      tsm2.GetOptimizedTrajectory());
 
   EXPECT_GT(status, 0);
   EXPECT_LT(status, 7);  // 5 ... NLOPT_MAXEVAL_REACHED
@@ -115,6 +117,83 @@ TEST(TrajectorySmootherNLOpt, Optimize_Empty) {
   tsm.InitializeProblem(1, tmp, common::TrajectoryPoint());
   int status = tsm.Optimize();
   EXPECT_EQ(-100, status);
+}
+
+TEST(TrajectorySmootherNLOpt, InterpolateWithinBounds) {
+  int idx0 = 2;
+  double v0 = 0.1;
+  int idx1 = 6;
+  double v1 = 0.2;
+
+  double v;
+  v = InterpolateWithinBounds(idx0, v0, idx1, v1, idx0);
+  EXPECT_FLOAT_EQ(v, v0);
+
+  v = InterpolateWithinBounds(idx0, v0, idx1, v1, idx1);
+  EXPECT_FLOAT_EQ(v, v1);
+
+  v = InterpolateWithinBounds(idx0, v0, idx1, v1, 4);
+  EXPECT_FLOAT_EQ(v, 0.15);
+}
+
+TEST(TrajectorySmootherNLOpt, IsJerkWithinBounds) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  double j_lb = tsm.GetProblemParameters().lower_bound_jerk;
+  double j_ub = tsm.GetProblemParameters().upper_bound_jerk;
+  double tol = tsm.GetProblemParameters().tol_jerk;
+  // upper
+  EXPECT_TRUE(tsm.IsJerkWithinBounds(j_lb));
+  EXPECT_TRUE(tsm.IsJerkWithinBounds(j_lb-tol));
+  EXPECT_FALSE(tsm.IsJerkWithinBounds(j_lb-tol-1e-9));
+  // lower
+  EXPECT_TRUE(tsm.IsJerkWithinBounds(j_ub));
+  EXPECT_TRUE(tsm.IsJerkWithinBounds(j_ub+tol));
+  EXPECT_FALSE(tsm.IsJerkWithinBounds(j_ub+tol+1e-9));
+}
+
+TEST(TrajectorySmootherNLOpt, IsAccelerationWithinBounds) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  double a_lb = tsm.GetProblemParameters().lower_bound_acceleration;
+  double a_ub = tsm.GetProblemParameters().upper_bound_acceleration;
+  double tol = tsm.GetProblemParameters().tol_acceleration;
+  // upper
+  EXPECT_TRUE(tsm.IsAccelerationWithinBounds(a_lb));
+  EXPECT_TRUE(tsm.IsAccelerationWithinBounds(a_lb-tol));
+  EXPECT_FALSE(tsm.IsAccelerationWithinBounds(a_lb-tol-1e-9));
+  // lower
+  EXPECT_TRUE(tsm.IsAccelerationWithinBounds(a_ub));
+  EXPECT_TRUE(tsm.IsAccelerationWithinBounds(a_ub+tol));
+  EXPECT_FALSE(tsm.IsAccelerationWithinBounds(a_ub+tol+1e-9));
+}
+
+TEST(TrajectorySmootherNLOpt, IsCurvatureChangeWithinBounds) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  double xi_lb = tsm.GetProblemParameters().lower_bound_curvature_change;
+  double xi_ub = tsm.GetProblemParameters().upper_bound_curvature_change;
+  double tol = tsm.GetProblemParameters().tol_curvature_change;
+  // upper
+  EXPECT_TRUE(tsm.IsCurvatureChangeWithinBounds(xi_lb));
+  EXPECT_TRUE(tsm.IsCurvatureChangeWithinBounds(xi_lb-tol));
+  EXPECT_FALSE(tsm.IsCurvatureChangeWithinBounds(xi_lb-tol-1e-9));
+  // lower
+  EXPECT_TRUE(tsm.IsCurvatureChangeWithinBounds(xi_ub));
+  EXPECT_TRUE(tsm.IsCurvatureChangeWithinBounds(xi_ub+tol));
+  EXPECT_FALSE(tsm.IsCurvatureChangeWithinBounds(xi_ub+tol+1e-9));
+}
+
+TEST(TrajectorySmootherNLOpt, IsCurvatureWithinBounds) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  double kappa_lb = tsm.GetProblemParameters().lower_bound_curvature;
+  double kappa_ub = tsm.GetProblemParameters().upper_bound_curvature;
+  double tol = tsm.GetProblemParameters().tol_curvature;
+  // upper
+  EXPECT_TRUE(tsm.IsCurvatureWithinBounds(kappa_lb));
+  EXPECT_TRUE(tsm.IsCurvatureWithinBounds(kappa_lb-tol));
+  EXPECT_FALSE(tsm.IsCurvatureWithinBounds(kappa_lb-tol-1e-9));
+  // lower
+  EXPECT_TRUE(tsm.IsCurvatureWithinBounds(kappa_ub));
+  EXPECT_TRUE(tsm.IsCurvatureWithinBounds(kappa_ub+tol));
+  EXPECT_FALSE(tsm.IsCurvatureWithinBounds(kappa_ub+tol+1e-9));
 }
 
 TEST(TrajectorySmootherNLOpt, Optimize1) {
@@ -325,6 +404,16 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504124308) {
   const std::string path_to_file =
       "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210504-124308.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210506104710) {
+  // Starting from stillstand, smoothing trajectory from reference generator
+  // Extracted from Simcontrol
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210506-104710.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
