@@ -100,7 +100,7 @@ classdef ControllerDataAnalysis  < PlotBase
            %acc = sqrt(self.res.Localization.Pose.LinearAcceleration.x.^2+self.res.Localization.Pose.LinearAcceleration.y.^2);
            acc = self.res.Localization.Pose.LinearAcceleration.x./cos(self.res.Localization.Pose.Heading);
            plot(self.res.Time(self.active), acc(self.active));
-           plot(self.res.Time(self.active), self.res.VehicleCANData.Motion.LongitudinalAcceleration(self.active));
+           plot(self.res.Time(self.active), self.res.VehicleDataCan.Motion.LongitudinalAcceleration(self.active));
            plot(self.res.Time(self.active), self.res.acc_limited(self.active));
            plot(self.res.Time(self.active), self.res.controller_active(self.active));
            legend('ist loca', 'ist can', 'control command', 'controller active')
@@ -109,8 +109,8 @@ classdef ControllerDataAnalysis  < PlotBase
            hold on
            title('steering')
            steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 852.7216;
-           steer = self.res.VehicleCANData.Steering.SteeringWheelAngle(self.active)/steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain;
-           sign=cast(self.res.VehicleCANData.Steering.SteeringWheelAngleSign(self.active),'like', steer);
+           steer = self.res.VehicleDataCan.Steering.SteeringWheelAngle(self.active)/steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain;
+           sign=cast(self.res.VehicleDataCan.Steering.SteeringWheelAngleSign(self.active),'like', steer);
            sign(sign==1) = -1;
            sign(sign==0) = 1;
            plot(self.res.Time(self.active), steer.*sign);
@@ -192,21 +192,21 @@ classdef ControllerDataAnalysis  < PlotBase
            hold on
            title('x');
            plot(self.res.Time(self.active), self.res.Localization.Pose.Position.x(self.active));
-           plot(self.res.Time(self.active), self.res.Reference.x(self.active));
+           plot(self.res.Time(self.active), self.res.ReferencePoint.x(self.active));
            legend('Loca', 'Ref');
            
            subplot(5,1,2);
            hold on
            title('y')
            plot(self.res.Time(self.active), self.res.Localization.Pose.Position.y(self.active));
-           plot(self.res.Time(self.active), self.res.Reference.y(self.active));
+           plot(self.res.Time(self.active), self.res.ReferencePoint.y(self.active));
            legend('Loca', 'Ref');
            
            subplot(5,1,3);
            hold on
            title('theta')
            plot(self.res.Time(self.active), wrapTo2Pi(self.res.Localization.Pose.Heading(self.active)));
-           plot(self.res.Time(self.active), wrapTo2Pi(self.res.Reference.theta(self.active)));
+           plot(self.res.Time(self.active), wrapTo2Pi(self.res.ReferencePoint.theta(self.active)));
            legend('Loca', 'Ref');
            
            subplot(5,1,4);
@@ -214,17 +214,17 @@ classdef ControllerDataAnalysis  < PlotBase
            title('v')
            v = sqrt(self.res.Localization.Pose.LinearVelocity.x(self.active).^2 + self.res.Localization.Pose.LinearVelocity.y(self.active).^2);
            plot(self.res.Time(self.active), v);
-           plot(self.res.Time(self.active), self.res.Reference.v(self.active));
+           plot(self.res.Time(self.active), self.res.ReferencePoint.v(self.active));
            legend('Loca', 'Ref');
            
            subplot(5,1,5);
            hold on
            title('kappa')
-           ss = self.res.VehicleCANData.Steering.SteeringWheelAngleSign;
-           kappa_is = tan(self.res.VehicleCANData.Steering.SteeringWheelAngle./852.7216)./2.786;
+           ss = self.res.VehicleDataCan.Steering.SteeringWheelAngleSign;
+           kappa_is = tan(self.res.VehicleDataCan.Steering.SteeringWheelAngle./852.7216)./2.786;
            kappa_is(ss==true) = -kappa_is(ss==true);
            plot(self.res.Time(self.active), kappa_is);
-           plot(self.res.Time(self.active), self.res.Reference.kappa(self.active));
+           plot(self.res.Time(self.active), self.res.ReferencePoint.kappa(self.active));
            legend('CAN', 'Ref');
            
            
@@ -291,12 +291,12 @@ classdef ControllerDataAnalysis  < PlotBase
                    ref_time = ...
                        ((self.res.time_larger(number_trajectory) - self.res.time_smaller(number_trajectory)).*self.res.interp_factor(number_trajectory)) + ...
                        self.res.time_smaller(number_trajectory) + initial_time;
-                   ref_x = self.res.Reference.x(number_trajectory);
-                   ref_y = self.res.Reference.y(number_trajectory);
-                   ref_v = self.res.Reference.v(number_trajectory);
-                   ref_theta = self.res.Reference.theta(number_trajectory);
-                   ref_kappa = self.res.Reference.kappa(number_trajectory);
-                   ref_a = self.res.Reference.a(number_trajectory);
+                   ref_x = self.res.ReferencePoint.x(number_trajectory);
+                   ref_y = self.res.ReferencePoint.y(number_trajectory);
+                   ref_v = self.res.ReferencePoint.v(number_trajectory);
+                   ref_theta = self.res.ReferencePoint.theta(number_trajectory);
+                   ref_kappa = self.res.ReferencePoint.kappa(number_trajectory);
+                   ref_a = self.res.ReferencePoint.a(number_trajectory);
                    
                    
                    relative_time = zeros(1,nr_points);
@@ -375,8 +375,8 @@ classdef ControllerDataAnalysis  < PlotBase
                plot(absolute_time, kappa)
                plot(ref_time, ref_kappa, 'kx')
                %compute loca kappa from loca?
-               ss = self.res.VehicleCANData.Steering.SteeringWheelAngleSign(number_trajectory);
-               kappa_is = tan(self.res.VehicleCANData.Steering.SteeringWheelAngle(number_trajectory)/852.7216)/2.786;
+               ss = self.res.VehicleDataCan.Steering.SteeringWheelAngleSign(number_trajectory);
+               kappa_is = tan(self.res.VehicleDataCan.Steering.SteeringWheelAngle(number_trajectory)/852.7216)/2.786;
                kappa_is(ss==true) = -kappa_is(ss==true);
                plot(loca_time, kappa_is, 'ko')
                plot([loca_time, ref_time], [kappa_is, ref_kappa], 'k-')
@@ -413,8 +413,8 @@ classdef ControllerDataAnalysis  < PlotBase
         function plotSteeringAngleCan(self)
            self.doNextPlot(); clf; hold on;
            set(gcf, 'Name', 'Steering Angle Can');
-           s = self.res.VehicleCANData.Steering.SteeringWheelAngle;
-           ss = self.res.VehicleCANData.Steering.SteeringWheelAngleSign;
+           s = self.res.VehicleDataCan.Steering.SteeringWheelAngle;
+           ss = self.res.VehicleDataCan.Steering.SteeringWheelAngleSign;
            s(ss==false) = -s(ss==false);
            plot(self.res.Time, s);        
         end
