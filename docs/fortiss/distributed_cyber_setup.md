@@ -1,21 +1,11 @@
-# Installation
+
+# Time Synchronization using Linux PTP (recommended by apollo)
+
+## Installation
 
 * Follow https://github.com/ApolloAuto/apollo/blob/master/docs/howto/how_to_setup_dual_ipc.md
 
-# Time Synchronization
-
-## Using NTP
-* With the current network configuration in the car ptp does not work!
-* use standard ntp
-* PC1 is the ntp master, synchronized to the lrz (129.187.254.32)
-* PC1 runs an ntp deamon all other nodes can sychronize to
-* configure /etc/ntp.conf: sudo vi /etc/ntp.conf: set server 192.168.140.158 iburst as main time server (cf. PC2 in the car!)
-* reboot
-* use ntpstat to check if we are sychronized to pc1 (192.168.140.158)
-* or use ntpq + the sysinfo command
-
-
-## Using PTP (recommended by apollo)
+## Using PTP 
 * Note the ethernet interface on the fortiss laptops and PC1 is: enp0s31f6 (So launching is done eg. via `sudo ./ptp4l -i enp0s31f6 -m`)
 * linuxptp does not have to be installed on the system (but could be using the make install target), just launch it from the compiled source folder
 * A good readme: https://docs.fedoraproject.org/en-US/fedora/rawhide/system-administrators-guide/servers/Configuring_PTP_Using_ptp4l/ 
