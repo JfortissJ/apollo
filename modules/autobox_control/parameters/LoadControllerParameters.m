@@ -19,7 +19,7 @@ switch_velocity_feedback = 1; %0:from can, 1:from loca
 
 % comfortable/safely handleable limitiation, not the technical limitations
 % of the vehicle
-max_steering_speed_comfort = 2*0.61/0.01; % aka maximum range / dt
+max_steering_speed_comfort = 2*0.61/0.01/2; % aka maximum range / dt, :2, otherwise too fast
 max_acceleration_comfort = 2;
 max_deceleration_comfort = -4.5;
 max_long_jerk_comfort = 200/2;
@@ -32,7 +32,7 @@ steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 14.8828*180/pi
 apollo_control_timeout = 10;
 
 % Below this speed shift time of the first trajpoint to the current time
-trajectory_timeshift_speed_threshold = 0.5;
+trajectory_timeshift_speed_threshold = 0.1;
 
 % The controller will not be set active until the throttle has once
 % exceeded this amount (and a new traj is received afterwards)
