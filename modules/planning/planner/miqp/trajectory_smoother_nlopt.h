@@ -44,6 +44,9 @@ class TrajectorySmootherNLOpt {
           lower_bound_curvature(-0.2),
           upper_bound_curvature(0.2),
           tol_curvature(1e-2),
+          lower_bound_velocity(-1),
+          upper_bound_velocity(20),
+          tol_velocity(1e-2),
           lower_bound_jerk(-0.75),
           upper_bound_jerk(0.75),
           tol_jerk(1e-2),
@@ -70,6 +73,9 @@ class TrajectorySmootherNLOpt {
     double lower_bound_curvature;
     double upper_bound_curvature;
     double tol_curvature;
+    double lower_bound_velocity;
+    double upper_bound_velocity;
+    double tol_velocity;
     double lower_bound_jerk;
     double upper_bound_jerk;
     double tol_jerk;
@@ -193,6 +199,10 @@ class TrajectorySmootherNLOpt {
 
   bool IsCurvatureWithinBounds(const double kappa) const;
 
+  double BoundedVelocity(const double val) const;
+
+  bool IsVelocityWithinBounds(const double kappa) const;
+
   void CalculateJthreshold();
 
  private:
@@ -205,7 +215,8 @@ class TrajectorySmootherNLOpt {
   Eigen::VectorXd X_;
   Eigen::VectorXd X_ub_;
   Eigen::VectorXd X_lb_;
-  Eigen::SparseMatrix<double> C_kappa_;
+  Eigen::MatrixXd C_kappa_;
+  Eigen::MatrixXd C_vel_;
   // stores the gradient of the trajectory w.r.t. to the inputs of the
   // optimization
   Eigen::MatrixXd dXdU_;

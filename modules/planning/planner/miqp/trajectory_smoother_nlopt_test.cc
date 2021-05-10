@@ -418,6 +418,26 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210506104710) {
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210510144910) {
+  // Stopping trajectory
+  // Extracted from Simcontrol
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210510-144910.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210510144917) {
+  // Stopping trajectory, with all other points having v=0
+  // Extracted from Simcontrol
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210510-144917.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
 TEST(TrajectorySmootherNLOpt, model_f) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   TrajectorySmootherNLOpt::Vector6d x;
