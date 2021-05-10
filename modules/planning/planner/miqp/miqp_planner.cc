@@ -228,10 +228,10 @@ Status MiqpPlanner::PlanOnReferenceLine(
           << (Clock::NowInSeconds() - current_time);
   }
 
-  if (planner_status == STOP_TRAJECTORY) {
-    CreateStopTrajectory(planning_init_point, reference_line_info);
-    return Status::OK();
-  }
+  // if (planner_status == STOP_TRAJECTORY) {
+  //   CreateStopTrajectory(planning_init_point, reference_line_info);
+  //   return Status::OK();
+  // }
 
   // Obstacles as obstacles
   if (config_.miqp_planner_config().consider_obstacles()) {
@@ -249,8 +249,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Plan
-  if (planner_status == PlannerState::START_TRAJECTORY) {
-    AINFO << "Start Trajectory, using reference instead of miqp solution";
+  if (planner_status == START_TRAJECTORY || planner_status == STOP_TRAJECTORY) {
+    AERROR << "Start/Stop Trajectory, using reference instead of miqp solution";
     GetRawCLastReferenceTrajectoryCMiqpPlaner(
         planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
   } else {
@@ -318,21 +318,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
       return Status(ErrorCode::PLANNING_ERROR,
                     "miqp trajectory colliding with environment");
     }
-  }
-
-  if (planner_status == START_TRAJECTORY &&
-      config_.miqp_planner_config().use_start_transformation() &&
-      !config_.miqp_planner_config().use_start_sqp_only()) {
-    AINFO << "Transforming Trajectory to start from standstill";
-    DiscretizedTrajectory old_traj = std::move(apollo_traj);
-    apollo_traj =
-        TransformationStartFromStandstill(planning_init_point, old_traj);
-  }
-
-  if (planner_status == START_TRAJECTORY &&
-      config_.miqp_planner_config().use_start_sqp_only()) {
-    AINFO << "Using SQP for start trajectory";
-    // TODO:
   }
 
   // Planning success -> publish trajectory
@@ -472,78 +457,6 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
           << apollo_trajectory[trajidx].DebugString();
   }
   return apollo_trajectory;
-}
-
-DiscretizedTrajectory MiqpPlanner::TransformationStartFromStandstill(
-    const common::TrajectoryPoint& planning_init_point,
-    const DiscretizedTrajectory& optimized_traj) {
-  const double ts = config_.miqp_planner_config().ts();
-  const double nr_steps = config_.miqp_planner_config().nr_steps();
-  double u_i = 0.5;  // TODO  PARAMETER!!!
-  double v_i = planning_init_point.v();
-  double a_i =
-      planning_init_point
-          .a();  // TODO make sure this is a reasonable value in the car!
-  const double s_0 = optimized_traj.TrajectoryPointAt(0).path_point().s();
-  double s_i = s_0;
-  double t_i = optimized_traj.TrajectoryPointAt(0).relative_time();
-  const TrajectoryPoint optimized_last_pt =
-      optimized_traj.TrajectoryPointAt(optimized_traj.NumOfPoints() - 1);
-  const double v_last = optimized_last_pt.v();
-  const double s_last = optimized_last_pt.path_point().s();
-  const double v_des = v_last;  // or: FLAGS_default_cruise_speed;
-
-  DiscretizedTrajectory out_trajectory;
-  for (int i = 0; i < nr_steps; ++i) {
-    // AINFO << "i = " << i << " s_i = " << s_i << " v_i = " << v_i << " a_i = "
-    // << a_i << " u_i = " << u_i;
-    if ((s_i - s_0) > optimized_traj.GetSpatialLength()) {
-      AERROR << "Spatial Length in Transformation was reached, ending "
-                "trajectory early";
-      break;
-    }
-    TrajectoryPoint traj_pt = optimized_traj.EvaluateAtS(s_i);
-    traj_pt.set_v(v_i);
-    traj_pt.set_a(a_i);
-    traj_pt.set_relative_time(t_i);
-    traj_pt.clear_steer();
-    traj_pt.mutable_path_point()->clear_dkappa();
-    traj_pt.mutable_path_point()->clear_ddkappa();
-
-    if (i < nr_steps - 1 && s_i > s_last) {
-      AERROR << "Optimized Trajectory was shorter than transformed start "
-                "trajectory:"
-             << s_i << ">" << s_last;
-    }
-    if (a_i > config_.miqp_planner_config().acc_lon_max_limit()) {
-      AERROR << "Transformed Start-Trajectory's acceleration is too high: a= "
-             << a_i;
-    } else if (a_i < config_.miqp_planner_config().acc_lon_min_limit()) {
-      AERROR << "Transformed Start-Trajectory's acceleration is too low: a = "
-             << a_i;
-    }
-
-    AINFO << "Transformed trajectory at i=" << i << ": "
-          << traj_pt.DebugString();
-    out_trajectory.AppendTrajectoryPoint(traj_pt);
-
-    t_i += ts;
-    s_i += ts * v_i + ts * ts * a_i / 2 + ts * ts * ts * u_i / 6;
-    v_i += ts * a_i + ts * ts * u_i / 2;
-    if (v_i > v_des) {  // reached target speed
-      v_i = v_des;
-      a_i = 0.0;  // not 100% correct...
-      u_i = 0.0;
-    } else {
-      a_i += ts * u_i;
-      if (a_i > config_.miqp_planner_config()
-                    .acc_start_trajectory()) {  // reached target acceleration
-        a_i = config_.miqp_planner_config().acc_start_trajectory();
-        u_i = 0.0;
-      }
-    }
-  }
-  return out_trajectory;
 }
 
 void MiqpPlanner::ConvertToInitialStateSecondOrder(

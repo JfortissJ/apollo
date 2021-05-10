@@ -78,10 +78,6 @@ class MiqpPlanner : public LatticePlanner {
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
       double traj[], int size);
 
-  apollo::planning::DiscretizedTrajectory TransformationStartFromStandstill(
-      const common::TrajectoryPoint& planning_init_point,
-      const apollo::planning::DiscretizedTrajectory& optimized_traj);
-
   void ConvertToInitialStateSecondOrder(
       const common::TrajectoryPoint& planning_init_point,
       double initial_state[]);
