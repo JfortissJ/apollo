@@ -196,6 +196,21 @@ TEST(TrajectorySmootherNLOpt, IsCurvatureWithinBounds) {
   EXPECT_FALSE(tsm.IsCurvatureWithinBounds(kappa_ub+tol+1e-9));
 }
 
+TEST(TrajectorySmootherNLOpt, IsVelocityWithinBounds) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  double vel_lb = tsm.GetProblemParameters().lower_bound_velocity;
+  double vel_ub = tsm.GetProblemParameters().upper_bound_velocity;
+  double tol = tsm.GetProblemParameters().tol_velocity;
+  // upper
+  EXPECT_TRUE(tsm.IsVelocityWithinBounds(vel_lb));
+  EXPECT_TRUE(tsm.IsVelocityWithinBounds(vel_lb-tol));
+  EXPECT_FALSE(tsm.IsVelocityWithinBounds(vel_lb-tol-1e-9));
+  // lower
+  EXPECT_TRUE(tsm.IsVelocityWithinBounds(vel_ub));
+  EXPECT_TRUE(tsm.IsVelocityWithinBounds(vel_ub+tol));
+  EXPECT_FALSE(tsm.IsVelocityWithinBounds(vel_ub+tol+1e-9));
+}
+
 TEST(TrajectorySmootherNLOpt, Optimize1) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   DiscretizedTrajectory traj;
@@ -274,6 +289,110 @@ TEST(TrajectorySmootherNLOpt, PlanningInitPoint) {
   EXPECT_GT(status, 0);
   EXPECT_FLOAT_EQ(traj_opt.at(0).path_point().kappa(),
                   planning_init_point.path_point().kappa());
+}
+
+TEST(TrajectorySmootherNLOpt, CurvatureBounds) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  DiscretizedTrajectory traj;
+  common::TrajectoryPoint tp1;
+  tp1.mutable_path_point()->set_x(0);
+  tp1.mutable_path_point()->set_y(0);
+  tp1.mutable_path_point()->set_s(0);
+  tp1.mutable_path_point()->set_theta(0);
+  tp1.mutable_path_point()->set_kappa(0);
+  tp1.mutable_path_point()->set_dkappa(0);
+  tp1.set_v(2);
+  tp1.set_a(0);
+  tp1.set_da(0);
+  tp1.set_relative_time(0);
+  traj.AppendTrajectoryPoint(tp1);
+  common::TrajectoryPoint tp2;
+  tp2.mutable_path_point()->set_x(5);
+  tp2.mutable_path_point()->set_y(0);
+  tp2.mutable_path_point()->set_s(5);
+  tp2.mutable_path_point()->set_theta(3.14159265359/4);
+  tp2.mutable_path_point()->set_kappa(0);
+  tp2.mutable_path_point()->set_dkappa(0);
+  tp2.set_v(2);
+  tp2.set_a(0);
+  tp2.set_da(0);
+  tp2.set_relative_time(2.5);
+  traj.AppendTrajectoryPoint(tp2);
+  common::TrajectoryPoint tp3;
+  tp3.mutable_path_point()->set_x(5);
+  tp3.mutable_path_point()->set_y(5);
+  tp3.mutable_path_point()->set_s(10);
+  tp3.mutable_path_point()->set_theta(3.14159265359/2);
+  tp3.mutable_path_point()->set_kappa(0);
+  tp3.mutable_path_point()->set_dkappa(0);
+  tp3.set_v(2);
+  tp3.set_a(0);
+  tp3.set_da(0);
+  tp3.set_relative_time(5);
+  traj.AppendTrajectoryPoint(tp3);
+  auto planning_init_point = tp1;
+  tsm.InitializeProblem(4, traj, planning_init_point);
+  int status = tsm.Optimize();
+  auto traj_opt = tsm.GetOptimizedTrajectory();
+  for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
+    AINFO << "Smoothed trajectory at i=" << trajidx << ": "
+          << traj_opt[trajidx].DebugString();
+  }
+  EXPECT_GT(status, 0);
+  EXPECT_LT(status, 5);  // 5 ... NLOPT_MAXEVAL_REACHED
+  EXPECT_TRUE(tsm.ValidateSmoothingSolution());
+}
+
+TEST(TrajectorySmootherNLOpt, VelocityBounds) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  DiscretizedTrajectory traj;
+  common::TrajectoryPoint tp1;
+  tp1.mutable_path_point()->set_x(0);
+  tp1.mutable_path_point()->set_y(0);
+  tp1.mutable_path_point()->set_s(0);
+  tp1.mutable_path_point()->set_theta(0);
+  tp1.mutable_path_point()->set_kappa(0);
+  tp1.mutable_path_point()->set_dkappa(0);
+  tp1.set_v(2);
+  tp1.set_a(0);
+  tp1.set_da(0);
+  tp1.set_relative_time(0);
+  traj.AppendTrajectoryPoint(tp1);
+  common::TrajectoryPoint tp2;
+  tp2.mutable_path_point()->set_x(4);
+  tp2.mutable_path_point()->set_y(0);
+  tp2.mutable_path_point()->set_s(4);
+  tp2.mutable_path_point()->set_theta(0);
+  tp2.mutable_path_point()->set_kappa(0);
+  tp2.mutable_path_point()->set_dkappa(0);
+  tp2.set_v(0);
+  tp2.set_a(0);
+  tp2.set_da(0);
+  tp2.set_relative_time(2.5);
+  traj.AppendTrajectoryPoint(tp2);
+  common::TrajectoryPoint tp3;
+  tp3.mutable_path_point()->set_x(4);
+  tp3.mutable_path_point()->set_y(0);
+  tp3.mutable_path_point()->set_s(4);
+  tp3.mutable_path_point()->set_theta(0);
+  tp3.mutable_path_point()->set_kappa(0);
+  tp3.mutable_path_point()->set_dkappa(0);
+  tp3.set_v(0);
+  tp3.set_a(0);
+  tp3.set_da(0);
+  tp3.set_relative_time(5);
+  traj.AppendTrajectoryPoint(tp3);
+  auto planning_init_point = tp1;
+  tsm.InitializeProblem(4, traj, planning_init_point);
+  int status = tsm.Optimize();
+  auto traj_opt = tsm.GetOptimizedTrajectory();
+  for (size_t trajidx = 0; trajidx < traj_opt.size(); ++trajidx) {
+    AINFO << "Smoothed trajectory at i=" << trajidx << ": "
+          << traj_opt[trajidx].DebugString();
+  }
+  EXPECT_GT(status, 0);
+  EXPECT_LT(status, 5);  // 5 ... NLOPT_MAXEVAL_REACHED
+  EXPECT_TRUE(tsm.ValidateSmoothingSolution());
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
