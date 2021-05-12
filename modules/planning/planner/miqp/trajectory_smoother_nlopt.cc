@@ -741,7 +741,7 @@ bool TrajectorySmootherNLOpt::ValidateSmoothingSolution() const {
   } else if (CheckConstraints() == false) {
     valid = false;
   }
-  if (true) {
+  if (!valid) {
     const std::string& time_pid_string = GetTimeString();
     const std::string& file_name = "trajectory_smoother_" + time_pid_string +
                                    "_" + std::to_string(subsampling_) +
