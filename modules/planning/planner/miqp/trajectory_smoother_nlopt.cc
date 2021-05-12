@@ -203,9 +203,9 @@ void TrajectorySmootherNLOpt::InitializeProblem(
 
   X_lb_.resize(STATES::STATES_SIZE * nr_integration_steps_);
   X_ub_.resize(STATES::STATES_SIZE * nr_integration_steps_);
-  C_kappa_.setZero(STATES::STATES_SIZE * nr_integration_steps_,
+  C_kappa_.resize(STATES::STATES_SIZE * nr_integration_steps_,
                    nr_integration_steps_);
-  C_vel_.setZero(STATES::STATES_SIZE * nr_integration_steps_,
+  C_vel_.resize(STATES::STATES_SIZE * nr_integration_steps_,
                    nr_integration_steps_);
   offset = 0;
   for (size_t idx = 0; idx < nr_integration_steps_; ++idx) {
@@ -222,8 +222,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     X_ub_[offset + STATES::A] = 1e3;
     X_ub_[offset + STATES::KAPPA] = params_.upper_bound_curvature;
     if (offset > 0) {  // no constraints for the initial point
-      C_kappa_(offset + STATES::KAPPA, idx) = 1;
-      C_vel_(offset + STATES::V, idx) = 1;
+      C_kappa_.insert(offset + STATES::KAPPA, idx) = 1;
+      C_vel_.insert(offset + STATES::V, idx) = 1;
     }
 
     offset += STATES::STATES_SIZE;
