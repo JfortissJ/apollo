@@ -1,4 +1,7 @@
-velocity: 0
-delta_s_in_front: 15
-heading_offset: 0.7
-lateral_offset: 3.5
+velocity: 1.5
+delta_s_in_front: 20
+heading_offset: 0.0
+lateral_offset: 0.0
+obstacle_width: 2.0
+obstacle_height: 2.0
+obstacle_length: 4.0

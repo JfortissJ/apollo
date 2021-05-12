@@ -28,6 +28,8 @@ using apollo::canbus::Chassis;
 using apollo::common::Status;
 using apollo::common::VehicleState;
 using apollo::common::VehicleStateProvider;
+using apollo::common::math::Box2d;
+using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
 using apollo::hdmap::HDMapUtil;
 using apollo::localization::LocalizationEstimate;
@@ -206,6 +208,7 @@ bool FakeObstacleComponent::FillPerceptionObstacles() {
 
   // Set linear_velocity
   apollo::common::Point3D velocity3d;
+  // TODO: why not use ob->theta??
   velocity3d.set_x(std::cos(other_ref_point.heading()) *
                    fake_obst_config_.velocity());
   velocity3d.set_y(std::sin(other_ref_point.heading()) *
@@ -215,9 +218,26 @@ bool FakeObstacleComponent::FillPerceptionObstacles() {
   ob->mutable_velocity()->CopyFrom(velocity3d);
 
   // Size of obstacle bounding box.
-  ob->set_length(4);  // obstacle length.
-  ob->set_width(2);   // obstacle width.
-  ob->set_height(2);  // obstacle height.
+  ob->set_length(fake_obst_config_.obstacle_length());
+  ob->set_width(fake_obst_config_.obstacle_width());
+  ob->set_height(fake_obst_config_.obstacle_height());
+
+  ob->set_id(101);
+  ob->set_type(perception::PerceptionObstacle::VEHICLE);
+  ob->set_tracking_time(0.0);  // duration of an obstacle since detection in s.
+  ob->set_timestamp(Clock::NowInSeconds());
+
+  // obstacle corner points.
+  Vec2d vec_obstacle = Vec2d(position.x(), position.y());
+  Box2d obstacle_box =
+      Box2d(vec_obstacle, ob->theta(), ob->length(), ob->width());
+  std::vector<common::math::Vec2d> corner_points;
+  obstacle_box.GetAllCorners(&corner_points);
+  for (const auto& corner_point : corner_points) {
+    auto* point = ob->add_polygon_point();
+    point->set_x(corner_point.x());
+    point->set_y(corner_point.y());
+  }
 
   obstacle_writer_->Write(response);
   return true;
