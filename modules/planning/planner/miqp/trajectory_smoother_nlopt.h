@@ -47,11 +47,11 @@ class TrajectorySmootherNLOpt {
           lower_bound_velocity(0.0),
           upper_bound_velocity(20),
           tol_velocity(1e-2),
-          lower_bound_jerk(-1.2),
-          upper_bound_jerk(1.2),
+          lower_bound_jerk(-10), //(-1.2),
+          upper_bound_jerk(10), //(1.2),
           tol_jerk(1e-2),
-          lower_bound_curvature_change(-0.2),
-          upper_bound_curvature_change(0.2),
+          lower_bound_curvature_change(-10), //(-0.2),
+          upper_bound_curvature_change(10), //(0.2),
           tol_curvature_change(1e-2) {}
     // costs for deviation from the initial reference
     double cost_offset_x;
