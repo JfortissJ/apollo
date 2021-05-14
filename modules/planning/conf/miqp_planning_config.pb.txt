@@ -21,7 +21,7 @@ miqp_planner_config: {
     nr_steps: 10
     nr_neighbouring_possible_regions: 0
     ts: 1.0
-    max_solution_time: 3
+    max_solution_time: 1.0
     relative_mip_gap_tolerance: 0.1
     mipemphasis: 0
     relobjdif: 0.5
