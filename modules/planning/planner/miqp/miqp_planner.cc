@@ -276,7 +276,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
   DiscretizedTrajectory apollo_traj =
       RawCTrajectoryToApolloTrajectory(traj, size);
-  CutoffTrajectoryAtV(apollo_traj, minimum_valid_speed_planning_);
+  // CutoffTrajectoryAtV(apollo_traj, minimum_valid_speed_planning_);
   // TODO not sure what is the best value for cutoff:
   // minimum_valid_speed_planning_ might be too agressive and might drops valid
   // results but no more invalidities, standstill_velocity_threshold_ is might
@@ -875,18 +875,18 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
   return status;
 }
 
-int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double vmin) {
-  // reverse, to not cutoff accelerating trajectories
-  for (size_t i = traj.size() - 1; i > 1; --i) {
-    if (traj.at(i).v() < vmin && traj.at(i - 1).v() >= vmin) {
-      traj.at(i).set_v(vmin);
-      traj.resize(i + 1);  // delete everything after this point
-      AINFO << "Cutting trajectory off at pt idx = " << i;
-      return i;
-    }
-  }
-  return traj.size();
-}
+// int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double vmin) {
+//   // reverse, to not cutoff accelerating trajectories
+//   for (size_t i = traj.size() - 1; i > 1; --i) {
+//     if (traj.at(i).v() < vmin && traj.at(i - 1).v() >= vmin) {
+//       traj.at(i).set_v(vmin);
+//       traj.resize(i + 1);  // delete everything after this point
+//       AINFO << "Cutting trajectory off at pt idx = " << i;
+//       return i;
+//     }
+//   }
+//   return traj.size();
+// }
 
 void MiqpPlanner::CreateStandstillTrajectory(
     const TrajectoryPoint& planning_init_point,
@@ -915,67 +915,67 @@ void MiqpPlanner::CreateStandstillTrajectory(
         << " y = " << planning_init_point.path_point().y();
 }
 
-void MiqpPlanner::CreateStopTrajectory(
-    const TrajectoryPoint& planning_init_point,
-    ReferenceLineInfo* reference_line_info) {
-  double lastrefpt[5];
-  GetLastReferencePointCMiqpPlanner(planner_, egoCarIdx_, lastrefpt);
-  const double time = std::move(lastrefpt[0]);
-  if (time > planning_init_point.relative_time()) {
-    AINFO << "Stop trajectory already should start at endpoint; Creating "
-             "Standstill trajectory instead!";
-    CreateStandstillTrajectory(planning_init_point, reference_line_info);
+// void MiqpPlanner::CreateStopTrajectory(
+//     const TrajectoryPoint& planning_init_point,
+//     ReferenceLineInfo* reference_line_info) {
+//   double lastrefpt[5];
+//   GetLastReferencePointCMiqpPlanner(planner_, egoCarIdx_, lastrefpt);
+//   const double time = std::move(lastrefpt[0]);
+//   if (time > planning_init_point.relative_time()) {
+//     AINFO << "Stop trajectory already should start at endpoint; Creating "
+//              "Standstill trajectory instead!";
+//     CreateStandstillTrajectory(planning_init_point, reference_line_info);
 
-  } else {  // Default case
-    TrajectoryPoint trajectory_point_1;
-    trajectory_point_1.mutable_path_point()->set_x(
-        planning_init_point.path_point().x());
-    trajectory_point_1.mutable_path_point()->set_y(
-        planning_init_point.path_point().y());
-    trajectory_point_1.mutable_path_point()->set_s(0.0);
-    trajectory_point_1.mutable_path_point()->set_theta(
-        planning_init_point.path_point().theta());
-    trajectory_point_1.set_v(planning_init_point.v());
-    trajectory_point_1.set_a(planning_init_point.a());
-    trajectory_point_1.set_relative_time(planning_init_point.relative_time());
+//   } else {  // Default case
+//     TrajectoryPoint trajectory_point_1;
+//     trajectory_point_1.mutable_path_point()->set_x(
+//         planning_init_point.path_point().x());
+//     trajectory_point_1.mutable_path_point()->set_y(
+//         planning_init_point.path_point().y());
+//     trajectory_point_1.mutable_path_point()->set_s(0.0);
+//     trajectory_point_1.mutable_path_point()->set_theta(
+//         planning_init_point.path_point().theta());
+//     trajectory_point_1.set_v(planning_init_point.v());
+//     trajectory_point_1.set_a(planning_init_point.a());
+//     trajectory_point_1.set_relative_time(planning_init_point.relative_time());
 
-    TrajectoryPoint trajectory_point_2;
+//     TrajectoryPoint trajectory_point_2;
 
-    const double x = std::move(lastrefpt[1]);
-    const double y = std::move(lastrefpt[2]);
-    const double theta = std::move(lastrefpt[3]);
-    const double v = std::move(lastrefpt[4]);
-    if (v > minimum_valid_speed_planning_) {
-      AERROR << "Invalid stopping Trajectory! Reference trajectory last point "
-                "speed = "
-             << v;
-    }
-    trajectory_point_2.mutable_path_point()->set_x(x);
-    trajectory_point_2.mutable_path_point()->set_y(y);
-    double s = std::sqrt(std::pow(planning_init_point.path_point().x() - x, 2) +
-                         std::pow(planning_init_point.path_point().y() - y, 2));
-    trajectory_point_2.mutable_path_point()->set_s(s);
-    trajectory_point_2.mutable_path_point()->set_theta(theta);
-    trajectory_point_2.set_v(0.0);
-    trajectory_point_2.set_a(0.0);  // TODO better set to something negative?
-    double time = s / planning_init_point.v();  // =ds/dt
-    trajectory_point_2.set_relative_time(planning_init_point.relative_time());
+//     const double x = std::move(lastrefpt[1]);
+//     const double y = std::move(lastrefpt[2]);
+//     const double theta = std::move(lastrefpt[3]);
+//     const double v = std::move(lastrefpt[4]);
+//     if (v > minimum_valid_speed_planning_) {
+//       AERROR << "Invalid stopping Trajectory! Reference trajectory last point "
+//                 "speed = "
+//              << v;
+//     }
+//     trajectory_point_2.mutable_path_point()->set_x(x);
+//     trajectory_point_2.mutable_path_point()->set_y(y);
+//     double s = std::sqrt(std::pow(planning_init_point.path_point().x() - x, 2) +
+//                          std::pow(planning_init_point.path_point().y() - y, 2));
+//     trajectory_point_2.mutable_path_point()->set_s(s);
+//     trajectory_point_2.mutable_path_point()->set_theta(theta);
+//     trajectory_point_2.set_v(0.0);
+//     trajectory_point_2.set_a(0.0);  // TODO better set to something negative?
+//     double time = s / planning_init_point.v();  // =ds/dt
+//     trajectory_point_2.set_relative_time(planning_init_point.relative_time());
 
-    DiscretizedTrajectory stopping_trajectory;
-    stopping_trajectory.AppendTrajectoryPoint(trajectory_point_1);
-    stopping_trajectory.AppendTrajectoryPoint(trajectory_point_2);
+//     DiscretizedTrajectory stopping_trajectory;
+//     stopping_trajectory.AppendTrajectoryPoint(trajectory_point_1);
+//     stopping_trajectory.AppendTrajectoryPoint(trajectory_point_2);
 
-    reference_line_info->SetTrajectory(stopping_trajectory);
-    reference_line_info->SetCost(0);  // TODO necessary?
-    reference_line_info->SetDrivable(true);
+//     reference_line_info->SetTrajectory(stopping_trajectory);
+//     reference_line_info->SetCost(0);  // TODO necessary?
+//     reference_line_info->SetDrivable(true);
 
-    AINFO << "Setting Stop trajectory at point t = "
-          << planning_init_point.relative_time()
-          << " x = " << planning_init_point.path_point().x()
-          << " y = " << planning_init_point.path_point().y()
-          << "with end point at t = " << time << " x = " << x << " y = " << y;
-  }
-}
+//     AINFO << "Setting Stop trajectory at point t = "
+//           << planning_init_point.relative_time()
+//           << " x = " << planning_init_point.path_point().x()
+//           << " y = " << planning_init_point.path_point().y()
+//           << "with end point at t = " << time << " x = " << x << " y = " << y;
+//   }
+// }
 
 std::pair<bool, apollo::planning::DiscretizedTrajectory>
 MiqpPlanner::SmoothTrajectory(
