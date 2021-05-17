@@ -24,9 +24,6 @@
 #include "absl/strings/str_cat.h"
 #include "cyber/common/file.h"
 #include "gtest/gtest_prod.h"
-
-#include "modules/routing/proto/routing.pb.h"
-
 #include "modules/common/math/quaternion.h"
 #include "modules/common/time/time.h"
 #include "modules/common/vehicle_state/vehicle_state_provider.h"
@@ -42,6 +39,7 @@
 #include "modules/planning/reference_line/reference_line_provider.h"
 #include "modules/planning/tasks/task_factory.h"
 #include "modules/planning/traffic_rules/traffic_decider.h"
+#include "modules/routing/proto/routing.pb.h"
 
 namespace apollo {
 namespace planning {
@@ -586,16 +584,45 @@ Status OnLanePlanning::Plan(
       }
     }
 
-    last_publishable_trajectory_.reset(new PublishableTrajectory(
-        current_time_stamp, best_ref_info->trajectory()));
-
-    ADEBUG << "current_time_stamp: " << current_time_stamp;
-
-    last_publishable_trajectory_->PrependTrajectoryPoints(
-        std::vector<TrajectoryPoint>(stitching_trajectory.begin(),
-                                     stitching_trajectory.end() - 1));
-
-    last_publishable_trajectory_->PopulateTrajectoryProtobuf(ptr_trajectory_pb);
+    if (FLAGS_always_update_trajectory) {  // default apollo behavior
+      UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
+                                      stitching_trajectory, ptr_trajectory_pb);
+    } else {
+      if (status.ok()) {
+        UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
+                                        stitching_trajectory,
+                                        ptr_trajectory_pb);
+      } else {
+        // TODO this code produces a non-deterministic exception somewhere else in the planner.... 
+        const double remaining_length =
+            last_publishable_trajectory_.get()->back().path_point().s() -
+            stitching_trajectory.back().path_point().s();
+        const double remaining_time =
+            last_publishable_trajectory_.get()->back().relative_time() -
+            stitching_trajectory.back().relative_time();
+        // TODO collision check
+        bool collision = false;
+        // if traj_old is too short / too old / colliding -> Emergency Stop
+        // else: reuse old trajectory -> copy last_publishable_trajectory_ to
+        // ptr_trajectory_pb
+        if (remaining_length < 5 || remaining_time < 1 || collision) {
+          AERROR << "Sending Emergency Stop Trajectory";
+          GenerateStopTrajectory(ptr_trajectory_pb);
+        } else {
+          AERROR << "Using old Trajectory";
+          ptr_trajectory_pb->mutable_trajectory_point()->CopyFrom(
+              {last_publishable_trajectory_.get()->begin(),
+               last_publishable_trajectory_.get()->end()});
+          ptr_trajectory_pb->mutable_header()->set_timestamp_sec(
+              last_publishable_trajectory_.get()->header_time());
+          ptr_trajectory_pb->set_total_path_length(
+              last_publishable_trajectory_.get()->back().path_point().s());
+          ptr_trajectory_pb->set_total_path_time(
+              last_publishable_trajectory_.get()->back().relative_time());
+          status = Status::OK();
+        }
+      }
+    }
 
     best_ref_info->ExportEngageAdvice(
         ptr_trajectory_pb->mutable_engage_advice());
@@ -1144,6 +1171,20 @@ void OnLanePlanning::AddPublishedAcceleration(
   (*sliding_line_properties)["lineTension"] = "0";
   (*sliding_line_properties)["fill"] = "false";
   (*sliding_line_properties)["showLine"] = "true";
+}
+
+void OnLanePlanning::UpdateLastPublishableTrajectory(
+    const double& current_time_stamp,
+    const apollo::planning::ReferenceLineInfo* best_ref_info,
+    const std::vector<apollo::common::TrajectoryPoint>& stitching_trajectory,
+    apollo::planning::ADCTrajectory* const ptr_trajectory_pb) {
+  last_publishable_trajectory_.reset(new PublishableTrajectory(
+      current_time_stamp, best_ref_info->trajectory()));
+  ADEBUG << "current_time_stamp: " << current_time_stamp;
+  last_publishable_trajectory_->PrependTrajectoryPoints(
+      std::vector<TrajectoryPoint>(stitching_trajectory.begin(),
+                                   stitching_trajectory.end() - 1));
+  last_publishable_trajectory_->PopulateTrajectoryProtobuf(ptr_trajectory_pb);
 }
 
 }  // namespace planning

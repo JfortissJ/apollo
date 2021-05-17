@@ -267,3 +267,5 @@ DECLARE_bool(use_soft_bound_in_nonlinear_speed_opt);
 DECLARE_bool(use_front_axe_center_in_path_planning);
 
 DECLARE_double(trajectory_stitching_advance_time);
+
+DECLARE_bool(always_update_trajectory);

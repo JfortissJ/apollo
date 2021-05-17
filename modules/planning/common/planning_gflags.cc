@@ -532,3 +532,7 @@ DEFINE_double(trajectory_stitching_advance_time, 0.0,
               "Zero starts the trajectory to be planned exactly at the next "
               "(expected) position of the car, a value greater than zero "
               "starts x seconds in advance on the old trajectory");
+
+DEFINE_bool(always_update_trajectory, true,
+            "publish an updated trajectory even if planning failed (apollo "
+            "default = true)");

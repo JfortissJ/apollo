@@ -101,6 +101,12 @@ class OnLanePlanning : public PlanningBase {
   void AddFallbackTrajectory(const planning_internal::Debug& debug_info,
                              planning_internal::Debug* debug_chart);
 
+  void UpdateLastPublishableTrajectory(
+      const double& current_time_stamp,
+      const apollo::planning::ReferenceLineInfo* best_ref_info,
+      const std::vector<apollo::common::TrajectoryPoint>& stitching_trajectory,
+      apollo::planning::ADCTrajectory* const ptr_trajectory_pb);
+
  private:
   routing::RoutingResponse last_routing_;
   std::unique_ptr<ReferenceLineProvider> reference_line_provider_;
