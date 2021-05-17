@@ -125,7 +125,7 @@ classdef PlotBase < handle
 
 				if (strcmp(v,'2014b')||strcmp(v,'2016a')||strcmp(v,'2013b'))
                     n = max(current.Number) + 1; %TODO intelligentere logik
-                elseif(strcmp(v,'2017b'))
+                elseif(strcmp(v,'2017b')||strcmp(v,'2019b')||strcmp(v,'2020a'))
                     n = length(current) + 1;
                 else
 					n = max(current)+1;

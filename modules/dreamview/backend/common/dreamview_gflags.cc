@@ -97,17 +97,18 @@ DEFINE_string(
     "/apollo/modules/dreamview/conf/mkz7_data_collection_table.pb.txt",
     "Data collection table config path.");
 
-DEFINE_bool(
-    fortiss_simcontrol_set_start_pose, 
-    true, 
-    "If false: standard apollo behavior; if true: set the vehicle to the provided x,y pose as start position");
+DEFINE_bool(fortiss_simcontrol_set_start_pose, true,
+            "If false: standard apollo behavior; if true: set the vehicle to "
+            "the provided x,y pose as start position");
 
 DEFINE_double(
-    fortiss_simcontrol_start_x,
-    693261.014351,
+    fortiss_simcontrol_start_x, 693261.014351,
     "Sim Control picks a start pose on the map next to this x position");
 
 DEFINE_double(
-    fortiss_simcontrol_start_y,
-    5339243.52646,
+    fortiss_simcontrol_start_y, 5339243.52646,
     "Sim Control picks a start pose on the map next to this y position");
+
+DEFINE_bool(fortiss_publish_empty_prediction, true,
+            "If true: standard apollo behavior, simctrl regularly outputs "
+            "empty prediction msgs; if false: no dummy prediction.");

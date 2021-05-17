@@ -1,0 +1,17 @@
+# Define all coms in DAG streaming.
+module_config {
+  module_library : "/apollo/bazel-bin/modules/fake_obstacle/libfake_obstacle_component.so"
+
+  timer_components {
+    class_name : "FakeObstacleComponent"
+    config {
+      name : "fake_obstacle"
+      flag_file_path:  "/apollo/modules/fake_obstacle/conf/fake_obstacle.conf"
+      config_file_path : "/apollo/modules/fake_obstacle/conf/fake_obstacle.pb.txt"
+      interval: 500
+      
+    }
+  }
+}
+
+

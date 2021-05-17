@@ -2,7 +2,7 @@
 <Root>
 	<ProjectExperiment>
 		<window>
-			<RelativeDocumentPlacement type="key">1:m 2 Instrumentation|016c5644-2fc0-4e7f-ba67-9069195da219/1:m 3 Instrumentation|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3:m 0 Instrumentation|530257e0-9dd7-4c8c-af26-acdb51a53091/0:m 1 Instrumentation|010867e6-b1d4-4361-8dca-43a159e6a62c/5:</RelativeDocumentPlacement>
+			<RelativeDocumentPlacement type="key">1:m 1 Instrumentation|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3:m 3 Instrumentation|aee80459-8c13-4109-a330-2a68a57f77a0/4:m 4 Instrumentation|016c5644-2fc0-4e7f-ba67-9069195da219/1:m 2 Instrumentation|010867e6-b1d4-4361-8dca-43a159e6a62c/5:m 0 Instrumentation|530257e0-9dd7-4c8c-af26-acdb51a53091/0:m 5 Instrumentation|94280714-a281-4583-9879-7045e11ef700/6:</RelativeDocumentPlacement>
 		</window>
 		<viewflags>
 			<Name type="key">ControllerEthernetDebugExperiment.CDE</Name>
@@ -30,11 +30,15 @@
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">controller.lay</Name>
+						<Name type="key">SystemStatus.lay</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 					<item>
-						<Name type="key">SystemStatus.lay</Name>
+						<Name type="key">ReferencePoint.lay</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">ApolloControl.lay</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
 				</item>
@@ -42,11 +46,11 @@
 					<Name type="key">Hardware Configurations</Name>
 					<ViewFlags type="key">1</ViewFlags>
 					<item>
-						<Name type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Name>
+						<Name type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Name>
 						<ViewFlags type="key">1</ViewFlags>
 						<item>
 							<Name type="key">autoboxmodel.sdf</Name>
-							<ViewFlags type="key">5</ViewFlags>
+							<ViewFlags type="key">1</ViewFlags>
 							<item>
 								<Name type="key">Data Sets</Name>
 								<ViewFlags type="key">1</ViewFlags>
@@ -60,7 +64,7 @@
 				</item>
 				<item>
 					<Name type="key">Measurement Data</Name>
-					<ViewFlags type="key">1</ViewFlags>
+					<ViewFlags type="key">5</ViewFlags>
 				</item>
 				<item>
 					<Name type="key">Reports</Name>
@@ -124,8 +128,11 @@
 				<Data type="key">SystemStatus.lay|1|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3|1:sm:mm 104 104 1404 532 -1 -1:</Data>
 			</Layout4>
 			<Layout5>
-				<Data type="key">controller.lay|0|be43c10f-4ef4-45b8-8aca-d02298654338/2|1:sm:mm 104 104 1404 532 -1 -1:</Data>
+				<Data type="key">ReferencePoint.lay|1|aee80459-8c13-4109-a330-2a68a57f77a0/4|1:sm:mm 130 130 1430 558 -1 -1:</Data>
 			</Layout5>
+			<Layout6>
+				<Data type="key">ApolloControl.lay|1|94280714-a281-4583-9879-7045e11ef700/6|1:sm:mm 156 156 1456 584 -1 -1:</Data>
+			</Layout6>
 		</Layouts>
 	</Instrumentation>
 	<BusNavigator>

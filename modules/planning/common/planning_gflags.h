@@ -74,6 +74,7 @@ DECLARE_bool(enable_trajectory_stitcher);
 // parameters for trajectory stitching and reinit planning starting point.
 DECLARE_double(replan_lateral_distance_threshold);
 DECLARE_double(replan_longitudinal_distance_threshold);
+DECLARE_double(replan_standstill_velocity_threshold);
 
 // parameter for reference line
 DECLARE_bool(enable_reference_line_provider_thread);
@@ -264,3 +265,5 @@ DECLARE_bool(use_smoothed_dp_guide_line);
 DECLARE_bool(use_soft_bound_in_nonlinear_speed_opt);
 
 DECLARE_bool(use_front_axe_center_in_path_planning);
+
+DECLARE_double(trajectory_stitching_advance_time);

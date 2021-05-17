@@ -55,6 +55,8 @@ class DiscretizedTrajectory : public std::vector<common::TrajectoryPoint> {
 
   virtual common::TrajectoryPoint Evaluate(const double relative_time) const;
 
+  virtual common::TrajectoryPoint EvaluateAtS(const double path_s) const;
+
   virtual size_t QueryLowerBoundPoint(const double relative_time,
                                       const double epsilon = 1.0e-5) const;
 

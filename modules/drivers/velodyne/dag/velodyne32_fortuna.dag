@@ -5,7 +5,7 @@
 ##################################################
 
 module_config {
-    module_library : "/apollo/bazel-bin/modules/drivers/velodyne/driver/libvelodyne_driver_component.so"
+    module_library : "/apollo/bazel-bin/modules/drivers/lidar/velodyne/driver/libvelodyne_driver_component.so"
 
     # 32
     components {
@@ -22,7 +22,7 @@ module_config {
 ##################################################
 
 module_config {
-    module_library : "/apollo/bazel-bin/modules/drivers/velodyne/parser/libvelodyne_convert_component.so"
+    module_library : "/apollo/bazel-bin/modules/drivers/lidar/velodyne/parser/libvelodyne_convert_component.so"
 
     # 32
     components {
@@ -42,7 +42,7 @@ module_config {
 ##################################################
 
 module_config {
-    module_library : "/apollo/bazel-bin/modules/drivers/velodyne/compensator/libvelodyne_compensator_component.so"
+    module_library : "/apollo/bazel-bin/modules/drivers/lidar/velodyne/compensator/libvelodyne_compensator_component.so"
 
     components {
       class_name : "CompensatorComponent"

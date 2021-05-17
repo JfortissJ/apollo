@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>fake_obstacle</name>
+        <dag_conf>/apollo/modules/fake_obstacle/dag/fake_obstacle.dag</dag_conf>
+        <process_name>fake_obstacle</process_name>
+    </module>
+</cyber>

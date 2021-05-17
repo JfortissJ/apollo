@@ -107,21 +107,6 @@
 				</item>
 				<item>
 					<Component type="key">Instrumentation</Component>
-					<Name type="key">controller.lay</Name>
-					<DisplayName type="key">controller.lay</DisplayName>
-					<Path type="key">.\Experiment Layouts</Path>
-					<Flags type="key">17472</Flags>
-					<Type type="key">10</Type>
-					<UniqueID type="key">1021848899</UniqueID>
-					<EntityID type="key">{DDD874FD-3379-4292-93F8-501438FF0FEE}</EntityID>
-					<ItemInfoDate type="key">25.03.2021 09:42:37</ItemInfoDate>
-					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
-					<ItemInfoDescr type="key"/>
-					<ItemInfoAddInfoDb type="key"/>
-					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
-				</item>
-				<item>
-					<Component type="key">Instrumentation</Component>
 					<Name type="key">SystemStatus.lay</Name>
 					<DisplayName type="key">SystemStatus.lay</DisplayName>
 					<Path type="key">.\Experiment Layouts</Path>
@@ -130,6 +115,36 @@
 					<UniqueID type="key">21180097</UniqueID>
 					<EntityID type="key">{42F91E4B-C9D1-4230-9B3E-9FBD034DA71B}</EntityID>
 					<ItemInfoDate type="key">26.03.2021 09:28:21</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">Instrumentation</Component>
+					<Name type="key">ReferencePoint.lay</Name>
+					<DisplayName type="key">ReferencePoint.lay</DisplayName>
+					<Path type="key">.\Experiment Layouts</Path>
+					<Flags type="key">16448</Flags>
+					<Type type="key">10</Type>
+					<UniqueID type="key">817047569</UniqueID>
+					<EntityID type="key">{868774D7-2FA5-4902-9AE5-7689746F11B7}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 09:37:30</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">Instrumentation</Component>
+					<Name type="key">ApolloControl.lay</Name>
+					<DisplayName type="key">ApolloControl.lay</DisplayName>
+					<Path type="key">.\Experiment Layouts</Path>
+					<Flags type="key">16448</Flags>
+					<Type type="key">10</Type>
+					<UniqueID type="key">461685748</UniqueID>
+					<EntityID type="key">{157EA24A-6212-4519-8B12-896146EBDDFC}</EntityID>
+					<ItemInfoDate type="key">29.03.2021 13:43:21</ItemInfoDate>
 					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
@@ -152,17 +167,17 @@
 				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
 				<item>
 					<Component type="key">PlatformManagement</Component>
-					<Targets type="key">Device::b7b74479-35ed-4550-8d88-e3259a5b257b</Targets>
+					<Targets type="key">Device::79578c82-be87-4e0f-ae59-44e7f9891b9e</Targets>
 					<RestoreInfopmdn type="key">Platform</RestoreInfopmdn>
-					<RestoreInfopmid type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</RestoreInfopmid>
-					<Name type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Name>
-					<DisplayName type="key">Platform [MicroAutoBox, unassigned]</DisplayName>
+					<RestoreInfopmid type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</RestoreInfopmid>
+					<Name type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Name>
+					<DisplayName type="key">Platform [MicroAutoBox, assigned to 'ds1401']</DisplayName>
 					<Flags type="key">128</Flags>
 					<ExtendedFlags type="key">3072</ExtendedFlags>
 					<Type type="key">6</Type>
-					<UniqueID type="key">1028200886</UniqueID>
-					<EntityID type="key">{F6311568-3FA7-4651-80D6-5429F77F4474}</EntityID>
-					<ItemInfoDate type="key">19.10.2020 15:53:04</ItemInfoDate>
+					<UniqueID type="key">27206820</UniqueID>
+					<EntityID type="key">{832BA637-0EC7-4030-A737-B03DE7523FAE}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 08:13:20</ItemInfoDate>
 					<ItemInfoDescr type="key"/>
 					<ItemInfoAddInfoDb type="key"/>
 					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
@@ -171,8 +186,8 @@
 						<Targets type="key">,VariableDescription::autoboxmodel.sdf</Targets>
 						<Flags type="key">18736</Flags>
 						<ExtendedFlags type="key">1</ExtendedFlags>
-						<UniqueID type="key">208188220</UniqueID>
-						<LinkedItem type="key">385428993</LinkedItem>
+						<UniqueID type="key">207301326</UniqueID>
+						<LinkedItem type="key">261464528</LinkedItem>
 						<item>
 							<Component type="key">DataSetManager</Component>
 							<Name type="key">Data Sets</Name>
@@ -181,9 +196,9 @@
 							<Flags type="key">65798</Flags>
 							<ExtendedFlags type="key">132</ExtendedFlags>
 							<Type type="key">3</Type>
-							<UniqueID type="key">908251763</UniqueID>
-							<EntityID type="key">{DD4D52BD-00EC-4389-9D29-C9F605EF2F5D}</EntityID>
-							<ItemInfoDate type="key">19.10.2020 15:53:05</ItemInfoDate>
+							<UniqueID type="key">25310532</UniqueID>
+							<EntityID type="key">{F7919AEA-AC24-47B9-8E39-923E8AD170B5}</EntityID>
+							<ItemInfoDate type="key">07.05.2021 08:13:20</ItemInfoDate>
 							<ItemInfoDescr type="key"/>
 							<ItemInfoAddInfoDb type="key"/>
 							<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
@@ -341,7 +356,7 @@
 				<VariableName type="key">Out1</VariableName>
 				<VariableUniqueName type="key">Model Root/AutoboxControl/limit out signals/limit acceleration rate/Out1</VariableUniqueName>
 				<VariableDescriptionName type="key">autoboxmodel.sdf</VariableDescriptionName>
-				<PlatformId type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</PlatformId>
+				<PlatformId type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</PlatformId>
 				<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 			</Favorite>
 		</Favorites>
@@ -363,7 +378,7 @@
 		<SimulationTimeGroupSupported type="key">-1</SimulationTimeGroupSupported>
 		<DeviceFactory>
 			<Device>
-				<DeviceName type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</DeviceName>
+				<DeviceName type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</DeviceName>
 				<DisplayName type="key">Platform</DisplayName>
 				<DeviceType type="key">110</DeviceType>
 				<DeviceConfiguration/>
@@ -376,7 +391,7 @@
 						<MACAddress type="key"/>
 						<Mode type="key">1</Mode>
 						<Children type="key">0</Children>
-						<NetClient type="key">192.168.140.1</NetClient>
+						<NetClient type="key">192.168.140.2</NetClient>
 						<PlatformType type="key">0</PlatformType>
 						<PortAddress type="key">0</PortAddress>
 						<ProcessorName type="key"/>
@@ -415,7 +430,7 @@
 							</AssignmentProperty>
 							<AssignmentProperty>
 								<Name type="key">NetClient</Name>
-								<Value type="key">192.168.140.1</Value>
+								<Value type="key">192.168.140.2</Value>
 								<Type type="key">System.String</Type>
 							</AssignmentProperty>
 							<AssignmentProperty>
@@ -461,13 +476,734 @@
 		</DeviceFactory>
 	</PlatformManagement>
 	<MeasurementConfiguration>
-		<NextUniqueKey type="key">27</NextUniqueKey>
+		<NextUniqueKey type="key">32</NextUniqueKey>
 		<SortedColumn type="key">4</SortedColumn>
 		<SortAscending type="key">-1</SortAscending>
-		<SignalList/>
+		<SignalList>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/acceleration</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/controller_active</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/limit out signals/acc limited</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/limit out signals/steering angle limited</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.a</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.ddkappa</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.dkappa</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.kappa</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.relative_time</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.s</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.theta</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.v</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePoint.z</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/distance_to_end</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/idx_larger</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/idx_smaller</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/interp_factor</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/lmt</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/time</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/time_larger</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/time_smaller</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/tts</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/steering_angle</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/TrackingError.e_delta</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/TrackingError.e_n</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/TrackingError.e_n_dot</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/TrackingError.e_psi</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/TrackingError.e_psi_dot</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/TrackingError.e_t</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/TrackingError.e_t_dot</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/AutoboxControl/TrackingError.e_v</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.LateralAcceleration</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.LongitudinalAcceleration</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.VehicleVelocity</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.YawRate</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.YawRateSign</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelAngle</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelAngleSign</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelSpeed</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelSpeedSign</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelTorque</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelTorqueSign</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.acceleration</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.brake</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.sequence_num</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.steering_rate</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.steering_target</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.throttle</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/ControlBus.timestamp_sec</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.MeasurementTime</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocity.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocity.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocity.z</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocityVrf.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocityVrf.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocityVrf.z</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.z</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Heading</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.z</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.z</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.z</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Orientation.qw</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Orientation.qx</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Orientation.qy</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Orientation.qz</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.z</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.a</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.ddkappa</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.dkappa</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.kappa</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.n_trajectory_point</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.relative_time</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.s</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.theta</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.timestamp_sec</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.v</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.x</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+			<Variable>
+				<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.y</Name>
+				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+				<Active type="key">-1</Active>
+				<Signal>
+					<Raster type="key">Hardware Polling [20ms]</Raster>
+				</Signal>
+			</Variable>
+		</SignalList>
 		<Platforms>
 			<Platform>
-				<Name type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Name>
+				<Name type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Name>
 				<FilteredRastersView type="key">1</FilteredRastersView>
 				<UseDefaultRasterForParameters type="key">0</UseDefaultRasterForParameters>
 				<DefaultRaster type="key">HostService</DefaultRaster>
@@ -478,14 +1214,18 @@
 						<AutoRepeatBehavior type="key">1</AutoRepeatBehavior>
 						<MultiCaptureHistoryEnabled type="key">0</MultiCaptureHistoryEnabled>
 						<DownsamplingFactor type="key">1</DownsamplingFactor>
-						<StartTrigger type="key">25</StartTrigger>
-						<StopTrigger type="key">26</StopTrigger>
+						<StartTrigger type="key">30</StartTrigger>
+						<StopTrigger type="key">31</StopTrigger>
 					</PlatformTriggered>
 				</Rasters>
-				<EnabledHardwarePollingRasters/>
+				<EnabledHardwarePollingRasters>
+					<HardwarePollingRaster>
+						<Name type="key">Hardware Polling [20ms]</Name>
+					</HardwarePollingRaster>
+				</EnabledHardwarePollingRasters>
 				<PlatformTriggers>
 					<PlatformTrigger>
-						<UniqueKey type="key">25</UniqueKey>
+						<UniqueKey type="key">30</UniqueKey>
 						<Name type="key">Platform Trigger 1</Name>
 						<Condition type="key"/>
 						<Delay type="key">0</Delay>
@@ -514,7 +1254,7 @@
 		</Platforms>
 		<DurationTriggers>
 			<DurationTrigger>
-				<UniqueKey type="key">26</UniqueKey>
+				<UniqueKey type="key">31</UniqueKey>
 				<Name type="key">Duration Trigger 1</Name>
 				<Delay type="key">0</Delay>
 				<Duration type="key">1</Duration>
@@ -576,9 +1316,9 @@
 		</Acquisition>
 		<Recorders>
 			<Recorder>
-				<Name type="key">Recorder 1</Name>
-				<UniqueKey type="key">24</UniqueKey>
-				<AutomaticSignalConfigurationEnabled type="key">-1</AutomaticSignalConfigurationEnabled>
+				<Name type="key">RecorderInputData</Name>
+				<UniqueKey type="key">27</UniqueKey>
+				<AutomaticSignalConfigurationEnabled type="key">0</AutomaticSignalConfigurationEnabled>
 				<WriteToFileEnabled type="key">-1</WriteToFileEnabled>
 				<MeasurementTimestampsEnabled type="key">0</MeasurementTimestampsEnabled>
 				<StartAudioSignalEnabled type="key">0</StartAudioSignalEnabled>
@@ -601,19 +1341,830 @@
 				<StorageInformation>
 					<AddToExperimentEnabled type="key">-1</AddToExperimentEnabled>
 					<AutomaticSaveDialogEnabled type="key">0</AutomaticSaveDialogEnabled>
-					<AutomaticExportEnabled type="key">0</AutomaticExportEnabled>
-					<AutomaticExportFileNamePrefix type="key">exp1_</AutomaticExportFileNamePrefix>
-					<AutomaticExportFileType type="key">ASAM MDF 4.1 Files (*.mf4)</AutomaticExportFileType>
+					<AutomaticExportEnabled type="key">-1</AutomaticExportEnabled>
+					<AutomaticExportFileNamePrefix type="key">rec_input_</AutomaticExportFileNamePrefix>
+					<AutomaticExportFileType type="key">MATLAB Files (*.mat)</AutomaticExportFileType>
 					<AutomaticExportFolder type="key"/>
 					<AutomaticNamingEnabled type="key">-1</AutomaticNamingEnabled>
 					<AutomaticNamingMinimunDigits type="key">3</AutomaticNamingMinimunDigits>
-					<AutomaticNamingStartIndex type="key">1</AutomaticNamingStartIndex>
+					<AutomaticNamingStartIndex type="key">115</AutomaticNamingStartIndex>
 					<Description type="key"/>
 					<FileNamePrefix type="key">rec1_</FileNamePrefix>
 					<OpenInMeasurementDataPoolEnabled type="key">0</OpenInMeasurementDataPoolEnabled>
 					<RecordingFileType type="key">ASAM MDF 4.1 Files (*.mf4)</RecordingFileType>
 				</StorageInformation>
-				<SignalList/>
+				<SignalList>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/acceleration</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/controller_active</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/limit out signals/acc limited</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/limit out signals/steering angle limited</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.a</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.ddkappa</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.dkappa</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.kappa</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.relative_time</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.s</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.theta</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.v</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePoint.z</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/distance_to_end</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/idx_larger</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/idx_smaller</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/interp_factor</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/lmt</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/time</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/time_larger</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/time_smaller</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/ReferencePointCalculation/ReferencePoint/tts</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/steering_angle</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/TrackingError.e_delta</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/TrackingError.e_n</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/TrackingError.e_n_dot</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/TrackingError.e_psi</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/TrackingError.e_psi_dot</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/TrackingError.e_t</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/TrackingError.e_t_dot</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/AutoboxControl/TrackingError.e_v</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.LateralAcceleration</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.LongitudinalAcceleration</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.VehicleVelocity</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.YawRate</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Motion.YawRateSign</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelAngle</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelAngleSign</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelSpeed</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelSpeedSign</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelTorque</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/CanCommunication/VehicleDataCan.Steering.SteeringWheelTorqueSign</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.acceleration</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.brake</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.sequence_num</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.steering_rate</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.steering_target</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.throttle</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/ControlBus.timestamp_sec</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.MeasurementTime</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocity.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocity.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocity.z</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocityVrf.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocityVrf.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.AngularVelocityVrf.z</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.EulerAngles.z</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Heading</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAcceleration.z</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearAccelerationVrf.z</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.LinearVelocity.z</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Orientation.qw</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Orientation.qx</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Orientation.qy</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Orientation.qz</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/LocalizationBus\n.Pose.Position.z</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.a</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.ddkappa</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.dkappa</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.kappa</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.n_trajectory_point</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.relative_time</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.s</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.theta</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.timestamp_sec</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.v</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.x</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+					<Variable>
+						<Name type="key">Model Root/EthernetCommunication/TrajectoryBus\n.y</Name>
+						<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
+						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
+						<Recorded type="key">-1</Recorded>
+						<Signal>
+							<Raster type="key">Hardware Polling [20ms]</Raster>
+						</Signal>
+					</Variable>
+				</SignalList>
 			</Recorder>
 		</Recorders>
 	</MeasurementConfiguration>

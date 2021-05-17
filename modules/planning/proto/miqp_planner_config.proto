@@ -1,0 +1,44 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+message MiqpPlannerConfiguration {
+    optional int32 nr_regions = 1 [default = 16];
+    optional double max_velocity_fitting = 2 [default = 10];
+    optional bool use_environment_polygon = 3 [default = true];
+    optional bool consider_obstacles = 4 [default = true];
+    optional double close_to_end_distance = 5 [default = 1.0];
+    optional double collision_radius_add = 6 [default = 0.0];
+    optional double jerk_weight = 7 [default = 1.0];
+    optional double position_weight = 8 [default = 2.0];
+    optional double velocity_weight = 9 [default = 0.0];
+    optional double acc_lon_max_limit = 10 [default = 2.0];
+    optional double acc_lon_min_limit = 11 [default = -4.0];
+    optional double jerk_lon_max_limit = 12 [default = 3.0];
+    optional double acc_lat_min_max_limit = 13 [default = 1.6];
+    optional double jerk_lat_min_max_limit = 14 [default = 1.4];
+    optional int32 nr_steps = 15 [default = 20];
+    optional int32 nr_neighbouring_possible_regions = 16 [default = 1];
+    optional double ts = 17 [default = 0.25];
+    optional double max_solution_time = 18 [default = 5.0];
+    optional double relative_mip_gap_tolerance = 19 [default = 0.1];
+    optional int32 mipemphasis = 20 [default = 1];
+    optional double relobjdif = 21 [default = 0.9];
+    optional double minimum_region_change_speed = 22 [default = 2];
+    optional int32 additional_steps_for_reference_longer_horizon = 23 [default = 4];
+    optional double delta_s_desired = 24 [default = 5];
+    optional double distance_stop_before = 25 [default = 5];
+    optional double distance_start_slowdown = 26 [default = 15];
+    optional bool use_sos = 27 [default = false];
+    optional bool use_branching_priorities = 28 [default = true];
+    optional int32 warmstart_type = 29 [default = 2];
+    optional double wheelbase_add = 30 [default = 0.0];
+    optional double destination_distance_stop_threshold = 31 [default = 2.0];
+    optional double cutoff_distance_reference_after_stop = 32 [default = 10.0];
+    optional bool obstacle_roi_filter = 33 [default = false];
+    optional double obstacle_roi_behind_distance = 34 [default = 10.0];
+    optional double acc_start_trajectory = 35 [default = 1.0];
+    optional double pts_offset_x = 36 [default = 0.0];
+    optional double pts_offset_y = 37 [default = 0.0];
+    optional bool use_smoothing = 38 [default = false];
+}

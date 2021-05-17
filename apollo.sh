@@ -94,7 +94,7 @@ function check_esd_files() {
 }
 
 function generate_build_targets() {
-  COMMON_TARGETS="//cyber/... union //modules/common/kv_db/... union //modules/dreamview/... $DISABLED_CYBER_MODULES"
+  COMMON_TARGETS="//cyber/... union //modules/common/kv_db/... union //modules/dreamview/... union //modules/fake_obstacle/... $DISABLED_CYBER_MODULES"
   case $BUILD_FILTER in
   cyber)
     BUILD_TARGETS=`bazel query //cyber/... union //modules/tools/visualizer/...`
