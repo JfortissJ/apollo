@@ -28,8 +28,8 @@ ptp4l[4232.559]: port 1: assuming the grand master role
 ### Slave
 
 * Make all other PCs slaves (two processes)
-* sudo ./ptp4l -i enp4s0 -m (maybe use -s)
-* `sudo ./phc2sys -a -r -m` or `sudo ./phc2sys -s enp4s0 -w -m`
+* `sudo ./ptp4l -i enp4s0 -m` (maybe use -s)
+* `sudo ./phc2sys -s enp4s0 -w -m -O 0`
 
 
 * You should see something like:
