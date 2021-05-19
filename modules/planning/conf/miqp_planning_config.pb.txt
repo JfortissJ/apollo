@@ -21,7 +21,7 @@ miqp_planner_config: {
     nr_steps: 10
     nr_neighbouring_possible_regions: 0
     ts: 1.0
-    max_solution_time: 3
+    max_solution_time: 1.0
     relative_mip_gap_tolerance: 0.1
     mipemphasis: 0
     relobjdif: 0.5
@@ -34,12 +34,10 @@ miqp_planner_config: {
     use_branching_priorities: true
     warmstart_type: 2
     wheelbase_add: 0.3
-    destination_distance_stop_threshold: 2.0
+    destination_distance_stop_threshold: 5.0
     cutoff_distance_reference_after_stop: 10.0
     obstacle_roi_filter: true
     obstacle_roi_behind_distance: 10.0
-    use_start_transformation: true
-    use_start_sqp_only: true
     acc_start_trajectory: 1.0
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06

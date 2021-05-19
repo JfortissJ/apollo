@@ -1,21 +1,11 @@
-# Installation
+
+# Time Synchronization using Linux PTP (recommended by apollo)
+
+## Installation
 
 * Follow https://github.com/ApolloAuto/apollo/blob/master/docs/howto/how_to_setup_dual_ipc.md
 
-# Time Synchronization
-
-## Using NTP
-* With the current network configuration in the car ptp does not work!
-* use standard ntp
-* PC1 is the ntp master, synchronized to the lrz (129.187.254.32)
-* PC1 runs an ntp deamon all other nodes can sychronize to
-* configure /etc/ntp.conf: sudo vi /etc/ntp.conf: set server 192.168.140.158 iburst as main time server (cf. PC2 in the car!)
-* reboot
-* use ntpstat to check if we are sychronized to pc1 (192.168.140.158)
-* or use ntpq + the sysinfo command
-
-
-## Using PTP (recommended by apollo)
+## Using PTP 
 * Note the ethernet interface on the fortiss laptops and PC1 is: enp0s31f6 (So launching is done eg. via `sudo ./ptp4l -i enp0s31f6 -m`)
 * linuxptp does not have to be installed on the system (but could be using the make install target), just launch it from the compiled source folder
 * A good readme: https://docs.fedoraproject.org/en-US/fedora/rawhide/system-administrators-guide/servers/Configuring_PTP_Using_ptp4l/ 
@@ -38,13 +28,12 @@ ptp4l[4232.559]: port 1: assuming the grand master role
 ### Slave
 
 * Make all other PCs slaves (two processes)
-* sudo ./ptp4l -i enp0s31f6 -m -s
-* sudo ./phc2sys -a -r -m
-* 
+* `sudo ./ptp4l -i enp4s0 -m` (maybe use -s)
+* `sudo ./phc2sys -s enp4s0 -w -m -O 0`
 
 
 * You should see something like:
-`
+```
 ptp4l[3688.994]: port 1: INITIALIZING to LISTENING on INIT_COMPLETE
 ptp4l[3688.994]: port 0: INITIALIZING to LISTENING on INIT_COMPLETE
 ptp4l[3695.303]: selected local clock c85b76.fffe.9bd4d9 as best master
@@ -64,8 +53,9 @@ ptp4l[3722.426]: master offset        301 s2 freq    -577 path delay     24764
 ptp4l[3723.537]: master offset        215 s2 freq    -572 path delay     24764
 ptp4l[3724.649]: master offset       -510 s2 freq   -1233 path delay     24779
 ptp4l[3725.760]: master offset        588 s2 freq    -288 path delay     24764
-`
-`
+```
+
+```
 phc2sys[3727.450]: reconfiguring after port state change
 phc2sys[3727.450]: selecting CLOCK_REALTIME for synchronization
 phc2sys[3727.450]: selecting enp0s31f6 as the master clock
@@ -78,5 +68,7 @@ phc2sys[3732.451]: CLOCK_REALTIME phc offset      -584 s2 freq   -1165 delay    
 phc2sys[3733.452]: CLOCK_REALTIME phc offset      -898 s2 freq   -1654 delay      0
 phc2sys[3734.452]: CLOCK_REALTIME phc offset       571 s2 freq    -454 delay      0
 phc2sys[3735.452]: CLOCK_REALTIME phc offset      -198 s2 freq   -1052 delay      0
-`
+```
 
+Troubleshooting: https://tsn.readthedocs.io/timesync.html#troubleshooting
+Make sure that system time does not synchronize (ubuntu settings / date & time / Automatic Date & Time)
