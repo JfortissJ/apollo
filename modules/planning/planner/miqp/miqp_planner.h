@@ -70,8 +70,7 @@ class MiqpPlanner : public LatticePlanner {
 
  private:
   std::vector<apollo::common::PathPoint> ToDiscretizedReferenceLine(
-      const std::vector<ReferencePoint>& ref_points,
-      const PlanningTarget& planning_target);
+      ReferenceLineInfo* reference_line_info, double stop_dist);
 
   void FillTimeDerivativesInApolloTrajectory(DiscretizedTrajectory& traj) const;
 
@@ -104,7 +103,10 @@ class MiqpPlanner : public LatticePlanner {
                                   double& p2_y, double& p3_x, double& p3_y,
                                   double& p4_x, double& p4_y);
 
-  PlannerState DeterminePlannerState(double planning_init_v, double goal_dist);
+  double CalculateSDistanceToStop(double goal_dist,
+                                  ReferenceLineInfo* reference_line_info);
+
+  PlannerState DeterminePlannerState(double planning_init_v, double stop_dist);
 
   int CutoffTrajectoryAtV(apollo::planning::DiscretizedTrajectory& traj,
                           double vmin);

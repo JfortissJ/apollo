@@ -136,8 +136,10 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double current_time = timestep;
   const double start_time = timestep;
 
-  PlannerState planner_status = DeterminePlannerState(
-      planning_init_point.v(), reference_line_info->SDistanceToDestination());
+  double stop_dist = CalculateSDistanceToStop(
+      reference_line_info->SDistanceToDestination(), reference_line_info);
+  PlannerState planner_status =
+      DeterminePlannerState(planning_init_point.v(), stop_dist);
 
   if (planner_status == STANDSTILL_TRAJECTORY) {
     CreateStandstillTrajectory(planning_init_point, reference_line_info);
@@ -151,9 +153,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Obtain a reference line and transform it to the PathPoint format.
   reference_line_info->set_is_on_reference_line();
-  std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
-      reference_line_info->reference_line().reference_points(),
-      reference_line_info->planning_target());
+  std::vector<PathPoint> discrete_reference_line =
+      ToDiscretizedReferenceLine(reference_line_info, stop_dist);
+
   // Reference line to raw c format
   const int ref_size =
       discrete_reference_line.size();  // aka N optimization support points
@@ -196,12 +198,11 @@ Status MiqpPlanner::PlanOnReferenceLine(
       config_.miqp_planner_config().distance_start_slowdown();
   const double dist_stop_before =
       config_.miqp_planner_config().distance_stop_before();
-  auto distGoal = reference_line_info->SDistanceToDestination();
-  if (distGoal - dist_stop_before < dist_start_slowdown) {
+  if (stop_dist - dist_stop_before < dist_start_slowdown) {
     track_ref_pos = false;
     vDes = 0;
-    deltaSDes = std::max(0.0, distGoal - dist_stop_before);
-    AINFO << "Tracking velocity instead of pts, distance goal :" << distGoal;
+    deltaSDes = std::max(0.0, stop_dist - dist_stop_before);
+    AINFO << "Tracking velocity instead of pts, distance goal :" << stop_dist;
   } else {
     track_ref_pos = true;
     vDes = FLAGS_default_cruise_speed;
@@ -325,7 +326,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   if (config_.miqp_planner_config().use_smoothing()) {
     auto smoothed_apollo_trajectory =
         SmoothTrajectory(apollo_traj, planning_init_point);
-    if(smoothed_apollo_trajectory.first) {
+    if (smoothed_apollo_trajectory.first) {
       reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
       reference_line_info->SetCost(0);  // TODO necessary?
       reference_line_info->SetDrivable(true);
@@ -349,12 +350,17 @@ Status MiqpPlanner::PlanOnReferenceLine(
 }
 
 std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
-    const std::vector<ReferencePoint>& ref_points,
-    const PlanningTarget& planning_target) {
-  double s = 0.0;
+    ReferenceLineInfo* reference_line_info, double stop_distance) {
+  const double s_vehicle = reference_line_info->AdcSlBoundary().end_s();
+  const PlanningTarget& planning_target =
+      reference_line_info->planning_target();
+  double s_stop_for_obstacle = stop_distance + s_vehicle;
 
+  // ref_points start at beginning of road, not at pose of vehicle
+  double s = 0.0;
   std::vector<PathPoint> path_points;
-  for (const auto& ref_point : ref_points) {
+  for (const auto& ref_point :
+       reference_line_info->reference_line().reference_points()) {
     PathPoint path_point;
     path_point.set_x(ref_point.x());
     path_point.set_y(ref_point.y());
@@ -370,9 +376,9 @@ std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
     path_point.set_s(s);
 
     if (planning_target.has_stop_point() &&
-        (s > planning_target.stop_point().s() +
-                 config_.miqp_planner_config()
-                     .cutoff_distance_reference_after_stop())) {
+        (s >
+         s_stop_for_obstacle + config_.miqp_planner_config()
+                                   .cutoff_distance_reference_after_stop())) {
       AINFO << "cutting off reference after s:" << s;
       break;
     }
@@ -429,8 +435,7 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     if ((vx * vx + vy * vy) < 1e-3) {
       kappa = 0;
     } else {
-      kappa =
-        (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
+      kappa = (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
     }
     TrajectoryPoint trajectory_point;
     trajectory_point.mutable_path_point()->set_x(x);
@@ -843,15 +848,36 @@ bool MiqpPlanner::FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
   return true;
 }
 
+double MiqpPlanner::CalculateSDistanceToStop(
+    double goal_dist, ReferenceLineInfo* reference_line_info) {
+  double stop_distance = goal_dist;
+  AINFO << "Goal distance is " << goal_dist;
+  for (const Obstacle* obstacle :
+       reference_line_info->path_decision()->obstacles().Items()) {
+    AINFO << "obstacle " << obstacle->Id()
+          << " perception line sl boundary: s_start["
+          << obstacle->PerceptionSLBoundary().start_s()
+          << "], HasTrajectory: " << obstacle->HasTrajectory()
+          << ", IsLaneBlocking: " << obstacle->IsLaneBlocking();
+    if (!obstacle->HasTrajectory() && obstacle->IsLaneBlocking()) {
+      // Calculation similar to ReferenceLineInfo::SDistanceToDestination()
+      double d_i = obstacle->PerceptionSLBoundary().start_s() -
+                   reference_line_info->AdcSlBoundary().end_s();
+      stop_distance = std::min(stop_distance, d_i);
+    }
+  }
+  return stop_distance;
+}
+
 apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
-    double planning_init_v, double goal_dist) {
+    double planning_init_v, double stop_dist) {
   PlannerState status;
   // issue hard stop trajectory without optimization if velocity is
   // low enough and goal is nearer than this
   const double destination_dist_threshold =
       config_.miqp_planner_config().destination_distance_stop_threshold();
 
-  if (goal_dist < destination_dist_threshold) {  // Approaching end or at end
+  if (stop_dist < destination_dist_threshold) {  // Approaching end or at end
     if (planning_init_v <=
         standstill_velocity_threshold_) {  // Standstill at end
       status = PlannerState::STANDSTILL_TRAJECTORY;
@@ -870,12 +896,13 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
     }
   }
   AINFO << "Planner status is: " << static_cast<int>(status)
-        << " v_init = " << planning_init_v << " goal dist = " << goal_dist;
+        << " v_init = " << planning_init_v << " stop dist = " << stop_dist;
 
   return status;
 }
 
-// int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double vmin) {
+// int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double
+// vmin) {
 //   // reverse, to not cutoff accelerating trajectories
 //   for (size_t i = traj.size() - 1; i > 1; --i) {
 //     if (traj.at(i).v() < vmin && traj.at(i - 1).v() >= vmin) {
@@ -946,14 +973,17 @@ void MiqpPlanner::CreateStandstillTrajectory(
 //     const double theta = std::move(lastrefpt[3]);
 //     const double v = std::move(lastrefpt[4]);
 //     if (v > minimum_valid_speed_planning_) {
-//       AERROR << "Invalid stopping Trajectory! Reference trajectory last point "
+//       AERROR << "Invalid stopping Trajectory! Reference trajectory last point
+//       "
 //                 "speed = "
 //              << v;
 //     }
 //     trajectory_point_2.mutable_path_point()->set_x(x);
 //     trajectory_point_2.mutable_path_point()->set_y(y);
-//     double s = std::sqrt(std::pow(planning_init_point.path_point().x() - x, 2) +
-//                          std::pow(planning_init_point.path_point().y() - y, 2));
+//     double s = std::sqrt(std::pow(planning_init_point.path_point().x() - x,
+//     2) +
+//                          std::pow(planning_init_point.path_point().y() - y,
+//                          2));
 //     trajectory_point_2.mutable_path_point()->set_s(s);
 //     trajectory_point_2.mutable_path_point()->set_theta(theta);
 //     trajectory_point_2.set_v(0.0);
@@ -973,7 +1003,8 @@ void MiqpPlanner::CreateStandstillTrajectory(
 //           << planning_init_point.relative_time()
 //           << " x = " << planning_init_point.path_point().x()
 //           << " y = " << planning_init_point.path_point().y()
-//           << "with end point at t = " << time << " x = " << x << " y = " << y;
+//           << "with end point at t = " << time << " x = " << x << " y = " <<
+//           y;
 //   }
 // }
 
