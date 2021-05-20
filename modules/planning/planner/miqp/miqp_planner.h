@@ -103,10 +103,10 @@ class MiqpPlanner : public LatticePlanner {
                                   double& p2_y, double& p3_x, double& p3_y,
                                   double& p4_x, double& p4_y);
 
-  double CalculateSDistanceToStop(double goal_dist,
-                                  ReferenceLineInfo* reference_line_info);
+  double CalculateSDistanceToStop(ReferenceLineInfo* reference_line_info,
+                                  bool brake_for_inlane);
 
-  PlannerState DeterminePlannerState(double planning_init_v, double stop_dist);
+  PlannerState DeterminePlannerState(const double planning_init_v, ReferenceLineInfo* reference_line_info, double& stop_dist);
 
   int CutoffTrajectoryAtV(apollo::planning::DiscretizedTrajectory& traj,
                           double vmin);

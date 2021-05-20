@@ -136,10 +136,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double current_time = timestep;
   const double start_time = timestep;
 
-  double stop_dist = CalculateSDistanceToStop(
-      reference_line_info->SDistanceToDestination(), reference_line_info);
-  PlannerState planner_status =
-      DeterminePlannerState(planning_init_point.v(), stop_dist);
+  double stop_dist;
+  PlannerState planner_status = DeterminePlannerState(
+      planning_init_point.v(), reference_line_info, stop_dist);
 
   if (planner_status == STANDSTILL_TRAJECTORY) {
     CreateStandstillTrajectory(planning_init_point, reference_line_info);
@@ -198,11 +197,16 @@ Status MiqpPlanner::PlanOnReferenceLine(
       config_.miqp_planner_config().distance_start_slowdown();
   const double dist_stop_before =
       config_.miqp_planner_config().distance_stop_before();
-  if (stop_dist - dist_stop_before < dist_start_slowdown) {
-    track_ref_pos = false;
+  if ((stop_dist - dist_stop_before < dist_start_slowdown) &&
+      (planner_status != PlannerState::START_TRAJECTORY)) {
+    track_ref_pos = false;  // only relevant for miqp
     vDes = 0;
     deltaSDes = std::max(0.0, stop_dist - dist_stop_before);
-    AINFO << "Tracking velocity instead of pts, distance goal :" << stop_dist;
+  } else if ((stop_dist - dist_stop_before < dist_start_slowdown) &&
+             (planner_status == PlannerState::START_TRAJECTORY)) {
+    track_ref_pos = false;  // only relevant for miqp
+    vDes = FLAGS_default_cruise_speed;
+    deltaSDes = std::max(0.0, stop_dist - dist_stop_before);
   } else {
     track_ref_pos = true;
     vDes = FLAGS_default_cruise_speed;
@@ -355,6 +359,9 @@ std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
   const PlanningTarget& planning_target =
       reference_line_info->planning_target();
   double s_stop_for_obstacle = stop_distance + s_vehicle;
+  AINFO << "s_stop_for_obstacle: " << s_stop_for_obstacle;
+  AINFO << "stop_distance: " << stop_distance;
+  AINFO << "s_vehicle: " << s_vehicle;
 
   // ref_points start at beginning of road, not at pose of vehicle
   double s = 0.0;
@@ -849,17 +856,21 @@ bool MiqpPlanner::FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
 }
 
 double MiqpPlanner::CalculateSDistanceToStop(
-    double goal_dist, ReferenceLineInfo* reference_line_info) {
-  double stop_distance = goal_dist;
-  AINFO << "Goal distance is " << goal_dist;
+    ReferenceLineInfo* reference_line_info, bool brake_for_inlane) {
+  double stop_distance = reference_line_info->SDistanceToDestination();
+  AINFO << "Goal distance is " << stop_distance;
   for (const Obstacle* obstacle :
        reference_line_info->path_decision()->obstacles().Items()) {
+    bool in_lane = reference_line_info->reference_line().IsOnLane(
+        obstacle->PerceptionSLBoundary());
     AINFO << "obstacle " << obstacle->Id()
           << " perception line sl boundary: s_start["
           << obstacle->PerceptionSLBoundary().start_s()
           << "], HasTrajectory: " << obstacle->HasTrajectory()
-          << ", IsLaneBlocking: " << obstacle->IsLaneBlocking();
-    if (!obstacle->HasTrajectory() && obstacle->IsLaneBlocking()) {
+          << ", IsLaneBlocking: " << obstacle->IsLaneBlocking()
+          << ", InLane: " << in_lane;
+    if ((!obstacle->HasTrajectory() && obstacle->IsLaneBlocking()) ||
+        (!obstacle->HasTrajectory() && in_lane && brake_for_inlane)) {
       // Calculation similar to ReferenceLineInfo::SDistanceToDestination()
       double d_i = obstacle->PerceptionSLBoundary().start_s() -
                    reference_line_info->AdcSlBoundary().end_s();
@@ -870,12 +881,19 @@ double MiqpPlanner::CalculateSDistanceToStop(
 }
 
 apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
-    double planning_init_v, double stop_dist) {
+    const double planning_init_v, ReferenceLineInfo* reference_line_info,
+    double& stop_dist) {
   PlannerState status;
   // issue hard stop trajectory without optimization if velocity is
   // low enough and goal is nearer than this
   const double destination_dist_threshold =
       config_.miqp_planner_config().destination_distance_stop_threshold();
+
+  // calculate the stop distance under the assumption to not brake for every
+  // obstacle in the lane
+  bool brake_for_inlane = false;
+  stop_dist = MiqpPlanner::CalculateSDistanceToStop(reference_line_info,
+                                                    brake_for_inlane);
 
   if (stop_dist < destination_dist_threshold) {  // Approaching end or at end
     if (planning_init_v <=
@@ -884,6 +902,10 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
     } else if (planning_init_v <=
                minimum_valid_speed_planning_) {  // Create stopping traj
       status = PlannerState::STOP_TRAJECTORY;
+      // overwriting start stop_distance!!
+      bool brake_for_inlane = true;
+      stop_dist = MiqpPlanner::CalculateSDistanceToStop(reference_line_info,
+                                                        brake_for_inlane);
     } else {  // Let miqp optimizier plan the stopping traj
       status = PlannerState::DRIVING_TRAJECTORY;
     }
@@ -891,6 +913,10 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
     if (planning_init_v <=
         minimum_valid_speed_planning_) {  // Low speed -> modify start
       status = PlannerState::START_TRAJECTORY;
+      // overwriting start stop_distance!!
+      bool brake_for_inlane = true;
+      stop_dist = MiqpPlanner::CalculateSDistanceToStop(reference_line_info,
+                                                        brake_for_inlane);
     } else {  // Driving: default case
       status = PlannerState::DRIVING_TRAJECTORY;
     }
