@@ -58,7 +58,7 @@ void GetRawCMiqpTrajectoryCMiqpPlanner(CMiqpPlanner c_miqp_planner, int carIdx,
 void GetRawCLastReferenceTrajectoryCMiqpPlaner(CMiqpPlanner c_miqp_planner,
                                                int carIdx, double start_time,
                                                double* trajectory, int& size);
-                                               
+
 bool UpdateConvexifiedMapCMiqpPlaner(CMiqpPlanner c_miqp_planner,
                                      double poly_pts[], const int poly_size);
 
@@ -69,7 +69,8 @@ void UpdateDesiredVelocityCMiqpPlanner(CMiqpPlanner c_miqp_planner,
 int AddObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, double p1_x[],
                             double p1_y[], double p2_x[], double p2_y[],
                             double p3_x[], double p3_y[], double p4_x[],
-                            double p4_y[], const int size, bool is_static);
+                            double p4_y[], const int size, bool is_static,
+                            bool is_soft);
 
 void UpdateObstacleCMiqpPlanner(CMiqpPlanner c_miqp_planner, int id,
                                 double p1_x[], double p1_y[], double p2_x[],

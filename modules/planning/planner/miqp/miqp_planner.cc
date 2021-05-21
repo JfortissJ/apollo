@@ -645,6 +645,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
                       collision_radius_add;
 
   s.slackWeight = 30;
+  s.slackWeightObstacle = 2000;
   s.acclerationWeight = 0;
   if (conf.has_acc_lon_max_limit()) {
     s.accLonMaxLimit = conf.acc_lon_max_limit();
@@ -780,6 +781,7 @@ bool MiqpPlanner::ProcessObstacles(
     double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N],
         p4_y[N];
     bool is_static;
+    bool is_soft = false;
     if (obstacle->IsVirtual()) {
       continue;
       // } else if (!obstacle->IsLaneBlocking()) {
@@ -795,24 +797,28 @@ bool MiqpPlanner::ProcessObstacles(
       is_static = true;
     } else {
       const float ts = GetTsCMiqpPlanner(planner_);
-      // AINFO << "Dynamic obstacle " << obstacle->Id();
+      AINFO << "Dynamic obstacle " << obstacle->Id();
       for (int i = 0; i < N; ++i) {
         double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
 
         common::math::Box2d box_i = obstacle->GetBoundingBox(point);
+        AINFO << "idx: " << i << ", box: " << box_i.DebugString();
+        box_i.LongitudinalExtend(config_.miqp_planner_config().extension_length_dynamic());
+        AINFO << "idx: " << i << ", extended box: " << box_i.DebugString();
         common::math::Polygon2d poly2d_i = Polygon2d(box_i);
         FillInflatedPtsFromPolygon(poly2d_i, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
                                    p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
       }
       is_static = false;
+      is_soft = true;
     }
 
     int idx_obs = AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y,
-                                          p3_x, p3_y, p4_x, p4_y, N, is_static);
+                                          p3_x, p3_y, p4_x, p4_y, N, is_static, is_soft);
     if (idx_obs != -1) {
       AINFO << "Added obstacle " << obstacle->Id()
-            << " with miqp idx = " << idx_obs << " is_static = " << is_static;
+            << " with miqp idx = " << idx_obs << " is_static = " << is_static << " is_soft = " << is_soft;
     }
   }
   return true;
