@@ -874,7 +874,9 @@ double MiqpPlanner::CalculateSDistanceToStop(
       // Calculation similar to ReferenceLineInfo::SDistanceToDestination()
       double d_i = obstacle->PerceptionSLBoundary().start_s() -
                    reference_line_info->AdcSlBoundary().end_s();
-      stop_distance = std::min(stop_distance, d_i);
+      if(d_i >= 0) { //obstacle is in front of the car
+        stop_distance = std::min(stop_distance, d_i);
+      }
     }
   }
   return stop_distance;
