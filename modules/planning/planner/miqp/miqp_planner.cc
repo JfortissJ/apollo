@@ -1053,21 +1053,16 @@ MiqpPlanner::SmoothTrajectory(
   tsm.InitializeProblem(subsampling, traj_in, planning_init_point);
   AINFO << "Planning init point is " << planning_init_point.DebugString();
   int status = tsm.Optimize();
-  if (status > 0) {
+  if (tsm.ValidateSmoothingSolution()) {
     auto traj = tsm.GetOptimizedTrajectory();
     for (int idx = 0; idx < traj.size(); ++idx) {
       AINFO << "Smoothed trajectory at idx = " << idx << " : "
             << traj.at(idx).DebugString();
     }
-    if (tsm.ValidateSmoothingSolution()) {
-      return {true, traj};
-    } else {
-      AERROR << "Trajectory Smoothing Not Valid!";
-      return {false, traj};
-    }
+    return {true, traj};
   } else {
-    AERROR << "Trajectory Smoothing Failed!";
-    return {false, traj_in};
+    AERROR << "Trajectory smoothing not valid or failed!";
+    return {false, traj};
   }
 }
 
