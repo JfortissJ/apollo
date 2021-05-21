@@ -311,8 +311,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
         ego_back_edge_to_center);
     if (obstacle_collision) {
       AERROR << "Planning success but collision with obstacle!";
-      return Status(ErrorCode::PLANNING_ERROR,
-                    "miqp trajectory colliding with obstacles");
+      // return Status(ErrorCode::PLANNING_ERROR,
+      //               "miqp trajectory colliding with obstacles");
     }
   }
 
@@ -320,8 +320,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   if (config_.miqp_planner_config().use_environment_polygon()) {
     if (EnvironmentCollision(left_pts, right_pts, apollo_traj)) {
       AERROR << "Planning success but collision with environment!";
-      return Status(ErrorCode::PLANNING_ERROR,
-                    "miqp trajectory colliding with environment");
+      // return Status(ErrorCode::PLANNING_ERROR,
+      //               "miqp trajectory colliding with environment");
     }
   }
 
@@ -728,27 +728,27 @@ bool MiqpPlanner::EnvironmentCollision(
     if (!envpoly.Contains(carpoly)) {
       AERROR << "Collision found at idx = " << i;
       // Debug outputs
-      {
-        std::stringstream ss;
-        ss << std::setprecision(15) << "envpoly = [";
-        const char* sep = "";
-        for (auto& pt : envpoly.points()) {
-          ss << sep << pt.x() << ", " << pt.y();
-          sep = "; ";
-        }
-        ss << "]";
-        AINFO << std::setprecision(15) << ss.str().c_str();
-      }
-      {
-        std::stringstream ss;
-        ss << std::setprecision(15) << "carpoly = [";
-        const char* sep = "";
-        for (auto& pt : carpoly.points()) {
-          ss << sep << pt.x() << ", " << pt.y();
-        }
-        ss << "]";
-        AINFO << std::setprecision(15) << ss.str().c_str();
-      }
+      // {
+      //   std::stringstream ss;
+      //   ss << std::setprecision(15) << "envpoly = [";
+      //   const char* sep = "";
+      //   for (auto& pt : envpoly.points()) {
+      //     ss << sep << pt.x() << ", " << pt.y();
+      //     sep = "; ";
+      //   }
+      //   ss << "]";
+      //   AINFO << std::setprecision(15) << ss.str().c_str();
+      // }
+      // {
+      //   std::stringstream ss;
+      //   ss << std::setprecision(15) << "carpoly = [";
+      //   const char* sep = "";
+      //   for (auto& pt : carpoly.points()) {
+      //     ss << sep << pt.x() << ", " << pt.y();
+      //   }
+      //   ss << "]";
+      //   AINFO << std::setprecision(15) << ss.str().c_str();
+      // }
       return true;
     }
   }
