@@ -5,10 +5,10 @@ transform:
     y: 0.0
     z: 0.0
   rotation:
-    x: 0.707
-    y: 0.707
-    z: 0
-    w: 0
+    x: 0.0
+    y: 0.0
+    z: 0.7071
+    w: 0.7071
 header:
   seq: 0
   stamp:
