@@ -23,8 +23,8 @@
 --fortiss_publish_empty_prediction=false
 
 # guerickestrasse begin
---fortiss_simcontrol_start_x=692939
---fortiss_simcontrol_start_y=5339064
+--fortiss_simcontrol_start_x=692966.52
+--fortiss_simcontrol_start_y=5339048.90
 
 # sunnyvale
 #--fortiss_simcontrol_start_x=586903

@@ -42,6 +42,7 @@ miqp_planner_config: {
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06
     use_smoothing: true
+    extension_length_dynamic: 6.0
 }
 
 

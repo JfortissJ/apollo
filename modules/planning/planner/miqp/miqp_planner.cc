@@ -136,8 +136,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
   double current_time = timestep;
   const double start_time = timestep;
 
+  double stop_dist;
   PlannerState planner_status = DeterminePlannerState(
-      planning_init_point.v(), reference_line_info->SDistanceToDestination());
+      planning_init_point.v(), reference_line_info, stop_dist);
 
   if (planner_status == STANDSTILL_TRAJECTORY) {
     CreateStandstillTrajectory(planning_init_point, reference_line_info);
@@ -151,9 +152,9 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Obtain a reference line and transform it to the PathPoint format.
   reference_line_info->set_is_on_reference_line();
-  std::vector<PathPoint> discrete_reference_line = ToDiscretizedReferenceLine(
-      reference_line_info->reference_line().reference_points(),
-      reference_line_info->planning_target());
+  std::vector<PathPoint> discrete_reference_line =
+      ToDiscretizedReferenceLine(reference_line_info, stop_dist);
+
   // Reference line to raw c format
   const int ref_size =
       discrete_reference_line.size();  // aka N optimization support points
@@ -196,12 +197,16 @@ Status MiqpPlanner::PlanOnReferenceLine(
       config_.miqp_planner_config().distance_start_slowdown();
   const double dist_stop_before =
       config_.miqp_planner_config().distance_stop_before();
-  auto distGoal = reference_line_info->SDistanceToDestination();
-  if (distGoal - dist_stop_before < dist_start_slowdown) {
-    track_ref_pos = false;
+  if ((stop_dist - dist_stop_before < dist_start_slowdown) &&
+      (planner_status != PlannerState::START_TRAJECTORY)) {
+    track_ref_pos = false;  // only relevant for miqp
     vDes = 0;
-    deltaSDes = std::max(0.0, distGoal - dist_stop_before);
-    AINFO << "Tracking velocity instead of pts, distance goal :" << distGoal;
+    deltaSDes = std::max(0.0, stop_dist - dist_stop_before);
+  } else if ((stop_dist - dist_stop_before < dist_start_slowdown) &&
+             (planner_status == PlannerState::START_TRAJECTORY)) {
+    track_ref_pos = false;  // only relevant for miqp
+    vDes = FLAGS_default_cruise_speed;
+    deltaSDes = std::max(0.0, stop_dist - dist_stop_before);
   } else {
     track_ref_pos = true;
     vDes = FLAGS_default_cruise_speed;
@@ -306,8 +311,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
         ego_back_edge_to_center);
     if (obstacle_collision) {
       AERROR << "Planning success but collision with obstacle!";
-      return Status(ErrorCode::PLANNING_ERROR,
-                    "miqp trajectory colliding with obstacles");
+      // return Status(ErrorCode::PLANNING_ERROR,
+      //               "miqp trajectory colliding with obstacles");
     }
   }
 
@@ -315,8 +320,8 @@ Status MiqpPlanner::PlanOnReferenceLine(
   if (config_.miqp_planner_config().use_environment_polygon()) {
     if (EnvironmentCollision(left_pts, right_pts, apollo_traj)) {
       AERROR << "Planning success but collision with environment!";
-      return Status(ErrorCode::PLANNING_ERROR,
-                    "miqp trajectory colliding with environment");
+      // return Status(ErrorCode::PLANNING_ERROR,
+      //               "miqp trajectory colliding with environment");
     }
   }
 
@@ -325,7 +330,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
   if (config_.miqp_planner_config().use_smoothing()) {
     auto smoothed_apollo_trajectory =
         SmoothTrajectory(apollo_traj, planning_init_point);
-    if(smoothed_apollo_trajectory.first) {
+    if (smoothed_apollo_trajectory.first) {
       reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
       reference_line_info->SetCost(0);  // TODO necessary?
       reference_line_info->SetDrivable(true);
@@ -349,12 +354,20 @@ Status MiqpPlanner::PlanOnReferenceLine(
 }
 
 std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
-    const std::vector<ReferencePoint>& ref_points,
-    const PlanningTarget& planning_target) {
-  double s = 0.0;
+    ReferenceLineInfo* reference_line_info, double stop_distance) {
+  const double s_vehicle = reference_line_info->AdcSlBoundary().end_s();
+  const PlanningTarget& planning_target =
+      reference_line_info->planning_target();
+  double s_stop_for_obstacle = stop_distance + s_vehicle;
+  AINFO << "s_stop_for_obstacle: " << s_stop_for_obstacle;
+  AINFO << "stop_distance: " << stop_distance;
+  AINFO << "s_vehicle: " << s_vehicle;
 
+  // ref_points start at beginning of road, not at pose of vehicle
+  double s = 0.0;
   std::vector<PathPoint> path_points;
-  for (const auto& ref_point : ref_points) {
+  for (const auto& ref_point :
+       reference_line_info->reference_line().reference_points()) {
     PathPoint path_point;
     path_point.set_x(ref_point.x());
     path_point.set_y(ref_point.y());
@@ -370,9 +383,9 @@ std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
     path_point.set_s(s);
 
     if (planning_target.has_stop_point() &&
-        (s > planning_target.stop_point().s() +
-                 config_.miqp_planner_config()
-                     .cutoff_distance_reference_after_stop())) {
+        (s >
+         s_stop_for_obstacle + config_.miqp_planner_config()
+                                   .cutoff_distance_reference_after_stop())) {
       AINFO << "cutting off reference after s:" << s;
       break;
     }
@@ -429,8 +442,7 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     if ((vx * vx + vy * vy) < 1e-3) {
       kappa = 0;
     } else {
-      kappa =
-        (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
+      kappa = (vx * ay - ax * vy) / (pow((vx * vx + vy * vy), 3 / 2));
     }
     TrajectoryPoint trajectory_point;
     trajectory_point.mutable_path_point()->set_x(x);
@@ -633,6 +645,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
                       collision_radius_add;
 
   s.slackWeight = 30;
+  s.slackWeightObstacle = 2000;
   s.acclerationWeight = 0;
   if (conf.has_acc_lon_max_limit()) {
     s.accLonMaxLimit = conf.acc_lon_max_limit();
@@ -716,27 +729,27 @@ bool MiqpPlanner::EnvironmentCollision(
     if (!envpoly.Contains(carpoly)) {
       AERROR << "Collision found at idx = " << i;
       // Debug outputs
-      {
-        std::stringstream ss;
-        ss << std::setprecision(15) << "envpoly = [";
-        const char* sep = "";
-        for (auto& pt : envpoly.points()) {
-          ss << sep << pt.x() << ", " << pt.y();
-          sep = "; ";
-        }
-        ss << "]";
-        AINFO << std::setprecision(15) << ss.str().c_str();
-      }
-      {
-        std::stringstream ss;
-        ss << std::setprecision(15) << "carpoly = [";
-        const char* sep = "";
-        for (auto& pt : carpoly.points()) {
-          ss << sep << pt.x() << ", " << pt.y();
-        }
-        ss << "]";
-        AINFO << std::setprecision(15) << ss.str().c_str();
-      }
+      // {
+      //   std::stringstream ss;
+      //   ss << std::setprecision(15) << "envpoly = [";
+      //   const char* sep = "";
+      //   for (auto& pt : envpoly.points()) {
+      //     ss << sep << pt.x() << ", " << pt.y();
+      //     sep = "; ";
+      //   }
+      //   ss << "]";
+      //   AINFO << std::setprecision(15) << ss.str().c_str();
+      // }
+      // {
+      //   std::stringstream ss;
+      //   ss << std::setprecision(15) << "carpoly = [";
+      //   const char* sep = "";
+      //   for (auto& pt : carpoly.points()) {
+      //     ss << sep << pt.x() << ", " << pt.y();
+      //   }
+      //   ss << "]";
+      //   AINFO << std::setprecision(15) << ss.str().c_str();
+      // }
       return true;
     }
   }
@@ -768,6 +781,7 @@ bool MiqpPlanner::ProcessObstacles(
     double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N],
         p4_y[N];
     bool is_static;
+    bool is_soft = false;
     if (obstacle->IsVirtual()) {
       continue;
       // } else if (!obstacle->IsLaneBlocking()) {
@@ -783,24 +797,28 @@ bool MiqpPlanner::ProcessObstacles(
       is_static = true;
     } else {
       const float ts = GetTsCMiqpPlanner(planner_);
-      // AINFO << "Dynamic obstacle " << obstacle->Id();
+      AINFO << "Dynamic obstacle " << obstacle->Id();
       for (int i = 0; i < N; ++i) {
         double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
 
         common::math::Box2d box_i = obstacle->GetBoundingBox(point);
+        AINFO << "idx: " << i << ", box: " << box_i.DebugString();
+        box_i.LongitudinalExtend(config_.miqp_planner_config().extension_length_dynamic());
+        AINFO << "idx: " << i << ", extended box: " << box_i.DebugString();
         common::math::Polygon2d poly2d_i = Polygon2d(box_i);
         FillInflatedPtsFromPolygon(poly2d_i, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
                                    p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
       }
       is_static = false;
+      is_soft = true;
     }
 
     int idx_obs = AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y,
-                                          p3_x, p3_y, p4_x, p4_y, N, is_static);
+                                          p3_x, p3_y, p4_x, p4_y, N, is_static, is_soft);
     if (idx_obs != -1) {
       AINFO << "Added obstacle " << obstacle->Id()
-            << " with miqp idx = " << idx_obs << " is_static = " << is_static;
+            << " with miqp idx = " << idx_obs << " is_static = " << is_static << " is_soft = " << is_soft;
     }
   }
   return true;
@@ -843,21 +861,59 @@ bool MiqpPlanner::FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
   return true;
 }
 
+double MiqpPlanner::CalculateSDistanceToStop(
+    ReferenceLineInfo* reference_line_info, bool brake_for_inlane) {
+  double stop_distance = reference_line_info->SDistanceToDestination();
+  AINFO << "Goal distance is " << stop_distance;
+  for (const Obstacle* obstacle :
+       reference_line_info->path_decision()->obstacles().Items()) {
+    bool in_lane = reference_line_info->reference_line().IsOnLane(
+        obstacle->PerceptionSLBoundary());
+    AINFO << "obstacle " << obstacle->Id()
+          << " perception line sl boundary: s_start["
+          << obstacle->PerceptionSLBoundary().start_s()
+          << "], HasTrajectory: " << obstacle->HasTrajectory()
+          << ", IsLaneBlocking: " << obstacle->IsLaneBlocking()
+          << ", InLane: " << in_lane;
+    if ((!obstacle->HasTrajectory() && obstacle->IsLaneBlocking()) ||
+        (!obstacle->HasTrajectory() && in_lane && brake_for_inlane)) {
+      // Calculation similar to ReferenceLineInfo::SDistanceToDestination()
+      double d_i = obstacle->PerceptionSLBoundary().start_s() -
+                   reference_line_info->AdcSlBoundary().end_s();
+      if(d_i >= 0) { //obstacle is in front of the car
+        stop_distance = std::min(stop_distance, d_i);
+      }
+    }
+  }
+  return stop_distance;
+}
+
 apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
-    double planning_init_v, double goal_dist) {
+    const double planning_init_v, ReferenceLineInfo* reference_line_info,
+    double& stop_dist) {
   PlannerState status;
   // issue hard stop trajectory without optimization if velocity is
   // low enough and goal is nearer than this
   const double destination_dist_threshold =
       config_.miqp_planner_config().destination_distance_stop_threshold();
 
-  if (goal_dist < destination_dist_threshold) {  // Approaching end or at end
+  // calculate the stop distance under the assumption to not brake for every
+  // obstacle in the lane
+  bool brake_for_inlane = false;
+  stop_dist = MiqpPlanner::CalculateSDistanceToStop(reference_line_info,
+                                                    brake_for_inlane);
+
+  if (stop_dist < destination_dist_threshold) {  // Approaching end or at end
     if (planning_init_v <=
         standstill_velocity_threshold_) {  // Standstill at end
       status = PlannerState::STANDSTILL_TRAJECTORY;
     } else if (planning_init_v <=
                minimum_valid_speed_planning_) {  // Create stopping traj
       status = PlannerState::STOP_TRAJECTORY;
+      // overwriting start stop_distance!!
+      bool brake_for_inlane = true;
+      stop_dist = MiqpPlanner::CalculateSDistanceToStop(reference_line_info,
+                                                        brake_for_inlane);
     } else {  // Let miqp optimizier plan the stopping traj
       status = PlannerState::DRIVING_TRAJECTORY;
     }
@@ -865,17 +921,22 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
     if (planning_init_v <=
         minimum_valid_speed_planning_) {  // Low speed -> modify start
       status = PlannerState::START_TRAJECTORY;
+      // overwriting start stop_distance!!
+      bool brake_for_inlane = true;
+      stop_dist = MiqpPlanner::CalculateSDistanceToStop(reference_line_info,
+                                                        brake_for_inlane);
     } else {  // Driving: default case
       status = PlannerState::DRIVING_TRAJECTORY;
     }
   }
   AINFO << "Planner status is: " << static_cast<int>(status)
-        << " v_init = " << planning_init_v << " goal dist = " << goal_dist;
+        << " v_init = " << planning_init_v << " stop dist = " << stop_dist;
 
   return status;
 }
 
-// int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double vmin) {
+// int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double
+// vmin) {
 //   // reverse, to not cutoff accelerating trajectories
 //   for (size_t i = traj.size() - 1; i > 1; --i) {
 //     if (traj.at(i).v() < vmin && traj.at(i - 1).v() >= vmin) {
@@ -946,14 +1007,17 @@ void MiqpPlanner::CreateStandstillTrajectory(
 //     const double theta = std::move(lastrefpt[3]);
 //     const double v = std::move(lastrefpt[4]);
 //     if (v > minimum_valid_speed_planning_) {
-//       AERROR << "Invalid stopping Trajectory! Reference trajectory last point "
+//       AERROR << "Invalid stopping Trajectory! Reference trajectory last point
+//       "
 //                 "speed = "
 //              << v;
 //     }
 //     trajectory_point_2.mutable_path_point()->set_x(x);
 //     trajectory_point_2.mutable_path_point()->set_y(y);
-//     double s = std::sqrt(std::pow(planning_init_point.path_point().x() - x, 2) +
-//                          std::pow(planning_init_point.path_point().y() - y, 2));
+//     double s = std::sqrt(std::pow(planning_init_point.path_point().x() - x,
+//     2) +
+//                          std::pow(planning_init_point.path_point().y() - y,
+//                          2));
 //     trajectory_point_2.mutable_path_point()->set_s(s);
 //     trajectory_point_2.mutable_path_point()->set_theta(theta);
 //     trajectory_point_2.set_v(0.0);
@@ -973,7 +1037,8 @@ void MiqpPlanner::CreateStandstillTrajectory(
 //           << planning_init_point.relative_time()
 //           << " x = " << planning_init_point.path_point().x()
 //           << " y = " << planning_init_point.path_point().y()
-//           << "with end point at t = " << time << " x = " << x << " y = " << y;
+//           << "with end point at t = " << time << " x = " << x << " y = " <<
+//           y;
 //   }
 // }
 
@@ -988,21 +1053,16 @@ MiqpPlanner::SmoothTrajectory(
   tsm.InitializeProblem(subsampling, traj_in, planning_init_point);
   AINFO << "Planning init point is " << planning_init_point.DebugString();
   int status = tsm.Optimize();
-  if (status > 0) {
+  if (tsm.ValidateSmoothingSolution()) {
     auto traj = tsm.GetOptimizedTrajectory();
     for (int idx = 0; idx < traj.size(); ++idx) {
       AINFO << "Smoothed trajectory at idx = " << idx << " : "
             << traj.at(idx).DebugString();
     }
-    if (tsm.ValidateSmoothingSolution()) {
-      return {true, traj};
-    } else {
-      AERROR << "Trajectory Smoothing Not Valid!";
-      return {false, traj};
-    }
+    return {true, traj};
   } else {
-    AERROR << "Trajectory Smoothing Failed!";
-    return {false, traj_in};
+    AERROR << "Trajectory smoothing not valid or failed!";
+    return {false, traj};
   }
 }
 
