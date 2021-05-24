@@ -584,44 +584,30 @@ Status OnLanePlanning::Plan(
       }
     }
 
-    if (FLAGS_always_update_trajectory) {  // default apollo behavior
-      UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
-                                      stitching_trajectory, ptr_trajectory_pb);
-    } else {
-      if (status.ok()) {
+    if (!FLAGS_always_update_trajectory && !status.ok()) {
+      const double remaining_length =
+          last_publishable_trajectory_.get()->back().path_point().s() -
+          stitching_trajectory.back().path_point().s();
+      const double remaining_time =
+          last_publishable_trajectory_.get()->back().relative_time() -
+          stitching_trajectory.back().relative_time();
+      bool collision = false;  // TODO collision check
+      // if traj_old is too short / too old / colliding -> Emergency Stop
+      // else: reuse old trajectory -> do not publish a new traj
+      if (remaining_length < 5 || remaining_time < 1 || collision) {
+        AERROR << "Sending Emergency Stop Trajectory";
+        GenerateStopTrajectory(ptr_trajectory_pb);
         UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
                                         stitching_trajectory,
                                         ptr_trajectory_pb);
       } else {
-        // TODO this code produces a non-deterministic exception somewhere else in the planner.... 
-        const double remaining_length =
-            last_publishable_trajectory_.get()->back().path_point().s() -
-            stitching_trajectory.back().path_point().s();
-        const double remaining_time =
-            last_publishable_trajectory_.get()->back().relative_time() -
-            stitching_trajectory.back().relative_time();
-        // TODO collision check
-        bool collision = false;
-        // if traj_old is too short / too old / colliding -> Emergency Stop
-        // else: reuse old trajectory -> copy last_publishable_trajectory_ to
-        // ptr_trajectory_pb
-        if (remaining_length < 5 || remaining_time < 1 || collision) {
-          AERROR << "Sending Emergency Stop Trajectory";
-          GenerateStopTrajectory(ptr_trajectory_pb);
-        } else {
-          AERROR << "Using old Trajectory";
-          ptr_trajectory_pb->mutable_trajectory_point()->CopyFrom(
-              {last_publishable_trajectory_.get()->begin(),
-               last_publishable_trajectory_.get()->end()});
-          ptr_trajectory_pb->mutable_header()->set_timestamp_sec(
-              last_publishable_trajectory_.get()->header_time());
-          ptr_trajectory_pb->set_total_path_length(
-              last_publishable_trajectory_.get()->back().path_point().s());
-          ptr_trajectory_pb->set_total_path_time(
-              last_publishable_trajectory_.get()->back().relative_time());
-          status = Status::OK();
-        }
+        AERROR << "Using old Trajectory";
+        publish_trajectory_ = false;
+        // status = Status::OK(); //TODO not sure
       }
+    } else {
+      UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
+                                      stitching_trajectory, ptr_trajectory_pb);
     }
 
     best_ref_info->ExportEngageAdvice(
@@ -1185,6 +1171,7 @@ void OnLanePlanning::UpdateLastPublishableTrajectory(
       std::vector<TrajectoryPoint>(stitching_trajectory.begin(),
                                    stitching_trajectory.end() - 1));
   last_publishable_trajectory_->PopulateTrajectoryProtobuf(ptr_trajectory_pb);
+  publish_trajectory_ = true;
 }
 
 }  // namespace planning

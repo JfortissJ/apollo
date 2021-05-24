@@ -39,7 +39,7 @@ namespace planning {
  */
 class OnLanePlanning : public PlanningBase {
  public:
-  OnLanePlanning() {
+  OnLanePlanning() : publish_trajectory_(true) {
     planner_dispatcher_ = std::make_unique<OnLanePlannerDispatcher>();
   }
   virtual ~OnLanePlanning();
@@ -66,6 +66,8 @@ class OnLanePlanning : public PlanningBase {
       const double current_time_stamp,
       const std::vector<common::TrajectoryPoint>& stitching_trajectory,
       ADCTrajectory* const trajectory) override;
+
+  bool PublishTrajectory() override { return publish_trajectory_; }
 
  private:
   common::Status InitFrame(const uint32_t sequence_num,
@@ -111,6 +113,7 @@ class OnLanePlanning : public PlanningBase {
   routing::RoutingResponse last_routing_;
   std::unique_ptr<ReferenceLineProvider> reference_line_provider_;
   Smoother planning_smoother_;
+  bool publish_trajectory_;
 };
 
 }  // namespace planning

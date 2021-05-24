@@ -50,5 +50,8 @@ void PlanningBase::FillPlanningPb(const double timestamp,
   trajectory_pb->mutable_routing_header()->CopyFrom(
       local_view_.routing->header());
 }
+
+bool PlanningBase::PublishTrajectory() { return true; }
+
 }  // namespace planning
 }  // namespace apollo
