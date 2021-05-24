@@ -1,23 +1,11 @@
 fake_obstacle_conf {
     id: 1
-    velocity: 1.5
-    delta_s_in_front: 20
+    velocity: 0.0
+    delta_s_in_front: 50
     heading_offset: 0.0
-    lateral_offset: 1.0
+    lateral_offset: 1.5
     width: 2.0
     height: 2.0
     length: 4.0
     type: VEHICLE
-}
-
-fake_obstacle_conf {
-    id: 2
-    velocity: 1.5
-    delta_s_in_front: 10
-    heading_offset: 0.0
-    lateral_offset: -1.0
-    width: 2.0
-    height: 2.0
-    length: 4.0
-    type: BICYCLE
 }

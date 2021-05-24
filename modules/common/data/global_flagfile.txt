@@ -20,6 +20,7 @@
 --use_cyber_time=true
 
 --fortiss_simcontrol_set_start_pose=true
+--fortiss_publish_empty_prediction=false
 
 # guerickestrasse begin
 --fortiss_simcontrol_start_x=692939
@@ -32,3 +33,5 @@
 --map_dir=/apollo/modules/map/data/osterwaldstrasse
 
 --map_dir=/apollo/modules/map/data/guerickestrasse
+
+--map_dir=/apollo/modules/map/data/guerickestrasse_wide
