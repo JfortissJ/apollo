@@ -118,7 +118,6 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   nr_integration_steps_ = input_traj_size_ + nr_intermediate_pts;
   problem_size_ = nr_integration_steps_ * INPUTS::INPUTS_SIZE;
   // x_ is resized in IntegrateModel()
-  X_old_.setZero(STATES::STATES_SIZE * nr_integration_steps_);
 
   stepsize_ = modified_input_trajectory_.at(1).relative_time() -
               modified_input_trajectory_.at(0).relative_time();
@@ -148,10 +147,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     offset += STATES::STATES_SIZE;
   }
 
-  u_.resize(problem_size_, 0.0);
+  u_.resize(problem_size_, 0);
   last_u_.setZero(problem_size_);
-  u_old_.setZero(problem_size_);
-  u_old_old_.setZero(problem_size_);
   // set u0: start values for the optimizer
   // choose the intermediate points with the same jerk and xi as the previous
   // input point
@@ -212,7 +209,7 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     offset += STATES::STATES_SIZE;
   }
   num_ineq_constr_ =
-      2*6 *
+      2*2 *
       nr_integration_steps_;  // upper and lower bound for kappa and velocity
 
   CalculateJthreshold();
@@ -501,9 +498,12 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
 
 void TrajectorySmootherNLOpt::InequalityConstraintFunction(
     unsigned m, double* result, unsigned n, const double* x, double* grad) {
+  // m ... number of constraints
+  // n ... size of input vector aka x (nlopt)
   // map input values to eigen vectors
   Map<const VectorXd> u_eigen(x, n);
   Map<MatrixXd> grad_eigen(grad, n, m);
+  // Map<MatrixXd> grad_eigen(grad, m, n);
   if (grad != NULL) grad_eigen.fill(0);
   const size_t nr_is = nr_integration_steps_;
   constexpr size_t dimU = INPUTS::INPUTS_SIZE;
@@ -512,36 +512,37 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
   CalculateCommonDataIfNecessary(u_eigen);
 
   // upper bounds
-  cineq_eigen.topRows(nr_is*6) = (X_ - X_ub_).transpose();
-  // cineq_eigen.block(nr_is * 0, 0, nr_is, 1) =
-  //     ((X_ - X_ub_).transpose() * C_kappa_).transpose();
-  // cineq_eigen.block(nr_is * 1, 0, nr_is, 1) =
-  //     ((X_ - X_ub_).transpose() * C_vel_).transpose();
+  // cineq_eigen.topRows(nr_is*6) = (X_ - X_ub_).transpose();
+  cineq_eigen.block(nr_is * 0, 0, nr_is, 1) = ((X_ - X_ub_).transpose() * C_kappa_).transpose();
+  cineq_eigen.block(nr_is * 1, 0, nr_is, 1) = ((X_ - X_ub_).transpose() * C_vel_).transpose();
 
   // lower bounds
-  cineq_eigen.bottomRows(nr_is*6) = (-X_ + X_lb_).transpose();
-  // cineq_eigen.block(nr_is * 2, 0, nr_is, 1) =
-  //     ((-X_ + X_lb_).transpose() * C_kappa_).transpose();
-  // cineq_eigen.block(nr_is * 3, 0, nr_is, 1) =
-  //     ((-X_ + X_lb_).transpose() * C_vel_).transpose();
+  // cineq_eigen.bottomRows(nr_is*6) = (-X_ + X_lb_).transpose();
+  cineq_eigen.block(nr_is * 2, 0, nr_is, 1) = ((-X_ + X_lb_).transpose() * C_kappa_).transpose();
+  cineq_eigen.block(nr_is * 3, 0, nr_is, 1) = ((-X_ + X_lb_).transpose() * C_vel_).transpose();
 
   if (grad != NULL) {
     // upper bounds
-    grad_eigen.leftCols(nr_is*6) = dXdU_.transpose();
-    // grad_eigen.block(0, nr_is * 0, dimU * nr_is, nr_is) =
-    //     dXdU_.transpose() * C_kappa_;
-    // grad_eigen.block(0, nr_is * 1, dimU * nr_is, nr_is) =
-    //     dXdU_.transpose() * C_vel_;
+    // std::cout << "dXdU_.size() " << dXdU_.rows() << ", " << dXdU_.cols() << "grad_eigen.size() " << grad_eigen.rows() << ", " << grad_eigen.cols() << "C_kappa_.size() " << C_kappa_.rows() << ", " << C_kappa_.cols() <<std::endl ;
+    // grad_eigen.topRows(m/2) = dXdU_;
+    // grad_eigen.leftCols(nr_is*6) = dXdU_.transpose();
+    grad_eigen.block(0, nr_is * 0, dimU * nr_is, nr_is) = dXdU_.transpose() * C_kappa_;
+    grad_eigen.block(0, nr_is * 1, dimU * nr_is, nr_is) = dXdU_.transpose() * C_vel_;
+    // std::cout << "dXdU_.transpose()  * C_kappa_  \n" << dXdU_.transpose()  * C_kappa_ << std::endl;
+    // std::cout << "grad_eigen.block(nr_is * 1, 0, nr_is, dimU * nr_is)  \n" << grad_eigen.block(nr_is * 1, 0, nr_is, dimU * nr_is) << std::endl;
+    // grad_eigen.block(nr_is * 0, 0, nr_is, dimU * nr_is) = (dXdU_.transpose()  * C_kappa_).transpose();
+    // grad_eigen.block(nr_is * 1, 0, nr_is, dimU * nr_is) = (dXdU_.transpose()  * C_vel_).transpose();
 
     // lower bounds
-    grad_eigen.rightCols(nr_is*6) = -dXdU_.transpose();
-    // grad_eigen.block(0, nr_is * 2, dimU * nr_is, nr_is) =
-    //     -dXdU_.transpose() * C_kappa_;
-    // grad_eigen.block(0, nr_is * 3, dimU * nr_is, nr_is) =
-    //     -dXdU_.transpose() * C_vel_;
-    std::cout << "u_eigen: \n" << u_eigen << std::endl;
-    std::cout << "constraint grad_eigen: \n" << grad_eigen << std::endl;
-    std::cout << "grad_eigen * u_eigen.transpose(): \n" << grad_eigen.transpose() * u_eigen << std::endl;
+    // grad_eigen.bottomRows(m/2) = -dXdU_;
+    // grad_eigen.rightCols(nr_is*6) = -dXdU_.transpose();
+    grad_eigen.block(0, nr_is * 2, dimU * nr_is, nr_is) = -dXdU_.transpose() * C_kappa_;
+    grad_eigen.block(0, nr_is * 3, dimU * nr_is, nr_is) = -dXdU_.transpose() * C_vel_;
+    // grad_eigen.block(nr_is * 2, 0, nr_is, dimU * nr_is) = (-dXdU_.transpose()  * C_kappa_).transpose();
+    // grad_eigen.block(nr_is * 3, 0, nr_is, dimU * nr_is) = (-dXdU_.transpose()  * C_vel_).transpose();
+    // std::cout << "u_eigen: \n" << u_eigen << std::endl;
+    // std::cout << "constraint grad_eigen: \n" << grad_eigen << std::endl;
+    // std::cout << "grad_eigen * u_eigen: \n" << grad_eigen * u_eigen << std::endl;
   }
 }
 
@@ -568,7 +569,7 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
   // currB_.resize(dimX, dimU);
   currB_.setZero(dimX, dimU);
 
-  size_t row_idx, row_idx_before, u_idx;
+  size_t row_idx, row_idx_before;
 
   for (size_t i = 1; i < N; ++i) {
     row_idx = i * dimX;
@@ -582,17 +583,16 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
     model_dfdu(x_before, u_curr, h, currB_);
 
     X.block<dimX, 1>(row_idx, 0) = currx_;
+    
+    // diagonal
     dXdU.block<dimX, dimU>(row_idx, (i - 1) * dimU) = currB_;
 
-    dXdU.block<dimX, dimU>(row_idx, dimU * (N - 1)) =
-        currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * (N - 1));
-
-    for (size_t idx_n = 1; idx_n < i; ++idx_n) {
-      u_idx = (idx_n - 1) * dimU;
-      dXdU.block<dimX, dimU>(row_idx, u_idx) =
-          currA_ * dXdU.block<dimX, dimU>(row_idx_before, u_idx);
+    for (size_t idx_n = 0; idx_n < i - 1; ++idx_n) {
+      // from left to diagonal
+      dXdU.block<dimX, dimU>(row_idx, idx_n * dimU) = currA_ * dXdU.block<dimX, dimU>(row_idx_before, idx_n * dimU);
     }
   }
+  // std::cout << "dXdU \n" << dXdU << std::endl;
 }
 
 void TrajectorySmootherNLOpt::model_f(const Vector6d& x,
@@ -609,9 +609,9 @@ void TrajectorySmootherNLOpt::model_f(const Vector6d& x,
       x(STATES::X) + 0.5 * h * x(STATES::V) * costh + 0.5 * h * c1 * cos(c2);
   const double y1 =
       x(STATES::Y) + 0.5 * h * x(STATES::V) * sinth + 0.5 * h * c1 * sin(c2);
-  const double theta1 = common::math::NormalizeAngle(
-      x(STATES::THETA) + 0.5 * h * x(STATES::V) * x(STATES::KAPPA) +
-      0.5 * h * c1 * c3);
+  const double theta1 = x(STATES::THETA) + 0.5 * h * x(STATES::V) * x(STATES::KAPPA) + 0.5 * h * c1 * c3;
+  // const double theta1 = common::math::NormalizeAngle(x(STATES::THETA) + 0.5 * h * x(STATES::V) * x(STATES::KAPPA) +
+  //     0.5 * h * c1 * c3);
   const double v1 = x(STATES::V) + 0.5 * h * x(STATES::A) + 0.5 * h * c4;
   const double a1 = c4;
   const double kappa1 = c3;
@@ -671,16 +671,6 @@ void TrajectorySmootherNLOpt::CalculateCommonDataIfNecessary(
   if (last_u_.size() != u.size() || u != last_u_ || last_u_.isZero()) {
     last_u_ = u;
     IntegrateModel(x0_, u, nr_integration_steps_, stepsize_, X_, dXdU_);
-    Eigen::VectorXd dx = X_ - X_old_;
-    dx /= stepsize_;
-    // std::cout << "x1-x0/dt \n" << dx << std::endl;
-    Eigen::VectorXd du = u_old_ - u_old_old_;
-    du /= stepsize_;
-    // std::cout << "dXdU_ * du \n" << dXdU_ * du << std::endl;
-    // std::cout << "diff \n" << dXdU_ * du - dx << std::endl;
-    X_old_ = X_;
-    u_old_old_ = u_old_;
-    u_old_ = u;
   }
 }
 

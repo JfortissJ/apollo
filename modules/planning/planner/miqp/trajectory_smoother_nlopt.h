@@ -220,7 +220,6 @@ class TrajectorySmootherNLOpt {
 
   // stores the currently integrated trajectory
   Eigen::VectorXd X_;
-  Eigen::VectorXd X_old_;
   Eigen::VectorXd X_ub_;
   Eigen::VectorXd X_lb_;
   Eigen::SparseMatrix<double> C_kappa_;
@@ -233,8 +232,6 @@ class TrajectorySmootherNLOpt {
   Matrix6d currA_;
   Eigen::MatrixXd currB_;  // dimX x dimU
   Eigen::VectorXd last_u_;
-  Eigen::VectorXd u_old_;
-  Eigen::VectorXd u_old_old_;
 
   // why is this all using vector, not eigen? -> tk: because of the nlopt api.
   std::vector<double> u_;
