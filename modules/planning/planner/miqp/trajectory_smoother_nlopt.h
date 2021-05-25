@@ -88,6 +88,13 @@ class TrajectorySmootherNLOpt {
    public:
     SolverParameters()
         : algorithm(nlopt::LD_SLSQP),
+        // : algorithm(nlopt::LN_BOBYQA), // exceptions with inequality constraints
+        // : algorithm(nlopt::LN_NEWUOA_BOUND), // exceptions with inequality constraints
+        // : algorithm(nlopt::LN_PRAXIS), // exceptions with inequality constraints
+        // : algorithm(nlopt::LN_COBYLA), // works but converges poorly
+        // : algorithm(nlopt::LD_MMA), // no convergence
+        // : algorithm(nlopt::LD_AUGLAG), // no convergence, but a lot of settings possible
+        // : algorithm(nlopt::GN_ISRES), // no convergence, 
           x_tol_rel(1e-6),
           x_tol_abs(1e-6),
           ineq_const_tol(1e-4),
@@ -213,6 +220,7 @@ class TrajectorySmootherNLOpt {
 
   // stores the currently integrated trajectory
   Eigen::VectorXd X_;
+  Eigen::VectorXd X_old_;
   Eigen::VectorXd X_ub_;
   Eigen::VectorXd X_lb_;
   Eigen::SparseMatrix<double> C_kappa_;
@@ -225,6 +233,8 @@ class TrajectorySmootherNLOpt {
   Matrix6d currA_;
   Eigen::MatrixXd currB_;  // dimX x dimU
   Eigen::VectorXd last_u_;
+  Eigen::VectorXd u_old_;
+  Eigen::VectorXd u_old_old_;
 
   // why is this all using vector, not eigen? -> tk: because of the nlopt api.
   std::vector<double> u_;
