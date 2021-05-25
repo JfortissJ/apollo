@@ -159,9 +159,9 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     X_ref_[offset + STATES::X] = pt.path_point().x() - pts_offset_x_;
     X_ref_[offset + STATES::Y] = pt.path_point().y() - pts_offset_y_;
     X_ref_[offset + STATES::THETA] = pt.path_point().theta();
-    X_ref_[offset + STATES::V] = pt.v();
-    X_ref_[offset + STATES::A] = pt.a();
-    X_ref_[offset + STATES::KAPPA] = pt.path_point().kappa();
+    X_ref_[offset + STATES::V] = BoundedVelocity(pt.v());
+    X_ref_[offset + STATES::A] = BoundedAcceleration(pt.a());
+    X_ref_[offset + STATES::KAPPA] = BoundedCurvature(pt.path_point().kappa());
     offset += STATES::STATES_SIZE;
   }
 

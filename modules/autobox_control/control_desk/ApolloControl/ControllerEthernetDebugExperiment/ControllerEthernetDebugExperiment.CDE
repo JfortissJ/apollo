@@ -189,6 +189,108 @@
 						<UniqueID type="key">207301326</UniqueID>
 						<LinkedItem type="key">261464528</LinkedItem>
 						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">973878642</UniqueID>
+							<LinkedItem type="key">887670410</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">1069379461</UniqueID>
+							<LinkedItem type="key">47248600</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">709173561</UniqueID>
+							<LinkedItem type="key">225437833</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">105676449</UniqueID>
+							<LinkedItem type="key">283526317</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">86246977</UniqueID>
+							<LinkedItem type="key">953462441</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">635277232</UniqueID>
+							<LinkedItem type="key">855218594</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">807073542</UniqueID>
+							<LinkedItem type="key">1045004461</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">41934716</UniqueID>
+							<LinkedItem type="key">651186091</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">456927691</UniqueID>
+							<LinkedItem type="key">707269144</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">1061031315</UniqueID>
+							<LinkedItem type="key">714383477</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">846770292</UniqueID>
+							<LinkedItem type="key">1048276181</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">525402185</UniqueID>
+							<LinkedItem type="key">258093713</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">42092030</UniqueID>
+							<LinkedItem type="key">1013878875</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">1063377794</UniqueID>
+							<LinkedItem type="key">941100765</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">60050780</UniqueID>
+							<LinkedItem type="key">424572805</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">278633359</UniqueID>
+							<LinkedItem type="key">562517739</LinkedItem>
+						</item>
+						<item>
+							<Component type="key">MeasureDataManagement</Component>
+							<Flags type="key">1380</Flags>
+							<UniqueID type="key">830033493</UniqueID>
+							<LinkedItem type="key">470192484</LinkedItem>
+						</item>
+						<item>
 							<Component type="key">DataSetManager</Component>
 							<Name type="key">Data Sets</Name>
 							<DisplayName type="key">Data Sets</DisplayName>
@@ -236,6 +338,346 @@
 				<ItemInfoDescr type="key"/>
 				<ItemInfoAddInfoDb type="key"/>
 				<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_115.mf4</Name>
+					<DisplayName type="key">rec1_115.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">887670410</UniqueID>
+					<EntityID type="key">{0F6CC39B-E027-4BBA-B24F-627535B1C783}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 08:59:25</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_116.mf4</Name>
+					<DisplayName type="key">rec1_116.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">47248600</UniqueID>
+					<EntityID type="key">{6B109E15-7027-4452-99D7-C13F4F46915A}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 09:00:13</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_117.mf4</Name>
+					<DisplayName type="key">rec1_117.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">225437833</UniqueID>
+					<EntityID type="key">{296172C7-1036-4DB9-9FB2-F967219B4A93}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 09:05:11</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_118.mf4</Name>
+					<DisplayName type="key">rec1_118.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">283526317</UniqueID>
+					<EntityID type="key">{5A906C13-F67B-4391-8818-C15D48FD2DCE}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 09:21:00</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_119.mf4</Name>
+					<DisplayName type="key">rec1_119.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">953462441</UniqueID>
+					<EntityID type="key">{389F53FB-AC9B-4421-B4C2-90217BEDAADD}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 09:24:45</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_120.mf4</Name>
+					<DisplayName type="key">rec1_120.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">855218594</UniqueID>
+					<EntityID type="key">{9E49D02A-FB8B-49E4-9396-FB84E295207F}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 09:26:24</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_121.mf4</Name>
+					<DisplayName type="key">rec1_121.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">1045004461</UniqueID>
+					<EntityID type="key">{5B0E160A-FD7B-4B9C-84EB-50CAC09F27B5}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 09:32:38</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_122.mf4</Name>
+					<DisplayName type="key">rec1_122.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">651186091</UniqueID>
+					<EntityID type="key">{9098D780-2C70-4DAA-9B65-6A6D2B77DE09}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 09:37:44</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_123.mf4</Name>
+					<DisplayName type="key">rec1_123.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">707269144</UniqueID>
+					<EntityID type="key">{477C23F4-1316-4552-A20C-FE49D356B284}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 15:46:50</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_124.mf4</Name>
+					<DisplayName type="key">rec1_124.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">714383477</UniqueID>
+					<EntityID type="key">{9E9EF50B-087D-49D2-A734-AFC7124D6510}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 15:50:48</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_125.mf4</Name>
+					<DisplayName type="key">rec1_125.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">1048276181</UniqueID>
+					<EntityID type="key">{A2916E19-C281-45D9-B270-AB7D5DDF5471}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 15:51:30</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_126.mf4</Name>
+					<DisplayName type="key">rec1_126.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">258093713</UniqueID>
+					<EntityID type="key">{45C21605-6C46-4142-A90D-60BD58C7A960}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 16:09:27</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_127.mf4</Name>
+					<DisplayName type="key">rec1_127.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">1013878875</UniqueID>
+					<EntityID type="key">{EB0368C5-33F9-4F42-9F37-9B2D518354FA}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 16:14:18</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_128.mf4</Name>
+					<DisplayName type="key">rec1_128.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">941100765</UniqueID>
+					<EntityID type="key">{2BAC855E-2100-4E6E-AF54-A0C130B7CD15}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 16:27:12</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_129.mf4</Name>
+					<DisplayName type="key">rec1_129.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">424572805</UniqueID>
+					<EntityID type="key">{C46A8680-4228-4B96-93CA-03B8D326B6F2}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 16:30:12</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_130.mf4</Name>
+					<DisplayName type="key">rec1_130.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">562517739</UniqueID>
+					<EntityID type="key">{EF557929-D8A2-4DC3-B7A1-DAFA5CE199A9}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 16:42:33</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
+				<item>
+					<Component type="key">MeasureDataManagement</Component>
+					<Name type="key">rec1_131.mf4</Name>
+					<DisplayName type="key">rec1_131.mf4</DisplayName>
+					<Path type="key">.\Measurement Data</Path>
+					<Flags type="key">1088</Flags>
+					<Type type="key">9</Type>
+					<UniqueID type="key">470192484</UniqueID>
+					<EntityID type="key">{B6C04C6B-2D0B-4FCA-8150-A20D41DEDED2}</EntityID>
+					<ItemInfoDate type="key">07.05.2021 16:45:16</ItemInfoDate>
+					<ItemInfoPath type="key">$FPATH$</ItemInfoPath>
+					<ItemInfoDescr type="key"/>
+					<ItemInfoLog type="key">
+Software revision: autoboxmodel.sdf, autoboxmodel.ppc
+Variable description: autoboxmodel.sdf
+    Platform / Device: Platform [MicroAutoBox, assigned to 'ds1401']
+ControlDesk version: 7.1</ItemInfoLog>
+					<ItemInfoAddInfoDb type="key"/>
+					<ItemInfoAuthor type="key">kessler</ItemInfoAuthor>
+				</item>
 			</item>
 			<item>
 				<Targets type="key">.rtf,.pdf,.html,.xml,.txt,.csv</Targets>
@@ -485,7 +927,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -493,7 +935,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -501,7 +943,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -509,7 +951,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -517,7 +959,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -525,7 +967,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -533,7 +975,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -541,7 +983,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -549,7 +991,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -557,7 +999,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -565,7 +1007,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -573,7 +1015,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -581,7 +1023,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -589,7 +1031,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -597,7 +1039,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -605,7 +1047,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -613,7 +1055,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -621,7 +1063,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -629,7 +1071,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -637,7 +1079,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -645,7 +1087,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -653,7 +1095,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -661,7 +1103,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -669,7 +1111,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -677,7 +1119,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -685,7 +1127,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -693,7 +1135,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -701,7 +1143,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -709,7 +1151,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -717,7 +1159,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -725,7 +1167,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -733,7 +1175,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -741,7 +1183,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -749,7 +1191,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -757,7 +1199,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -765,7 +1207,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -773,7 +1215,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -781,7 +1223,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -789,7 +1231,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -797,7 +1239,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -805,7 +1247,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -813,7 +1255,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -821,7 +1263,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -829,7 +1271,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -837,7 +1279,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -845,7 +1287,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -853,7 +1295,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -861,7 +1303,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -869,7 +1311,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -877,7 +1319,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -885,7 +1327,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -893,7 +1335,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -901,7 +1343,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -909,7 +1351,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -917,7 +1359,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -925,7 +1367,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -933,7 +1375,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -941,7 +1383,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -949,7 +1391,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -957,7 +1399,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -965,7 +1407,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -973,7 +1415,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -981,7 +1423,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -989,7 +1431,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -997,7 +1439,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1005,7 +1447,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1013,7 +1455,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1021,7 +1463,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1029,7 +1471,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1037,7 +1479,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1045,7 +1487,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1053,7 +1495,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1061,7 +1503,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1069,7 +1511,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1077,7 +1519,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1085,7 +1527,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1093,7 +1535,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1101,7 +1543,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1109,7 +1551,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1117,7 +1559,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1125,7 +1567,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1133,7 +1575,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1141,7 +1583,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1149,7 +1591,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1157,7 +1599,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1165,7 +1607,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1173,7 +1615,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1181,7 +1623,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1189,7 +1631,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 			<Variable>
@@ -1197,7 +1639,7 @@
 				<Platform type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Platform>
 				<Active type="key">-1</Active>
 				<Signal>
-					<Raster type="key">Hardware Polling [20ms]</Raster>
+					<Raster type="key">Hardware Polling [10ms]</Raster>
 				</Signal>
 			</Variable>
 		</SignalList>
@@ -1220,9 +1662,26 @@
 				</Rasters>
 				<EnabledHardwarePollingRasters>
 					<HardwarePollingRaster>
+						<Name type="key">Hardware Polling [10ms]</Name>
+					</HardwarePollingRaster>
+					<HardwarePollingRaster>
 						<Name type="key">Hardware Polling [20ms]</Name>
 					</HardwarePollingRaster>
 				</EnabledHardwarePollingRasters>
+				<DisplayedRasters>
+					<Raster>
+						<Name type="key">HostService</Name>
+					</Raster>
+					<Raster>
+						<Name type="key">OnChange</Name>
+					</Raster>
+					<Raster>
+						<Name type="key">Hardware Polling [20ms]</Name>
+					</Raster>
+					<Raster>
+						<Name type="key">Hardware Polling [10ms]</Name>
+					</Raster>
+				</DisplayedRasters>
 				<PlatformTriggers>
 					<PlatformTrigger>
 						<UniqueKey type="key">30</UniqueKey>
@@ -1347,7 +1806,7 @@
 					<AutomaticExportFolder type="key"/>
 					<AutomaticNamingEnabled type="key">-1</AutomaticNamingEnabled>
 					<AutomaticNamingMinimunDigits type="key">3</AutomaticNamingMinimunDigits>
-					<AutomaticNamingStartIndex type="key">115</AutomaticNamingStartIndex>
+					<AutomaticNamingStartIndex type="key">132</AutomaticNamingStartIndex>
 					<Description type="key"/>
 					<FileNamePrefix type="key">rec1_</FileNamePrefix>
 					<OpenInMeasurementDataPoolEnabled type="key">0</OpenInMeasurementDataPoolEnabled>
@@ -1360,7 +1819,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1369,7 +1828,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1378,7 +1837,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1387,7 +1846,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1396,7 +1855,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1405,7 +1864,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1414,7 +1873,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1423,7 +1882,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1432,7 +1891,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1441,7 +1900,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1450,7 +1909,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1459,7 +1918,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1468,7 +1927,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1477,7 +1936,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1486,7 +1945,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1495,7 +1954,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1504,7 +1963,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1513,7 +1972,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1522,7 +1981,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1531,7 +1990,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1540,7 +1999,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1549,7 +2008,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1558,7 +2017,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1567,7 +2026,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1576,7 +2035,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1585,7 +2044,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1594,7 +2053,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1603,7 +2062,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1612,7 +2071,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1621,7 +2080,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1630,7 +2089,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1639,7 +2098,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1648,7 +2107,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1657,7 +2116,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1666,7 +2125,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1675,7 +2134,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1684,7 +2143,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1693,7 +2152,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1702,7 +2161,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1711,7 +2170,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1720,7 +2179,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1729,7 +2188,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1738,7 +2197,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1747,7 +2206,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1756,7 +2215,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1765,7 +2224,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1774,7 +2233,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1783,7 +2242,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1792,7 +2251,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1801,7 +2260,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1810,7 +2269,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1819,7 +2278,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1828,7 +2287,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1837,7 +2296,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1846,7 +2305,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1855,7 +2314,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1864,7 +2323,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1873,7 +2332,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1882,7 +2341,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1891,7 +2350,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1900,7 +2359,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1909,7 +2368,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1918,7 +2377,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1927,7 +2386,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1936,7 +2395,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1945,7 +2404,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1954,7 +2413,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1963,7 +2422,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1972,7 +2431,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1981,7 +2440,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1990,7 +2449,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -1999,7 +2458,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2008,7 +2467,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2017,7 +2476,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2026,7 +2485,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2035,7 +2494,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2044,7 +2503,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2053,7 +2512,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2062,7 +2521,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2071,7 +2530,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2080,7 +2539,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2089,7 +2548,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2098,7 +2557,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2107,7 +2566,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2116,7 +2575,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2125,7 +2584,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2134,7 +2593,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2143,7 +2602,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2152,7 +2611,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 					<Variable>
@@ -2161,7 +2620,7 @@
 						<PlatformDisplayName type="key">Platform</PlatformDisplayName>
 						<Recorded type="key">-1</Recorded>
 						<Signal>
-							<Raster type="key">Hardware Polling [20ms]</Raster>
+							<Raster type="key">Hardware Polling [10ms]</Raster>
 						</Signal>
 					</Variable>
 				</SignalList>
