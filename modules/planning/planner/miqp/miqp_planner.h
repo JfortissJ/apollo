@@ -106,7 +106,9 @@ class MiqpPlanner : public LatticePlanner {
   double CalculateSDistanceToStop(ReferenceLineInfo* reference_line_info,
                                   bool brake_for_inlane);
 
-  PlannerState DeterminePlannerState(const double planning_init_v, ReferenceLineInfo* reference_line_info, double& stop_dist);
+  PlannerState DeterminePlannerState(const double planning_init_v,
+                                     ReferenceLineInfo* reference_line_info,
+                                     double& stop_dist);
 
   int CutoffTrajectoryAtV(apollo::planning::DiscretizedTrajectory& traj,
                           double vmin);
@@ -121,6 +123,10 @@ class MiqpPlanner : public LatticePlanner {
   std::pair<bool, apollo::planning::DiscretizedTrajectory> SmoothTrajectory(
       const apollo::planning::DiscretizedTrajectory& traj_in,
       const common::TrajectoryPoint& planning_init_point);
+
+  bool ThetaChangeLargerThan(
+      const apollo::planning::DiscretizedTrajectory& traj,
+      const double delta_theta_max);
 
  private:
   CMiqpPlanner planner_;
