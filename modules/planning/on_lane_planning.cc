@@ -34,6 +34,7 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/common/trajectory_stitcher.h"
 #include "modules/planning/common/util/util.h"
+#include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/planner/rtk/rtk_replay_planner.h"
 #include "modules/planning/proto/planning_internal.pb.h"
 #include "modules/planning/reference_line/reference_line_provider.h"
@@ -584,30 +585,70 @@ Status OnLanePlanning::Plan(
       }
     }
 
-    if (!FLAGS_always_update_trajectory && !status.ok()) {
+    if (FLAGS_always_update_trajectory || status.ok()) {
+      // Default apollo behavior OR successfull planning
+      UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
+                                      stitching_trajectory, ptr_trajectory_pb);
+    } else {
       const double remaining_length =
           last_publishable_trajectory_.get()->back().path_point().s() -
           stitching_trajectory.back().path_point().s();
       const double remaining_time =
           last_publishable_trajectory_.get()->back().relative_time() -
           stitching_trajectory.back().relative_time();
-      bool collision = false;  // TODO collision check
-      // if traj_old is too short / too old / colliding -> Emergency Stop
-      // else: reuse old trajectory -> do not publish a new traj
-      if (remaining_length < 5 || remaining_time < 1 || collision) {
+
+      const auto& vehicle_config =
+          common::VehicleConfigHelper::Instance()->GetConfig();
+      const double ego_length = vehicle_config.vehicle_param().length();
+      const double ego_width = vehicle_config.vehicle_param().width();
+      const double ego_back_edge_to_center =
+          vehicle_config.vehicle_param().back_edge_to_center();
+
+      std::vector<const Obstacle*> obstacles_non_virtual;
+      for (const Obstacle* obstacle : frame_.get()->obstacles()) {
+        if (!obstacle->IsVirtual()) {
+          obstacles_non_virtual.push_back(obstacle);
+        }
+      }
+      const DiscretizedTrajectory* old_traj =
+          last_publishable_trajectory_.get();
+      // only use future part of the old traj for collision checking
+      // size_t first_idx_greater;
+      // for (size_t idx = 0; idx < last_publishable_trajectory_->size(); ++idx)
+      // {
+      //   if (last_publishable_trajectory_->at(idx).relative_time() >= 0.0) {
+      //     if (idx == 0) {
+      //       first_idx_greater = 0;
+      //     } else {
+      //       first_idx_greater = idx - 1;
+      //     }
+      //     break;
+      //   }
+      // }
+      // DiscretizedTrajectory old_traj;
+      // old_traj.PrependTrajectoryPoints(std::vector<TrajectoryPoint>(
+      //     last_publishable_trajectory_->begin() + first_idx_greater,
+      //     last_publishable_trajectory_->end() - 1));
+      const bool obstacle_collision = CollisionChecker::InCollision(
+          obstacles_non_virtual, *old_traj, ego_length, ego_width,
+          ego_back_edge_to_center);
+
+      AINFO << "remaining length = " << remaining_length
+            << " remaining time = " << remaining_time
+            << " obstacle_collision = " << obstacle_collision;
+      if (remaining_length < 5 || remaining_time < 1 || obstacle_collision) {
+        // if traj_old is too short / too old / colliding -> Emergency Stop
         AERROR << "Sending Emergency Stop Trajectory";
         GenerateStopTrajectory(ptr_trajectory_pb);
         UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
                                         stitching_trajectory,
                                         ptr_trajectory_pb);
       } else {
-        AERROR << "Using old Trajectory";
+        // else: reuse old trajectory -> do not publish a new traj
+        AERROR << "Reusing old Trajectory...";
         publish_trajectory_ = false;
-        // status = Status::OK(); //TODO not sure
+        // status = Status::OK();
       }
-    } else {
-      UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
-                                      stitching_trajectory, ptr_trajectory_pb);
     }
 
     best_ref_info->ExportEngageAdvice(
