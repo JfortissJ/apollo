@@ -636,7 +636,7 @@ Status OnLanePlanning::Plan(
       AINFO << "remaining length = " << remaining_length
             << " remaining time = " << remaining_time
             << " obstacle_collision = " << obstacle_collision;
-      if (remaining_length < 5 || remaining_time < 1 || obstacle_collision) {
+      if (remaining_length < 1 || remaining_time < 1 || obstacle_collision) {
         // if traj_old is too short / too old / colliding -> Emergency Stop
         AERROR << "Sending Emergency Stop Trajectory";
         GenerateStopTrajectory(ptr_trajectory_pb);
