@@ -82,8 +82,6 @@ TrajectorySmootherNLOpt::TrajectorySmootherNLOpt(const char logdir[],
       pts_offset_x_(pts_offset_x),
       pts_offset_y_(pts_offset_y),
       modified_input_trajectory_() {
-  // TODO Set costs
-
   x0_.resize(STATES::STATES_SIZE);
 
   num_ineq_constr_ = 0;
@@ -132,27 +130,9 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   x0_[STATES::Y] =
       modified_input_trajectory_.front().path_point().y() - pts_offset_y_;
   x0_[STATES::THETA] = modified_input_trajectory_.front().path_point().theta();
-  x0_[STATES::V] = modified_input_trajectory_.front().v();
-  x0_[STATES::A] = modified_input_trajectory_.front().a();
-  x0_[STATES::KAPPA] = modified_input_trajectory_.front().path_point().kappa();
-
-  if (x0_[STATES::V] > params_.upper_bound_velocity ||
-      x0_[STATES::V] < params_.lower_bound_velocity) {
-    AERROR << "Initial velocity exceeds bounds, bounding...";
-    x0_[STATES::V] = BoundedVelocity(x0_[STATES::V]);
-  }
-
-  if (x0_[STATES::KAPPA] > params_.upper_bound_curvature ||
-      x0_[STATES::KAPPA] < params_.lower_bound_curvature) {
-    AERROR << "Initial kappa exceeds bounds, bounding...";
-    x0_[STATES::KAPPA] = BoundedCurvature(x0_[STATES::KAPPA]);
-  }
-
-  if (x0_[STATES::KAPPA] > params_.upper_bound_acceleration ||
-      x0_[STATES::KAPPA] < params_.lower_bound_acceleration) {
-    AERROR << "Initial acceleration exceeds bounds, bounding...";
-    x0_[STATES::A] = BoundedAcceleration(x0_[STATES::A]);
-  }
+  x0_[STATES::V] = BoundedVelocity(modified_input_trajectory_.front().v());
+  x0_[STATES::A] = BoundedAcceleration(modified_input_trajectory_.front().a());
+  x0_[STATES::KAPPA] = BoundedCurvature(modified_input_trajectory_.front().path_point().kappa());
 
   // set reference from input
   X_ref_.resize(input_traj_size_ * STATES::STATES_SIZE);
@@ -167,8 +147,8 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     offset += STATES::STATES_SIZE;
   }
 
-  u_.resize(problem_size_);
-  last_u_.resize(problem_size_);
+  u_.resize(problem_size_, 0);
+  last_u_.setZero(problem_size_);
   // set u0: start values for the optimizer
   // choose the intermediate points with the same jerk and xi as the previous
   // input point
@@ -195,32 +175,32 @@ void TrajectorySmootherNLOpt::InitializeProblem(
   lower_bound_.resize(problem_size_);
   upper_bound_.resize(problem_size_);
   for (size_t idx = 0; idx < problem_size_; idx += 2) {
-    lower_bound_.at(idx + INPUTS::J) = params_.lower_bound_jerk;
-    lower_bound_.at(idx + INPUTS::XI) = params_.lower_bound_curvature_change;
-    upper_bound_.at(idx + INPUTS::J) = params_.upper_bound_jerk;
-    upper_bound_.at(idx + INPUTS::XI) = params_.upper_bound_curvature_change;
+    lower_bound_.at(idx + INPUTS::J) = params_.lower_bound_jerk - 1e-4;
+    lower_bound_.at(idx + INPUTS::XI) = params_.lower_bound_curvature_change  - 1e-4;
+    upper_bound_.at(idx + INPUTS::J) = params_.upper_bound_jerk + 1e-4;
+    upper_bound_.at(idx + INPUTS::XI) = params_.upper_bound_curvature_change + 1e-4;
   }
 
-  X_lb_.resize(STATES::STATES_SIZE * nr_integration_steps_);
-  X_ub_.resize(STATES::STATES_SIZE * nr_integration_steps_);
+  X_lb_.setZero(STATES::STATES_SIZE * nr_integration_steps_);
+  X_ub_.setZero(STATES::STATES_SIZE * nr_integration_steps_);
   C_kappa_.resize(STATES::STATES_SIZE * nr_integration_steps_,
-                   nr_integration_steps_);
+                  nr_integration_steps_);
   C_vel_.resize(STATES::STATES_SIZE * nr_integration_steps_,
-                   nr_integration_steps_);
+                nr_integration_steps_);
   offset = 0;
   for (size_t idx = 0; idx < nr_integration_steps_; ++idx) {
     X_lb_[offset + STATES::X] = -1e3;
     X_lb_[offset + STATES::Y] = -1e3;
     X_lb_[offset + STATES::THETA] = -1e3;
-    X_lb_[offset + STATES::V] = params_.lower_bound_velocity;
+    X_lb_[offset + STATES::V] = params_.lower_bound_velocity - 1e-4;
     X_lb_[offset + STATES::A] = -1e3;
-    X_lb_[offset + STATES::KAPPA] = params_.lower_bound_curvature;
+    X_lb_[offset + STATES::KAPPA] = params_.lower_bound_curvature - 1e-4;
     X_ub_[offset + STATES::X] = 1e3;
     X_ub_[offset + STATES::Y] = 1e3;
     X_ub_[offset + STATES::THETA] = 1e3;
-    X_ub_[offset + STATES::V] = params_.upper_bound_velocity;
+    X_ub_[offset + STATES::V] = params_.upper_bound_velocity + 1e-4;
     X_ub_[offset + STATES::A] = 1e3;
-    X_ub_[offset + STATES::KAPPA] = params_.upper_bound_curvature;
+    X_ub_[offset + STATES::KAPPA] = params_.upper_bound_curvature + 1e-4;
     if (offset > 0) {  // no constraints for the initial point
       C_kappa_.insert(offset + STATES::KAPPA, idx) = 1;
       C_vel_.insert(offset + STATES::V, idx) = 1;
@@ -229,9 +209,22 @@ void TrajectorySmootherNLOpt::InitializeProblem(
     offset += STATES::STATES_SIZE;
   }
   num_ineq_constr_ =
-      4 * nr_integration_steps_;  // upper and lower bound for kappa and velocity
+      2*2 *
+      nr_integration_steps_;  // upper and lower bound for kappa and velocity
 
   CalculateJthreshold();
+
+  // Constraints
+  if (num_ineq_constr_ > 0) {
+    ineq_constraint_tol_.clear();
+    ineq_constraint_tol_.resize(num_ineq_constr_,
+                                solver_params_.ineq_const_tol);
+  }
+
+  if (num_eq_constr_ > 0) {
+    eq_constraint_tol_.clear();
+    eq_constraint_tol_.resize(num_eq_constr_, solver_params_.eq_const_tol);
+  }
 
   status_ = 0;
   ready_to_optimize_ = true;
@@ -265,16 +258,11 @@ int TrajectorySmootherNLOpt::Optimize() {
 
   // Constraints
   if (num_ineq_constr_ > 0) {
-    ineq_constraint_tol_.clear();
-    ineq_constraint_tol_.resize(num_ineq_constr_,
-                                solver_params_.ineq_const_tol);
     opt.add_inequality_mconstraint(nlopt_inequality_constraint_wrapper, this,
                                    ineq_constraint_tol_);
   }
 
   if (num_eq_constr_ > 0) {
-    eq_constraint_tol_.clear();
-    eq_constraint_tol_.resize(num_eq_constr_, solver_params_.eq_const_tol);
     opt.add_equality_mconstraint(nlopt_equality_constraint_wrapper, this,
                                  eq_constraint_tol_);
   }
@@ -501,6 +489,7 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
     if (any_absolute_input_term) {
       grad_eigen += 2 * absolute_inputs.cwiseProduct(costs_inputs);
     }
+    // std::cout << "cost function grad_eigen: \n" << grad_eigen << std::endl;
   }
 
   numevals_ += 1;
@@ -509,9 +498,12 @@ double TrajectorySmootherNLOpt::ObjectiveFunction(unsigned n, const double* x,
 
 void TrajectorySmootherNLOpt::InequalityConstraintFunction(
     unsigned m, double* result, unsigned n, const double* x, double* grad) {
+  // m ... number of constraints
+  // n ... size of input vector aka x (nlopt)
   // map input values to eigen vectors
   Map<const VectorXd> u_eigen(x, n);
   Map<MatrixXd> grad_eigen(grad, n, m);
+  // Map<MatrixXd> grad_eigen(grad, m, n);
   if (grad != NULL) grad_eigen.fill(0);
   const size_t nr_is = nr_integration_steps_;
   constexpr size_t dimU = INPUTS::INPUTS_SIZE;
@@ -520,25 +512,37 @@ void TrajectorySmootherNLOpt::InequalityConstraintFunction(
   CalculateCommonDataIfNecessary(u_eigen);
 
   // upper bounds
-  // cineq_eigen.topRows(nr_is) = (X_ - X_ub_).transpose() * C_kappa_;
-  cineq_eigen.block(nr_is*0, 0, nr_is, 1) = ((X_ - X_ub_).transpose() * C_kappa_).transpose();
-  cineq_eigen.block(nr_is*1, 0, nr_is, 1) = ((X_ - X_ub_).transpose() * C_vel_).transpose();
+  // cineq_eigen.topRows(nr_is*6) = (X_ - X_ub_).transpose();
+  cineq_eigen.block(nr_is * 0, 0, nr_is, 1) = ((X_ - X_ub_).transpose() * C_kappa_).transpose();
+  cineq_eigen.block(nr_is * 1, 0, nr_is, 1) = ((X_ - X_ub_).transpose() * C_vel_).transpose();
 
   // lower bounds
-  // cineq_eigen.bottomRows(nr_is) = (-X_ + X_lb_).transpose() * C_kappa_;
-  cineq_eigen.block(nr_is*2, 0, nr_is, 1) = ((-X_ + X_lb_).transpose() * C_kappa_).transpose();
-  cineq_eigen.block(nr_is*3, 0, nr_is, 1) = ((-X_ + X_lb_).transpose() * C_vel_).transpose();
+  // cineq_eigen.bottomRows(nr_is*6) = (-X_ + X_lb_).transpose();
+  cineq_eigen.block(nr_is * 2, 0, nr_is, 1) = ((-X_ + X_lb_).transpose() * C_kappa_).transpose();
+  cineq_eigen.block(nr_is * 3, 0, nr_is, 1) = ((-X_ + X_lb_).transpose() * C_vel_).transpose();
 
   if (grad != NULL) {
     // upper bounds
-    // grad_eigen.leftCols(nr_is) = dXdU_.transpose() * C_kappa_;
-    grad_eigen.block(0, nr_is*0, dimU*nr_is, nr_is) = dXdU_.transpose() * C_kappa_;
-    grad_eigen.block(0, nr_is*1, dimU*nr_is, nr_is) = dXdU_.transpose() * C_vel_;
-    
+    // std::cout << "dXdU_.size() " << dXdU_.rows() << ", " << dXdU_.cols() << "grad_eigen.size() " << grad_eigen.rows() << ", " << grad_eigen.cols() << "C_kappa_.size() " << C_kappa_.rows() << ", " << C_kappa_.cols() <<std::endl ;
+    // grad_eigen.topRows(m/2) = dXdU_;
+    // grad_eigen.leftCols(nr_is*6) = dXdU_.transpose();
+    grad_eigen.block(0, nr_is * 0, dimU * nr_is, nr_is) = dXdU_.transpose() * C_kappa_;
+    grad_eigen.block(0, nr_is * 1, dimU * nr_is, nr_is) = dXdU_.transpose() * C_vel_;
+    // std::cout << "dXdU_.transpose()  * C_kappa_  \n" << dXdU_.transpose()  * C_kappa_ << std::endl;
+    // std::cout << "grad_eigen.block(nr_is * 1, 0, nr_is, dimU * nr_is)  \n" << grad_eigen.block(nr_is * 1, 0, nr_is, dimU * nr_is) << std::endl;
+    // grad_eigen.block(nr_is * 0, 0, nr_is, dimU * nr_is) = (dXdU_.transpose()  * C_kappa_).transpose();
+    // grad_eigen.block(nr_is * 1, 0, nr_is, dimU * nr_is) = (dXdU_.transpose()  * C_vel_).transpose();
+
     // lower bounds
-    // grad_eigen.rightCols(nr_is) = -dXdU_.transpose() * C_kappa_;    
-    grad_eigen.block(0, nr_is*2, dimU*nr_is, nr_is) = -dXdU_.transpose() * C_kappa_;
-    grad_eigen.block(0, nr_is*3, dimU*nr_is, nr_is) = -dXdU_.transpose() * C_vel_;
+    // grad_eigen.bottomRows(m/2) = -dXdU_;
+    // grad_eigen.rightCols(nr_is*6) = -dXdU_.transpose();
+    grad_eigen.block(0, nr_is * 2, dimU * nr_is, nr_is) = -dXdU_.transpose() * C_kappa_;
+    grad_eigen.block(0, nr_is * 3, dimU * nr_is, nr_is) = -dXdU_.transpose() * C_vel_;
+    // grad_eigen.block(nr_is * 2, 0, nr_is, dimU * nr_is) = (-dXdU_.transpose()  * C_kappa_).transpose();
+    // grad_eigen.block(nr_is * 3, 0, nr_is, dimU * nr_is) = (-dXdU_.transpose()  * C_vel_).transpose();
+    // std::cout << "u_eigen: \n" << u_eigen << std::endl;
+    // std::cout << "constraint grad_eigen: \n" << grad_eigen << std::endl;
+    // std::cout << "grad_eigen * u_eigen: \n" << grad_eigen * u_eigen << std::endl;
   }
 }
 
@@ -554,15 +558,18 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
   constexpr size_t dimU = INPUTS::INPUTS_SIZE;
   const size_t N = num_integration_steps;
 
-  X.resize(dimX * N);
+  // X.resize(dimX * N);
+  X.setZero(dimX * N);
   X.block<dimX, 1>(0, 0) = x0;
 
-  dXdU.resize(dimX * N, dimU * N);
-  dXdU.fill(0.0f);
+  // dXdU.resize(dimX * N, dimU * N);
+  // dXdU.fill(0.0f);
+  dXdU.setZero(dimX * N, dimU * N);
 
-  currB_.resize(dimX, dimU);
+  // currB_.resize(dimX, dimU);
+  currB_.setZero(dimX, dimU);
 
-  size_t row_idx, row_idx_before, u_idx;
+  size_t row_idx, row_idx_before;
 
   for (size_t i = 1; i < N; ++i) {
     row_idx = i * dimX;
@@ -576,17 +583,16 @@ void TrajectorySmootherNLOpt::IntegrateModel(const Vector6d& x0,
     model_dfdu(x_before, u_curr, h, currB_);
 
     X.block<dimX, 1>(row_idx, 0) = currx_;
+    
+    // diagonal
     dXdU.block<dimX, dimU>(row_idx, (i - 1) * dimU) = currB_;
 
-    dXdU.block<dimX, dimU>(row_idx, dimU * (N - 1)) =
-        currA_ * dXdU.block<dimX, dimU>(row_idx_before, dimU * (N - 1));
-
-    for (size_t idx_n = 1; idx_n < i; ++idx_n) {
-      u_idx = (idx_n - 1) * dimU;
-      dXdU.block<dimX, dimU>(row_idx, u_idx) =
-          currA_ * dXdU.block<dimX, dimU>(row_idx_before, u_idx);
+    for (size_t idx_n = 0; idx_n < i - 1; ++idx_n) {
+      // from left to diagonal
+      dXdU.block<dimX, dimU>(row_idx, idx_n * dimU) = currA_ * dXdU.block<dimX, dimU>(row_idx_before, idx_n * dimU);
     }
   }
+  // std::cout << "dXdU \n" << dXdU << std::endl;
 }
 
 void TrajectorySmootherNLOpt::model_f(const Vector6d& x,
@@ -603,9 +609,9 @@ void TrajectorySmootherNLOpt::model_f(const Vector6d& x,
       x(STATES::X) + 0.5 * h * x(STATES::V) * costh + 0.5 * h * c1 * cos(c2);
   const double y1 =
       x(STATES::Y) + 0.5 * h * x(STATES::V) * sinth + 0.5 * h * c1 * sin(c2);
-  const double theta1 = common::math::NormalizeAngle(
-      x(STATES::THETA) + 0.5 * h * x(STATES::V) * x(STATES::KAPPA) +
-      0.5 * h * c1 * c3);
+  const double theta1 = x(STATES::THETA) + 0.5 * h * x(STATES::V) * x(STATES::KAPPA) + 0.5 * h * c1 * c3;
+  // const double theta1 = common::math::NormalizeAngle(x(STATES::THETA) + 0.5 * h * x(STATES::V) * x(STATES::KAPPA) +
+  //     0.5 * h * c1 * c3);
   const double v1 = x(STATES::V) + 0.5 * h * x(STATES::A) + 0.5 * h * c4;
   const double a1 = c4;
   const double kappa1 = c3;
@@ -652,7 +658,7 @@ void TrajectorySmootherNLOpt::model_dfdu(const Vector6d& x,
   // dfdxi_out << 0, 0, 0, 0.5 * pow(h, 2), h, 0, 0, 0,
   //     0.5 * pow(h, 2) * x(STATES::V) + 0.5 * pow(h, 3) * x(STATES::A), 0, 0,
   //     h;
-  dfdxi_out.setZero(6, 2);
+  dfdxi_out.setConstant(6, 2, 0);
   dfdxi_out(3, 0) = 0.5 * pow(h, 2);
   dfdxi_out(4, 0) = h;
   dfdxi_out(2, 1) =
@@ -708,9 +714,9 @@ bool TrajectorySmootherNLOpt::CheckConstraints() const {
     if ((idx > 0) && !IsCurvatureWithinBounds(kappa)) {
       AERROR << "solution exceeds bounds at idx " << idx;
       return false;
-    } else if ((idx > 0) && !IsAccelerationWithinBounds(a)) {
-      AERROR << "solution exceeds bounds at idx " << idx;
-      return false;
+    // } else if ((idx > 0) && !IsAccelerationWithinBounds(a)) {
+    //   AERROR << "solution exceeds bounds at idx " << idx;
+    //   return false;
     } else if (!IsJerkWithinBounds(j)) {
       AERROR << "solution exceeds bounds at idx " << idx;
       return false;
@@ -826,12 +832,10 @@ double TrajectorySmootherNLOpt::BoundedVelocity(const double val) const {
                     params_.lower_bound_velocity, params_.tol_velocity);
 }
 
-bool TrajectorySmootherNLOpt::IsVelocityWithinBounds(
-    const double vel) const {
+bool TrajectorySmootherNLOpt::IsVelocityWithinBounds(const double vel) const {
   if (std::isgreater(vel,
                      params_.upper_bound_velocity + params_.tol_velocity) ||
-      std::isless(vel,
-                  params_.lower_bound_velocity - params_.tol_velocity)) {
+      std::isless(vel, params_.lower_bound_velocity - params_.tol_velocity)) {
     AERROR << "solution.velocity = " << vel << " exceeds bounds";
     return false;
   } else {
