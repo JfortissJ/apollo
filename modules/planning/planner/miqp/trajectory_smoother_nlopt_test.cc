@@ -94,10 +94,7 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
           << traj_opt[trajidx].DebugString();
   }
-  tsm.DebugDumpU();
-  tsm.DebugDumpX();
-  tsm.DebugDumpXref();
-
+  
   const std::string file_name =
       "sqp_out_" + std::to_string(subsampling) + "_" + input_file;
   SaveDiscretizedTrajectoryToFile(traj_opt, path_to_file, file_name);
@@ -566,6 +563,24 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210520154439) {
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526095319) {
+  // Extracted from Simcontrol, from reference generator
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210526-095319.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526095321) {
+  // Extracted from Simcontrol, from miqp
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210526-095321.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
 TEST(TrajectorySmootherNLOpt, model_f) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   TrajectorySmootherNLOpt::Vector6d x;
@@ -582,6 +597,20 @@ TEST(TrajectorySmootherNLOpt, model_f) {
   EXPECT_NEAR(x_out(3), 1.001, 1e-9);
   EXPECT_NEAR(x_out(4), 0.02, 1e-9);
   EXPECT_NEAR(x_out(5), 0.05, 1e-9);
+}
+
+TEST(TrajectorySmootherNLOpt, CheckBoundsIntegrationOneStep) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  TrajectorySmootherNLOpt::Vector6d x0;
+  double v = 0.5;
+  double a = -2.0; 
+  double j = 0;
+  double xi = 0;
+  x0 << 0.0, 0.0, 0.0, v, a, 0.0;
+  tsm.SetX0(x0);
+  tsm.SetStepsize(1.0);
+  bool in_bounds = tsm.CheckBoundsIntegrationOneStep(j, xi);
+  EXPECT_FALSE(in_bounds);
 }
 
 TEST(TrajectorySmootherNLOpt, IntegrateModelConstInput) {

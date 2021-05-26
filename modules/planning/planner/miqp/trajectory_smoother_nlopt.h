@@ -47,11 +47,11 @@ class TrajectorySmootherNLOpt {
           lower_bound_velocity(0.0),
           upper_bound_velocity(20),
           tol_velocity(1e-2),
-          lower_bound_jerk(-10), //(-1.2),
-          upper_bound_jerk(10), //(1.2),
+          lower_bound_jerk(-10),  //(-1.2),
+          upper_bound_jerk(10),   //(1.2),
           tol_jerk(1e-2),
-          lower_bound_curvature_change(-10), //(-0.2),
-          upper_bound_curvature_change(10), //(0.2),
+          lower_bound_curvature_change(-10),  //(-0.2),
+          upper_bound_curvature_change(10),   //(0.2),
           tol_curvature_change(1e-2) {}
     // costs for deviation from the initial reference
     double cost_offset_x;
@@ -88,13 +88,13 @@ class TrajectorySmootherNLOpt {
    public:
     SolverParameters()
         : algorithm(nlopt::LD_SLSQP),
-        // : algorithm(nlopt::LN_BOBYQA), // exceptions with inequality constraints
-        // : algorithm(nlopt::LN_NEWUOA_BOUND), // exceptions with inequality constraints
-        // : algorithm(nlopt::LN_PRAXIS), // exceptions with inequality constraints
-        // : algorithm(nlopt::LN_COBYLA), // works but converges poorly
-        // : algorithm(nlopt::LD_MMA), // no convergence
-        // : algorithm(nlopt::LD_AUGLAG), // no convergence, but a lot of settings possible
-        // : algorithm(nlopt::GN_ISRES), // no convergence, 
+          // : algorithm(nlopt::LN_BOBYQA), // exceptions with inequality
+          // constraints : algorithm(nlopt::LN_NEWUOA_BOUND), // exceptions with
+          // inequality constraints : algorithm(nlopt::LN_PRAXIS), // exceptions
+          // with inequality constraints : algorithm(nlopt::LN_COBYLA), // works
+          // but converges poorly : algorithm(nlopt::LD_MMA), // no convergence
+          // : algorithm(nlopt::LD_AUGLAG), // no convergence, but a lot of
+          // settings possible : algorithm(nlopt::GN_ISRES), // no convergence,
           x_tol_rel(1e-6),
           x_tol_abs(1e-6),
           ineq_const_tol(1e-4),
@@ -162,23 +162,18 @@ class TrajectorySmootherNLOpt {
   void CalculateCommonDataIfNecessary(const Eigen::VectorXd& u);
 
   void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h,
-               Vector6d& x_out);
+               Vector6d& x_out) const;
 
   void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h,
-                  Matrix6d& dfdx_out);
+                  Matrix6d& dfdx_out) const;
 
   void model_dfdu(const Vector6d& x, const Eigen::Vector2d& u, const double h,
-                  Eigen::MatrixXd& dfdxi_out);
-
-  void DebugDumpX() const;
-
-  void DebugDumpXref() const;
-
-  void DebugDumpU() const;
+                  Eigen::MatrixXd& dfdxi_out) const;
 
   int GetNumEvals() const { return numevals_; }
 
-  bool CheckConstraints() const;
+  bool CheckConstraints(const std::vector<double>& u,
+                        const Eigen::VectorXd& X) const;
 
   bool ValidateSmoothingSolution() const;
 
@@ -211,6 +206,16 @@ class TrajectorySmootherNLOpt {
   bool IsVelocityWithinBounds(const double kappa) const;
 
   void CalculateJthreshold();
+
+  bool CheckBoundsIntegrationOneStep(double jerk, double dkappa) const;
+
+  void SetX0(const Vector6d& x0) {
+    x0_ = x0;
+  }
+
+  void SetStepsize(const double h) {
+    stepsize_ = h;
+  }
 
  private:
   // stores the positions of the reference
