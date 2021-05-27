@@ -1,9 +1,9 @@
 clc
-% close all
+close all
 clear all
 
 rootpath = 'miqp_testdata'
-input_file = 'test_trajectory_miqp_20210429-135518.pb.txt'
+input_file = 'test_trajectory_miqp_20210526-105909.pb.txt'
 subsampling = 1
 miqp_traj = ReadTrajectory(rootpath, input_file)
 sqp_traj = ReadTrajectory(rootpath, ['sqp_out_', num2str(subsampling), '_', input_file])
@@ -62,7 +62,7 @@ ylabel('theta')
 subplot(4,1,4)
 hold on
 plot(miqp_traj.relative_time, miqp_traj.kappa, 'o-.')
-plot(sqp_traj.relative_time, sqp_traj.kappa)
+plot(sqp_traj.relative_time, sqp_traj.kappa, 'x-')
 legend('miqp', 'sqp')
 ylabel('kappa')
 
@@ -133,6 +133,8 @@ end
 
 if isempty(da)
     da = nan*relative_time;
+elseif isscalar(da) 
+    da = [da, nan * relative_time(2:end)];
 end
 if isempty(dkappa)
     dkappa = nan*relative_time;
