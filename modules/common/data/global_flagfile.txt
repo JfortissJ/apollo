@@ -35,3 +35,5 @@
 --map_dir=/apollo/modules/map/data/guerickestrasse
 
 --map_dir=/apollo/modules/map/data/guerickestrasse_wide
+
+--map_dir=/apollo/modules/map/data/guerickestrasse_assymetric_5
