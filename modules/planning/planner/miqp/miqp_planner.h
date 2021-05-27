@@ -75,7 +75,7 @@ class MiqpPlanner : public LatticePlanner {
   void FillTimeDerivativesInApolloTrajectory(DiscretizedTrajectory& traj) const;
 
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
-      double traj[], int size);
+      double traj[], int size, bool low_speed_check);
 
   void ConvertToInitialStateSecondOrder(
       const common::TrajectoryPoint& planning_init_point,
@@ -128,11 +128,14 @@ class MiqpPlanner : public LatticePlanner {
       const apollo::planning::DiscretizedTrajectory& traj,
       const double delta_theta_max);
 
+  bool IsVxVyValid(const double& vx, const double& vy);
+
  private:
   CMiqpPlanner planner_;
   bool firstrun_;
   int egoCarIdx_;
   double minimum_valid_speed_planning_;
+  double minimum_valid_speed_vx_vy_;
   double standstill_velocity_threshold_;
   std::string logdir_;
 };

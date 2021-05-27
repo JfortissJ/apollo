@@ -33,7 +33,7 @@ miqp_planner_config: {
     use_sos: false
     use_branching_priorities: true
     warmstart_type: 2
-    wheelbase_add: 0.3
+    wheelbase_add: 0.5
     destination_distance_stop_threshold: 5.0
     cutoff_distance_reference_after_stop: 10.0
     obstacle_roi_filter: true
@@ -43,6 +43,7 @@ miqp_planner_config: {
     pts_offset_y: 5.339e+06
     use_smoothing: true
     extension_length_dynamic: 6.0
+    minimum_percentage_valid_miqp_points: 0.5
 }
 
 

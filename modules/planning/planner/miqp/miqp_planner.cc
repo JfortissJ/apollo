@@ -103,6 +103,8 @@ common::Status MiqpPlanner::Init(const PlanningConfig& config) {
   egoCarIdx_ = -1;                       // set invalid
   minimum_valid_speed_planning_ = 1.0;   // below our model is invalid
   standstill_velocity_threshold_ = 0.1;  // set velocity hard to zero below this
+  minimum_valid_speed_vx_vy_ = 0.5;  // below this individual speed threshold
+                                     // for vx and vy the model is invalid
 
   LOG(INFO) << "Writing MIQP Planner Logs to " << logdir_.c_str();
   char logdir_cstr[logdir_.length()];
@@ -254,10 +256,12 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Plan
+  DiscretizedTrajectory apollo_traj;
   if (planner_status == START_TRAJECTORY || planner_status == STOP_TRAJECTORY) {
     AERROR << "Start/Stop Trajectory, using reference instead of miqp solution";
     GetRawCLastReferenceTrajectoryCMiqpPlaner(
         planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
+    apollo_traj = RawCTrajectoryToApolloTrajectory(traj, size, false);
   } else {
     current_time = Clock::NowInSeconds();
     bool success = PlanCMiqpPlanner(planner_, timestep);
@@ -268,7 +272,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
     // Planning failed
     if (!success) {
       AINFO << "Planning failed";
-      // TODO Generate some error trajectory
       return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
     }
 
@@ -278,16 +281,23 @@ Status MiqpPlanner::PlanOnReferenceLine(
     // planning_init_point.relative_time()
     GetRawCMiqpTrajectoryCMiqpPlanner(
         planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
+    apollo_traj = RawCTrajectoryToApolloTrajectory(traj, size, true);
   }
-  DiscretizedTrajectory apollo_traj =
-      RawCTrajectoryToApolloTrajectory(traj, size);
 
-  if (ThetaChangeLargerThan(apollo_traj, 0.5)) {
-    AERROR
-        << "Very high theta changes on this trajectory, setting error state.";
-    return Status(ErrorCode::PLANNING_ERROR, "high theta changes!");
+  if (config_.miqp_planner_config().minimum_percentage_valid_miqp_points() *
+          config_.miqp_planner_config().nr_steps() >
+      apollo_traj.size()) {
+    AERROR << "Trajectory has too many invalid points, setting error state";
+    return Status(ErrorCode::PLANNING_ERROR, "invalid points!");
   }
-  //CutoffTrajectoryAtV(apollo_traj, minimum_valid_speed_planning_);
+
+  // if (ThetaChangeLargerThan(apollo_traj, 0.5)) {
+  //   AERROR
+  //       << "Very high theta changes on this trajectory, setting error
+  //       state.";
+  //   return Status(ErrorCode::PLANNING_ERROR, "high theta changes!");
+  // }
+  // CutoffTrajectoryAtV(apollo_traj, minimum_valid_speed_planning_);
   // TODO not sure what is the best value for cutoff:
   // minimum_valid_speed_planning_ might be too agressive and might drops valid
   // results but no more invalidities, standstill_velocity_threshold_ is might
@@ -402,6 +412,9 @@ std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
 
 void MiqpPlanner::FillTimeDerivativesInApolloTrajectory(
     DiscretizedTrajectory& traj) const {
+  if (traj.size() < 2) {  // no derivatives possible
+    return;
+  }
   for (size_t i = 0; i < traj.size() - 1; ++i) {
     double diff_t = (traj[i + 1].relative_time() - traj[i].relative_time());
 
@@ -419,7 +432,7 @@ void MiqpPlanner::FillTimeDerivativesInApolloTrajectory(
 }
 
 DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
-    double traj[], int size) {
+    double traj[], int size, bool low_speed_check) {
   double s = 0.0f;
   double lastx =
       traj[0 + TRAJECTORY_X_IDX] + config_.miqp_planner_config().pts_offset_x();
@@ -439,6 +452,14 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     const double ay = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_AY_IDX];
     // const double ux = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UX_IDX];
     // const double uy = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UY_IDX];
+
+    // at the first invalid vx vy point cut off the current trajectory
+    if (low_speed_check && !IsVxVyValid(vx, vy)) {
+      AINFO << "Trajectory at idx = " << trajidx << " has invalid (vx,vy) = ("
+            << vx << ", " << vy << "); skipping further points.";
+      break;
+    }
+
     const double theta = atan2(vy, vx);
     const double v = vx / cos(theta);
     // const double a = ax / cos(theta); // probably wrong
@@ -467,14 +488,19 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     lastx = x;
     lasty = y;
   }
-
   FillTimeDerivativesInApolloTrajectory(apollo_trajectory);
 
-  for (int trajidx = 0; trajidx < size; ++trajidx) {
+  for (int trajidx = 0; trajidx < apollo_trajectory.size(); ++trajidx) {
     AINFO << "Planned trajectory at i=" << trajidx << ": "
           << apollo_trajectory[trajidx].DebugString();
   }
+
   return apollo_trajectory;
+}
+
+bool MiqpPlanner::IsVxVyValid(const double& vx, const double& vy) {
+  return (fabs(vx) > minimum_valid_speed_vx_vy_ ||
+          fabs(vy) > minimum_valid_speed_vx_vy_);
 }
 
 void MiqpPlanner::ConvertToInitialStateSecondOrder(
