@@ -100,7 +100,7 @@ class TrajectorySmootherNLOpt {
           ineq_const_tol(1e-4),
           eq_const_tol(1e-4),
           max_num_evals(1000),
-          max_time(0.05) {}
+          max_time(0.15) {}
 
     // algorithm to use for optimization. check NLOPT Documentation
     // http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms

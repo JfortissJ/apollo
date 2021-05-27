@@ -1046,7 +1046,7 @@ std::pair<bool, apollo::planning::DiscretizedTrajectory>
 MiqpPlanner::SmoothTrajectory(
     const apollo::planning::DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point) {
-  int subsampling = 1;
+  int subsampling = 3;
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt(
       logdir_.c_str(), config_.miqp_planner_config().pts_offset_x(),
       config_.miqp_planner_config().pts_offset_y());
