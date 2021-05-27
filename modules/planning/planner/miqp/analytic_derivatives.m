@@ -85,3 +85,46 @@ fv_a
 fv_kappa
 fv_jerk
 fv_xi
+
+
+%% da
+fa = a+h*jerk;
+fa_x = diff(fa,x);
+fa_y = diff(fa,y);
+fa_theta = diff(fa,theta);
+fa_v = diff(fa,v);
+fa_a = diff(fa,a);
+fa_kappa = diff(fa,kappa);
+fa_jerk = diff(fa,jerk);
+fa_xi = diff(fa,xi);
+
+fa_x 
+fa_y
+fa_theta
+fa_v
+fa_a
+fa_kappa
+fa_jerk
+fa_xi
+
+
+
+%% dkappa
+fkappa = kappa+h*xi;
+fkappa_x = diff(fkappa,x);
+fkappa_y = diff(fkappa,y);
+fkappa_theta = diff(fkappa,theta);
+fkappa_v = diff(fkappa,v);
+fkappa_a = diff(fkappa,a);
+fkappa_kappa = diff(fkappa,kappa);
+fkappa_jerk = diff(fkappa,jerk);
+fkappa_xi = diff(fkappa,xi);
+
+fkappa_x 
+fkappa_y
+fkappa_theta
+fkappa_v
+fkappa_a
+fkappa_kappa
+fkappa_jerk
+fkappa_xi

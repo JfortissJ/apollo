@@ -32,10 +32,10 @@ class TrajectorySmootherNLOpt {
     ProblemParameters()
         : cost_offset_x(1e1),
           cost_offset_y(1e1),
-          cost_offset_theta(0),
+          cost_offset_theta(0.0),
           cost_offset_v(1e1),
           cost_curvature(1e2),
-          cost_acceleration(0),
+          cost_acceleration(0.0),
           cost_curvature_change(2e1),
           cost_acceleration_change(2e0),
           lower_bound_acceleration(-8.0),
@@ -45,13 +45,13 @@ class TrajectorySmootherNLOpt {
           upper_bound_curvature(0.2),
           tol_curvature(1e-2),
           lower_bound_velocity(0.0),
-          upper_bound_velocity(20),
+          upper_bound_velocity(15.0),
           tol_velocity(1e-2),
-          lower_bound_jerk(-10),  //(-1.2),
-          upper_bound_jerk(10),   //(1.2),
+          lower_bound_jerk(-5.0),  //(-1.2),
+          upper_bound_jerk(5.0),   //(1.2),
           tol_jerk(1e-2),
-          lower_bound_curvature_change(-10),  //(-0.2),
-          upper_bound_curvature_change(10),   //(0.2),
+          lower_bound_curvature_change(-5.0),  //(-0.2),
+          upper_bound_curvature_change(5.0),   //(0.2),
           tol_curvature_change(1e-2) {}
     // costs for deviation from the initial reference
     double cost_offset_x;
@@ -91,8 +91,8 @@ class TrajectorySmootherNLOpt {
           // : algorithm(nlopt::LN_BOBYQA), // exceptions with inequality
           // constraints : algorithm(nlopt::LN_NEWUOA_BOUND), // exceptions with
           // inequality constraints : algorithm(nlopt::LN_PRAXIS), // exceptions
-          // with inequality constraints : algorithm(nlopt::LN_COBYLA), // works
-          // but converges poorly : algorithm(nlopt::LD_MMA), // no convergence
+          // with inequality constraints : 
+          // : algorithm(nlopt::LN_COBYLA), // works but converges poorly : algorithm(nlopt::LD_MMA), // no convergence
           // : algorithm(nlopt::LD_AUGLAG), // no convergence, but a lot of
           // settings possible : algorithm(nlopt::GN_ISRES), // no convergence,
           x_tol_rel(1e-6),
@@ -207,7 +207,7 @@ class TrajectorySmootherNLOpt {
 
   void CalculateJthreshold();
 
-  bool CheckBoundsIntegrationOneStep(double jerk, double dkappa) const;
+  bool CheckBoundsAfterIntegration(double jerk, double dkappa, size_t steps) const;
 
   void SetX0(const Vector6d& x0) {
     x0_ = x0;
@@ -261,6 +261,7 @@ class TrajectorySmootherNLOpt {
   double stepsize_;
   int nr_integration_steps_;
   double initial_time_;
+  size_t precision_ = 4;
 
   std::string logdir_;
   double pts_offset_x_;
@@ -290,6 +291,8 @@ double BoundValue(const double v, const double vmax, const double vmin,
 
 double InterpolateWithinBounds(int idx0, double v0, int idx1, double v1,
                                int idx);
+
+double Round(double a, size_t p);
 
 }  // namespace planning
 }  // namespace apollo

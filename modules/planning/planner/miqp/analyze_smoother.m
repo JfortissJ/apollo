@@ -3,7 +3,7 @@ close all
 clear all
 
 rootpath = 'miqp_testdata'
-input_file = 'test_trajectory_miqp_20210526-095319.pb.txt'
+input_file = 'test_trajectory_miqp_20210526-105909.pb.txt'
 subsampling = 1
 miqp_traj = ReadTrajectory(rootpath, input_file)
 sqp_traj = ReadTrajectory(rootpath, ['sqp_out_', num2str(subsampling), '_', input_file])

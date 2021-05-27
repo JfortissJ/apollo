@@ -133,6 +133,13 @@ TEST(TrajectorySmootherNLOpt, InterpolateWithinBounds) {
   EXPECT_FLOAT_EQ(v, 0.15);
 }
 
+TEST(TrajectorySmootherNLOpt, Round) {
+  double in = 1.0 + 1e-6;
+  EXPECT_FLOAT_EQ(Round(in, 6), in);
+  EXPECT_FLOAT_EQ(Round(in, 5), 1.0);
+  EXPECT_NE(Round(in, 5), in);
+}
+
 TEST(TrajectorySmootherNLOpt, IsJerkWithinBounds) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   double j_lb = tsm.GetProblemParameters().lower_bound_jerk;
@@ -441,6 +448,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135505) {
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135507) {
+  // SOMETIMES FAILING!!!
   const std::string path_to_file =
       "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210429-135507.pb.txt";
@@ -555,7 +563,8 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210510144917) {
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210520154439) {
-  // Extracted from Simcontrol
+  // SOMETIMES FAILING???
+  // Extracted from Simcontrol, stopping trajectory
   const std::string path_to_file =
       "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210520-154439.pb.txt";
@@ -581,6 +590,16 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526095321) {
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526105909) {
+  // SOMETIMES FAILING!!!!!
+  // Extracted from Simcontrol, from miqp
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210526-105909.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
 TEST(TrajectorySmootherNLOpt, model_f) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   TrajectorySmootherNLOpt::Vector6d x;
@@ -599,7 +618,7 @@ TEST(TrajectorySmootherNLOpt, model_f) {
   EXPECT_NEAR(x_out(5), 0.05, 1e-9);
 }
 
-TEST(TrajectorySmootherNLOpt, CheckBoundsIntegrationOneStep) {
+TEST(TrajectorySmootherNLOpt, CheckBoundsAfterIntegration) {
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
   TrajectorySmootherNLOpt::Vector6d x0;
   double v = 0.5;
@@ -609,7 +628,7 @@ TEST(TrajectorySmootherNLOpt, CheckBoundsIntegrationOneStep) {
   x0 << 0.0, 0.0, 0.0, v, a, 0.0;
   tsm.SetX0(x0);
   tsm.SetStepsize(1.0);
-  bool in_bounds = tsm.CheckBoundsIntegrationOneStep(j, xi);
+  bool in_bounds = tsm.CheckBoundsAfterIntegration(j, xi, 1);
   EXPECT_FALSE(in_bounds);
 }
 
