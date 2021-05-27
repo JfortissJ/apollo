@@ -1,7 +1,7 @@
 fake_obstacle_conf {
     id: 1
     velocity: 2.0
-    delta_s_in_front: 25
+    delta_s_in_front: 20
     heading_offset: 0.0
     lateral_offset: 0.0
     width: 6.0
