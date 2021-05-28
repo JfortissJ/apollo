@@ -170,6 +170,8 @@ void ImarEthernet::PublishSensorData() {
       qy = q.y();
       qz = q.z();
       qw = q.w();
+      AERROR << "Yaw " << gps_data_->xcominsSol.fRPY[2] << " Pitch " << gps_data_->xcominsSol.fRPY[1] << " Roll " << gps_data_->xcominsSol.fRPY[0];
+      AERROR << "Quaternion: qx,qy,qz,qw = [" << qx << ", " << qy << ", " << qz << ", " << qw << "];";
 
       // No transformation, done on the inat device
       vx = gps_data_->xcominsSol.fVel[0];
