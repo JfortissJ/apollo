@@ -24,9 +24,6 @@
 #include "absl/strings/str_cat.h"
 #include "cyber/common/file.h"
 #include "gtest/gtest_prod.h"
-
-#include "modules/routing/proto/routing.pb.h"
-
 #include "modules/common/math/quaternion.h"
 #include "modules/common/time/time.h"
 #include "modules/common/vehicle_state/vehicle_state_provider.h"
@@ -42,6 +39,7 @@
 #include "modules/planning/reference_line/reference_line_provider.h"
 #include "modules/planning/tasks/task_factory.h"
 #include "modules/planning/traffic_rules/traffic_decider.h"
+#include "modules/routing/proto/routing.pb.h"
 
 namespace apollo {
 namespace planning {
@@ -208,9 +206,14 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
   VehicleState vehicle_state =
       VehicleStateProvider::Instance()->vehicle_state();
   const double vehicle_state_timestamp = vehicle_state.timestamp();
-  DCHECK_GE(start_timestamp, vehicle_state_timestamp)
-      << "start_timestamp is behind vehicle_state_timestamp by "
-      << start_timestamp - vehicle_state_timestamp << " secs";
+  std::stringstream debug_timing;
+  debug_timing << "start_timestamp and vehicle_state_timestamp diff is "
+               << start_timestamp - vehicle_state_timestamp << " secs";
+  if (fabs(start_timestamp - vehicle_state_timestamp) > 1) {
+    AERROR << debug_timing.str();
+  } else {
+    AINFO << debug_timing.str();
+  }
 
   if (!status.ok() || !util::IsVehicleStateValid(vehicle_state)) {
     std::string msg(
