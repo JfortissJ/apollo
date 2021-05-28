@@ -41,4 +41,8 @@ message MiqpPlannerConfiguration {
     optional double pts_offset_x = 36 [default = 0.0];
     optional double pts_offset_y = 37 [default = 0.0];
     optional bool use_smoothing = 38 [default = false];
+    optional double extension_length_dynamic = 39 [default = 6.0];
+    optional double extension_length_static = 40 [default = 2.0];
+    optional double extension_width_static = 41 [default = 0.4];
+    optional double minimum_percentage_valid_miqp_points = 42 [default = 0.5];
 }

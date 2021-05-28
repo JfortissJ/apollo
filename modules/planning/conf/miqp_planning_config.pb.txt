@@ -6,8 +6,8 @@ standard_planning_config {
 miqp_planner_config: {
     nr_regions: 16
     max_velocity_fitting: 10
-    use_environment_polygon: false
-    consider_obstacles: false
+    use_environment_polygon: true
+    consider_obstacles: true
     close_to_end_distance: 1.0
     collision_radius_add: 0.3
     jerk_weight: 1.0
@@ -18,10 +18,10 @@ miqp_planner_config: {
     jerk_lon_max_limit: 3.0
     acc_lat_min_max_limit: 1.6
     jerk_lat_min_max_limit: 1.4
-    nr_steps: 10
+    nr_steps: 6
     nr_neighbouring_possible_regions: 0
     ts: 1.0
-    max_solution_time: 1.0
+    max_solution_time: 1
     relative_mip_gap_tolerance: 0.1
     mipemphasis: 0
     relobjdif: 0.5
@@ -33,7 +33,7 @@ miqp_planner_config: {
     use_sos: false
     use_branching_priorities: true
     warmstart_type: 2
-    wheelbase_add: 0.3
+    wheelbase_add: 0.5
     destination_distance_stop_threshold: 5.0
     cutoff_distance_reference_after_stop: 10.0
     obstacle_roi_filter: true
@@ -42,6 +42,10 @@ miqp_planner_config: {
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06
     use_smoothing: true
+    extension_length_dynamic: 6.0
+    extension_length_static: 0.0
+    extension_width_static: 0.0
+    minimum_percentage_valid_miqp_points: 0.5
 }
 
 

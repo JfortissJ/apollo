@@ -103,6 +103,8 @@ common::Status MiqpPlanner::Init(const PlanningConfig& config) {
   egoCarIdx_ = -1;                       // set invalid
   minimum_valid_speed_planning_ = 1.0;   // below our model is invalid
   standstill_velocity_threshold_ = 0.1;  // set velocity hard to zero below this
+  minimum_valid_speed_vx_vy_ = 0.5;  // below this individual speed threshold
+                                     // for vx and vy the model is invalid
 
   LOG(INFO) << "Writing MIQP Planner Logs to " << logdir_.c_str();
   char logdir_cstr[logdir_.length()];
@@ -254,10 +256,12 @@ Status MiqpPlanner::PlanOnReferenceLine(
   }
 
   // Plan
+  DiscretizedTrajectory apollo_traj;
   if (planner_status == START_TRAJECTORY || planner_status == STOP_TRAJECTORY) {
     AERROR << "Start/Stop Trajectory, using reference instead of miqp solution";
     GetRawCLastReferenceTrajectoryCMiqpPlaner(
         planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
+    apollo_traj = RawCTrajectoryToApolloTrajectory(traj, size, false);
   } else {
     current_time = Clock::NowInSeconds();
     bool success = PlanCMiqpPlanner(planner_, timestep);
@@ -268,7 +272,6 @@ Status MiqpPlanner::PlanOnReferenceLine(
     // Planning failed
     if (!success) {
       AINFO << "Planning failed";
-      // TODO Generate some error trajectory
       return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
     }
 
@@ -278,9 +281,22 @@ Status MiqpPlanner::PlanOnReferenceLine(
     // planning_init_point.relative_time()
     GetRawCMiqpTrajectoryCMiqpPlanner(
         planner_, egoCarIdx_, planning_init_point.relative_time(), traj, size);
+    apollo_traj = RawCTrajectoryToApolloTrajectory(traj, size, true);
   }
-  DiscretizedTrajectory apollo_traj =
-      RawCTrajectoryToApolloTrajectory(traj, size);
+
+  if (config_.miqp_planner_config().minimum_percentage_valid_miqp_points() *
+          config_.miqp_planner_config().nr_steps() >
+      apollo_traj.size()) {
+    AERROR << "Trajectory has too many invalid points, setting error state";
+    return Status(ErrorCode::PLANNING_ERROR, "invalid points!");
+  }
+
+  // if (ThetaChangeLargerThan(apollo_traj, 0.5)) {
+  //   AERROR
+  //       << "Very high theta changes on this trajectory, setting error
+  //       state.";
+  //   return Status(ErrorCode::PLANNING_ERROR, "high theta changes!");
+  // }
   // CutoffTrajectoryAtV(apollo_traj, minimum_valid_speed_planning_);
   // TODO not sure what is the best value for cutoff:
   // minimum_valid_speed_planning_ might be too agressive and might drops valid
@@ -396,6 +412,9 @@ std::vector<PathPoint> MiqpPlanner::ToDiscretizedReferenceLine(
 
 void MiqpPlanner::FillTimeDerivativesInApolloTrajectory(
     DiscretizedTrajectory& traj) const {
+  if (traj.size() < 2) {  // no derivatives possible
+    return;
+  }
   for (size_t i = 0; i < traj.size() - 1; ++i) {
     double diff_t = (traj[i + 1].relative_time() - traj[i].relative_time());
 
@@ -413,7 +432,7 @@ void MiqpPlanner::FillTimeDerivativesInApolloTrajectory(
 }
 
 DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
-    double traj[], int size) {
+    double traj[], int size, bool low_speed_check) {
   double s = 0.0f;
   double lastx =
       traj[0 + TRAJECTORY_X_IDX] + config_.miqp_planner_config().pts_offset_x();
@@ -433,6 +452,14 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     const double ay = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_AY_IDX];
     // const double ux = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UX_IDX];
     // const double uy = traj[trajidx * TRAJECTORY_SIZE + TRAJECTORY_UY_IDX];
+
+    // at the first invalid vx vy point cut off the current trajectory
+    if (low_speed_check && !IsVxVyValid(vx, vy)) {
+      AINFO << "Trajectory at idx = " << trajidx << " has invalid (vx,vy) = ("
+            << vx << ", " << vy << "); skipping further points.";
+      break;
+    }
+
     const double theta = atan2(vy, vx);
     const double v = vx / cos(theta);
     // const double a = ax / cos(theta); // probably wrong
@@ -461,14 +488,19 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
     lastx = x;
     lasty = y;
   }
-
   FillTimeDerivativesInApolloTrajectory(apollo_trajectory);
 
-  for (int trajidx = 0; trajidx < size; ++trajidx) {
+  for (int trajidx = 0; trajidx < apollo_trajectory.size(); ++trajidx) {
     AINFO << "Planned trajectory at i=" << trajidx << ": "
           << apollo_trajectory[trajidx].DebugString();
   }
+
   return apollo_trajectory;
+}
+
+bool MiqpPlanner::IsVxVyValid(const double& vx, const double& vy) {
+  return (fabs(vx) > minimum_valid_speed_vx_vy_ ||
+          fabs(vy) > minimum_valid_speed_vx_vy_);
 }
 
 void MiqpPlanner::ConvertToInitialStateSecondOrder(
@@ -645,6 +677,7 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
                       collision_radius_add;
 
   s.slackWeight = 30;
+  s.slackWeightObstacle = 2000;
   s.acclerationWeight = 0;
   if (conf.has_acc_lon_max_limit()) {
     s.accLonMaxLimit = conf.acc_lon_max_limit();
@@ -780,6 +813,7 @@ bool MiqpPlanner::ProcessObstacles(
     double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N],
         p4_y[N];
     bool is_static;
+    bool is_soft = false;
     if (obstacle->IsVirtual()) {
       continue;
       // } else if (!obstacle->IsLaneBlocking()) {
@@ -787,32 +821,49 @@ bool MiqpPlanner::ProcessObstacles(
       //   lane)"; continue;
     } else if (!obstacle->HasTrajectory()) {
       // AINFO << "Static obstacle " << obstacle->Id();
-      const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
+      // const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
+      common::math::Box2d box = obstacle->PerceptionBoundingBox();
+      double ext_l = config_.miqp_planner_config().extension_length_static();
+      double ext_w = config_.miqp_planner_config().extension_width_static();
+      box.LongitudinalExtend(ext_l);
+      box.LateralExtend(ext_w);
+      common::math::Polygon2d polygon = Polygon2d(box);
       for (int i = 0; i < N; ++i) {
         FillInflatedPtsFromPolygon(polygon, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
                                    p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
       }
+      if (ext_w > 0 || ext_l > 0) {
+        is_soft = true;
+        AINFO << "Setting static obstacle " << obstacle->Id() << " as soft";
+      }
       is_static = true;
     } else {
       const float ts = GetTsCMiqpPlanner(planner_);
-      // AINFO << "Dynamic obstacle " << obstacle->Id();
+      AINFO << "Dynamic obstacle " << obstacle->Id();
       for (int i = 0; i < N; ++i) {
         double pred_time = timestep + i * ts;
         TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
 
         common::math::Box2d box_i = obstacle->GetBoundingBox(point);
+        AINFO << "idx: " << i << ", box: " << box_i.DebugString();
+        box_i.LongitudinalExtend(
+            config_.miqp_planner_config().extension_length_dynamic());
+        AINFO << "idx: " << i << ", extended box: " << box_i.DebugString();
         common::math::Polygon2d poly2d_i = Polygon2d(box_i);
         FillInflatedPtsFromPolygon(poly2d_i, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
                                    p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
       }
       is_static = false;
+      is_soft = true;
     }
 
-    int idx_obs = AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y,
-                                          p3_x, p3_y, p4_x, p4_y, N, is_static);
+    int idx_obs =
+        AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y,
+                                p4_x, p4_y, N, is_static, is_soft);
     if (idx_obs != -1) {
       AINFO << "Added obstacle " << obstacle->Id()
-            << " with miqp idx = " << idx_obs << " is_static = " << is_static;
+            << " with miqp idx = " << idx_obs << " is_static = " << is_static
+            << " is_soft = " << is_soft;
     }
   }
   return true;
@@ -874,7 +925,9 @@ double MiqpPlanner::CalculateSDistanceToStop(
       // Calculation similar to ReferenceLineInfo::SDistanceToDestination()
       double d_i = obstacle->PerceptionSLBoundary().start_s() -
                    reference_line_info->AdcSlBoundary().end_s();
-      stop_distance = std::min(stop_distance, d_i);
+      if (d_i >= 0) {  // obstacle is in front of the car
+        stop_distance = std::min(stop_distance, d_i);
+      }
     }
   }
   return stop_distance;
@@ -927,19 +980,18 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
   return status;
 }
 
-// int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double
-// vmin) {
-//   // reverse, to not cutoff accelerating trajectories
-//   for (size_t i = traj.size() - 1; i > 1; --i) {
-//     if (traj.at(i).v() < vmin && traj.at(i - 1).v() >= vmin) {
-//       traj.at(i).set_v(vmin);
-//       traj.resize(i + 1);  // delete everything after this point
-//       AINFO << "Cutting trajectory off at pt idx = " << i;
-//       return i;
-//     }
-//   }
-//   return traj.size();
-// }
+int MiqpPlanner::CutoffTrajectoryAtV(DiscretizedTrajectory& traj, double vmin) {
+  // reverse, to not cutoff accelerating trajectories
+  for (size_t i = traj.size() - 1; i > 1; --i) {
+    if (traj.at(i).v() < vmin && traj.at(i - 1).v() >= vmin) {
+      traj.at(i).set_v(vmin);
+      traj.resize(i + 1);  // delete everything after this point
+      AINFO << "Cutting trajectory off at pt idx = " << i;
+      return i;
+    }
+  }
+  return traj.size();
+}
 
 void MiqpPlanner::CreateStandstillTrajectory(
     const TrajectoryPoint& planning_init_point,
@@ -1038,29 +1090,38 @@ std::pair<bool, apollo::planning::DiscretizedTrajectory>
 MiqpPlanner::SmoothTrajectory(
     const apollo::planning::DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point) {
-  int subsampling = 1;
+  int subsampling = 3;
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt(
       logdir_.c_str(), config_.miqp_planner_config().pts_offset_x(),
       config_.miqp_planner_config().pts_offset_y());
   tsm.InitializeProblem(subsampling, traj_in, planning_init_point);
   AINFO << "Planning init point is " << planning_init_point.DebugString();
-  int status = tsm.Optimize();
-  if (status > 0) {
-    auto traj = tsm.GetOptimizedTrajectory();
+  tsm.Optimize();
+  auto traj = tsm.GetOptimizedTrajectory();
+  if (tsm.ValidateSmoothingSolution()) {
     for (int idx = 0; idx < traj.size(); ++idx) {
       AINFO << "Smoothed trajectory at idx = " << idx << " : "
             << traj.at(idx).DebugString();
     }
-    if (tsm.ValidateSmoothingSolution()) {
-      return {true, traj};
-    } else {
-      AERROR << "Trajectory Smoothing Not Valid!";
-      return {false, traj};
-    }
+    return {true, traj};
   } else {
-    AERROR << "Trajectory Smoothing Failed!";
-    return {false, traj_in};
+    AERROR << "Trajectory smoothing not valid or failed!";
+    return {false, traj};
   }
+}
+
+bool MiqpPlanner::ThetaChangeLargerThan(
+    const apollo::planning::DiscretizedTrajectory& traj,
+    const double delta_theta_max) {
+  for (size_t idx = 0; idx < traj.size() - 1; ++idx) {
+    const double delta_theta =
+        common::math::NormalizeAngle(traj.at(idx).path_point().theta() -
+                                     traj.at(idx + 1).path_point().theta());
+    if (delta_theta > delta_theta_max) {
+      return true;
+    }
+  }
+  return false;
 }
 
 }  // namespace planning

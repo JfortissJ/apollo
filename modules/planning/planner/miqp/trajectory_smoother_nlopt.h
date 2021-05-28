@@ -32,10 +32,10 @@ class TrajectorySmootherNLOpt {
     ProblemParameters()
         : cost_offset_x(1e1),
           cost_offset_y(1e1),
-          cost_offset_theta(0),
+          cost_offset_theta(0.0),
           cost_offset_v(1e1),
           cost_curvature(1e2),
-          cost_acceleration(0),
+          cost_acceleration(0.0),
           cost_curvature_change(2e1),
           cost_acceleration_change(2e0),
           lower_bound_acceleration(-8.0),
@@ -45,13 +45,13 @@ class TrajectorySmootherNLOpt {
           upper_bound_curvature(0.2),
           tol_curvature(1e-2),
           lower_bound_velocity(0.0),
-          upper_bound_velocity(20),
+          upper_bound_velocity(15.0),
           tol_velocity(1e-2),
-          lower_bound_jerk(-10), //(-1.2),
-          upper_bound_jerk(10), //(1.2),
+          lower_bound_jerk(-5.0),  //(-1.2),
+          upper_bound_jerk(5.0),   //(1.2),
           tol_jerk(1e-2),
-          lower_bound_curvature_change(-10), //(-0.2),
-          upper_bound_curvature_change(10), //(0.2),
+          lower_bound_curvature_change(-5.0),  //(-0.2),
+          upper_bound_curvature_change(5.0),   //(0.2),
           tol_curvature_change(1e-2) {}
     // costs for deviation from the initial reference
     double cost_offset_x;
@@ -88,12 +88,19 @@ class TrajectorySmootherNLOpt {
    public:
     SolverParameters()
         : algorithm(nlopt::LD_SLSQP),
+          // : algorithm(nlopt::LN_BOBYQA), // exceptions with inequality
+          // constraints : algorithm(nlopt::LN_NEWUOA_BOUND), // exceptions with
+          // inequality constraints : algorithm(nlopt::LN_PRAXIS), // exceptions
+          // with inequality constraints : 
+          // : algorithm(nlopt::LN_COBYLA), // works but converges poorly : algorithm(nlopt::LD_MMA), // no convergence
+          // : algorithm(nlopt::LD_AUGLAG), // no convergence, but a lot of
+          // settings possible : algorithm(nlopt::GN_ISRES), // no convergence,
           x_tol_rel(1e-6),
           x_tol_abs(1e-6),
           ineq_const_tol(1e-4),
           eq_const_tol(1e-4),
           max_num_evals(1000),
-          max_time(0.05) {}
+          max_time(0.15) {}
 
     // algorithm to use for optimization. check NLOPT Documentation
     // http://ab-initio.mit.edu/wiki/index.php/NLopt_Algorithms
@@ -155,23 +162,18 @@ class TrajectorySmootherNLOpt {
   void CalculateCommonDataIfNecessary(const Eigen::VectorXd& u);
 
   void model_f(const Vector6d& x, const Eigen::Vector2d& u, const double h,
-               Vector6d& x_out);
+               Vector6d& x_out) const;
 
   void model_dfdx(const Vector6d& x, const Eigen::Vector2d& u, const double h,
-                  Matrix6d& dfdx_out);
+                  Matrix6d& dfdx_out) const;
 
   void model_dfdu(const Vector6d& x, const Eigen::Vector2d& u, const double h,
-                  Eigen::MatrixXd& dfdxi_out);
-
-  void DebugDumpX() const;
-
-  void DebugDumpXref() const;
-
-  void DebugDumpU() const;
+                  Eigen::MatrixXd& dfdxi_out) const;
 
   int GetNumEvals() const { return numevals_; }
 
-  bool CheckConstraints() const;
+  bool CheckConstraints(const std::vector<double>& u,
+                        const Eigen::VectorXd& X) const;
 
   bool ValidateSmoothingSolution() const;
 
@@ -204,6 +206,16 @@ class TrajectorySmootherNLOpt {
   bool IsVelocityWithinBounds(const double kappa) const;
 
   void CalculateJthreshold();
+
+  bool CheckBoundsAfterIntegration(double jerk, double dkappa, size_t steps) const;
+
+  void SetX0(const Vector6d& x0) {
+    x0_ = x0;
+  }
+
+  void SetStepsize(const double h) {
+    stepsize_ = h;
+  }
 
  private:
   // stores the positions of the reference
@@ -249,6 +261,7 @@ class TrajectorySmootherNLOpt {
   double stepsize_;
   int nr_integration_steps_;
   double initial_time_;
+  size_t precision_ = 4;
 
   std::string logdir_;
   double pts_offset_x_;
@@ -278,6 +291,8 @@ double BoundValue(const double v, const double vmax, const double vmin,
 
 double InterpolateWithinBounds(int idx0, double v0, int idx1, double v1,
                                int idx);
+
+double Round(double a, size_t p);
 
 }  // namespace planning
 }  // namespace apollo

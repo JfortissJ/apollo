@@ -94,10 +94,7 @@ void OptimizeFromFileHelper(std::string path_to_file, std::string input_file,
     AINFO << "Smoothed trajectory at i=" << trajidx << ": "
           << traj_opt[trajidx].DebugString();
   }
-  tsm.DebugDumpU();
-  tsm.DebugDumpX();
-  tsm.DebugDumpXref();
-
+  
   const std::string file_name =
       "sqp_out_" + std::to_string(subsampling) + "_" + input_file;
   SaveDiscretizedTrajectoryToFile(traj_opt, path_to_file, file_name);
@@ -134,6 +131,13 @@ TEST(TrajectorySmootherNLOpt, InterpolateWithinBounds) {
 
   v = InterpolateWithinBounds(idx0, v0, idx1, v1, 4);
   EXPECT_FLOAT_EQ(v, 0.15);
+}
+
+TEST(TrajectorySmootherNLOpt, Round) {
+  double in = 1.0 + 1e-6;
+  EXPECT_FLOAT_EQ(Round(in, 6), in);
+  EXPECT_FLOAT_EQ(Round(in, 5), 1.0);
+  EXPECT_NE(Round(in, 5), in);
 }
 
 TEST(TrajectorySmootherNLOpt, IsJerkWithinBounds) {
@@ -444,6 +448,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135505) {
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135507) {
+  // SOMETIMES FAILING!!!
   const std::string path_to_file =
       "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210429-135507.pb.txt";
@@ -558,11 +563,49 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210510144917) {
 }
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210520154439) {
-  // Extracted from Simcontrol
+  // SOMETIMES FAILING???
+  // Extracted from Simcontrol, stopping trajectory
   const std::string path_to_file =
       "modules/planning/planner/miqp/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210520-154439.pb.txt";
   int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526095319) {
+  // Extracted from Simcontrol, from reference generator
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210526-095319.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526095321) {
+  // Extracted from Simcontrol, from miqp
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210526-095321.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526105909) {
+  // SOMETIMES FAILING!!!!!
+  // Extracted from Simcontrol, from miqp
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210526-105909.pb.txt";
+  int subsampling = 1;  // subsampling
+  OptimizeFromFileHelper(path_to_file, input_file, subsampling);
+}
+
+TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210527131525) {
+  // Extracted from Simcontrol
+  const std::string path_to_file =
+      "modules/planning/planner/miqp/miqp_testdata";
+  const std::string input_file = "test_trajectory_miqp_20210527-131525.pb.txt";
+  int subsampling = 3;  // subsampling, fails if we use less time!!!
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
 }
 
@@ -582,6 +625,20 @@ TEST(TrajectorySmootherNLOpt, model_f) {
   EXPECT_NEAR(x_out(3), 1.001, 1e-9);
   EXPECT_NEAR(x_out(4), 0.02, 1e-9);
   EXPECT_NEAR(x_out(5), 0.05, 1e-9);
+}
+
+TEST(TrajectorySmootherNLOpt, CheckBoundsAfterIntegration) {
+  TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt("/apollo/data/log/");
+  TrajectorySmootherNLOpt::Vector6d x0;
+  double v = 0.5;
+  double a = -2.0; 
+  double j = 0;
+  double xi = 0;
+  x0 << 0.0, 0.0, 0.0, v, a, 0.0;
+  tsm.SetX0(x0);
+  tsm.SetStepsize(1.0);
+  bool in_bounds = tsm.CheckBoundsAfterIntegration(j, xi, 1);
+  EXPECT_FALSE(in_bounds);
 }
 
 TEST(TrajectorySmootherNLOpt, IntegrateModelConstInput) {
