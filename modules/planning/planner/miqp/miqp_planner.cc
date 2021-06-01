@@ -490,7 +490,7 @@ DiscretizedTrajectory MiqpPlanner::RawCTrajectoryToApolloTrajectory(
   }
   FillTimeDerivativesInApolloTrajectory(apollo_trajectory);
 
-  for (int trajidx = 0; trajidx < apollo_trajectory.size(); ++trajidx) {
+  for (size_t trajidx = 0; trajidx < apollo_trajectory.size(); ++trajidx) {
     AINFO << "Planned trajectory at i=" << trajidx << ": "
           << apollo_trajectory[trajidx].DebugString();
   }
@@ -662,7 +662,17 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   if (conf.has_obstacle_roi_behind_distance()) {
     s.obstacle_roi_behind_distance = conf.obstacle_roi_behind_distance();
   } else {
-    s.obstacle_roi_behind_distance = 10.0;
+    s.obstacle_roi_behind_distance = 5.0;
+  }
+  if (conf.has_obstacle_roi_front_distance()) {
+    s.obstacle_roi_front_distance = conf.obstacle_roi_front_distance();
+  } else {
+    s.obstacle_roi_front_distance = 30.0;
+  }
+  if (conf.has_obstacle_roi_side_distance()) {
+    s.obstacle_roi_side_distance = conf.obstacle_roi_side_distance();
+  } else {
+    s.obstacle_roi_side_distance = 15.0;
   }
   s.wheelBase = common::VehicleConfigHelper::Instance()
                     ->GetConfig()
@@ -1080,7 +1090,7 @@ std::pair<bool, apollo::planning::DiscretizedTrajectory>
 MiqpPlanner::SmoothTrajectory(
     const apollo::planning::DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point) {
-  int subsampling = 1;
+  int subsampling = 3;
   TrajectorySmootherNLOpt tsm = TrajectorySmootherNLOpt(
       logdir_.c_str(), config_.miqp_planner_config().pts_offset_x(),
       config_.miqp_planner_config().pts_offset_y());
@@ -1089,7 +1099,7 @@ MiqpPlanner::SmoothTrajectory(
   tsm.Optimize();
   auto traj = tsm.GetOptimizedTrajectory();
   if (tsm.ValidateSmoothingSolution()) {
-    for (int idx = 0; idx < traj.size(); ++idx) {
+    for (size_t idx = 0; idx < traj.size(); ++idx) {
       AINFO << "Smoothed trajectory at idx = " << idx << " : "
             << traj.at(idx).DebugString();
     }

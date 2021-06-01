@@ -69,6 +69,8 @@ struct MiqpPlannerSettings {
   bool buffer_cplex_outputs;
   bool obstacle_roi_filter;
   float obstacle_roi_behind_distance;
+  float obstacle_roi_front_distance;
+  float obstacle_roi_side_distance;
 };
 
 #endif  // MIQP_PLANNER_SETTINGS_HEADER

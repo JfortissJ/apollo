@@ -37,7 +37,9 @@ miqp_planner_config: {
     destination_distance_stop_threshold: 5.0
     cutoff_distance_reference_after_stop: 10.0
     obstacle_roi_filter: true
-    obstacle_roi_behind_distance: 10.0
+    obstacle_roi_behind_distance: 5.0
+    obstacle_roi_front_distance: 30.0
+    obstacle_roi_side_distance: 15.0
     acc_start_trajectory: 1.0
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06
