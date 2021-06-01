@@ -1,0 +1,136 @@
+header {
+  timestamp_sec: 0
+}
+total_path_length: 0.0038285135536094772
+total_path_time: 12.49901819229126
+trajectory_point {
+  path_point {
+    x: 692994.13349826867
+    y: 5339033.9439790426
+    theta: -0.49590804749886175
+    kappa: 2.7174794329669919e-05
+    s: 0
+    dkappa: -3.43931745961094e-05
+  }
+  v: 0.10788747162204709
+  a: -0.12160397712095627
+  relative_time: 3.4990181922912598
+  da: 0.077623915765830567
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 4.49901819229126
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 5.49901819229126
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 6.49901819229126
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 7.49901819229126
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 8.49901819229126
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 9.49901819229126
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 10.49901819229126
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 11.49901819229126
+}
+trajectory_point {
+  path_point {
+    x: 692994.13535874465
+    y: 5339033.9473251067
+    theta: -0
+    kappa: 0
+    s: 0.0038285135536094772
+    dkappa: 0
+  }
+  v: 0
+  a: 0
+  relative_time: 12.49901819229126
+}

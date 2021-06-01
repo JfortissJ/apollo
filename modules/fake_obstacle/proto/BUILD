@@ -13,5 +13,6 @@ proto_library(
         "fake_obstacle_conf.proto",
     ],
     deps = [
+        "//modules/perception/proto:perception_proto_lib",
     ],
 )

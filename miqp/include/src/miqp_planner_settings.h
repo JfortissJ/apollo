@@ -38,7 +38,13 @@ struct MiqpPlannerSettings {
   float positionWeight;
   float velocityWeight;
   float acclerationWeight;
+  float accLonMaxLimit;
+  float accLonMinLimit;
+  float jerkLonMaxLimit;
+  float accLatMinMaxLimit;
+  float jerkLatMinMaxLimit;
   float simplificationDistanceMap;
+  float simplificationDistanceReferenceLine;
   float bufferReference;
   float buffer_for_merging_tolerance;
   float refLineInterpInc;

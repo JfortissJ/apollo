@@ -31,18 +31,18 @@ namespace imar {
 
 bool ImarEthernet::Init() {
   // Create writers
+  // links to topic "/apollo/localization/gps"
   gps_writer_ = node_->CreateWriter<apollo::localization::Gps>(
-      imar_conf_
-          .localization_topic());  // links to topic "/apollo/localization/gps"
+      imar_conf_.localization_topic());
+  // links to topic "/apollo/sensor/gnss/corrected_imu"
   imu_writer_ = node_->CreateWriter<apollo::localization::CorrectedImu>(
-      imar_conf_
-          .imu_topic());  // links to topic "/apollo/sensor/gnss/corrected_imu"
+      imar_conf_.imu_topic());
+  // links to topic "/apollo/sensor/fortiss_imar_status"
   imar_status_writer_ = node_->CreateWriter<apollo::drivers::FortissImarStatus>(
-      imar_conf_.imar_status_topic());  // links to topic
-                                        // "/apollo/sensor/fortiss_imar_status"
+      imar_conf_.imar_status_topic());
+  // links to "/apollo/sensor/gnss/gnss_status"
   gnss_ins_status_writer_ = node_->CreateWriter<apollo::drivers::gnss::InsStat>(
-      imar_conf_
-          .ins_status_topic());  // links to "/apollo/sensor/gnss/gnss_status"
+      imar_conf_.ins_status_topic());
 
   // Publish status
   auto imar_status = std::make_shared<apollo::drivers::FortissImarStatus>();
@@ -54,13 +54,12 @@ bool ImarEthernet::Init() {
 
 //! start socket communication
 bool ImarEthernet::ConfigureImar() {
-  //! initialize sdk
+  // initialize sdk
   p_ins_ = new insCom("iNatGPS");
   gps_data_ = new useUdpLogData();
-
-  cout << "[ConfigureImar] iNat device: " << imar_conf_.ip_address()
-       << " at TCP port " << imar_conf_.tcp_port() << " and UDP Port "
-       << imar_conf_.udp_port() << ".";
+  AINFO << "[ConfigureImar] iNat device: " << imar_conf_.ip_address()
+        << " at TCP port " << imar_conf_.tcp_port() << " and UDP Port "
+        << imar_conf_.udp_port() << ".";
   this->InitImar(this->p_ins_);
   return true;
 }
@@ -75,7 +74,7 @@ bool ImarEthernet::Start() {
 
   //! start the spin thread
   imar_thread_ptr_.reset(new std::thread(&ImarEthernet::ImarSpin, this));
-  AERROR << "[Start] Started iNat communication successfully.";
+  AINFO << "[Start] Started iNat communication successfully.";
   return true;
 }
 
@@ -93,7 +92,6 @@ std::tuple<double, double, double, double>
 ImarEthernet::ConvertEulerAnglesToQuaternion(const double yaw,
                                              const double roll,
                                              const double pitch) {
-  // Abbreviations for the various angular functions
   double cy = cos(-yaw * 0.5f);
   double sy = sin(-yaw * 0.5f);
   double cr = cos(roll * 0.5f);
@@ -140,72 +138,58 @@ void ImarEthernet::PublishSensorData() {
   double unix_sec_gps = cyber::Time::Now().ToSecond();
   gps->mutable_header()->set_timestamp_sec(unix_sec_gps);
   auto *pose = gps->mutable_localization();
-  double qx, qy, qz, qw, roll, pitch, yaw;
+  double qx, qy, qz, qw;
   double posx, posy, posz;
   double vx, vy, vz;
   bool new_gnss_data = false;
 
-  //  The INSRPY message contains the integration filter attitude solution in
-  //  Euler representa- tion (roll, pitch and yaw). The given Euler angles
-  //  describe the orientation of the body frame with respect to the navigation
-  //  frame (NED).
   if (imar_conf_.gps_available()) {  // Regular case: gps signal is available
 
     // check if the data is new: as there is no method to do this directly in
     // the sdk, we check long and lat. if the same -> skip
     if ((old_longitude_ != gps_data_->xcominsSol.dPos[0]) ||
         (old_lattitude_ != gps_data_->xcominsSol.dPos[1])) {
-      // AERROR << "old long: " << old_longitude_ << " old lat: " <<
-      // old_lattitude_ << "\n"; //TODO
       old_longitude_ = gps_data_->xcominsSol.dPos[0];
       old_lattitude_ = gps_data_->xcominsSol.dPos[1];
       new_gnss_data = true;
 
-      roll = gps_data_->xcominsSol.fRPY[0];
-      pitch = gps_data_->xcominsSol.fRPY[1];
-      yaw = gps_data_->xcominsSol.fRPY[2];
+      // TODO I am not too sure here: is the order of pitch and roll correct?
 
-      // Feedback Daniel: Thats what they use in Providentia and these
-      // coordinates are stable and fused ecef -> has to be converted to utm
-      //  posx = gps_data_->xcominsPosECEF.dECEF[0] + imar_conf_.x_lever() +
-      //  imar_conf_.x_offset(); // x posy = gps_data_->xcominsPosECEF.dECEF[1]
-      //  + imar_conf_.y_lever() + imar_conf_.y_offset(); // y posz =
-      //  gps_data_->xcominsPosECEF.dECEF[2] + imar_conf_.z_lever() +
-      //  imar_conf_.z_offset(); // z
+      // The given Euler angles from the imar interface describe the orientation
+      // of the body frame with respect to the navigation frame (NED).
 
-      vx = gps_data_->xcominsSol.fVel[0];  // x
-      vy = gps_data_->xcominsSol.fVel[1];  // y
-      vz = gps_data_->xcominsSol.fVel[2];  // z
+      // Convert from North/East/Down to East/North/Up and define quaternion
+      Eigen::Quaterniond q =
+          Eigen::AngleAxisd(-gps_data_->xcominsSol.fRPY[2],
+                            Eigen::Vector3d::UnitZ()) *
+          Eigen::AngleAxisd(gps_data_->xcominsSol.fRPY[0],
+                            Eigen::Vector3d::UnitX()) *
+          Eigen::AngleAxisd(gps_data_->xcominsSol.fRPY[1] + M_PI,
+                            Eigen::Vector3d::UnitY());
+      qx = q.x();
+      qy = q.y();
+      qz = q.z();
+      qw = q.w();
+      AERROR << "Yaw " << gps_data_->xcominsSol.fRPY[2] << " Pitch " << gps_data_->xcominsSol.fRPY[1] << " Roll " << gps_data_->xcominsSol.fRPY[0];
+      AERROR << "Quaternion: qx,qy,qz,qw = [" << qx << ", " << qy << ", " << qz << ", " << qw << "];";
 
-      // Long/Lat to UTM
-      // const double longitude = gps_data_->xcominsSol.dPos[0] * 180.0 / M_PI;
-      // const double latitude = gps_data_->xcominsSol.dPos[1] * 180.0 / M_PI;
-      // int zone;
-      // bool northp;
-      // double x, y;
-      // GeographicLib::UTMUPS::Forward(latitude, longitude, zone, northp, x,
-      // y);
-      // //string zonestr = GeographicLib::UTMUPS::EncodeZone(zone, northp);
-      // //for debugging
+      // No transformation, done on the inat device
+      vx = gps_data_->xcominsSol.fVel[0];
+      vy = gps_data_->xcominsSol.fVel[1];
+      vz = gps_data_->xcominsSol.fVel[2];
 
+      // Transform from Long/Lat to UTM
       apollo::localization::msf::UTMCoor utm_xy;
       apollo::localization::msf::FrameTransform::LatlonToUtmXY(
           gps_data_->xcominsSol.dPos[0], gps_data_->xcominsSol.dPos[1],
           &utm_xy);
-
-      // TODO test and cleanup!!!!!
-
-      posx = utm_xy.x + imar_conf_.x_lever();
-      posy = utm_xy.y + imar_conf_.y_lever();
-      posz = static_cast<double>(gps_data_->xcominsSol.fAlt) +
-             imar_conf_.z_lever();
+      posx = utm_xy.x;
+      posy = utm_xy.y;
+      posz = static_cast<double>(gps_data_->xcominsSol.fAlt);
     }
 
-  } else  // irregular case, i.e. in garage
-  {
+  } else {  // irregular case, i.e. in garage
     new_gnss_data = true;
-    AERROR << "Mode[!gps_available] ... integrating inertia values to "
-              "calculate pose";
 
     if (previous_gps_message_ == nullptr) {
       previous_gps_message_ = std::make_shared<apollo::localization::Gps>();
@@ -257,45 +241,40 @@ void ImarEthernet::PublishSensorData() {
         prev_quaternion->qx(), prev_quaternion->qy(), prev_quaternion->qz(),
         prev_quaternion->qw());
 
-    roll =
+    double roll =
         prev_roll +
         previous_imu_pose->mutable_angular_velocity()->x() *
             dt;  // +
                  // 0.5*previous_imu_pose->mutable_angular_acceleration()->x()*dt*dt;
-    pitch =
+    double pitch =
         prev_pitch +
         previous_imu_pose->mutable_angular_velocity()->y() *
             dt;  // +
                  // 0.5*previous_imu_pose->mutable_angular_acceleration()->y()*dt*dt;
-    yaw =
+    double yaw =
         prev_yaw +
         previous_imu_pose->mutable_angular_velocity()->z() *
             dt;  // +
                  // 0.5*previous_imu_pose->mutable_angular_acceleration()->z()*dt*dt;
+
+    tie(qx, qy, qz, qw) = ConvertEulerAnglesToQuaternion(yaw, roll, pitch);
   }
 
   if (new_gnss_data) {
-    tie(qx, qy, qz, qw) = ConvertEulerAnglesToQuaternion(yaw, roll, pitch);
-
     pose->mutable_orientation()->set_qx(qx);
     pose->mutable_orientation()->set_qy(qy);
     pose->mutable_orientation()->set_qz(qz);
     pose->mutable_orientation()->set_qw(qw);
 
-    pose->mutable_position()->set_x(posx);  // x
-    pose->mutable_position()->set_y(posy);  // y
-    pose->mutable_position()->set_z(posz);  // z
+    pose->mutable_position()->set_x(posx);
+    pose->mutable_position()->set_y(posy);
+    pose->mutable_position()->set_z(posz);
 
-    pose->mutable_linear_velocity()->set_x(vx);  // x
-    pose->mutable_linear_velocity()->set_y(vy);  // y
-    pose->mutable_linear_velocity()->set_z(vz);  // z
+    pose->mutable_linear_velocity()->set_x(vx);
+    pose->mutable_linear_velocity()->set_y(vy);
+    pose->mutable_linear_velocity()->set_z(vz);
 
-    // AERROR << "pose ready to be sent, pose.x=" <<
-    // pose->mutable_position()->x();
-
-    if (gps_writer_->Write(gps)) {
-      AINFO << "sent gps message!";
-    } else {
+    if (!gps_writer_->Write(gps)) {
       AERROR << "failed to send gps message!";
     }
   }
@@ -303,8 +282,8 @@ void ImarEthernet::PublishSensorData() {
   //! IMU
   using apollo::localization::CorrectedImu;
   auto imu = std::make_shared<CorrectedImu>();
-  double unix_sec_imu = cyber::Time::Now().ToSecond();
-  imu->mutable_header()->set_timestamp_sec(unix_sec_imu);
+  // use gps timestamp here to make sure IMU and GPS have exactly the same time
+  imu->mutable_header()->set_timestamp_sec(unix_sec_gps);
   auto *imu_pose = imu->mutable_imu();
   bool new_imu_data = false;
 
@@ -312,33 +291,48 @@ void ImarEthernet::PublishSensorData() {
     if ((old_acceleration_[0] != gps_data_->xcominsSol.fAcc[0]) ||
         (old_acceleration_[1] != gps_data_->xcominsSol.fAcc[1]) ||
         (old_acceleration_[2] != gps_data_->xcominsSol.fAcc[2])) {
-      // AERROR << "old acc0: " << old_acceleration_[0] << " old acc1: " <<
-      // old_acceleration_[1] << " old acc2 " << old_acceleration_[2] << "\n";
-      // //TODO
       new_imu_data = true;
       old_acceleration_[0] = gps_data_->xcominsSol.fAcc[0];
       old_acceleration_[1] = gps_data_->xcominsSol.fAcc[1];
       old_acceleration_[2] = gps_data_->xcominsSol.fAcc[2];
 
-      imu_pose->mutable_angular_velocity()->set_x(
-          gps_data_->xcominsSol.fOmg[0]);  // x
-      imu_pose->mutable_angular_velocity()->set_y(
-          gps_data_->xcominsSol.fOmg[1]);  // y
-      imu_pose->mutable_angular_velocity()->set_z(
-          gps_data_->xcominsSol.fOmg[2]);  // z
+      // Rotation matrix to rotate acc vector and angular velocity vector from
+      // body frame to ENU frame
 
-      imu_pose->mutable_linear_acceleration()->set_x(
-          gps_data_->xcominsSol.fAcc[0]);  // x
-      imu_pose->mutable_linear_acceleration()->set_y(
-          gps_data_->xcominsSol.fAcc[1]);  // y
-      imu_pose->mutable_linear_acceleration()->set_z(
-          gps_data_->xcominsSol.fAcc[2]);  // z
+      // Rotate rotation matrix from North/East/Down to East/North/Up
+      float roll = gps_data_->xcominsSol.fRPY[1];
+      float pitch = gps_data_->xcominsSol.fRPY[0];
+      float yaw = -gps_data_->xcominsSol.fRPY[2];
+
+      // TODO the accelerations are currently not translated into the vehicle
+      // reference point (for position and speed, this is done on the imar
+      // device!)
+
+      // Rotated Acceleration from iNat Body Frame to Forward/left/up
+      const double a_trans_x = -gps_data_->xcominsSol.fAcc[1];
+      const double a_trans_y = gps_data_->xcominsSol.fAcc[0];
+      const double a_trans_z = gps_data_->xcominsSol.fAcc[2];
+
+      // TODO I am not sure about this transformation
+      const double ang_vel_trans_x = gps_data_->xcominsSol.fOmg[0];
+      const double ang_vel_trans_y = -gps_data_->xcominsSol.fOmg[1];
+      const double ang_vel_trans_z = -gps_data_->xcominsSol.fOmg[2];
+
+      // Fill msg
+      imu_pose->mutable_angular_velocity()->set_x(ang_vel_trans_x);
+      imu_pose->mutable_angular_velocity()->set_y(ang_vel_trans_y);
+      imu_pose->mutable_angular_velocity()->set_z(ang_vel_trans_z);
+
+      imu_pose->mutable_linear_acceleration()->set_x(a_trans_x);
+      imu_pose->mutable_linear_acceleration()->set_y(a_trans_y);
+      imu_pose->mutable_linear_acceleration()->set_z(a_trans_z);
+
+      imu_pose->mutable_euler_angles()->set_x(roll);
+      imu_pose->mutable_euler_angles()->set_y(pitch);
+      imu_pose->mutable_euler_angles()->set_z(yaw);
     }
-  } else  // irregular case, i.e. in garage
-  {
+  } else {  // irregular case, i.e. in garage
     new_imu_data = true;
-    // AERROR << "Mode[!gps_available] ... integrating inertia values to
-    // calculate imu_pose";
 
     imu_pose->mutable_angular_velocity()->set_x(
         gps_data_->xcomimuComp.fOmg[0]);  // x
@@ -355,26 +349,20 @@ void ImarEthernet::PublishSensorData() {
         gps_data_->xcomimuComp.fAcc[2]);  // z
   }
 
-  // AERROR << "imu_pose ready to be send, imu_pose.ax = " <<
-  // imu_pose->mutable_linear_acceleration()->x();
-
   if (new_imu_data) {
-    if (imu_writer_->Write(imu)) {
-      AINFO << "sent imu message!";
-    } else {
+    if (!imu_writer_->Write(imu)) {
       AERROR << "failed to send imu message!";
     }
   }
 
   if (new_gnss_data || new_imu_data) {
     auto ins_status = std::make_shared<apollo::drivers::gnss::InsStat>();
-    ins_status->mutable_header()->set_timestamp_sec(unix_sec_imu);
+    ins_status->mutable_header()->set_timestamp_sec(unix_sec_gps);
     // TODO: also set status fields?
     gnss_ins_status_writer_->Write(ins_status);
   }
 
   // save messages
-  // AERROR << "Last action: saving previous messages of gps and imu";
   previous_gps_message_ = gps;
   previous_imu_message_ = imu;
 }
@@ -384,17 +372,14 @@ void ImarEthernet::ImarSpin() {
     //! read data from UDP socket
     if (-1 != p_ins_->getUdpUseData(gps_data_)) {
       if (true) {
-        // AERROR << "---------------- THE NEXT SPIN
-        // ------------------------------\n"; //TODO
         if (old_frame_count_ != gps_data_->xcominsSol.tHeader.ucFrameCnt) {
           old_frame_count_ = gps_data_->xcominsSol.tHeader.ucFrameCnt;
           // AERROR << "old frame cout is: " << old_frame_count_ <<"\n"; //TODO
-          AINFO << "Publishing NEW sensor data \n";
+          // AINFO << "Publishing NEW sensor data \n";
           PublishSensorData();
         }
       }
     }
-    // sleep(1); // TO remove if stable
   }
 }
 

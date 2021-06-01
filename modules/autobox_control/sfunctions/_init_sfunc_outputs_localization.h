@@ -127,9 +127,10 @@ void fill_outputs_localization(SimStruct* S, Apollo__Localization__LocalizationT
 
 //!!!!ADD FILLING MANUALLY !!!!
 	
-	if(apollo_msg->has_measurement_time)
+	// use timestamp from header as measurement time is not present in apollo 5.5
+	if(apollo_msg->header->has_timestamp_sec)
 	{
-		DOUBLE_CAST(*port_measurement_time, &apollo_msg->measurement_time);
+		DOUBLE_CAST(*port_measurement_time, &apollo_msg->header->timestamp_sec);
 	}
 	
 	if(apollo_msg->pose->orientation->has_qy)

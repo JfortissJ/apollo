@@ -24,9 +24,6 @@
 #include "absl/strings/str_cat.h"
 #include "cyber/common/file.h"
 #include "gtest/gtest_prod.h"
-
-#include "modules/routing/proto/routing.pb.h"
-
 #include "modules/common/math/quaternion.h"
 #include "modules/common/time/time.h"
 #include "modules/common/vehicle_state/vehicle_state_provider.h"
@@ -37,11 +34,13 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/common/trajectory_stitcher.h"
 #include "modules/planning/common/util/util.h"
+#include "modules/planning/constraint_checker/collision_checker.h"
 #include "modules/planning/planner/rtk/rtk_replay_planner.h"
 #include "modules/planning/proto/planning_internal.pb.h"
 #include "modules/planning/reference_line/reference_line_provider.h"
 #include "modules/planning/tasks/task_factory.h"
 #include "modules/planning/traffic_rules/traffic_decider.h"
+#include "modules/routing/proto/routing.pb.h"
 
 namespace apollo {
 namespace planning {
@@ -208,9 +207,14 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
   VehicleState vehicle_state =
       VehicleStateProvider::Instance()->vehicle_state();
   const double vehicle_state_timestamp = vehicle_state.timestamp();
-  DCHECK_GE(start_timestamp, vehicle_state_timestamp)
-      << "start_timestamp is behind vehicle_state_timestamp by "
-      << start_timestamp - vehicle_state_timestamp << " secs";
+  std::stringstream debug_timing;
+  debug_timing << "start_timestamp and vehicle_state_timestamp diff is "
+               << start_timestamp - vehicle_state_timestamp << " secs";
+  if (fabs(start_timestamp - vehicle_state_timestamp) > 1) {
+    AERROR << debug_timing.str();
+  } else {
+    AINFO << debug_timing.str();
+  }
 
   if (!status.ok() || !util::IsVehicleStateValid(vehicle_state)) {
     std::string msg(
@@ -586,16 +590,71 @@ Status OnLanePlanning::Plan(
       }
     }
 
-    last_publishable_trajectory_.reset(new PublishableTrajectory(
-        current_time_stamp, best_ref_info->trajectory()));
+    if (FLAGS_always_update_trajectory || status.ok()) {
+      // Default apollo behavior OR successfull planning
+      UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
+                                      stitching_trajectory, ptr_trajectory_pb);
+    } else {
+      const double remaining_length =
+          last_publishable_trajectory_.get()->back().path_point().s() -
+          stitching_trajectory.back().path_point().s();
+      const double remaining_time =
+          last_publishable_trajectory_.get()->back().relative_time() -
+          stitching_trajectory.back().relative_time();
 
-    ADEBUG << "current_time_stamp: " << current_time_stamp;
+      const auto& vehicle_config =
+          common::VehicleConfigHelper::Instance()->GetConfig();
+      const double ego_length = vehicle_config.vehicle_param().length();
+      const double ego_width = vehicle_config.vehicle_param().width();
+      const double ego_back_edge_to_center =
+          vehicle_config.vehicle_param().back_edge_to_center();
 
-    last_publishable_trajectory_->PrependTrajectoryPoints(
-        std::vector<TrajectoryPoint>(stitching_trajectory.begin(),
-                                     stitching_trajectory.end() - 1));
+      std::vector<const Obstacle*> obstacles_non_virtual;
+      for (const Obstacle* obstacle : frame_.get()->obstacles()) {
+        if (!obstacle->IsVirtual()) {
+          obstacles_non_virtual.push_back(obstacle);
+        }
+      }
+      const DiscretizedTrajectory* old_traj =
+          last_publishable_trajectory_.get();
+      // only use future part of the old traj for collision checking
+      // size_t first_idx_greater;
+      // for (size_t idx = 0; idx < last_publishable_trajectory_->size(); ++idx)
+      // {
+      //   if (last_publishable_trajectory_->at(idx).relative_time() >= 0.0) {
+      //     if (idx == 0) {
+      //       first_idx_greater = 0;
+      //     } else {
+      //       first_idx_greater = idx - 1;
+      //     }
+      //     break;
+      //   }
+      // }
+      // DiscretizedTrajectory old_traj;
+      // old_traj.PrependTrajectoryPoints(std::vector<TrajectoryPoint>(
+      //     last_publishable_trajectory_->begin() + first_idx_greater,
+      //     last_publishable_trajectory_->end() - 1));
+      const bool obstacle_collision = CollisionChecker::InCollision(
+          obstacles_non_virtual, *old_traj, ego_length, ego_width,
+          ego_back_edge_to_center);
 
-    last_publishable_trajectory_->PopulateTrajectoryProtobuf(ptr_trajectory_pb);
+      AINFO << "remaining length = " << remaining_length
+            << " remaining time = " << remaining_time
+            << " obstacle_collision = " << obstacle_collision;
+      if (remaining_length < 1 || remaining_time < 1 || obstacle_collision) {
+        // if traj_old is too short / too old / colliding -> Emergency Stop
+        AERROR << "Sending Emergency Stop Trajectory";
+        GenerateStopTrajectory(ptr_trajectory_pb);
+        UpdateLastPublishableTrajectory(current_time_stamp, best_ref_info,
+                                        stitching_trajectory,
+                                        ptr_trajectory_pb);
+      } else {
+        // else: reuse old trajectory -> do not publish a new traj
+        AERROR << "Reusing old Trajectory...";
+        publish_trajectory_ = false;
+        // status = Status::OK();
+      }
+    }
 
     best_ref_info->ExportEngageAdvice(
         ptr_trajectory_pb->mutable_engage_advice());
@@ -1144,6 +1203,21 @@ void OnLanePlanning::AddPublishedAcceleration(
   (*sliding_line_properties)["lineTension"] = "0";
   (*sliding_line_properties)["fill"] = "false";
   (*sliding_line_properties)["showLine"] = "true";
+}
+
+void OnLanePlanning::UpdateLastPublishableTrajectory(
+    const double& current_time_stamp,
+    const apollo::planning::ReferenceLineInfo* best_ref_info,
+    const std::vector<apollo::common::TrajectoryPoint>& stitching_trajectory,
+    apollo::planning::ADCTrajectory* const ptr_trajectory_pb) {
+  last_publishable_trajectory_.reset(new PublishableTrajectory(
+      current_time_stamp, best_ref_info->trajectory()));
+  ADEBUG << "current_time_stamp: " << current_time_stamp;
+  last_publishable_trajectory_->PrependTrajectoryPoints(
+      std::vector<TrajectoryPoint>(stitching_trajectory.begin(),
+                                   stitching_trajectory.end() - 1));
+  last_publishable_trajectory_->PopulateTrajectoryProtobuf(ptr_trajectory_pb);
+  publish_trajectory_ = true;
 }
 
 }  // namespace planning

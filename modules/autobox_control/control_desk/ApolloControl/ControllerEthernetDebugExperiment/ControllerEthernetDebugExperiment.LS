@@ -2,7 +2,7 @@
 <Root>
 	<ProjectExperiment>
 		<window>
-			<RelativeDocumentPlacement type="key">1:m 0 Instrumentation|530257e0-9dd7-4c8c-af26-acdb51a53091/0:m 1 Instrumentation|010867e6-b1d4-4361-8dca-43a159e6a62c/5:</RelativeDocumentPlacement>
+			<RelativeDocumentPlacement type="key">1:m 2 Instrumentation|010867e6-b1d4-4361-8dca-43a159e6a62c/5:m 1 Instrumentation|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3:m 3 Instrumentation|aee80459-8c13-4109-a330-2a68a57f77a0/4:m 4 Instrumentation|016c5644-2fc0-4e7f-ba67-9069195da219/1:m 0 Instrumentation|530257e0-9dd7-4c8c-af26-acdb51a53091/0:m 5 Instrumentation|94280714-a281-4583-9879-7045e11ef700/6:</RelativeDocumentPlacement>
 		</window>
 		<viewflags>
 			<Name type="key">ControllerEthernetDebugExperiment.CDE</Name>
@@ -25,18 +25,150 @@
 						<Name type="key">Initialize_Status.lay</Name>
 						<ViewFlags type="key">1</ViewFlags>
 					</item>
+					<item>
+						<Name type="key">Controller_outputs.lay</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">SystemStatus.lay</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">ReferencePoint.lay</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">ApolloControl.lay</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
 				</item>
 				<item>
 					<Name type="key">Hardware Configurations</Name>
 					<ViewFlags type="key">1</ViewFlags>
 					<item>
-						<Name type="key">b7b74479-35ed-4550-8d88-e3259a5b257b</Name>
-						<ViewFlags type="key">1</ViewFlags>
+						<Name type="key">79578c82-be87-4e0f-ae59-44e7f9891b9e</Name>
+						<ViewFlags type="key">65</ViewFlags>
 						<item>
 							<Name type="key">autoboxmodel.sdf</Name>
 							<ViewFlags type="key">5</ViewFlags>
 							<item>
+								<Name type="key">rec1_115.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_116.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_117.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_118.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_119.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_120.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_121.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_122.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_123.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_124.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_125.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_126.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_127.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_128.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_129.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_130.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_131.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
 								<Name type="key">Data Sets</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_132.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_133.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_134.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_135.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_136.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_137.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_138.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_139.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_140.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_141.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_142.mf4</Name>
+								<ViewFlags type="key">1</ViewFlags>
+							</item>
+							<item>
+								<Name type="key">rec1_143.mf4</Name>
 								<ViewFlags type="key">1</ViewFlags>
 							</item>
 						</item>
@@ -49,6 +181,122 @@
 				<item>
 					<Name type="key">Measurement Data</Name>
 					<ViewFlags type="key">1</ViewFlags>
+					<item>
+						<Name type="key">rec1_115.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_116.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_117.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_118.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_119.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_120.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_121.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_122.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_123.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_124.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_125.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_126.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_127.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_128.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_129.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_130.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_131.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_132.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_133.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_134.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_135.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_136.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_137.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_138.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_139.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_140.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_141.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_142.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
+					<item>
+						<Name type="key">rec1_143.mf4</Name>
+						<ViewFlags type="key">1</ViewFlags>
+					</item>
 				</item>
 				<item>
 					<Name type="key">Reports</Name>
@@ -81,14 +329,14 @@
 			</item>
 		</viewflags>
 	</ProjectExperiment>
-	<XILAPIEESPort>
-		<ErrorConfigurationDocuments Version="1"/>
-	</XILAPIEESPort>
 	<SignalEditor>
 		<OpenSignalDescriptionSets Version="1"/>
 		<OpenSignalGenerators Version="1"/>
 		<Documents Version="1"/>
 	</SignalEditor>
+	<BusNavigator>
+		<Documents Version="1"/>
+	</BusNavigator>
 	<Interpreter Version="2">
 		<Project>
 			<ScriptCount type="key">0</ScriptCount>
@@ -100,14 +348,26 @@
 	<Instrumentation>
 		<Layouts Version="3">
 			<Layout1>
-				<Data type="key">Ethernet.lay|1|530257e0-9dd7-4c8c-af26-acdb51a53091/0|1:sm:mm 182 182 1820 669 -1 -1:</Data>
+				<Data type="key">Ethernet.lay|1|530257e0-9dd7-4c8c-af26-acdb51a53091/0|1:sm:mm 182 182 1780 669 -1 -1:</Data>
 			</Layout1>
 			<Layout2>
-				<Data type="key">Initialize_Status.lay|1|010867e6-b1d4-4361-8dca-43a159e6a62c/5|1:sm:mm 208 208 1866 691 -1 -1:</Data>
+				<Data type="key">Initialize_Status.lay|1|010867e6-b1d4-4361-8dca-43a159e6a62c/5|1:sm:mm 208 208 1806 691 -1 -1:</Data>
 			</Layout2>
+			<Layout3>
+				<Data type="key">Controller_outputs.lay|1|016c5644-2fc0-4e7f-ba67-9069195da219/1|1:sm:mm 78 78 1378 506 -1 -1:</Data>
+			</Layout3>
+			<Layout4>
+				<Data type="key">SystemStatus.lay|1|f7485f7c-f1b2-41d8-bcd7-b8992130a66d/3|1:sm:mm 104 104 1404 532 -1 -1:</Data>
+			</Layout4>
+			<Layout5>
+				<Data type="key">ReferencePoint.lay|1|aee80459-8c13-4109-a330-2a68a57f77a0/4|1:sm:mm 130 130 1430 558 -1 -1:</Data>
+			</Layout5>
+			<Layout6>
+				<Data type="key">ApolloControl.lay|1|94280714-a281-4583-9879-7045e11ef700/6|1:sm:mm 156 156 1456 584 -1 -1:</Data>
+			</Layout6>
 		</Layouts>
 	</Instrumentation>
-	<BusNavigator>
-		<Documents Version="1"/>
-	</BusNavigator>
+	<XILAPIEESPort>
+		<ErrorConfigurationDocuments Version="1"/>
+	</XILAPIEESPort>
 </Root>

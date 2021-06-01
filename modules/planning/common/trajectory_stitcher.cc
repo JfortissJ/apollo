@@ -128,6 +128,10 @@ std::vector<TrajectoryPoint> TrajectoryStitcher::ComputeStitchingTrajectory(
     return ComputeReinitStitchingTrajectory(planning_cycle_time, vehicle_state);
   }
 
+  if (vehicle_state.linear_velocity() < FLAGS_replan_standstill_velocity_threshold) {
+    *replan_reason = "replan due to standstill.";
+    return ComputeReinitStitchingTrajectory(planning_cycle_time, vehicle_state);
+  }
   if (vehicle_state.driving_mode() != canbus::Chassis::COMPLETE_AUTO_DRIVE) {
     *replan_reason = "replan for manual mode.";
     return ComputeReinitStitchingTrajectory(planning_cycle_time, vehicle_state);

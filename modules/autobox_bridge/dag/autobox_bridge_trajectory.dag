@@ -5,7 +5,7 @@ module_config {
         config {
             name: "AutoBox_Bridge_Trajectory"
             config_file_path:  "/apollo/modules/autobox_bridge/conf/autobox_bridge_conf.pb.txt"
-            interval: 1000
+            interval: 100
             }
         }
     }

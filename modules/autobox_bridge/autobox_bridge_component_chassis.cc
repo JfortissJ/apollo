@@ -65,7 +65,8 @@ bool AutoBoxBridgeComponent_CHASSIS::Init() {
   return true;
 }
 bool AutoBoxBridgeComponent_CHASSIS::Proc() {
- publishChassis();
+  std::lock_guard<std::mutex> lock(chassis_cmd_mutex_);
+  publishChassis();
   return true;
 }
 

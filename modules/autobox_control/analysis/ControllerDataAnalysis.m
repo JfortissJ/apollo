@@ -40,6 +40,13 @@ classdef ControllerDataAnalysis  < PlotBase
 				[~, ~, ext] = fileparts(res_);
 				if strcmp(ext,'.mat') %a ControlDesk Log
 					self.res = readControlDeskRecordings(res_);
+                    %postprocess to new control desk logger
+                    if isfield(self.res,'LocalizationBus')
+                        self.res.Localization = self.res.LocalizationBus;
+                    end
+                    if isfield(self.res,'TrajectoryBus')
+                        self.res.Trajectory = self.res.TrajectoryBus;
+                    end
 				else
 					error('If you pass a string it has to be a filename. MAT files will be interpreted as ControlDesk Logs, CSV files as ADTF SignalLogs.');
                 end
@@ -50,6 +57,7 @@ classdef ControllerDataAnalysis  < PlotBase
 			end
 			self.setPlotStructName({'res'});
 			calcActive(self);
+            isValid(self);
         end
         
         %% Destructor
@@ -67,7 +75,18 @@ classdef ControllerDataAnalysis  < PlotBase
         function calcActive(self)
             self.active = 1:length(self.res.Time);
         end
-		
+        
+        %% Check if control desk log is not broken
+        function isValid(self)
+           if(sum(self.res.Localization.MeasurementTime) == 0 && ...
+              sum(self.res.ControlBus.timestamp_sec) == 0 && ...
+              sum(self.res.Trajectory.timestamp_sec) == 0)
+               disp('!! All data zero!');
+           end
+           if(length(self.res.Localization.MeasurementTime) == 1)
+               disp('!! Log empty!');
+           end
+        end
 		
 		%% Acc Steer
         function plotAccSteer(self)
@@ -78,14 +97,26 @@ classdef ControllerDataAnalysis  < PlotBase
            subplot(2,1,1);
            hold on
            title('acc');
-           acc = sqrt(self.res.Localization.Pose.LinearAcceleration.x.^2+self.res.Localization.Pose.LinearAcceleration.y.^2);
+           %acc = sqrt(self.res.Localization.Pose.LinearAcceleration.x.^2+self.res.Localization.Pose.LinearAcceleration.y.^2);
+           acc = self.res.Localization.Pose.LinearAcceleration.x./cos(self.res.Localization.Pose.Heading);
            plot(self.res.Time(self.active), acc(self.active));
-%            plot(self.res.Time(self.active), self.res.CustomerCanData.Acceleration_Interface.AccelerationRequest(self.active));
+           plot(self.res.Time(self.active), self.res.VehicleDataCan.Motion.LongitudinalAcceleration(self.active));
+           plot(self.res.Time(self.active), self.res.acc_limited(self.active));
+           plot(self.res.Time(self.active), self.res.controller_active(self.active));
+           legend('ist loca', 'ist can', 'control command', 'controller active')
            
            subplot(2,1,2);
            hold on
            title('steering')
-           plot(self.res.Time(self.active), self.res.CustomerCanData.Steering_Interface.SteeringAngleRequest(self.active));
+           steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 852.7216;
+           steer = self.res.VehicleDataCan.Steering.SteeringWheelAngle(self.active)/steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain;
+           sign=cast(self.res.VehicleDataCan.Steering.SteeringWheelAngleSign(self.active),'like', steer);
+           sign(sign==1) = -1;
+           sign(sign==0) = 1;
+           plot(self.res.Time(self.active), steer.*sign);
+           plot(self.res.Time(self.active), self.res.steering_angle_limited(self.active));
+           plot(self.res.Time(self.active), self.res.controller_active(self.active));
+           legend('can', 'control command', 'controller active')
         end
         
         %% Loca
@@ -112,8 +143,11 @@ classdef ControllerDataAnalysis  < PlotBase
            hold on
            title('v')
            v = sqrt(self.res.Localization.Pose.LinearVelocity.x(self.active).^2 + self.res.Localization.Pose.LinearVelocity.y(self.active).^2);
-           %plot(self.res.Time(self.active), v);
-           plot(v);
+           v1 = self.res.Localization.Pose.LinearVelocity.x(self.active)./cos(self.res.Localization.Pose.Heading(self.active));
+           v2 = self.res.Localization.Pose.LinearVelocity.y(self.active)./sin(self.res.Localization.Pose.Heading(self.active));
+           plot(self.res.Time(self.active), v);
+           plot(self.res.Time(self.active), v1);
+           plot(self.res.Time(self.active), v2);
            
            subplot(5,1,5);
            hold on
@@ -150,7 +184,59 @@ classdef ControllerDataAnalysis  < PlotBase
            
         end
         
+        function plotLocaVsReference(self)
+            self.doNextPlot(); clf; hold on;
+           set(gcf, 'Name', 'Localization vs. Reference');
+           
+           subplot(5,1,1);
+           hold on
+           title('x');
+           plot(self.res.Time(self.active), self.res.Localization.Pose.Position.x(self.active));
+           plot(self.res.Time(self.active), self.res.ReferencePoint.x(self.active));
+           legend('Loca', 'Ref');
+           
+           subplot(5,1,2);
+           hold on
+           title('y')
+           plot(self.res.Time(self.active), self.res.Localization.Pose.Position.y(self.active));
+           plot(self.res.Time(self.active), self.res.ReferencePoint.y(self.active));
+           legend('Loca', 'Ref');
+           
+           subplot(5,1,3);
+           hold on
+           title('theta')
+           plot(self.res.Time(self.active), wrapTo2Pi(self.res.Localization.Pose.Heading(self.active)));
+           plot(self.res.Time(self.active), wrapTo2Pi(self.res.ReferencePoint.theta(self.active)));
+           legend('Loca', 'Ref');
+           
+           subplot(5,1,4);
+           hold on
+           title('v')
+           v = sqrt(self.res.Localization.Pose.LinearVelocity.x(self.active).^2 + self.res.Localization.Pose.LinearVelocity.y(self.active).^2);
+           plot(self.res.Time(self.active), v);
+           plot(self.res.Time(self.active), self.res.ReferencePoint.v(self.active));
+           legend('Loca', 'Ref');
+           
+           subplot(5,1,5);
+           hold on
+           title('kappa')
+           ss = self.res.VehicleDataCan.Steering.SteeringWheelAngleSign;
+           kappa_is = tan(self.res.VehicleDataCan.Steering.SteeringWheelAngle./852.7216)./2.786;
+           kappa_is(ss==true) = -kappa_is(ss==true);
+           plot(self.res.Time(self.active), kappa_is);
+           plot(self.res.Time(self.active), self.res.ReferencePoint.kappa(self.active));
+           legend('CAN', 'Ref');
+           
+           
+        end
+        
         %% Trajectory
+        function plotTrajectoryRangeFromTime(self, starttime, endtime)
+            idx0 = self.getIdxFromTime(starttime);
+            idx1 = self.getIdxFromTime(endtime);
+            self.plotTrajectoryRange([idx0:idx1]);
+        end
+        
         function plotTrajectoryRange(self, number_trajectory_range)
            self.doNextPlot(); clf; hold on;
            set(gcf, 'Name', 'Trajectory1');
@@ -159,86 +245,149 @@ classdef ControllerDataAnalysis  < PlotBase
            self.doNextPlot(); clf; hold on;
            set(gcf, 'Name', 'Trajectory2');
            h2 = gcf;
+           
+           x_offset = self.res.Localization.Pose.Position.x(number_trajectory_range(1));
+           y_offset = self.res.Localization.Pose.Position.y(number_trajectory_range(1));
 
 %            number_trajectory = 200; % i.e. first trajectory that get's published
             for number_trajectory = number_trajectory_range
-               initial_time = self.res.Trajectory.timestamp_sec(number_trajectory);
-               nr_points = self.res.Trajectory.n_trajectory_point(number_trajectory);
-
-
-               relative_time = zeros(1,nr_points);
-               x = zeros(1,nr_points);
-               y = zeros(1,nr_points);
-               theta = zeros(1,nr_points);
-               velocity = zeros(1,nr_points);
-               a = zeros(1,nr_points);
-               kappa = zeros(1, nr_points);
-               dkappa = zeros(1,nr_points);
-               for i=1:nr_points
-                   number = ['i',num2str(i-1,'%03d')];
-                   relative_time(i) = self.res.Trajectory.relative_time.(number)(number_trajectory);
-                   x(i) = self.res.Trajectory.x.(number)(number_trajectory);
-                   y(i) = self.res.Trajectory.y.(number)(number_trajectory);
-                   theta(i) = self.res.Trajectory.theta.(number)(number_trajectory);
-                   velocity(i) = self.res.Trajectory.v.(number)(number_trajectory);
-                   a(i) = self.res.Trajectory.a.(number)(number_trajectory);
-                   kappa(i) = self.res.Trajectory.kappa.(number)(number_trajectory);
-                   dkappa(i) = self.res.Trajectory.dkappa.(number)(number_trajectory);
-               end
+                
+               if iscell(self.res.Trajectory)
+                % data from apollo bag
+                
+                   initial_time = self.res.Trajectory{number_trajectory}.initial_time(1);
+                   relative_time = self.res.Trajectory{number_trajectory}.relative_time;
+                   
+                   x= self.res.Trajectory{number_trajectory}.x;
+                   y = self.res.Trajectory{number_trajectory}.y;
+                   theta= self.res.Trajectory{number_trajectory}.theta;
+                   velocity = self.res.Trajectory{number_trajectory}.v;
+                   a = self.res.Trajectory{number_trajectory}.a;
+                   kappa = self.res.Trajectory{number_trajectory}.kappa;
+                   dkappa = self.res.Trajectory{number_trajectory}.dkappa;
+                   
+                   idx_L = find(self.res.Localization.MeasurementTime>initial_time(1));
+                   idx_matched_traj = idx_L(1);
+                   loca_x = self.res.Localization.Pose.Position.x(idx_matched_traj);
+                   loca_y = self.res.Localization.Pose.Position.y(idx_matched_traj);
+                   loca_v = sqrt(self.res.Localization.Pose.LinearVelocity.x(idx_matched_traj)^2+...
+                       self.res.Localization.Pose.LinearVelocity.y(idx_matched_traj)^2);
+                   loca_theta = self.res.Localization.Pose.Heading(idx_matched_traj);
+                   loca_a = self.res.Localization.Pose.LinearAcceleration.x(idx_matched_traj)/cos(loca_theta);
+                   loca_time = self.res.Localization.MeasurementTime(idx_matched_traj);
                
+               else
+                   initial_time = self.res.Trajectory.timestamp_sec(number_trajectory);
+                   nr_points = self.res.Trajectory.n_trajectory_point(number_trajectory);
+
+                   loca_x = self.res.Localization.Pose.Position.x(number_trajectory);
+                   loca_y = self.res.Localization.Pose.Position.y(number_trajectory);
+                   loca_v = sqrt(self.res.Localization.Pose.LinearVelocity.x(number_trajectory)^2+...
+                        self.res.Localization.Pose.LinearVelocity.y(number_trajectory)^2);
+                   loca_theta = self.res.Localization.Pose.Heading(number_trajectory);
+                   loca_a = self.res.Localization.Pose.LinearAcceleration.x(number_trajectory)/cos(loca_theta);
+                   loca_time = self.res.Localization.MeasurementTime(number_trajectory);
+                    
+                   ref_time = ...
+                       ((self.res.time_larger(number_trajectory) - self.res.time_smaller(number_trajectory)).*self.res.interp_factor(number_trajectory)) + ...
+                       self.res.time_smaller(number_trajectory) + initial_time;
+                   ref_x = self.res.ReferencePoint.x(number_trajectory);
+                   ref_y = self.res.ReferencePoint.y(number_trajectory);
+                   ref_v = self.res.ReferencePoint.v(number_trajectory);
+                   ref_theta = self.res.ReferencePoint.theta(number_trajectory);
+                   ref_kappa = self.res.ReferencePoint.kappa(number_trajectory);
+                   ref_a = self.res.ReferencePoint.a(number_trajectory);
+                   
+                   
+                   relative_time = zeros(1,nr_points);
+                   x = zeros(1,nr_points);
+                   y = zeros(1,nr_points);
+                   theta = zeros(1,nr_points);
+                   velocity = zeros(1,nr_points);
+                   a = zeros(1,nr_points);
+                   kappa = zeros(1, nr_points);
+                   dkappa = zeros(1,nr_points);
+                   for i=1:nr_points
+                       number = ['i',num2str(i-1,'%02d')]; %or 02d if 100pts
+                       relative_time(i) = self.res.Trajectory.relative_time.(number)(number_trajectory);
+                       x(i) = self.res.Trajectory.x.(number)(number_trajectory);
+                       y(i) = self.res.Trajectory.y.(number)(number_trajectory);
+                       theta(i) = self.res.Trajectory.theta.(number)(number_trajectory);
+                       velocity(i) = self.res.Trajectory.v.(number)(number_trajectory);
+                       a(i) = self.res.Trajectory.a.(number)(number_trajectory);
+                       kappa(i) = self.res.Trajectory.kappa.(number)(number_trajectory);
+                       dkappa(i) = self.res.Trajectory.dkappa.(number)(number_trajectory);
+                   end
+               end
+
                absolute_time = relative_time+initial_time;
                [~, ideal_idx]=find(relative_time+initial_time >= self.res.Localization.MeasurementTime(number_trajectory), 1, 'first');
                
                figure(h1)
                subplot(4,1,1); hold on
                plot(absolute_time,relative_time);
-               plot(absolute_time(ideal_idx), relative_time(ideal_idx), 'kx')
-               xlabel('abslute time')
+               xlabel('absolute time')
                ylabel('relative time')
                
                subplot(4,1,2); hold on
-               plot(absolute_time, x)
-               plot(absolute_time(ideal_idx), x(ideal_idx), 'kx')
+               plot(absolute_time, x-x_offset)
+               plot(ref_time, ref_x-x_offset, 'kx')
+               plot(loca_time, loca_x-x_offset, 'ko')
+               plot([loca_time, ref_time], [loca_x-x_offset, ref_x-x_offset], 'k-')
                ylabel('x')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,3); hold on
-               plot(absolute_time, y)
-               plot(absolute_time(ideal_idx), y(ideal_idx), 'kx')
+               plot(absolute_time, y-y_offset)
+               plot(ref_time, ref_y-y_offset, 'kx')
+               plot(loca_time, loca_y-y_offset, 'ko')
+               plot([loca_time, ref_time], [loca_y-y_offset, ref_y-y_offset], 'k-')
                ylabel('y')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,4); hold on
                plot(absolute_time, wrapTo2Pi(theta))
-               plot(absolute_time(ideal_idx), wrapTo2Pi(theta(ideal_idx)), 'kx')
+               plot(ref_time, wrapTo2Pi(ref_theta), 'kx')
+               plot(loca_time, wrapTo2Pi(loca_theta), 'ko')
+               plot([loca_time, ref_time], [wrapTo2Pi(loca_theta), wrapTo2Pi(ref_theta)], 'k-')
                ylabel('theta')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                figure(h2)
                
                subplot(4,1,1); hold on
                plot(absolute_time, velocity)
-               plot(absolute_time(ideal_idx), velocity(ideal_idx), 'kx')
+               plot(ref_time, ref_v, 'kx')
+               plot(loca_time, loca_v, 'ko')
+               plot([loca_time, ref_time], [loca_v, ref_v], 'k-')
                ylabel('v')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,2); hold on
                plot(absolute_time, a)
-               plot(absolute_time(ideal_idx), a(ideal_idx), 'kx')
+               plot(ref_time, ref_a, 'kx')
+               plot(loca_time, loca_a, 'ko')
+               plot([loca_time, ref_time], [loca_a, ref_a], 'k-')
                ylabel('a')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,3); hold on
                plot(absolute_time, kappa)
-               plot(absolute_time(ideal_idx), kappa(ideal_idx), 'kx')
+               plot(ref_time, ref_kappa, 'kx')
+               %compute loca kappa from loca?
+               ss = self.res.VehicleDataCan.Steering.SteeringWheelAngleSign(number_trajectory);
+               kappa_is = tan(self.res.VehicleDataCan.Steering.SteeringWheelAngle(number_trajectory)/852.7216)/2.786;
+               kappa_is(ss==true) = -kappa_is(ss==true);
+               plot(loca_time, kappa_is, 'ko')
+               plot([loca_time, ref_time], [kappa_is, ref_kappa], 'k-')
                ylabel('kappa')
-               xlabel('abslute time')
+               xlabel('absolute time')
                
                subplot(4,1,4); hold on
                plot(absolute_time, dkappa)
                plot(absolute_time(ideal_idx), dkappa(ideal_idx), 'kx')
                ylabel('dkappa')
-               xlabel('abslute time')
+               xlabel('absolute time')
             end
         end
         
@@ -249,10 +398,10 @@ classdef ControllerDataAnalysis  < PlotBase
            subplot(211); hold on
            t = self.res.Trajectory.timestamp_sec(:);
            t(t==0) = nan;
-           plot(self.res.Time(:), t);    
            l=self.res.Localization.MeasurementTime(:);
            l(l<=0.001) = nan;
-           plot(self.res.Time, l); 
+           plot(self.res.Time, t-l(1));    
+           plot(self.res.Time, l-l(1)); 
            subplot(212); hold on
            plot(self.res.Time(2:end), diff(t));
            plot(self.res.Time(2:end), diff(l));
@@ -268,6 +417,50 @@ classdef ControllerDataAnalysis  < PlotBase
            ss = self.res.VehicleDataCan.Steering.SteeringWheelAngleSign;
            s(ss==false) = -s(ss==false);
            plot(self.res.Time, s);        
+        end
+        
+        %% Tracking Error
+        function plotTrackingError(self)
+            self.doNextPlot(); clf; hold on;
+           set(gcf, 'Name', 'Tracking Errors');
+           subplot(411); hold on
+           plot(self.res.Time(self.active), self.res.TrackingError.e_n(self.active));
+           title('e_n')
+           subplot(412); hold on
+           plot(self.res.Time(self.active), self.res.TrackingError.e_t(self.active));
+           title('e_t')
+           subplot(413); hold on
+           plot(self.res.Time(self.active), self.res.TrackingError.e_psi(self.active));
+           title('e_psi')
+           subplot(414); hold on
+           plot(self.res.Time(self.active), self.res.TrackingError.e_v(self.active));
+           title('e_v')
+        end
+        %% Matching idxs
+        function plotMatchingIdxs(self)
+            self.doNextPlot(); clf; hold on;
+            plot(self.res.Time(self.active), self.res.idx_larger(self.active));
+            plot(self.res.Time(self.active), self.res.idx_smaller(self.active));
+            plot(self.res.Time(self.active), self.res.interp_factor(self.active));
+            legend('idx lager', 'idx smaller', 'interpolation factor');
+        end
+        
+        %% First move idx
+        function idx = getFirstMoveIdx(self)
+            movement = sqrt(diff(self.res.Localization.Pose.Position.x).^2 + diff(self.res.Localization.Pose.Position.y).^2);
+            idx = find(movement > 0.02, 1, 'first');
+            idx = idx - 20;
+            if idx < 1
+                idx = 1;
+            end
+        end
+        
+        %%Get index from time
+        function idx = getIdxFromTime(self, t)
+            idx = zeros(size(t));
+            for i=1:length(t)
+                idx(i) = find(self.res.Time <= t(i), 1, 'last');
+            end
         end
 		
         

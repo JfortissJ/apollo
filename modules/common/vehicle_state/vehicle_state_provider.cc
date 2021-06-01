@@ -19,11 +19,10 @@
 #include <cmath>
 
 #include "Eigen/Core"
-
-#include "cyber/common/log.h"
-
 #include "absl/strings/str_cat.h"
+#include "cyber/common/log.h"
 #include "modules/common/configs/config_gflags.h"
+#include "modules/common/configs/vehicle_config_helper.h"
 #include "modules/common/math/euler_angles_zxy.h"
 #include "modules/common/math/quaternion.h"
 #include "modules/localization/common/localization_gflags.h"
@@ -71,12 +70,34 @@ Status VehicleStateProvider::Update(
     vehicle_state_.set_steering_percentage(chassis.steering_percentage());
   }
 
-  static constexpr double kEpsilon = 1e-6;
-  if (std::abs(vehicle_state_.linear_velocity()) < kEpsilon) {
-    vehicle_state_.set_kappa(0.0);
-  } else {
-    vehicle_state_.set_kappa(vehicle_state_.angular_velocity() /
-                             vehicle_state_.linear_velocity());
+  // apollos implementaion using the yaw rate
+  // static constexpr double kEpsilon = 1e-6;
+  // if (std::abs(vehicle_state_.linear_velocity()) < kEpsilon) {
+  //   vehicle_state_.set_kappa(0.0);
+  // } else {
+  //   vehicle_state_.set_kappa(vehicle_state_.angular_velocity() /
+  //                            vehicle_state_.linear_velocity());
+  // }
+
+  // implementation using the steering angle
+  if (chassis.has_steering_percentage()) {
+    const double steering_angle = chassis.steering_percentage() / 100.0 *
+                                  common::VehicleConfigHelper::Instance()
+                                      ->GetConfig()
+                                      .vehicle_param()
+                                      .max_steer_angle();
+    double kappa =
+        tan(steering_angle) / common::VehicleConfigHelper::Instance()
+                                  ->GetConfig()
+                                  .vehicle_param()
+                                  .wheel_base();
+    const double KAPPA_MAX = 0.1724; // = 1/(11.6/2) our Passat GTE has a turning circle of 11.6m
+    if(kappa > KAPPA_MAX) {
+      kappa = KAPPA_MAX;
+    } else if(kappa < -KAPPA_MAX) {
+      kappa = -KAPPA_MAX;
+    } 
+    vehicle_state_.set_kappa(kappa);
   }
 
   vehicle_state_.set_driving_mode(chassis.driving_mode());

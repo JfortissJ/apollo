@@ -77,6 +77,8 @@ build:cpu_prof --linkopt=-lprofiler
 
 # Enable C++14
 build --cxxopt="-std=c++1y"
+# Enable optimized code
+build --copt=-O3
 # Enable colorful output of GCC
 # build --cxxopt="-fdiagnostics-color=always"
 

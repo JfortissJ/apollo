@@ -30,7 +30,7 @@ imarDriverComponent::imarDriverComponent()
               GNSS)  //! todo introduce in monitor logger protobuf, for the
                      //! moment take the gnss entry
 {
-  AERROR << "Started imar node!";
+  AINFO << "Started imar node!";
 }
 
 bool imarDriverComponent::Init() {

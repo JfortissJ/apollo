@@ -69,11 +69,13 @@ class MiqpPlanner : public LatticePlanner {
       ReferenceLineInfo* reference_line_info) override;
 
  private:
-  apollo::planning::DiscretizedTrajectory BarkTrajectoryToApolloTrajectory(
-      double traj[], int size);
+  std::vector<apollo::common::PathPoint> ToDiscretizedReferenceLine(
+      ReferenceLineInfo* reference_line_info, double stop_dist);
+
+  void FillTimeDerivativesInApolloTrajectory(DiscretizedTrajectory& traj) const;
 
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
-      double traj[], int size);
+      double traj[], int size, bool low_speed_check);
 
   void ConvertToInitialStateSecondOrder(
       const common::TrajectoryPoint& planning_init_point,
@@ -94,13 +96,20 @@ class MiqpPlanner : public LatticePlanner {
 
   bool ProcessDynamicObstacles(const std::vector<const Obstacle*>& obstacles,
                                double timestep);
+  std::vector<const Obstacle*> FilterNonVirtualObstacles(
+      const std::vector<const Obstacle*>& obstacles);
 
   bool FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
                                   double& p1_x, double& p1_y, double& p2_x,
                                   double& p2_y, double& p3_x, double& p3_y,
                                   double& p4_x, double& p4_y);
 
-  PlannerState DeterminePlannerState(double planning_init_v, double goal_dist);
+  double CalculateSDistanceToStop(ReferenceLineInfo* reference_line_info,
+                                  bool brake_for_inlane);
+
+  PlannerState DeterminePlannerState(const double planning_init_v,
+                                     ReferenceLineInfo* reference_line_info,
+                                     double& stop_dist);
 
   int CutoffTrajectoryAtV(apollo::planning::DiscretizedTrajectory& traj,
                           double vmin);
@@ -112,11 +121,22 @@ class MiqpPlanner : public LatticePlanner {
   void CreateStopTrajectory(const common::TrajectoryPoint& planning_init_point,
                             ReferenceLineInfo* reference_line_info);
 
+  std::pair<bool, apollo::planning::DiscretizedTrajectory> SmoothTrajectory(
+      const apollo::planning::DiscretizedTrajectory& traj_in,
+      const common::TrajectoryPoint& planning_init_point);
+
+  bool ThetaChangeLargerThan(
+      const apollo::planning::DiscretizedTrajectory& traj,
+      const double delta_theta_max);
+
+  bool IsVxVyValid(const double& vx, const double& vy);
+
  private:
   CMiqpPlanner planner_;
   bool firstrun_;
   int egoCarIdx_;
   double minimum_valid_speed_planning_;
+  double minimum_valid_speed_vx_vy_;
   double standstill_velocity_threshold_;
   std::string logdir_;
 };

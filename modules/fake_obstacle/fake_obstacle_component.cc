@@ -28,6 +28,8 @@ using apollo::canbus::Chassis;
 using apollo::common::Status;
 using apollo::common::VehicleState;
 using apollo::common::VehicleStateProvider;
+using apollo::common::math::Box2d;
+using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
 using apollo::hdmap::HDMapUtil;
 using apollo::localization::LocalizationEstimate;
@@ -36,10 +38,7 @@ using apollo::planning::ReferenceLineProvider;
 using apollo::routing::RoutingResponse;
 
 FakeObstacleComponent::FakeObstacleComponent()
-    : monitor_logger_buffer_(common::monitor::MonitorMessageItem::PLANNING),
-      s_init_obstacle_(0.0),
-      t_init_obstacle_(0.0),
-      obstacle_has_started_(false) {
+    : monitor_logger_buffer_(common::monitor::MonitorMessageItem::PLANNING) {
   AINFO << "Started FakeObstacleComponent !";
 }
 
@@ -51,7 +50,8 @@ FakeObstacleComponent::~FakeObstacleComponent() {
 
 bool FakeObstacleComponent::Init() {
   // load proto file
-  if (!cyber::common::GetProtoFromFile(config_file_path_, &fake_obst_config_)) {
+  if (!cyber::common::GetProtoFromFile(config_file_path_,
+                                       &fake_obst_list_config_)) {
     monitor_logger_buffer_.ERROR("Unable to load fake obstacle conf file: " +
                                  config_file_path_);
   }
@@ -121,7 +121,12 @@ bool FakeObstacleComponent::InitReaders() {
 }
 
 bool FakeObstacleComponent::Proc() {
-  FillPerceptionObstacles();
+  auto obstacles = FillPerceptionObstacles();
+  auto response = std::make_shared<PerceptionObstacles>(obstacles);
+  common::util::FillHeader(node_->Name(), response.get());
+
+  obstacle_writer_->Write(response);
+
   return true;
 }
 
@@ -164,63 +169,86 @@ bool FakeObstacleComponent::UpdateReferenceLine() {
   return true;
 }
 
-bool FakeObstacleComponent::FillPerceptionObstacles() {
-  if (!obstacle_has_started_) {
-    if (!UpdateReferenceLine()) {
-      AERROR << "Could not update reference";
-      return false;
+PerceptionObstacles FakeObstacleComponent::FillPerceptionObstacles() {
+  PerceptionObstacles obstacles;
+
+  for (const auto& fake_obst_config :
+       fake_obst_list_config_.fake_obstacle_conf()) {
+    int id = fake_obst_config.id();
+    if (obstacles_init_states_.count(id) == 0) {
+      AERROR << "Initializing fake obstacle with id " << id;
+      if (!UpdateReferenceLine()) {
+        AERROR << "Could not update reference";
+        break;
+      }
+
+      common::math::Vec2d ego_vec2d =
+          common::math::Vec2d(latest_localization_.pose().position().x(),
+                              latest_localization_.pose().position().y());
+      common::SLPoint ego_sl;
+      last_reference_lines_.front().XYToSL(ego_vec2d, &ego_sl);
+
+      ObstacleInitState obstacle_init_state;
+      obstacle_init_state.s = ego_sl.s() + fake_obst_config.delta_s_in_front();
+      obstacle_init_state.t = Clock::NowInSeconds();
+      obstacles_init_states_.insert(std::make_pair(id, obstacle_init_state));
     }
 
-    common::math::Vec2d ego_vec2d =
-        common::math::Vec2d(latest_localization_.pose().position().x(),
-                            latest_localization_.pose().position().y());
-    common::SLPoint ego_sl;
-    last_reference_lines_.front().XYToSL(ego_vec2d, &ego_sl);
+    double diff_time = Clock::NowInSeconds() - obstacles_init_states_[id].t;
+    double s_current_obstacle =
+        obstacles_init_states_[id].s + diff_time * fake_obst_config.velocity();
+    planning::ReferencePoint other_ref_point =
+        last_reference_lines_.front().GetReferencePoint(s_current_obstacle);
 
-    s_init_obstacle_ = ego_sl.s() + fake_obst_config_.delta_s_in_front();
-    t_init_obstacle_ = Clock::NowInSeconds();
-    obstacle_has_started_ = true;
+    auto* ob = obstacles.add_perception_obstacle();
+
+    apollo::common::Point3D position;
+    const double lateral_offset_direction = other_ref_point.heading() + M_PI_2;
+    position.set_x(other_ref_point.x() + cos(lateral_offset_direction) *
+                                             fake_obst_config.lateral_offset());
+    position.set_y(other_ref_point.y() + sin(lateral_offset_direction) *
+                                             fake_obst_config.lateral_offset());
+    position.set_z(0.0);
+    ob->mutable_position()->CopyFrom(position);
+
+    ob->set_theta(other_ref_point.heading() +
+                  fake_obst_config.heading_offset());
+
+    // Set linear_velocity
+    apollo::common::Point3D velocity3d;
+    // TODO: why not use ob->theta??
+    velocity3d.set_x(std::cos(other_ref_point.heading()) *
+                     fake_obst_config.velocity());
+    velocity3d.set_y(std::sin(other_ref_point.heading()) *
+                     fake_obst_config.velocity());
+    velocity3d.set_z(0);
+
+    ob->mutable_velocity()->CopyFrom(velocity3d);
+
+    // Size of obstacle bounding box.
+    ob->set_length(fake_obst_config.length());
+    ob->set_width(fake_obst_config.width());
+    ob->set_height(fake_obst_config.height());
+
+    ob->set_id(id);
+    ob->set_type(fake_obst_config.type());
+    ob->set_tracking_time(
+        0.0);  // duration of an obstacle since detection in s.
+    ob->set_timestamp(Clock::NowInSeconds());
+
+    // obstacle corner points.
+    Vec2d vec_obstacle = Vec2d(position.x(), position.y());
+    Box2d obstacle_box =
+        Box2d(vec_obstacle, ob->theta(), ob->length(), ob->width());
+    std::vector<common::math::Vec2d> corner_points;
+    obstacle_box.GetAllCorners(&corner_points);
+    for (const auto& corner_point : corner_points) {
+      auto* point = ob->add_polygon_point();
+      point->set_x(corner_point.x());
+      point->set_y(corner_point.y());
+    }
   }
-
-  double diff_time = Clock::NowInSeconds() - t_init_obstacle_;
-  double s_current_obstacle =
-      s_init_obstacle_ + diff_time * fake_obst_config_.velocity();
-  planning::ReferencePoint other_ref_point =
-      last_reference_lines_.front().GetReferencePoint(s_current_obstacle);
-
-  auto response = std::make_shared<PerceptionObstacles>();
-  common::util::FillHeader(node_->Name(), response.get());
-  apollo::perception::PerceptionObstacle* ob =
-      response->add_perception_obstacle();
-
-  apollo::common::Point3D position;
-  const double lateral_offset_direction = other_ref_point.heading() + M_PI_2;
-  position.set_x(other_ref_point.x() + cos(lateral_offset_direction) *
-                                           fake_obst_config_.lateral_offset());
-  position.set_y(other_ref_point.y() + sin(lateral_offset_direction) *
-                                           fake_obst_config_.lateral_offset());
-  position.set_z(0.0);
-  ob->mutable_position()->CopyFrom(position);
-
-  ob->set_theta(other_ref_point.heading() + fake_obst_config_.heading_offset());
-
-  // Set linear_velocity
-  apollo::common::Point3D velocity3d;
-  velocity3d.set_x(std::cos(other_ref_point.heading()) *
-                   fake_obst_config_.velocity());
-  velocity3d.set_y(std::sin(other_ref_point.heading()) *
-                   fake_obst_config_.velocity());
-  velocity3d.set_z(0);
-
-  ob->mutable_velocity()->CopyFrom(velocity3d);
-
-  // Size of obstacle bounding box.
-  ob->set_length(4);  // obstacle length.
-  ob->set_width(2);   // obstacle width.
-  ob->set_height(2);  // obstacle height.
-
-  obstacle_writer_->Write(response);
-  return true;
+  return obstacles;
 }
 
 }  // namespace fake_obstacle
