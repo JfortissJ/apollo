@@ -207,9 +207,14 @@ void OnLanePlanning::RunOnce(const LocalView& local_view,
   VehicleState vehicle_state =
       VehicleStateProvider::Instance()->vehicle_state();
   const double vehicle_state_timestamp = vehicle_state.timestamp();
-  DCHECK_GE(start_timestamp, vehicle_state_timestamp)
-      << "start_timestamp is behind vehicle_state_timestamp by "
-      << start_timestamp - vehicle_state_timestamp << " secs";
+  std::stringstream debug_timing;
+  debug_timing << "start_timestamp and vehicle_state_timestamp diff is "
+               << start_timestamp - vehicle_state_timestamp << " secs";
+  if (fabs(start_timestamp - vehicle_state_timestamp) > 1) {
+    AERROR << debug_timing.str();
+  } else {
+    AINFO << debug_timing.str();
+  }
 
   if (!status.ok() || !util::IsVehicleStateValid(vehicle_state)) {
     std::string msg(

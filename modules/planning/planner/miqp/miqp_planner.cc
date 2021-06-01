@@ -242,13 +242,11 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Obstacles as obstacles
   if (config_.miqp_planner_config().consider_obstacles()) {
-    // TODO: is that correct or should make use of relative time?
-    current_time = Clock::NowInSeconds();
-    bool success = ProcessObstacles(frame->obstacles(),
-                                    planning_init_point.relative_time());
-    AINFO << "Processing Obstacles took Time [s] = "
-          << (Clock::NowInSeconds() - current_time);
-    if (!success) {
+    RemoveAllObstaclesCMiqpPlanner(planner_);
+    bool success1 = ProcessStaticObstacles(frame->obstacles());
+    bool success2 = ProcessDynamicObstacles(
+        frame->obstacles(), planning_init_point.relative_time());
+    if (!success1 || !success2) {
       AERROR << "Processing of obstacles failed";
       return Status(ErrorCode::PLANNING_ERROR,
                     "processing of obstacles failed!");
@@ -798,56 +796,78 @@ bool MiqpPlanner::EnvironmentCollision(
   return false;
 }
 
-std::vector<const Obstacle*> MiqpPlanner::FilterNonVirtualObstacles(
+bool MiqpPlanner::ProcessStaticObstacles(
     const std::vector<const Obstacle*>& obstacles) {
-  std::vector<const Obstacle*> obstacles_out;
+  double ext_l = config_.miqp_planner_config().extension_length_static();
+  double ext_w = config_.miqp_planner_config().extension_width_static();
+  bool is_soft = (ext_w > 0 || ext_l > 0) ? true : false;
+
+  std::vector<Polygon2d> static_polygons;
   for (const Obstacle* obstacle : obstacles) {
-    if (obstacle->IsVirtual()) {
-      AINFO << "Skipping virtual obstacle for post-collision check: "
-            << obstacle->DebugString();
-      continue;
-    } else {
-      obstacles_out.push_back(obstacle);
+    bool merged = false;
+    if (!obstacle->IsVirtual() && !obstacle->HasTrajectory()) {
+      common::math::Box2d obst_box = obstacle->PerceptionBoundingBox();
+      obst_box.LongitudinalExtend(ext_l);
+      obst_box.LateralExtend(ext_w);
+      const common::math::Polygon2d obst_poly = Polygon2d(obst_box);
+
+      if (config_.miqp_planner_config().merge_static_obstacles()) {
+        for (auto it = static_polygons.begin(); it != static_polygons.end();
+             it++) {
+          double d = obst_poly.DistanceTo(*it);
+          if (d < config_.miqp_planner_config()
+                      .static_obstacle_distance_criteria()) {
+            // merge polygons!
+            std::vector<Vec2d> vertices = obst_poly.GetAllVertices();
+            std::vector<Vec2d> vsp = it->GetAllVertices();
+            vertices.insert(vertices.end(), vsp.begin(), vsp.end());
+            Polygon2d convex_polygon;
+            Polygon2d::ComputeConvexHull(vertices, &convex_polygon);
+            AINFO << "Not adding polygon from obstacle id " << obstacle->Id()
+                  << " explicitly, but merging with existing";
+            *it = convex_polygon;
+            merged = true;
+            break;
+          }
+        }
+      }
+      if (!merged) {
+        AINFO << "Adding polygon from obstacle id" << obstacle->Id();
+        static_polygons.push_back(obst_poly);
+      }
     }
   }
-  return obstacles_out;
+
+  const int N = GetNCMiqpPlanner(planner_);
+  for (const Polygon2d polygon : static_polygons) {
+    double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N],
+        p4_y[N];
+    bool is_static = true;
+    for (int i = 0; i < N; ++i) {
+      FillInflatedPtsFromPolygon(polygon, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
+                                 p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
+    }
+
+    int idx_obs =
+        AddObstacleCMiqpPlanner(planner_, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y,
+                                p4_x, p4_y, N, is_static, is_soft);
+    if (idx_obs != -1) {
+      AINFO << "Added obstacle "
+            << " with miqp idx = " << idx_obs << " is_static = " << is_static;
+    }
+  }
+  return true;
 }
 
-bool MiqpPlanner::ProcessObstacles(
+bool MiqpPlanner::ProcessDynamicObstacles(
     const std::vector<const Obstacle*>& obstacles, double timestep) {
-  RemoveAllObstaclesCMiqpPlanner(planner_);
-
-  // Add obstacles
+  bool is_soft = true;  // make dynamic obstacles always soft!
   const int N = GetNCMiqpPlanner(planner_);
   for (const Obstacle* obstacle : obstacles) {
     double p1_x[N], p1_y[N], p2_x[N], p2_y[N], p3_x[N], p3_y[N], p4_x[N],
         p4_y[N];
-    bool is_static;
-    bool is_soft = false;
-    if (obstacle->IsVirtual()) {
-      continue;
-      // } else if (!obstacle->IsLaneBlocking()) {
-      //   AINFO << "Skipping obstacle " << obstacle->Id() << " (not blocking
-      //   lane)"; continue;
-    } else if (!obstacle->HasTrajectory()) {
-      // AINFO << "Static obstacle " << obstacle->Id();
-      // const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
-      common::math::Box2d box = obstacle->PerceptionBoundingBox();
-      double ext_l = config_.miqp_planner_config().extension_length_static();
-      double ext_w = config_.miqp_planner_config().extension_width_static();
-      box.LongitudinalExtend(ext_l);
-      box.LateralExtend(ext_w);
-      common::math::Polygon2d polygon = Polygon2d(box);
-      for (int i = 0; i < N; ++i) {
-        FillInflatedPtsFromPolygon(polygon, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
-                                   p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
-      }
-      if (ext_w > 0 || ext_l > 0) {
-        is_soft = true;
-        AINFO << "Setting static obstacle " << obstacle->Id() << " as soft";
-      }
-      is_static = true;
-    } else {
+    bool is_static = false;
+    if (!obstacle->IsVirtual() && obstacle->HasTrajectory()) {
       const float ts = GetTsCMiqpPlanner(planner_);
       AINFO << "Dynamic obstacle " << obstacle->Id();
       for (int i = 0; i < N; ++i) {
@@ -864,7 +884,6 @@ bool MiqpPlanner::ProcessObstacles(
                                    p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
       }
       is_static = false;
-      is_soft = true;
     }
 
     int idx_obs =
@@ -877,6 +896,21 @@ bool MiqpPlanner::ProcessObstacles(
     }
   }
   return true;
+}
+
+std::vector<const Obstacle*> MiqpPlanner::FilterNonVirtualObstacles(
+    const std::vector<const Obstacle*>& obstacles) {
+  std::vector<const Obstacle*> obstacles_out;
+  for (const Obstacle* obstacle : obstacles) {
+    if (obstacle->IsVirtual()) {
+      AINFO << "Skipping virtual obstacle for post-collision check: "
+            << obstacle->DebugString();
+      continue;
+    } else {
+      obstacles_out.push_back(obstacle);
+    }
+  }
+  return obstacles_out;
 }
 
 bool MiqpPlanner::FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
