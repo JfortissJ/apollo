@@ -831,10 +831,20 @@ bool MiqpPlanner::ProcessObstacles(
       //   lane)"; continue;
     } else if (!obstacle->HasTrajectory()) {
       // AINFO << "Static obstacle " << obstacle->Id();
-      const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
+      // const common::math::Polygon2d& polygon = obstacle->PerceptionPolygon();
+      common::math::Box2d box = obstacle->PerceptionBoundingBox();
+      double ext_l = config_.miqp_planner_config().extension_length_static();
+      double ext_w = config_.miqp_planner_config().extension_width_static();
+      box.LongitudinalExtend(ext_l);
+      box.LateralExtend(ext_w);
+      common::math::Polygon2d polygon = Polygon2d(box);
       for (int i = 0; i < N; ++i) {
         FillInflatedPtsFromPolygon(polygon, p1_x[i], p1_y[i], p2_x[i], p2_y[i],
                                    p3_x[i], p3_y[i], p4_x[i], p4_y[i]);
+      }
+      if (ext_w > 0 || ext_l > 0) {
+        is_soft = true;
+        AINFO << "Setting static obstacle " << obstacle->Id() << " as soft";
       }
       is_static = true;
     } else {

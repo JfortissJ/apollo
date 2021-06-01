@@ -18,7 +18,7 @@ miqp_planner_config: {
     jerk_lon_max_limit: 3.0
     acc_lat_min_max_limit: 1.6
     jerk_lat_min_max_limit: 1.4
-    nr_steps: 10
+    nr_steps: 6
     nr_neighbouring_possible_regions: 0
     ts: 1.0
     max_solution_time: 1
@@ -45,6 +45,8 @@ miqp_planner_config: {
     pts_offset_y: 5.339e+06
     use_smoothing: true
     extension_length_dynamic: 6.0
+    extension_length_static: 0.0
+    extension_width_static: 0.0
     minimum_percentage_valid_miqp_points: 0.5
 }
 
