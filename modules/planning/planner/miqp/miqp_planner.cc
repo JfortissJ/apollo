@@ -1010,7 +1010,7 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
         minimum_valid_speed_planning_) {  // Low speed -> modify start
       status = PlannerState::START_TRAJECTORY;
       // overwriting start stop_distance!!
-      bool brake_for_inlane = true;
+      bool brake_for_inlane = false;  // to be prone against obstacles that slightly collide with lane (referenceLineGenerator cannot handle close obstacles well -> would not stop otherwise)
       stop_dist = MiqpPlanner::CalculateSDistanceToStop(reference_line_info,
                                                         brake_for_inlane);
     } else {  // Driving: default case
