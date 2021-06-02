@@ -433,7 +433,7 @@ ErrorCode FortunaController::EnableAutoMode() {
 
   
   if (driving_mode() == Chassis::COMPLETE_AUTO_DRIVE) {
-    AINFO << "Already in COMPLETE_AUTO_DRIVE mode";
+    ADEBUG << "Already in COMPLETE_AUTO_DRIVE mode";
     return ErrorCode::OK;
   }
   //brake_60_->set_enable();
@@ -451,7 +451,7 @@ ErrorCode FortunaController::EnableAutoMode() {
   // }
 
   set_driving_mode(Chassis::COMPLETE_AUTO_DRIVE);
-  AINFO << "Switch to COMPLETE_AUTO_DRIVE mode ok.";
+  ADEBUG << "Switch to COMPLETE_AUTO_DRIVE mode ok.";
   return ErrorCode::OK;
 }
 
