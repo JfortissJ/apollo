@@ -48,8 +48,8 @@ miqp_planner_config: {
     extension_length_static: 0.0
     extension_width_static: 0.0
     minimum_percentage_valid_miqp_points: 0.5
-    merge_static_obstacles: true
-    static_obstacle_distance_criteria: 2.0
+    merge_static_obstacles: false
+    static_obstacle_distance_criteria: 1.0
 }
 
 
