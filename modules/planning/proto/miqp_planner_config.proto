@@ -47,4 +47,6 @@ message MiqpPlannerConfiguration {
     optional double minimum_percentage_valid_miqp_points = 42 [default = 0.5];
     optional bool merge_static_obstacles = 43 [default = false];
     optional double static_obstacle_distance_criteria = 44 [default = 2.0];
+    optional double obstacle_roi_front_distance = 45 [default = 10.0];
+    optional double obstacle_roi_side_distance = 46 [default = 10.0];
 }

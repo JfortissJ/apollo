@@ -26,7 +26,7 @@ miqp_planner_config: {
     mipemphasis: 0
     relobjdif: 0.5
     minimum_region_change_speed: 1
-    additional_steps_for_reference_longer_horizon: 6
+    additional_steps_for_reference_longer_horizon: 3
     delta_s_desired: 1
     distance_stop_before: 1
     distance_start_slowdown: 15
@@ -37,7 +37,9 @@ miqp_planner_config: {
     destination_distance_stop_threshold: 5.0
     cutoff_distance_reference_after_stop: 10.0
     obstacle_roi_filter: true
-    obstacle_roi_behind_distance: 10.0
+    obstacle_roi_behind_distance: 5.0
+    obstacle_roi_front_distance: 30.0
+    obstacle_roi_side_distance: 15.0
     acc_start_trajectory: 1.0
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06
