@@ -4,7 +4,7 @@ standard_planning_config {
   }
 }
 miqp_planner_config: {
-    nr_regions: 16
+    nr_regions: 32
     max_velocity_fitting: 10
     use_environment_polygon: true
     consider_obstacles: true
@@ -44,12 +44,12 @@ miqp_planner_config: {
     pts_offset_x: 692000
     pts_offset_y: 5.339e+06
     use_smoothing: true
-    extension_length_dynamic: 6.0
+    extension_length_dynamic: 8.0
     extension_length_static: 0.0
     extension_width_static: 0.0
     minimum_percentage_valid_miqp_points: 0.5
-    merge_static_obstacles: true
-    static_obstacle_distance_criteria: 2.0
+    merge_static_obstacles: false
+    static_obstacle_distance_criteria: 1.0
 }
 
 
