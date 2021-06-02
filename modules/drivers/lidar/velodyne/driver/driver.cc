@@ -181,10 +181,10 @@ void VelodyneDriver::PollPositioningPacket(void) {
       nmea_time->hour = static_cast<uint16_t>(current_time.tm_hour);
       nmea_time->min = static_cast<uint16_t>(current_time.tm_min);
       nmea_time->sec = static_cast<uint16_t>(current_time.tm_sec);
-      AINFO << "Get NMEA Time from local time :"
-            << "year:" << nmea_time->year << "mon:" << nmea_time->mon
-            << "day:" << nmea_time->day << "hour:" << nmea_time->hour
-            << "min:" << nmea_time->min << "sec:" << nmea_time->sec;
+      ADEBUG << "Get NMEA Time from local time :"
+             << "year:" << nmea_time->year << "mon:" << nmea_time->mon
+             << "day:" << nmea_time->day << "hour:" << nmea_time->hour
+             << "min:" << nmea_time->min << "sec:" << nmea_time->sec;
     } else {
       while (!cyber::IsShutdown()) {
         int rc = positioning_input_->get_positioning_data_packet(nmea_time);
