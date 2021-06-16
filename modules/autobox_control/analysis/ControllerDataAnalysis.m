@@ -207,8 +207,14 @@ classdef ControllerDataAnalysis  < PlotBase
            title('theta')
            plot(self.res.Time(self.active), wrapTo2Pi(self.res.Localization.Pose.Heading(self.active)));
            plot(self.res.Time(self.active), wrapTo2Pi(self.res.ReferencePoint.theta(self.active)));
-           legend('Loca', 'Ref');
            
+           dx = diff(self.res.Localization.Pose.Position.x(self.active));
+           dy = diff(self.res.Localization.Pose.Position.y(self.active));
+           theta_calc = atan2(dy, dx);
+           tt=self.res.Time(self.active);
+           %plot(tt(1:end-1), wrapTo2Pi(theta_calc));
+           
+           legend('Loca', 'Ref');
            subplot(5,1,4);
            hold on
            title('v')
