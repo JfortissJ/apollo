@@ -56,7 +56,7 @@ def parseIMU(freader, outputDir, substr):
     outputPathImu = os.path.join(outputDir, substr + "imu.csv")
     with open(outputPathImu, "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        writer.writerow(["t", "ax", "ay", "az", "vrotx",
+        writer.writerow(["unix_timestamp_sec", "ax", "ay", "az", "vrotx",
                          "vroty", "vrotz", "roll", "pitch", "yaw"])
         writer.writerows(rows_imu)
         print("######## parsed imu message to " + outputPathImu + " ########")
@@ -94,7 +94,7 @@ def parseLocalization(freader, outputDir, substr):
     outputPathLocalization = os.path.join(outputDir, substr + "localization.csv")
     with open(outputPathLocalization, "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        writer.writerow(["t", "x", "y", "z", "vx", "vy", "vz", "ax", "ay",
+        writer.writerow(["unix_timestamp_sec", "x", "y", "z", "vx", "vy", "vz", "ax", "ay",
                          "az", "qx", "qy", "qz", "qw", "h", "vrotx", "vroty", "vrotz"])
         writer.writerows(rows_loca)
         print("######## parsed localization message to " + outputPathLocalization + " ########")
@@ -124,7 +124,7 @@ def parseOdometry(freader, outputDir, substr):
     outputPathOdometry = os.path.join(outputDir, substr + "odometry.csv")
     with open(outputPathOdometry, "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        writer.writerow(["t", "x", "y", "z", "qx", "qy",
+        writer.writerow(["unix_timestamp_sec", "x", "y", "z", "qx", "qy",
                          "qz", "qw", "vx", "vy", "vz"])
         writer.writerows(rows_odometry)
         print("######## parsed odometry message to " + outputPathOdometry + " ########")
@@ -138,13 +138,24 @@ def parsePerception(freader, outputDir, substr):
             perception = perception_obstacle_pb2.PerceptionObstacles()
             perception.ParseFromString(msg)
             timestamp_sec = perception.header.timestamp_sec
-            row = [timestamp_sec]
-            rows_perception.append(row)
+
+            for o in perception.perception_obstacle:
+                id = o.id
+                x = o.position.x
+                y = o.position.y
+                z = o.position.z
+                theta = o.theta
+                l = o.length
+                w = o.width
+                h = o.height
+                tracking_time = o.tracking_time
+                row = [timestamp_sec, id, x, y, z, theta, l, w, h, tracking_time]
+                rows_perception.append(row)
 
     outputPathPerception = os.path.join(outputDir, substr + "perception.csv")
     with open(outputPathPerception, "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        writer.writerow(["timestamp_sec"])
+        writer.writerow(["unix_timestamp_sec", "id", "x", "y", "z", "theta", "length", "width", "height", "tracking_time"])
         writer.writerows(rows_perception)
         print("######## parsed perception to " + outputPathPerception + " ########")
 
@@ -181,7 +192,7 @@ def parsePlanning(freader, outputDir, substr):
     outputPathPlanning = os.path.join(outputDir, substr + "planning.csv")
     with open(outputPathPlanning, "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        writer.writerow(["timestamp_sec", "relative_time", "sequence_num", "num_points", "x", "y",
+        writer.writerow(["unix_timestamp_sec", "relative_time", "sequence_num", "num_points", "x", "y",
                          "theta", "kappa", "dkappa", "s", "v", "a", "da", "steer", "replan_reason", "latency"])
         writer.writerows(rows_planning)
         print("######## parsed planning message to " + outputPathPlanning + " ########")
@@ -201,7 +212,7 @@ def parsePrediction(freader, outputDir, substr):
     outputPathPrediction = os.path.join(outputDir, substr + "prediction.csv")
     with open(outputPathPrediction, "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        writer.writerow(["timestamp_sec"])
+        writer.writerow(["unix_timestamp_sec"])
         writer.writerows(rows_prediction)
         print("######## parsed prediction to " + outputPathPrediction + " ########")
 
