@@ -42,6 +42,13 @@ Now, inside the docker container, build Apollo using:
 **Note: ** calling `bash apollo.sh build_cpu` instead of `bash apollo.sh build`causes some erros, as opencv cannot be found. Don't do it and stick to the plan build call.
 **Note: ** If you experience experience some weird stuff when building, clean all bazel directories using `bazel clean --expunge`
 
+## Fortiss MIQP Planner
+In order to use the MIQP Planner (described in the publications [1](https://ieeexplore.ieee.org/document/9304743) and [2](https://ieeexplore.ieee.org/document/9304495)), you need to build Apollo using 
+
+`bash apollo.sh build_use_planner_miqp`.
+
+Also, as it requires the CPLEX solver, you need to place the CPLEX libraries at `apollo/cplex`. For more info, see cplex/README.md
+
 ## Prerequisites
 
 * If you want to run the Perception module and the Viszalization Components you need to install cuda and the nvidia docker toolchain:

@@ -97,30 +97,30 @@ function generate_build_targets() {
   COMMON_TARGETS="//cyber/... union //modules/common/kv_db/... union //modules/dreamview/... union //modules/fake_obstacle/... $DISABLED_CYBER_MODULES"
   case $BUILD_FILTER in
   cyber)
-    BUILD_TARGETS=`bazel query //cyber/... union //modules/tools/visualizer/...`
+    BUILD_TARGETS=`bazel query //cyber/... union //modules/tools/visualizer/... $DISABLED_MIQP_MODULES`
     ;;
   drivers)
-    BUILD_TARGETS=`bazel query //cyber/... union //modules/tools/visualizer/... union //modules/drivers/... except //modules/drivers/tools/... except //modules/drivers/canbus/... except //modules/drivers/video/...`
+    BUILD_TARGETS=`bazel query //cyber/... union //modules/tools/visualizer/... union //modules/drivers/... except //modules/drivers/tools/... except //modules/drivers/canbus/... except //modules/drivers/video/... $DISABLED_MIQP_MODULES`
     ;;
   control)
-    BUILD_TARGETS=`bazel query $COMMON_TARGETS union //modules/control/... `
+    BUILD_TARGETS=`bazel query $COMMON_TARGETS union //modules/control/... $DISABLED_MIQP_MODULES`
     ;;
   planning)
-    BUILD_TARGETS=`bazel query $COMMON_TARGETS union //modules/routing/... union //modules/planning/...`
+    BUILD_TARGETS=`bazel query $COMMON_TARGETS union //modules/routing/... union //modules/planning/... $DISABLED_MIQP_MODULES`
     ;;
   prediction)
-    BUILD_TARGETS=`bazel query $COMMON_TARGETS union //modules/routing/... union //modules/prediction/...`
+    BUILD_TARGETS=`bazel query $COMMON_TARGETS union //modules/routing/... union //modules/prediction/... $DISABLED_MIQP_MODULES`
     ;;
   pnc)
-    BUILD_TARGETS=`bazel query $COMMON_TARGETS union //modules/routing/... union //modules/prediction/... union //modules/planning/... union //modules/control/...`
+    BUILD_TARGETS=`bazel query $COMMON_TARGETS union //modules/routing/... union //modules/prediction/... union //modules/planning/... union //modules/control/... $DISABLED_MIQP_MODULES`
     ;;
   no_perception)
-    BUILD_TARGETS=`bazel query //modules/... except //modules/perception/... union //cyber/...`
+    BUILD_TARGETS=`bazel query //modules/... except //modules/perception/... union //cyber/... $DISABLED_MIQP_MODULES`
     ;;
   *)
 #    BUILD_TARGETS=`bazel query //modules/... union //cyber/...`
     # FIXME(all): temporarily disable modules doesn't compile in 18.04
-    BUILD_TARGETS=`bazel query //modules/... union //cyber/... except //modules/v2x/... except //modules/map/tools/map_datachecker/... $DISABLE_CYBER_MODULES`
+    BUILD_TARGETS=`bazel query //modules/... union //cyber/... except //modules/v2x/... except //modules/map/tools/map_datachecker/... $DISABLE_CYBER_MODULES $DISABLED_MIQP_MODULES`
   esac
 
   if [ $? -ne 0 ]; then
@@ -749,6 +749,8 @@ function main() {
     DEFINES="${DEFINES} --copt=-mavx2"
   fi
 
+  DISABLED_MIQP_MODULES="except //modules/planning/planner/miqp/..."
+
   local cmd=$1
   shift
 
@@ -813,6 +815,11 @@ function main() {
       ;;
     build_planning)
       BUILD_FILTER="planning"
+      apollo_build_dbg $@
+      ;;
+    build_use_planner_miqp)
+      DISABLED_MIQP_MODULES=""
+      DEFINES="${DEFINES} --define planner_miqp=true"
       apollo_build_dbg $@
       ;;
     build_prediction)

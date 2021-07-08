@@ -2,6 +2,11 @@ load("//tools:cpplint.bzl", "cpplint")
 
 package(default_visibility = ["//visibility:public"])
 
+config_setting(
+    name = "_planner_miqp",
+    values = {"define": "planner_miqp=true"},
+)
+
 cc_library(
     name = "planner",
     hdrs = ["planner.h"],
@@ -31,18 +36,17 @@ cc_library(
     ],
     copts = [
         "-DMODULE_NAME=\\\"planning\\\"",
-        "-fopenmp",
-    ],
+        "-fopenmp"]
+        + select({":_planner_miqp" : ["-D USE_PLANNER_MIQP"], "//conditions:default": []}),
     deps = [
         "//modules/common/status",
         "//modules/common/util",
         "//modules/planning/planner/lattice:lattice_planner",
-        "//modules/planning/planner/miqp:miqp_planner",
         "//modules/planning/planner/navi:navi_planner",
         "//modules/planning/planner/public_road:public_road_planner",
         "//modules/planning/planner/rtk:rtk_planner",
-        "//modules/planning/proto:planning_proto",
-    ],
+        "//modules/planning/proto:planning_proto"]
+        + select({":_planner_miqp" : ["//modules/planning/planner/miqp:miqp_planner"], "//conditions:default": []}),
 )
 
 cc_test(
