@@ -510,19 +510,21 @@ void MiqpPlanner::ConvertToInitialStateSecondOrder(
         << ", y:" << planning_init_point.path_point().y()
         << ", v:" << planning_init_point.v()
         << ", a:" << planning_init_point.a()
-        << ", theta:" << planning_init_point.path_point().theta();
+        << ", theta:" << planning_init_point.path_point().theta()
+        << ", kappa:" << planning_init_point.path_point().kappa();
 
   double vel = std::max(planning_init_point.v(), 0.1);
   double theta = planning_init_point.path_point().theta();
+  double kappa = planning_init_point.path_point().kappa();
   // cplex throws an exception if vel=0
   initial_state[0] = planning_init_point.path_point().x() -
                      config_.miqp_planner_config().pts_offset_x();
   initial_state[1] = vel * cos(theta);
-  initial_state[2] = planning_init_point.a() * cos(theta);
+  initial_state[2] = planning_init_point.a() * cos(theta) - pow(vel, 2) * kappa * sin(theta);
   initial_state[3] = planning_init_point.path_point().y() -
                      config_.miqp_planner_config().pts_offset_y();
   initial_state[4] = vel * sin(theta);
-  initial_state[5] = planning_init_point.a() * sin(theta);
+  initial_state[5] = planning_init_point.a() * sin(theta) + pow(vel, 2) * kappa * cos(theta);
   AINFO << std::setprecision(15)
         << "initial state in miqp = x:" << initial_state[0]
         << ", xd:" << initial_state[1] << ", xdd:" << initial_state[2]
