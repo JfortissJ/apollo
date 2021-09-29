@@ -43,7 +43,7 @@ Now, inside the docker container, build Apollo using:
 **Note: ** If you experience experience some weird stuff when building, clean all bazel directories using `bazel clean --expunge`
 
 ## Fortiss MIQP Planner
-In order to use the MIQP Planner (described in the publications [1](https://ieeexplore.ieee.org/document/9304743) and [2](https://ieeexplore.ieee.org/document/9304495)), you need to build Apollo using 
+In order to use the MIQP Planner (described in the publications [1](https://ieeexplore.ieee.org/document/9304743) and [2](https://ieeexplore.ieee.org/document/9304495), see [source code](https://github.com/bark-simulator/planner_miqp)), you need to build Apollo using 
 
 `bash apollo.sh build_use_planner_miqp`.
 
