@@ -13,3 +13,5 @@ You then start Dreamview, activate Simcontrol, and launch the following modules:
 Finally, you need to perform a routing. The planner should now start planning, and the car should drive.
 
 Optionally, you can simulate obstacles via `cyber_launch start modules/fake_obstacle/launch/fake_obstacle.launch`
+
+Tested with https://github.com/bark-simulator/planner-miqp/commit/cea69161e7763af59d76bad87d8b4d6e4d0d1a8c
