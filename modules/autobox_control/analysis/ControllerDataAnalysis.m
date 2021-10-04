@@ -461,6 +461,15 @@ classdef ControllerDataAnalysis  < PlotBase
             end
         end
         
+        function idx = getLastMoveIdx(self)
+            movement = sqrt(diff(self.res.Localization.Pose.Position.x).^2 + diff(self.res.Localization.Pose.Position.y).^2);
+            idx = find(movement > 0.01, 1, 'last');
+            idx = idx + 20;
+            if idx < 1
+                idx = 1;
+            end
+        end
+        
         %%Get index from time
         function idx = getIdxFromTime(self, t)
             idx = zeros(size(t));
