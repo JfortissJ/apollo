@@ -16,6 +16,8 @@
 # limitations under the License.
 ###############################################################################
 
+import csv
+import os
 import random
 
 import matplotlib.pyplot as plt
@@ -31,6 +33,11 @@ class Map:
         self.map_pb = map_pb2.Map()
         self.colors = []
         self.init_colors()
+        self.export_lanes = False
+
+    def __del__(self):
+        if self.export_lanes:
+            self.lanefile_handle.close()
 
     def init_colors(self):
         color_num = 6
@@ -45,6 +52,12 @@ class Map:
 
     def load(self, map_file_name):
         res = proto_utils.get_pb_from_file(map_file_name, self.map_pb)
+
+        if self.export_lanes:
+            self.lanefile_handle = open(os.path.splitext(map_file_name)[0] + "_lanes.csv", 'w')
+            self.lanefile = csv.writer(self.lanefile_handle)
+            self.lanefile.writerow(["lane_id", "x_center", "y_center", "x_rightbound", "y_rightbound", "x_leftbound", "y_leftbound"])
+
         return res is not None
 
     def draw_roads(self, ax):
@@ -71,12 +84,12 @@ class Map:
         for lane in self.map_pb.lane:
             color_val = self.colors[cnt % len(self.colors)]
             if len(laneids) == 0:
-                self._draw_lane_boundary(lane, ax, color_val)
-                self._draw_lane_central(lane, ax, color_val)
+                [lx, ly, rx, ry] = self._draw_lane_boundary(lane, ax, color_val)
+                [cx, cy] = self._draw_lane_central(lane, ax, color_val)
             else:
                 if lane.id.id in laneids:
-                    self._draw_lane_boundary(lane, ax, color_val)
-                    self._draw_lane_central(lane, ax, color_val)
+                    [lx, ly, rx, ry] = self._draw_lane_boundary(lane, ax, color_val)
+                    [cx, cy] = self._draw_lane_central(lane, ax, color_val)
             if is_show_lane_ids:
                 self._draw_lane_id(lane, ax, color_val)
             elif is_show_lane_details:
@@ -85,6 +98,10 @@ class Map:
                 print(str(lane))
                 self._draw_lane_id(lane, ax, color_val)
             cnt += 1
+            if self.export_lanes:
+                lid = lane.id.id
+                for idx in range(0, len(cx)):
+                    self.lanefile.writerow([lid, cx[idx], cy[idx], rx[idx], ry[idx], lx[idx], ly[idx]])
 
     def _draw_lane_id(self, lane, ax, color_val):
         """draw lane id"""
@@ -209,6 +226,10 @@ class Map:
     @staticmethod
     def _draw_lane_boundary(lane, ax, color_val):
         """draw boundary"""
+        lx = []
+        ly = []
+        rx = []
+        ry = []
         for curve in lane.left_boundary.curve.segment:
             if curve.HasField('line_segment'):
                 px = []
@@ -216,6 +237,8 @@ class Map:
                 for p in curve.line_segment.point:
                     px.append(float(p.x))
                     py.append(float(p.y))
+                    lx.append(float(p.x))
+                    ly.append(float(p.y))
                 ax.plot(px, py, ls='-', c=color_val, alpha=0.5)
         for curve in lane.right_boundary.curve.segment:
             if curve.HasField('line_segment'):
@@ -224,11 +247,16 @@ class Map:
                 for p in curve.line_segment.point:
                     px.append(float(p.x))
                     py.append(float(p.y))
+                    rx.append(float(p.x))
+                    ry.append(float(p.y))
                 ax.plot(px, py, ls='-', c=color_val, alpha=0.5)
+        return [lx, ly, rx, ry]
 
     @staticmethod
     def _draw_lane_central(lane, ax, color_val):
         """draw boundary"""
+        cx = []
+        cy = []
         for curve in lane.central_curve.segment:
             if curve.HasField('line_segment'):
                 px = []
@@ -236,7 +264,10 @@ class Map:
                 for p in curve.line_segment.point:
                     px.append(float(p.x))
                     py.append(float(p.y))
+                    cx.append(float(p.x))
+                    cy.append(float(p.y))
                 ax.plot(px, py, ls=':', c=color_val, alpha=0.5)
+        return [cx, cy]
 
     @staticmethod
     def _draw_polygon_boundary(polygon, ax, color_val):

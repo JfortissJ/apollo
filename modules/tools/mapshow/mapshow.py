@@ -90,6 +90,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     map = Map()
+    map.export_lanes = True
     map.load(args.map)
     draw(map)
 
