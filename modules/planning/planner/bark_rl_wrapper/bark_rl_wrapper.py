@@ -15,16 +15,21 @@ class BarkRlWrapper(object):
         self.perception_obstacles_received_ = False
         self.perception_obstacle_msg_ = PerceptionObstacles()
         self.planning_pub_ = node.create_writer('/apollo/planning', planning_pb2.ADCTrajectory)
+        # TODO: create bark-ml external runtime and save it as member
 
     def publish_planningmsg(self):
 
         if not self.perception_obstacles_received_:
             print("perception not received yet")
             return
+        
+        # TODO step 1: init ego vehicle with planning_init_point (call self.env.addEgoAgent())
+        # TODO step 2: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
+        # TODO step 3: set reference line
 
         trajectory_msg = planning_pb2.ADCTrajectory()
         # TODO: fill this with data from BARK-ML
-        # 
+        #  (call self.env.generateTrajectory())
         # 
         self.planning_pub_.write(trajectory_msg)
         self.perception_obstacles_received_ = False

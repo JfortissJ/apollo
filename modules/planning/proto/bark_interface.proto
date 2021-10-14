@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+import "modules/common/proto/pnc_point.proto";
+
+message BarkObstacle {
+    required int32 id = 1;  // obstacle ID.
+    required double box_length = 2;  // obstacle length.
+    required double box_width = 3;  // obstacle width.
+    repeated apollo.common.TrajectoryPoint prediction = 4;
+}
+
+message BarkInterface {
+    required apollo.common.TrajectoryPoint planning_init_point = 1;
+    repeated apollo.common.PathPoint reference_line = 2;
+    repeated BarkObstacle obstacles = 3;
+}

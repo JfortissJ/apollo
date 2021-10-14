@@ -592,4 +592,12 @@ proto_library(
     srcs = ["miqp_planner_config.proto"],
 )
 
+proto_library(
+    name = "bark_interface_proto_lib",
+    srcs = ["bark_interface.proto"],
+    deps = [
+        "//modules/common/proto:pnc_point_proto_lib",
+    ],
+)
+
 cpplint()
