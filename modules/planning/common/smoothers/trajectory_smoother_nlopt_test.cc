@@ -15,7 +15,7 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "modules/planning/planner/miqp/trajectory_smoother_nlopt.h"
+#include "modules/planning/common/smoothers/trajectory_smoother_nlopt.h"
 
 #include <cmath>
 
@@ -401,7 +401,7 @@ TEST(TrajectorySmootherNLOpt, VelocityBounds) {
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp.pb.txt";
   int subsampling = 0;  // no subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -409,7 +409,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile) {
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileSubsampling) {
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -417,7 +417,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFileSubsampling) {
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileStartDriving) {
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_from_standstill.pb.txt";
   int subsampling = 0;  // no subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -425,7 +425,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFileStartDriving) {
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileInCurve) {
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_in_curve.pb.txt";
   int subsampling = 1;  // no subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -433,7 +433,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFileInCurve) {
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135504) {
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210429-135504.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -441,7 +441,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135504) {
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135505) {
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210429-135505.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -450,7 +450,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135505) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135507) {
   // SOMETIMES FAILING!!!
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210429-135507.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -460,7 +460,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135518) {
   // Not sure, if this is a reasonable test, as transformed input is already
   // crap
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210429-135518.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -470,7 +470,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135518_Orig) {
   // Corresponds to OptimizeFromFile20210429135518, but operates on original
   // miqp trajectory, and not the transformed one
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file =
       "test_trajectory_miqp_20210429-135518_orig.pb.txt";
   int subsampling = 1;  // subsampling
@@ -479,7 +479,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429135518_Orig) {
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429133659) {
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210429-133659.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -488,7 +488,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210429133659) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210503140734) {
   // FROM SIMULATION
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210503-140734.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -499,7 +499,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504121851) {
   // there is quite an offset between the initial state and the rest of the
   // reference
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210504-121851.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -508,7 +508,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504121851) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504123902) {
   // Starting from stillstand, smoothing trajectory from reference generator
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210504-123902.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -517,7 +517,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504123902) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504124154) {
   // Starting from stillstand, smoothing trajectory from reference generator
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210504-124154.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -526,7 +526,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504124154) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210504124308) {
   // Starting from stillstand, smoothing trajectory from reference generator
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210504-124308.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -536,7 +536,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210506104710) {
   // Starting from stillstand, smoothing trajectory from reference generator
   // Extracted from Simcontrol
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210506-104710.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -546,7 +546,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210510144910) {
   // Stopping trajectory
   // Extracted from Simcontrol
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210510-144910.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -556,7 +556,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210510144917) {
   // Stopping trajectory, with all other points having v=0
   // Extracted from Simcontrol
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210510-144917.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -566,7 +566,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210520154439) {
   // SOMETIMES FAILING???
   // Extracted from Simcontrol, stopping trajectory
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210520-154439.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -575,7 +575,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210520154439) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526095319) {
   // Extracted from Simcontrol, from reference generator
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210526-095319.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -584,7 +584,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526095319) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526095321) {
   // Extracted from Simcontrol, from miqp
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210526-095321.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -594,7 +594,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526105909) {
   // SOMETIMES FAILING!!!!!
   // Extracted from Simcontrol, from miqp
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210526-105909.pb.txt";
   int subsampling = 1;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -603,7 +603,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210526105909) {
 TEST(TrajectorySmootherNLOpt, OptimizeFromFile20210527131525) {
   // Extracted from Simcontrol
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_trajectory_miqp_20210527-131525.pb.txt";
   int subsampling = 3;  // subsampling, fails if we use less time!!!
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -719,7 +719,7 @@ TEST(TrajectorySmootherNLOpt, IntegrateModelNonconstInput) {
 
 TEST(TrajectorySmootherNLOpt, OptimizeFromFileSZero) {
   const std::string path_to_file =
-      "modules/planning/planner/miqp/miqp_testdata";
+      "modules/planning/common/smoothers/miqp_testdata";
   const std::string input_file = "test_reproduce_szero.pb.txt";
   int subsampling = 0;  // subsampling
   OptimizeFromFileHelper(path_to_file, input_file, subsampling);
@@ -729,7 +729,7 @@ TEST(TrajectorySmootherNLOpt, OptimizeFromFileSZero) {
 // jerk bound of the smoother -> numeric issues and local minimum
 // TEST(TrajectorySmootherNLOpt, OptimizeFromFileMaxStepsStart) {
 //   const std::string path_to_file =
-//       "modules/planning/planner/miqp/miqp_testdata";
+//       "modules/planning/common/smoothers/miqp_testdata";
 //   const std::string input_file = "test_reproduce_invalid_start.pb.txt";
 //   const std::string start_point_file =
 //       "startpoint_reproduce_invalid_start.pb.txt";

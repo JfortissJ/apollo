@@ -15,7 +15,7 @@
  * limitations under the License.
  *****************************************************************************/
 
-#include "modules/planning/planner/miqp/trajectory_smoother_nlopt.h"
+#include "modules/planning/common/smoothers/trajectory_smoother_nlopt.h"
 
 #include <nlopt.h>
 

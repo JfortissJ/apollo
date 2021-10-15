@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 fortiss GmbH
+ * Copyright 2021 fortiss GmbH
  * Authors: Tobias Kessler, Klemens Esterle
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,13 +34,6 @@
 namespace apollo {
 namespace planning {
 
-enum PlannerState {
-  DRIVING_TRAJECTORY = 0,
-  START_TRAJECTORY = 1,
-  STOP_TRAJECTORY = 2,
-  STANDSTILL_TRAJECTORY = 3
-};
-
 /**
  * @class MiqpPlanner
  * @note LatticePlanner class from apollo served as a reference implementation!
@@ -69,11 +62,6 @@ class MiqpPlanner : public LatticePlanner {
       ReferenceLineInfo* reference_line_info) override;
 
  private:
-  std::vector<apollo::common::PathPoint> ToDiscretizedReferenceLine(
-      ReferenceLineInfo* reference_line_info, double stop_dist);
-
-  void FillTimeDerivativesInApolloTrajectory(DiscretizedTrajectory& traj) const;
-
   apollo::planning::DiscretizedTrajectory RawCTrajectoryToApolloTrajectory(
       double traj[], int size, bool low_speed_check);
 
@@ -81,21 +69,13 @@ class MiqpPlanner : public LatticePlanner {
       const common::TrajectoryPoint& planning_init_point,
       double initial_state[]);
 
-  void ConvertToPolyPts(const std::vector<common::math::Vec2d>& left_pts,
-                        const std::vector<common::math::Vec2d>& right_pts,
-                        double poly_pts[]);
-
   MiqpPlannerSettings DefaultSettings();
-
-  bool EnvironmentCollision(
-      std::vector<common::math::Vec2d> left_pts,
-      std::vector<common::math::Vec2d> right_pts,
-      const apollo::planning::DiscretizedTrajectory& ego_trajectory);
 
   bool ProcessStaticObstacles(const std::vector<const Obstacle*>& obstacles);
 
   bool ProcessDynamicObstacles(const std::vector<const Obstacle*>& obstacles,
                                double timestep);
+
   std::vector<const Obstacle*> FilterNonVirtualObstacles(
       const std::vector<const Obstacle*>& obstacles);
 
@@ -104,30 +84,8 @@ class MiqpPlanner : public LatticePlanner {
                                   double& p2_y, double& p3_x, double& p3_y,
                                   double& p4_x, double& p4_y);
 
-  double CalculateSDistanceToStop(ReferenceLineInfo* reference_line_info,
-                                  bool brake_for_inlane);
-
-  PlannerState DeterminePlannerState(const double planning_init_v,
-                                     ReferenceLineInfo* reference_line_info,
-                                     double& stop_dist);
-
   int CutoffTrajectoryAtV(apollo::planning::DiscretizedTrajectory& traj,
                           double vmin);
-
-  void CreateStandstillTrajectory(
-      const common::TrajectoryPoint& planning_init_point,
-      ReferenceLineInfo* reference_line_info);
-
-  void CreateStopTrajectory(const common::TrajectoryPoint& planning_init_point,
-                            ReferenceLineInfo* reference_line_info);
-
-  std::pair<bool, apollo::planning::DiscretizedTrajectory> SmoothTrajectory(
-      const apollo::planning::DiscretizedTrajectory& traj_in,
-      const common::TrajectoryPoint& planning_init_point);
-
-  bool ThetaChangeLargerThan(
-      const apollo::planning::DiscretizedTrajectory& traj,
-      const double delta_theta_max);
 
   bool IsVxVyValid(const double& vx, const double& vy);
 
