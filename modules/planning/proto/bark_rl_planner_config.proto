@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package apollo.planning;
+
+message BarkRlPlannerConfiguration {
+    optional bool consider_obstacles = 4 [default = true];
+    optional int32 nr_steps = 15 [default = 20];
+    optional double ts = 17 [default = 0.25];
+    optional double distance_stop_before = 25 [default = 5];
+    optional double distance_start_slowdown = 26 [default = 15];
+    optional double destination_distance_stop_threshold = 31 [default = 2.0];
+    optional double cutoff_distance_reference_after_stop = 32 [default = 10.0];
+    optional double pts_offset_x = 36 [default = 0.0];
+    optional double pts_offset_y = 37 [default = 0.0];
+    optional double extension_length_dynamic = 39 [default = 6.0];
+    optional double extension_length_static = 40 [default = 2.0];
+    optional double extension_width_static = 41 [default = 0.4];
+}

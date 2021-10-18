@@ -147,6 +147,7 @@ proto_library(
         ":speed_bounds_decider_config_proto_lib",
         ":st_bounds_decider_config_proto_lib",
         ":miqp_planner_config_proto_lib",
+        ":bark_rl_planner_config_proto_lib",
     ],
 )
 
@@ -590,6 +591,11 @@ proto_library(
 proto_library(
     name = "miqp_planner_config_proto_lib",
     srcs = ["miqp_planner_config.proto"],
+)
+
+proto_library(
+    name = "bark_rl_planner_config_proto_lib",
+    srcs = ["bark_rl_planner_config.proto"],
 )
 
 proto_library(
