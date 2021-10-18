@@ -2,17 +2,28 @@ syntax = "proto2";
 
 package apollo.planning;
 
+import "modules/common/proto/header.proto";
 import "modules/common/proto/pnc_point.proto";
 
 message BarkObstacle {
     required int32 id = 1;  // obstacle ID.
     required double box_length = 2;  // obstacle length.
     required double box_width = 3;  // obstacle width.
-    repeated apollo.common.TrajectoryPoint prediction = 4;
+    repeated apollo.common.TrajectoryPoint prediction = 6;  // predicted trajectory in reference frame.
+    required double s_distance_center_to_reference = 4;  // longitudinal distance from box's center to reference frame
+    required double d_distance_center_to_reference = 5;  // lateral distance from box's center to reference frame
 }
 
-message BarkInterface {
-    required apollo.common.TrajectoryPoint planning_init_point = 1;
-    repeated apollo.common.PathPoint reference_line = 2;
-    repeated BarkObstacle obstacles = 3;
+message ApolloToBarkInterface {
+    required apollo.common.Header header = 1;
+    required apollo.common.TrajectoryPoint planning_init_point = 2;
+    required double velocity_desired = 3;
+    repeated apollo.common.PathPoint reference_line = 4;
+    repeated BarkObstacle obstacles = 5;
+}
+
+
+message BarkToApolloInterface {
+    required apollo.common.Header header = 1;
+    repeated apollo.common.TrajectoryPoint planned_trajectory = 2;
 }

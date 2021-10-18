@@ -598,11 +598,19 @@ proto_library(
     srcs = ["bark_rl_planner_config.proto"],
 )
 
+cc_proto_library(
+    name = "bark_interface_proto",
+    deps = [
+        ":bark_interface_proto_lib",
+    ],
+)
+
 proto_library(
     name = "bark_interface_proto_lib",
     srcs = ["bark_interface.proto"],
     deps = [
         "//modules/common/proto:pnc_point_proto_lib",
+        "//modules/common/proto:header_proto_lib",
     ],
 )
 
