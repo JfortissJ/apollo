@@ -29,7 +29,6 @@
 #include "cyber/common/log.h"
 #include "cyber/common/macros.h"
 #include "cyber/logger/logger_util.h"
-#include "modules/common/math/cartesian_frenet_conversion.h"
 #include "modules/common/math/path_matcher.h"
 #include "modules/common/time/time.h"
 #include "modules/planning/common/fortiss_common.h"
@@ -40,14 +39,11 @@
 namespace apollo {
 namespace planning {
 
-// TODO: are all these needed?
 using apollo::common::ErrorCode;
 using apollo::common::PathPoint;
 using apollo::common::Status;
 using apollo::common::TrajectoryPoint;
 using apollo::common::math::Box2d;
-using apollo::common::math::CartesianFrenetConverter;
-using apollo::common::math::PathMatcher;
 using apollo::common::math::Polygon2d;
 using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
@@ -155,14 +151,13 @@ Status MiqpPlanner::PlanOnReferenceLine(
   current_time = Clock::NowInSeconds();
 
   // Map
-  std::vector<Vec2d> left_pts, right_pts;
+  fortiss::RoadBoundaries road_bounds;
   if (config_.miqp_planner_config().use_environment_polygon()) {
     current_time = Clock::NowInSeconds();
-    std::tie(left_pts, right_pts) =
-        fortiss::ToLeftAndRightBoundary(reference_line_info);
-    const int poly_size = left_pts.size() + right_pts.size();
+    road_bounds = fortiss::ToLeftAndRightBoundary(reference_line_info);
+    const int poly_size = road_bounds.left.size() + road_bounds.right.size();
     double poly_pts[poly_size * 2];
-    fortiss::ConvertToPolyPts(left_pts, right_pts, map_offset, poly_pts);
+    fortiss::ConvertToPolyPts(road_bounds, map_offset, poly_pts);
     UpdateConvexifiedMapCMiqpPlaner(planner_, poly_pts, poly_size);
     AINFO << "Map Processing Time [s] = "
           << (Clock::NowInSeconds() - current_time);
@@ -285,7 +280,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
 
   // Check resulting trajectory for collision with environment
   if (config_.miqp_planner_config().use_environment_polygon()) {
-    if (fortiss::EnvironmentCollision(left_pts, right_pts, apollo_traj)) {
+    if (fortiss::EnvironmentCollision(road_bounds, apollo_traj)) {
       AERROR << "Planning success but collision with environment!";
     }
   }

@@ -37,22 +37,17 @@ struct MapOffset {
   double y;
 };
 
-// TODO: replace pair of vectors by RoadBoundary
-struct RoadBoundary {
+struct RoadBoundaries {
   std::vector<apollo::common::math::Vec2d> left;
   std::vector<apollo::common::math::Vec2d> right;
 };
 
-std::pair<std::vector<apollo::common::math::Vec2d>,
-          std::vector<apollo::common::math::Vec2d>>
-ToLeftAndRightBoundary(ReferenceLineInfo* reference_line_info);
+RoadBoundaries ToLeftAndRightBoundary(ReferenceLineInfo* reference_line_info);
 
-bool EnvironmentCollision(std::vector<common::math::Vec2d> left_pts,
-                          std::vector<common::math::Vec2d> right_pts,
+bool EnvironmentCollision(const RoadBoundaries& road_bounds,
                           const DiscretizedTrajectory& ego_trajectory);
 
-void ConvertToPolyPts(const std::vector<apollo::common::math::Vec2d>& left_pts,
-                      const std::vector<apollo::common::math::Vec2d>& right_pts,
+void ConvertToPolyPts(const RoadBoundaries& road_bounds,
                       const MapOffset& map_offset, double poly_pts[]);
 
 std::vector<apollo::common::PathPoint> ToDiscretizedReferenceLine(

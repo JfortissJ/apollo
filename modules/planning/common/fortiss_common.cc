@@ -31,8 +31,7 @@ using apollo::common::math::Polygon2d;
 using apollo::common::math::Vec2d;
 using apollo::planning::DiscretizedTrajectory;
 
-std::pair<std::vector<Vec2d>, std::vector<Vec2d>> ToLeftAndRightBoundary(
-    ReferenceLineInfo* reference_line_info) {
+RoadBoundaries ToLeftAndRightBoundary(ReferenceLineInfo* reference_line_info) {
   std::vector<Vec2d> left_points, right_points;
   const hdmap::RouteSegments& segments = reference_line_info->Lanes();
   for (const auto& seg : segments) {
@@ -51,15 +50,19 @@ std::pair<std::vector<Vec2d>, std::vector<Vec2d>> ToLeftAndRightBoundary(
       }
     }
   }
-  return std::make_pair(left_points, right_points);
+  RoadBoundaries bounds;
+  bounds.left = left_points;
+  bounds.right = right_points;
+  return bounds;
 }
 
 //! @note copied from apollo's CollisionChecker::InCollision() function
-bool EnvironmentCollision(std::vector<Vec2d> left_pts,
-                          std::vector<Vec2d> right_pts,
+bool EnvironmentCollision(const RoadBoundaries& road_bounds,
                           const DiscretizedTrajectory& ego_trajectory) {
   // append reversed right points to the left points
-  left_pts.insert(left_pts.end(), right_pts.rbegin(), right_pts.rend());
+  auto left_pts = road_bounds.left;
+  left_pts.insert(left_pts.end(), road_bounds.right.rbegin(),
+                  road_bounds.right.rend());
   // create polygon from the point vector
   Polygon2d envpoly(left_pts);
 
@@ -94,16 +97,16 @@ bool EnvironmentCollision(std::vector<Vec2d> left_pts,
   return false;
 }
 
-void ConvertToPolyPts(const std::vector<Vec2d>& left_pts,
-                      const std::vector<Vec2d>& right_pts,
+void ConvertToPolyPts(const RoadBoundaries& road_bounds,
                       const MapOffset& map_offset, double poly_pts[]) {
   int i = 0;
-  for (auto it = left_pts.begin(); it != left_pts.end(); ++it) {
+  for (auto it = road_bounds.left.begin(); it != road_bounds.left.end(); ++it) {
     poly_pts[2 * i] = it->x() - map_offset.x;
     poly_pts[2 * i + 1] = it->y() - map_offset.y;
     i++;
   }
-  for (auto it = right_pts.rbegin(); it != right_pts.rend(); ++it) {
+  for (auto it = road_bounds.right.rbegin(); it != road_bounds.right.rend();
+       ++it) {
     poly_pts[2 * i] = it->x() - map_offset.x;
     poly_pts[2 * i + 1] = it->y() - map_offset.y;
     i++;
