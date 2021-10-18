@@ -84,9 +84,6 @@ class MiqpPlanner : public LatticePlanner {
                                   double& p2_y, double& p3_x, double& p3_y,
                                   double& p4_x, double& p4_y);
 
-  int CutoffTrajectoryAtV(apollo::planning::DiscretizedTrajectory& traj,
-                          double vmin);
-
   bool IsVxVyValid(const double& vx, const double& vy);
 
  private:
