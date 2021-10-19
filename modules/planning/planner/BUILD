@@ -19,6 +19,7 @@ cc_library(
         "//modules/planning/proto:planning_proto",
         "//modules/planning/scenarios:scenario",
         "//modules/planning/scenarios:scenario_manager",
+        "//modules/planning/proto:bark_interface_proto",
     ],
 )
 

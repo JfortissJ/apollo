@@ -29,6 +29,7 @@
 #include "modules/planning/planner/lattice/lattice_planner.h"
 #include "modules/planning/planner/planner.h"
 #include "modules/planning/proto/planning_config.pb.h"
+#include "modules/planning/proto/bark_interface.pb.h"
 
 namespace apollo {
 namespace planning {
@@ -60,11 +61,14 @@ class BarkRlPlanner : public LatticePlanner {
       const common::TrajectoryPoint& planning_init_point, Frame* frame,
       ReferenceLineInfo* reference_line_info) override;
 
+  void SetBarkResponsePtr(BarkResponse* response, std::mutex* mutex) override;
  private:
   // TODO: convert obstacles to BarkObstacles (filter out virtual obstacles?)
   bool ProcessObstacles(const std::vector<const Obstacle*>& obstacles, double timestep);
 
  private:
+  BarkResponse* bark_response_; // TODO: initialize and handle nullptr
+  std::mutex* mutex_; // TODO: initialize and handle nullptr
   double minimum_valid_speed_planning_;
   double standstill_velocity_threshold_;
 };

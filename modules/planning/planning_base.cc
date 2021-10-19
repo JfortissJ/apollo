@@ -22,6 +22,7 @@
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/proto/planning_internal.pb.h"
 #include "modules/planning/tasks/task_factory.h"
+#include "modules/planning/proto/bark_interface.pb.h"
 
 namespace apollo {
 namespace planning {
@@ -52,6 +53,10 @@ void PlanningBase::FillPlanningPb(const double timestamp,
 }
 
 bool PlanningBase::PublishTrajectory() { return true; }
+
+void PlanningBase::SetBarkResponsePtr(BarkResponse* response, std::mutex* mutex) {
+  planner_->SetBarkResponsePtr(response, mutex);
+}
 
 }  // namespace planning
 }  // namespace apollo

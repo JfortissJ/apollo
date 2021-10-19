@@ -21,6 +21,7 @@ cc_library(
         "//modules/planning/common:history",
         "//modules/planning/proto:planning_proto",
         "//modules/prediction/proto:prediction_proto",
+        "//modules/planning/proto:bark_interface_proto",
     ],
 )
 
@@ -62,6 +63,7 @@ cc_library(
         "//modules/planning/tasks:task_factory",
         "//modules/planning/traffic_rules:traffic_decider",
         "//modules/prediction/proto:prediction_proto",
+        "//modules/planning/proto:bark_interface_proto",
     ],
 )
 

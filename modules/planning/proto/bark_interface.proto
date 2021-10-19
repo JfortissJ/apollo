@@ -14,7 +14,7 @@ message BarkObstacle {
     required double d_distance_center_to_reference = 5;  // lateral distance from box's center to reference frame
 }
 
-message ApolloToBarkInterface {
+message ApolloToBarkMsg {
     required apollo.common.Header header = 1;
     required apollo.common.TrajectoryPoint planning_init_point = 2;
     required double velocity_desired = 3;
@@ -23,7 +23,7 @@ message ApolloToBarkInterface {
 }
 
 
-message BarkToApolloInterface {
+message BarkResponse {
     required apollo.common.Header header = 1;
     repeated apollo.common.TrajectoryPoint planned_trajectory = 2;
 }

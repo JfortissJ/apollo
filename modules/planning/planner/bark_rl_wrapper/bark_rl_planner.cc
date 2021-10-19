@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "cyber/common/log.h"
+#include "cyber/time/rate.h"
 #include "cyber/common/macros.h"
 #include "cyber/logger/logger_util.h"
 #include "modules/common/math/path_matcher.h"
@@ -49,6 +50,7 @@ using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
 using apollo::planning::DiscretizedTrajectory;
 using apollo::planning::fortiss::MapOffset;
+using apollo::cyber::Rate;
 
 BarkRlPlanner::BarkRlPlanner() {}
 
@@ -132,8 +134,18 @@ Status BarkRlPlanner::PlanOnReferenceLine(
     }
   }
 
-  // // Plan
+  // send ApolloToBarkMsg message
+  ApolloToBarkMsg bark_interface_msg;
+  AINFO << "Sending ApolloToBarkMsg msg:" << bark_interface_msg.DebugString();
+
+  // Plan ... wait for trajectory from bark ml
+  Rate rate(0.05);
+  bool new_trajectory_from_bark_ml = false; // TODO: this should come from reader
+  while (!new_trajectory_from_bark_ml) {
+    rate.Sleep();
+  }
   // DiscretizedTrajectory apollo_traj;
+  // bark_ml_message(vdes)
   // if (planner_status == fortiss::PlannerState::START_TRAJECTORY ||
   //     planner_status == fortiss::PlannerState::STOP_TRAJECTORY) {
   //   AERROR << "Start/Stop Trajectory, using reference instead of miqp
@@ -162,13 +174,6 @@ Status BarkRlPlanner::PlanOnReferenceLine(
   //       planner_, egoCarIdx_, planning_init_point.relative_time(), traj,
   //       size);
   //   apollo_traj = RawCTrajectoryToApolloTrajectory(traj, size, true);
-  // }
-
-  // if (config_.bark_rl_planner_config().minimum_percentage_valid_miqp_points() *
-  //         config_.bark_rl_planner_config().nr_steps() >
-  //     apollo_traj.size()) {
-  //   AERROR << "Trajectory has too many invalid points, setting error state";
-  //   return Status(ErrorCode::PLANNING_ERROR, "invalid points!");
   // }
 
   // // Check resulting trajectory for collision with obstacles
@@ -222,6 +227,11 @@ Status BarkRlPlanner::PlanOnReferenceLine(
   //       << (Clock::NowInSeconds() - start_time);
 
   // return return_status;
+}
+
+void BarkRlPlanner::SetBarkResponsePtr(BarkResponse* response, std::mutex* mutex) {
+  bark_response_ = response;
+  mutex_ = mutex;
 }
 
 }  // namespace planning

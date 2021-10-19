@@ -81,11 +81,25 @@ bool PlanningComponent::Init() {
           relative_map_.CopyFrom(*map_message);
         });
   }
+
+  bark_response_reader_ = node_->CreateReader<BarkResponse>(
+      FLAGS_planning_bark_response_topic,
+      [this](const std::shared_ptr<BarkResponse>& bark_response) {
+        ADEBUG << "Received bark response: run callback.";
+        // TODO: use own lock?
+        std::lock_guard<std::mutex> lock(mutex_);
+        bark_response_.CopyFrom(*bark_response);
+      });
+  planning_base_->SetBarkResponsePtr(&bark_response_, &mutex_);
+
   planning_writer_ =
       node_->CreateWriter<ADCTrajectory>(FLAGS_planning_trajectory_topic);
 
   rerouting_writer_ =
       node_->CreateWriter<RoutingRequest>(FLAGS_routing_request_topic);
+
+  apollo_to_bark_msg_writer_ =
+      node_->CreateWriter<ApolloToBarkMsg>(FLAGS_planning_apollo_to_bark_topic);
 
   return true;
 }

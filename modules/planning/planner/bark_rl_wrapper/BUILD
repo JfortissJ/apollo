@@ -18,6 +18,7 @@ cc_library(
         "//modules/planning/planner/lattice:lattice_planner",
         "//modules/planning/proto:planning_proto",
         "//modules/planning/common:fortiss_common",
+        "//modules/planning/proto:bark_interface_proto"
     ],
 )
 

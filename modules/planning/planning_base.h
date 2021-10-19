@@ -33,6 +33,7 @@
 #include "modules/planning/common/trajectory/publishable_trajectory.h"
 #include "modules/planning/planner/planner.h"
 #include "modules/planning/planner/planner_dispatcher.h"
+#include "modules/planning/proto/bark_interface.pb.h"
 #include "modules/planning/proto/planning.pb.h"
 #include "modules/planning/proto/planning_config.pb.h"
 #include "modules/planning/proto/traffic_rule_config.pb.h"
@@ -72,6 +73,8 @@ class PlanningBase {
       ADCTrajectory* const trajectory) = 0;
 
   virtual bool PublishTrajectory();
+
+  virtual void SetBarkResponsePtr(BarkResponse* response, std::mutex* mutex);
 
  protected:
   virtual void FillPlanningPb(const double timestamp,

@@ -27,6 +27,7 @@
 #include "modules/perception/proto/traffic_light_detection.pb.h"
 #include "modules/planning/common/planning_gflags.h"
 #include "modules/planning/planning_base.h"
+#include "modules/planning/proto/bark_interface.pb.h"
 #include "modules/planning/proto/pad_msg.pb.h"
 #include "modules/planning/proto/planning.pb.h"
 #include "modules/planning/proto/planning_config.pb.h"
@@ -63,15 +64,18 @@ class PlanningComponent final
   std::shared_ptr<cyber::Reader<routing::RoutingResponse>> routing_reader_;
   std::shared_ptr<cyber::Reader<planning::PadMessage>> pad_msg_reader_;
   std::shared_ptr<cyber::Reader<relative_map::MapMsg>> relative_map_reader_;
+  std::shared_ptr<cyber::Reader<BarkResponse>> bark_response_reader_;
 
   std::shared_ptr<cyber::Writer<ADCTrajectory>> planning_writer_;
   std::shared_ptr<cyber::Writer<routing::RoutingRequest>> rerouting_writer_;
+  std::shared_ptr<cyber::Writer<ApolloToBarkMsg>> apollo_to_bark_msg_writer_;
 
   std::mutex mutex_;
   perception::TrafficLightDetection traffic_light_;
   routing::RoutingResponse routing_;
   planning::PadMessage pad_msg_;
   relative_map::MapMsg relative_map_;
+  BarkResponse bark_response_;
 
   LocalView local_view_;
 
