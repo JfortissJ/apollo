@@ -611,6 +611,7 @@ proto_library(
     deps = [
         "//modules/common/proto:pnc_point_proto_lib",
         "//modules/common/proto:header_proto_lib",
+        "//modules/planning/proto:planning_proto_lib"
     ],
 )
 

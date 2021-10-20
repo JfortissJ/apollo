@@ -27,9 +27,9 @@
 #include <vector>
 
 #include "cyber/common/log.h"
-#include "cyber/time/rate.h"
 #include "cyber/common/macros.h"
 #include "cyber/logger/logger_util.h"
+#include "cyber/time/rate.h"
 #include "modules/common/math/path_matcher.h"
 #include "modules/common/time/time.h"
 #include "modules/planning/common/fortiss_common.h"
@@ -48,24 +48,25 @@ using apollo::common::math::Box2d;
 using apollo::common::math::Polygon2d;
 using apollo::common::math::Vec2d;
 using apollo::common::time::Clock;
+using apollo::cyber::Rate;
 using apollo::planning::DiscretizedTrajectory;
 using apollo::planning::fortiss::MapOffset;
-using apollo::cyber::Rate;
 
-BarkRlPlanner::BarkRlPlanner() {}
+BarkRlPlanner::BarkRlPlanner() { logdir_ += "/apollo/data/log/"; }
 
 common::Status BarkRlPlanner::Init(const PlanningConfig& config) {
   minimum_valid_speed_planning_ = 1.0;   // below our model is invalid
   standstill_velocity_threshold_ = 0.1;  // set velocity hard to zero below this
 
+  LOG(INFO) << "Writing BarkRlPlanner Logs to " << logdir_.c_str();
   config_ = config;
   if (!config_.has_bark_rl_planner_config()) {
-    AERROR << "Please provide miqp planner parameter file! " +
+    AERROR << "Please provide BarkRlPlanner parameter file! " +
                   config_.DebugString();
     return Status(ErrorCode::PLANNING_ERROR,
-                  "miqp planner parameters missing!");
+                  "BarkRlPlanner parameters missing!");
   } else {
-    AINFO << "MIQP Planner Configuration: "
+    AINFO << "BarkRlPlanner Configuration: "
           << config_.bark_rl_planner_config().DebugString();
   }
 
@@ -102,11 +103,12 @@ Status BarkRlPlanner::PlanOnReferenceLine(
   std::vector<PathPoint> discrete_reference_line =
       fortiss::ToDiscretizedReferenceLine(
           reference_line_info, stop_dist,
-          config_.bark_rl_planner_config().cutoff_distance_reference_after_stop());
+          config_.bark_rl_planner_config()
+              .cutoff_distance_reference_after_stop());
 
   // Map
-  // fortiss::RoadBoundaries road_bounds;
-  // road_bounds = fortiss::ToLeftAndRightBoundary(reference_line_info);
+  fortiss::RoadBoundaries road_bounds;
+  road_bounds = fortiss::ToLeftAndRightBoundary(reference_line_info);
 
   // Initial State
   // TODO
@@ -126,110 +128,103 @@ Status BarkRlPlanner::PlanOnReferenceLine(
 
   // Obstacles as obstacles
   if (config_.bark_rl_planner_config().consider_obstacles()) {
-    bool success = ProcessObstacles(
-        frame->obstacles(), planning_init_point.relative_time());
+    bool success = ProcessObstacles(frame->obstacles(),
+                                    planning_init_point.relative_time());
     if (success) {
       AERROR << "Processing of obstacles failed";
-      return Status(ErrorCode::PLANNING_ERROR, "processing of obstacles failed!");
+      return Status(ErrorCode::PLANNING_ERROR,
+                    "processing of obstacles failed!");
     }
   }
 
   // send ApolloToBarkMsg message
-  ApolloToBarkMsg bark_interface_msg;
-  AINFO << "Sending ApolloToBarkMsg msg:" << bark_interface_msg.DebugString();
+  ApolloToBarkMsg bark_request;
+  // TODO: fill bark_request
+  AINFO << "Sending ApolloToBarkMsg msg:" << bark_request.DebugString();
+  apollo_to_bark_msg_writer_->Write(bark_request);
 
   // Plan ... wait for trajectory from bark ml
-  Rate rate(0.05);
-  bool new_trajectory_from_bark_ml = false; // TODO: this should come from reader
-  while (!new_trajectory_from_bark_ml) {
+  Rate rate(receiver_wait_in_sec_);
+  double waited_period = 0;
+  bool received_reponse = false;
+  while (waited_period <= 1.0) {
+    {
+      std::lock_guard<std::mutex> lock(*mutex_);
+      if (bark_response_ &&
+          bark_response_->mutable_header()->timestamp_sec() >
+              bark_request.mutable_header()->timestamp_sec()) {
+        AINFO << "Received ApolloToBarkMsg:" << bark_response_->DebugString();
+        received_reponse = true;
+        break;
+      }
+    }
     rate.Sleep();
+    waited_period += receiver_wait_in_sec_;
   }
-  // DiscretizedTrajectory apollo_traj;
-  // bark_ml_message(vdes)
-  // if (planner_status == fortiss::PlannerState::START_TRAJECTORY ||
-  //     planner_status == fortiss::PlannerState::STOP_TRAJECTORY) {
-  //   AERROR << "Start/Stop Trajectory, using reference instead of miqp
-  //   solution"; GetRawCLastReferenceTrajectoryCMiqpPlaner(
-  //       planner_, egoCarIdx_, planning_init_point.relative_time(), traj,
-  //       size);
-  //   apollo_traj = RawCTrajectoryToApolloTrajectory(traj, size, false);
-  // } else {
-  //   current_time = Clock::NowInSeconds();
-  //   bool success = PlanCBarkRlPlanner(planner_, timestep);
-  //   AINFO << "Miqp planning Time [s] = "
-  //         << (Clock::NowInSeconds() - current_time);
-  //   current_time = Clock::NowInSeconds();
 
-  //   // Planning failed
-  //   if (!success) {
-  //     AINFO << "Planning failed";
-  //     return Status(ErrorCode::PLANNING_ERROR, "miqp planner failed!");
-  //   }
+  DiscretizedTrajectory apollo_traj;
+  if (!received_reponse) {
+    AERROR << "Did not receive a reponse from BARK";
+    return Status(ErrorCode::PLANNING_ERROR, "bark interfacing failed!");
+  } else {
+    apollo_traj = DiscretizedTrajectory(bark_response_->planned_trajectory());
+  }
 
-  //   // Get trajectory from miqp planner
-  //   AINFO << "Planning Success!";
-  //   // trajectories shall start at t=0 with an offset of
-  //   // planning_init_point.relative_time()
-  //   GetRawCMiqpTrajectoryCBarkRlPlanner(
-  //       planner_, egoCarIdx_, planning_init_point.relative_time(), traj,
-  //       size);
-  //   apollo_traj = RawCTrajectoryToApolloTrajectory(traj, size, true);
-  // }
+  // Check resulting trajectory for collision with obstacles
+  if (config_.bark_rl_planner_config().consider_obstacles()) {
+    const auto& vehicle_config =
+        common::VehicleConfigHelper::Instance()->GetConfig();
+    const double ego_length = vehicle_config.vehicle_param().length();
+    const double ego_width = vehicle_config.vehicle_param().width();
+    const double ego_back_edge_to_center =
+        vehicle_config.vehicle_param().back_edge_to_center();
+    auto obstacles_non_virtual =
+        fortiss::FilterNonVirtualObstacles(frame->obstacles());
+    const bool obstacle_collision = CollisionChecker::InCollision(
+        obstacles_non_virtual, apollo_traj, ego_length, ego_width,
+        ego_back_edge_to_center);
+    if (obstacle_collision) {
+      AERROR << "Planning success but collision with obstacle!";
+    }
+  }
 
-  // // Check resulting trajectory for collision with obstacles
-  // if (config_.bark_rl_planner_config().consider_obstacles()) {
-  //   const auto& vehicle_config =
-  //       common::VehicleConfigHelper::Instance()->GetConfig();
-  //   const double ego_length = vehicle_config.vehicle_param().length();
-  //   const double ego_width = vehicle_config.vehicle_param().width();
-  //   const double ego_back_edge_to_center =
-  //       vehicle_config.vehicle_param().back_edge_to_center();
-  //   auto obstacles_non_virtual =
-  //   FilterNonVirtualObstacles(frame->obstacles()); const bool
-  //   obstacle_collision = CollisionChecker::InCollision(
-  //       obstacles_non_virtual, apollo_traj, ego_length, ego_width,
-  //       ego_back_edge_to_center);
-  //   if (obstacle_collision) {
-  //     AERROR << "Planning success but collision with obstacle!";
-  //   }
-  // }
+  // Check resulting trajectory for collision with environment
+  if (config_.bark_rl_planner_config().use_environment_polygon()) {
+    if (fortiss::EnvironmentCollision(road_bounds, apollo_traj)) {
+      AERROR << "Planning success but collision with environment!";
+    }
+  }
 
-  // // Check resulting trajectory for collision with environment
-  // if (config_.bark_rl_planner_config().use_environment_polygon()) {
-  //   if (fortiss::EnvironmentCollision(road_bounds, apollo_traj)) {
-  //     AERROR << "Planning success but collision with environment!";
-  //   }
-  // }
+  // Planning success -> publish trajectory
+  Status return_status;
+  if (config_.bark_rl_planner_config().use_smoothing()) {
+    auto smoothed_apollo_trajectory = fortiss::SmoothTrajectory(
+        apollo_traj, planning_init_point, logdir_.c_str(), map_offset);
+    if (smoothed_apollo_trajectory.first) {
+      reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
+      reference_line_info->SetCost(0);
+      reference_line_info->SetDrivable(true);
+      return_status = Status::OK();
+    } else {
+      return_status = Status(ErrorCode::PLANNING_ERROR, "Smoothing failed!");
+    }
+  } else {
+    reference_line_info->SetTrajectory(apollo_traj);
+    reference_line_info->SetCost(0);
+    reference_line_info->SetDrivable(true);
+    return_status = Status::OK();
+  }
 
-  // // Planning success -> publish trajectory
-  // Status return_status;
-  // if (config_.bark_rl_planner_config().use_smoothing()) {
-  //   auto smoothed_apollo_trajectory = fortiss::SmoothTrajectory(
-  //       apollo_traj, planning_init_point, logdir_.c_str(), map_offset);
-  //   if (smoothed_apollo_trajectory.first) {
-  //     reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
-  //     reference_line_info->SetCost(0);
-  //     reference_line_info->SetDrivable(true);
-  //     return_status = Status::OK();
-  //   } else {
-  //     return_status = Status(ErrorCode::PLANNING_ERROR, "Smoothing failed!");
-  //   }
-  // } else {
-  //   reference_line_info->SetTrajectory(apollo_traj);
-  //   reference_line_info->SetCost(0);
-  //   reference_line_info->SetDrivable(true);
-  //   return_status = Status::OK();
-  // }
+  AINFO << "BarkRlPlanner::PlanOnReferenceLine() took "
+        << (Clock::NowInSeconds() - start_time);
 
-  // AINFO << "MIQP Planner postprocess took [s]: "
-  //       << (Clock::NowInSeconds() - current_time);
-  // AINFO << "BarkRlPlanner::PlanOnReferenceLine() took "
-  //       << (Clock::NowInSeconds() - start_time);
-
-  // return return_status;
+  return return_status;
 }
 
-void BarkRlPlanner::SetBarkResponsePtr(BarkResponse* response, std::mutex* mutex) {
+void BarkRlPlanner::SetBarkInterfacePointers(
+    const std::shared_ptr<cyber::Writer<ApolloToBarkMsg>>& request_writer,
+    BarkResponse* response, std::mutex* mutex) {
+  apollo_to_bark_msg_writer_ = request_writer;
   bark_response_ = response;
   mutex_ = mutex;
 }

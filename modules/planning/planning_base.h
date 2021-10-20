@@ -74,7 +74,9 @@ class PlanningBase {
 
   virtual bool PublishTrajectory();
 
-  virtual void SetBarkResponsePtr(BarkResponse* response, std::mutex* mutex);
+  virtual void SetBarkInterfacePointers(
+      const std::shared_ptr<cyber::Writer<ApolloToBarkMsg>>& request_writer,
+      BarkResponse* response, std::mutex* mutex);
 
  protected:
   virtual void FillPlanningPb(const double timestamp,

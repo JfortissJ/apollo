@@ -67,7 +67,9 @@ class Planner {
 
   virtual void Stop() = 0;
 
-  virtual void SetBarkResponsePtr(BarkResponse* response, std::mutex* mutex) = 0;
+  virtual void SetBarkInterfacePointers(
+      const std::shared_ptr<cyber::Writer<ApolloToBarkMsg>>& request_writer,
+      BarkResponse* response, std::mutex* mutex) = 0;
 
  protected:
   PlanningConfig config_;
@@ -101,8 +103,9 @@ class PlannerWithReferenceLine : public Planner {
     return apollo::common::Status::OK();
   }
 
-  virtual void SetBarkResponsePtr(BarkResponse* response,
-                               std::mutex* mutex) override{};
+  virtual void SetBarkInterfacePointers(
+      const std::shared_ptr<cyber::Writer<ApolloToBarkMsg>>& request_writer,
+      BarkResponse* response, std::mutex* mutex) override{};
 };
 
 }  // namespace planning

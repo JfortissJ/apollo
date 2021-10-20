@@ -4,6 +4,7 @@ package apollo.planning;
 
 import "modules/common/proto/header.proto";
 import "modules/common/proto/pnc_point.proto";
+import "modules/planning/proto/planning.proto";
 
 message BarkObstacle {
     required int32 id = 1;  // obstacle ID.
@@ -25,5 +26,5 @@ message ApolloToBarkMsg {
 
 message BarkResponse {
     required apollo.common.Header header = 1;
-    repeated apollo.common.TrajectoryPoint planned_trajectory = 2;
+    required apollo.planning.ADCTrajectory planned_trajectory = 2;
 }

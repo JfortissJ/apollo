@@ -90,7 +90,6 @@ bool PlanningComponent::Init() {
         std::lock_guard<std::mutex> lock(mutex_);
         bark_response_.CopyFrom(*bark_response);
       });
-  planning_base_->SetBarkResponsePtr(&bark_response_, &mutex_);
 
   planning_writer_ =
       node_->CreateWriter<ADCTrajectory>(FLAGS_planning_trajectory_topic);
@@ -101,6 +100,8 @@ bool PlanningComponent::Init() {
   apollo_to_bark_msg_writer_ =
       node_->CreateWriter<ApolloToBarkMsg>(FLAGS_planning_apollo_to_bark_topic);
 
+  planning_base_->SetBarkInterfacePointers(apollo_to_bark_msg_writer_,
+                                           &bark_response_, &mutex_);
   return true;
 }
 
