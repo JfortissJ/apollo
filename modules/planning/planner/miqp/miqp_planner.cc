@@ -269,7 +269,7 @@ Status MiqpPlanner::PlanOnReferenceLine(
     const double ego_width = vehicle_config.vehicle_param().width();
     const double ego_back_edge_to_center =
         vehicle_config.vehicle_param().back_edge_to_center();
-    auto obstacles_non_virtual = FilterNonVirtualObstacles(frame->obstacles());
+    auto obstacles_non_virtual = fortiss::FilterNonVirtualObstacles(frame->obstacles());
     const bool obstacle_collision = CollisionChecker::InCollision(
         obstacles_non_virtual, apollo_traj, ego_length, ego_width,
         ego_back_edge_to_center);
@@ -698,21 +698,6 @@ bool MiqpPlanner::ProcessDynamicObstacles(
     }
   }
   return true;
-}
-
-std::vector<const Obstacle*> MiqpPlanner::FilterNonVirtualObstacles(
-    const std::vector<const Obstacle*>& obstacles) {
-  std::vector<const Obstacle*> obstacles_out;
-  for (const Obstacle* obstacle : obstacles) {
-    if (obstacle->IsVirtual()) {
-      AINFO << "Skipping virtual obstacle for post-collision check: "
-            << obstacle->DebugString();
-      continue;
-    } else {
-      obstacles_out.push_back(obstacle);
-    }
-  }
-  return obstacles_out;
 }
 
 bool MiqpPlanner::FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,

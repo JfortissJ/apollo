@@ -76,9 +76,6 @@ class MiqpPlanner : public LatticePlanner {
   bool ProcessDynamicObstacles(const std::vector<const Obstacle*>& obstacles,
                                double timestep);
 
-  std::vector<const Obstacle*> FilterNonVirtualObstacles(
-      const std::vector<const Obstacle*>& obstacles);
-
   bool FillInflatedPtsFromPolygon(const common::math::Polygon2d poly,
                                   double& p1_x, double& p1_y, double& p2_x,
                                   double& p2_y, double& p3_x, double& p3_y,

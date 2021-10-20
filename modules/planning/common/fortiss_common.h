@@ -47,6 +47,9 @@ RoadBoundaries ToLeftAndRightBoundary(ReferenceLineInfo* reference_line_info);
 bool EnvironmentCollision(const RoadBoundaries& road_bounds,
                           const DiscretizedTrajectory& ego_trajectory);
 
+std::vector<const Obstacle*> FilterNonVirtualObstacles(
+    const std::vector<const Obstacle*>& obstacles);
+
 void ConvertToPolyPts(const RoadBoundaries& road_bounds,
                       const MapOffset& map_offset, double poly_pts[]);
 

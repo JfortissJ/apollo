@@ -97,6 +97,21 @@ bool EnvironmentCollision(const RoadBoundaries& road_bounds,
   return false;
 }
 
+std::vector<const Obstacle*> FilterNonVirtualObstacles(
+    const std::vector<const Obstacle*>& obstacles) {
+  std::vector<const Obstacle*> obstacles_out;
+  for (const Obstacle* obstacle : obstacles) {
+    if (obstacle->IsVirtual()) {
+      AINFO << "Skipping virtual obstacle for post-collision check: "
+            << obstacle->DebugString();
+      continue;
+    } else {
+      obstacles_out.push_back(obstacle);
+    }
+  }
+  return obstacles_out;
+}
+
 void ConvertToPolyPts(const RoadBoundaries& road_bounds,
                       const MapOffset& map_offset, double poly_pts[]) {
   int i = 0;
