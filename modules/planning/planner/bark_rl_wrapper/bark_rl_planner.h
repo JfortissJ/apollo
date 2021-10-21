@@ -66,15 +66,15 @@ class BarkRlPlanner : public LatticePlanner {
       BarkResponse* response, std::mutex* mutex) override;
 
  private:
-  // TODO: convert obstacles to BarkObstacles (filter out virtual obstacles?)
-  bool ProcessObstacles(const std::vector<const Obstacle*>& obstacles,
-                        double timestep);
+  std::vector<BarkObstacle> ConvertToBarkObstacles(
+      const std::vector<const Obstacle*>& obstacles, double timestep) const;
 
  private:
   std::shared_ptr<cyber::Writer<ApolloToBarkMsg>> apollo_to_bark_msg_writer_;
   BarkResponse* bark_response_;  // TODO: initialize and handle nullptr
   std::mutex* mutex_;            // TODO: initialize and handle nullptr
   double receiver_wait_in_sec_ = 0.05;
+  double bark_timeout_ = 1.0;
   double minimum_valid_speed_planning_;
   double standstill_velocity_threshold_;
   std::string logdir_;

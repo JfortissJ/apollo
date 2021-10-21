@@ -110,10 +110,7 @@ Status BarkRlPlanner::PlanOnReferenceLine(
   fortiss::RoadBoundaries road_bounds;
   road_bounds = fortiss::ToLeftAndRightBoundary(reference_line_info);
 
-  // Initial State
-  // TODO
-
-  // // Target velocity
+  // Target velocity
   double vDes;
   const double dist_start_slowdown =
       config_.bark_rl_planner_config().distance_start_slowdown();
@@ -127,19 +124,22 @@ Status BarkRlPlanner::PlanOnReferenceLine(
   }
 
   // Obstacles as obstacles
+  std::vector<BarkObstacle> bark_obstacles;
   if (config_.bark_rl_planner_config().consider_obstacles()) {
-    bool success = ProcessObstacles(frame->obstacles(),
-                                    planning_init_point.relative_time());
-    if (success) {
-      AERROR << "Processing of obstacles failed";
-      return Status(ErrorCode::PLANNING_ERROR,
-                    "processing of obstacles failed!");
-    }
+    bark_obstacles = ConvertToBarkObstacles(
+        frame->obstacles(), planning_init_point.relative_time());
   }
 
-  // send ApolloToBarkMsg message
   ApolloToBarkMsg bark_request;
-  // TODO: fill bark_request
+  bark_request.mutable_header()->set_timestamp_sec(Clock::NowInSeconds());
+  bark_request.mutable_planning_init_point()->CopyFrom(planning_init_point);
+  bark_request.set_velocity_desired(vDes);
+  *bark_request.mutable_reference_line() = {discrete_reference_line.begin(),
+                                            discrete_reference_line.end()};
+  *bark_request.mutable_obstacles() = {bark_obstacles.begin(),
+                                       bark_obstacles.end()};
+
+  // send ApolloToBarkMsg message
   AINFO << "Sending ApolloToBarkMsg msg:" << bark_request.DebugString();
   apollo_to_bark_msg_writer_->Write(bark_request);
 
@@ -147,7 +147,7 @@ Status BarkRlPlanner::PlanOnReferenceLine(
   Rate rate(receiver_wait_in_sec_);
   double waited_period = 0;
   bool received_reponse = false;
-  while (waited_period <= 1.0) {
+  while (waited_period <= bark_timeout_) {
     {
       std::lock_guard<std::mutex> lock(*mutex_);
       if (bark_response_ &&
@@ -227,6 +227,13 @@ void BarkRlPlanner::SetBarkInterfacePointers(
   apollo_to_bark_msg_writer_ = request_writer;
   bark_response_ = response;
   mutex_ = mutex;
+}
+
+std::vector<BarkObstacle> BarkRlPlanner::ConvertToBarkObstacles(
+    const std::vector<const Obstacle*>& obstacles, double timestep) const {
+  std::vector<BarkObstacle> bark_obstacles;
+  // TODO: fill in obstacle message
+  return bark_obstacles;
 }
 
 }  // namespace planning

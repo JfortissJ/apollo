@@ -7,24 +7,24 @@ import "modules/common/proto/pnc_point.proto";
 import "modules/planning/proto/planning.proto";
 
 message BarkObstacle {
-    required int32 id = 1;  // obstacle ID.
-    required double box_length = 2;  // obstacle length.
-    required double box_width = 3;  // obstacle width.
+    optional int32 id = 1;  // obstacle ID.
+    optional double box_length = 2;  // obstacle length.
+    optional double box_width = 3;  // obstacle width.
     repeated apollo.common.TrajectoryPoint prediction = 6;  // predicted trajectory in reference frame.
-    required double s_distance_center_to_reference = 4;  // longitudinal distance from box's center to reference frame
-    required double d_distance_center_to_reference = 5;  // lateral distance from box's center to reference frame
+    optional double s_distance_center_to_reference = 4;  // longitudinal distance from box's center to reference frame
+    optional double d_distance_center_to_reference = 5;  // lateral distance from box's center to reference frame
 }
 
 message ApolloToBarkMsg {
-    required apollo.common.Header header = 1;
-    required apollo.common.TrajectoryPoint planning_init_point = 2;
-    required double velocity_desired = 3;
+    optional apollo.common.Header header = 1;
+    optional apollo.common.TrajectoryPoint planning_init_point = 2;
+    optional double velocity_desired = 3;
     repeated apollo.common.PathPoint reference_line = 4;
     repeated BarkObstacle obstacles = 5;
 }
 
 
 message BarkResponse {
-    required apollo.common.Header header = 1;
-    required apollo.planning.ADCTrajectory planned_trajectory = 2;
+    optional apollo.common.Header header = 1;
+    optional apollo.planning.ADCTrajectory planned_trajectory = 2;
 }
