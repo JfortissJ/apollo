@@ -25,6 +25,7 @@
 #ifdef USE_PLANNER_MIQP
 #include "modules/planning/planner/miqp/miqp_planner.h"
 #endif
+#include "modules/planning/planner/bark_rl_wrapper/bark_rl_planner.h"
 
 namespace apollo {
 namespace planning {
@@ -45,6 +46,9 @@ void PlannerDispatcher::RegisterPlanners() {
   planner_factory_.Register(PlannerType::MIQP,
                             []() -> Planner* { return new MiqpPlanner(); });
 #endif
+
+  planner_factory_.Register(PlannerType::BARK_RL,
+                            []() -> Planner* { return new BarkRlPlanner(); });
 }
 
 }  // namespace planning

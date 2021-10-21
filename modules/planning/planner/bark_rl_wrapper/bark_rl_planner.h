@@ -44,7 +44,7 @@ class BarkRlPlanner : public LatticePlanner {
 
   virtual ~BarkRlPlanner() = default;
 
-  std::string Name() override { return "BarkRlPlanner"; }
+  std::string Name() override { return "BARK_RL"; }
 
   common::Status Init(const PlanningConfig& config) override;
 

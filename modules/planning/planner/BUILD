@@ -46,7 +46,8 @@ cc_library(
         "//modules/planning/planner/navi:navi_planner",
         "//modules/planning/planner/public_road:public_road_planner",
         "//modules/planning/planner/rtk:rtk_planner",
-        "//modules/planning/proto:planning_proto"]
+        "//modules/planning/proto:planning_proto",
+        "//modules/planning/planner/bark_rl_wrapper:bark_rl_planner"]
         + select({":_planner_miqp" : ["//modules/planning/planner/miqp:miqp_planner"], "//conditions:default": []}),
 )
 

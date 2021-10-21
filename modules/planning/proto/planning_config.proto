@@ -331,6 +331,7 @@ enum PlannerType {
   NAVI = 2;         // navigation planner
   LATTICE = 3;      // lattice planner
   MIQP = 4;         // miqp planner
+  BARK_RL = 5;      // bark rl planner
 }
 
 message RtkPlanningConfig {
