@@ -9,7 +9,10 @@ from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
 
 import bark_ml.environments.gym
+from bark.core.world.map import MapInterface
+from bark_ml.environments.external_runtime import ExternalRuntime
 from bark_ml.library_wrappers.lib_tf_agents.agents.sac_agent import BehaviorSACAgent
+from bark_ml.observers.nearest_state_observer import NearestAgentsObserver
 from bark.runtime.commons.parameters import ParameterServer
 
 
@@ -35,8 +38,11 @@ class BarkRlWrapper(object):
 
         # TODO: create bark-ml external runtime and save it as member
         self.params_ = ParameterServer()
-        # observer = NearestAgentsObserver()
-        # self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=params)
+        observer = NearestAgentsObserver()
+        csvfile = "/apollo/modules/planning/data/base_map_lanes_guerickestr_assymetric_48.csv"
+        map_interface = MapInterface()
+        map_interface.SetCsvMap(csvfile)
+        self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_)
         self.step_time = 0.2 # this should come from pb param file
         self.num_steps = 10 # this should come from pb param file
         self.cycle_time_ = 0.2
