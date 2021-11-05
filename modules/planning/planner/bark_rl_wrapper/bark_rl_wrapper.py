@@ -1,6 +1,6 @@
 import time
 import numpy as np
-
+import os.path
 from cyber_py3 import cyber
 from cyber_py3 import cyber_time
 
@@ -8,12 +8,14 @@ from common.logger import Logger
 from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
 
-import bark_ml.environments.gym
+import bark
 from bark.core.world.map import MapInterface
+from bark.runtime.viewer.matplotlib_viewer import MPViewer
+from bark.runtime.commons.parameters import ParameterServer
+
 from bark_ml.environments.external_runtime import ExternalRuntime
 from bark_ml.library_wrappers.lib_tf_agents.agents.sac_agent import BehaviorSACAgent
 from bark_ml.observers.nearest_state_observer import NearestAgentsObserver
-from bark.runtime.commons.parameters import ParameterServer
 
 
 CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
@@ -36,18 +38,23 @@ class BarkRlWrapper(object):
         self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE, 
                                                 bark_interface_pb2.BarkResponse)
 
-        # TODO: create bark-ml external runtime and save it as member
         self.params_ = ParameterServer()
         observer = NearestAgentsObserver()
         csvfile = "/apollo/modules/planning/data/base_map_lanes_guerickestr_assymetric_48.csv"
+        if not os.path.isfile(csvfile):
+            print("map file does not exist, path might be wrong: {}".format(csvfile))
         map_interface = MapInterface()
         map_interface.SetCsvMap(csvfile)
-        self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_)
+        self.viewer_ = MPViewer(params=self.params_)
+        self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_, viewer=self.viewer_, render=False)
+        self.env_.setupWorld()
+        if not isinstance(self.env_._world, bark.core.world.World):
+            print("BARK World could not be created")
         self.step_time = 0.2 # this should come from pb param file
         self.num_steps = 10 # this should come from pb param file
         self.cycle_time_ = 0.2
-
         self.sequence_num_ = 0
+
 
     def publish_planningmsg(self):
 
@@ -79,7 +86,8 @@ class BarkRlWrapper(object):
         # step 4: 
         state_action_traj = self.env_.generateTrajectory(self.step_time, self.num_steps)
         adc_trajectory = planning_pb2.ADCTrajectory()
-        for (bark_state, _) in state_action_traj:
+        for bark_state in state_action_traj[0]:
+            print("bark_state: ", bark_state)
             traj_point = adc_trajectory.trajectory_point.add()
             traj_point.relative_time = bark_state[0]
             traj_point.path_point.x = bark_state[1]
@@ -89,7 +97,7 @@ class BarkRlWrapper(object):
             # TODO: do we need to fill traj_point.path_point.s?
             
         response_msg = bark_interface_pb2.BarkResponse()
-        response_msg.planned_trajectory = adc_trajectory
+        response_msg.planned_trajectory.CopyFrom(adc_trajectory)
         response_msg.header.timestamp_sec = cyber_time.Time.now().to_sec()
         response_msg.header.module_name = 'bark_response'
         response_msg.header.sequence_num = self.sequence_num_

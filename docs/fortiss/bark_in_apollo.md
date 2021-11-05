@@ -2,14 +2,15 @@
 
 ## Installation (everytime you start the docker container)
 ### Update Pip Package
-python3.7 -m pip install --upgrade pip --user
+`python3.7 -m pip install --upgrade pip --user`
 ### Install BARK ML
-python3.7 -m pip install bark-ml --user
+`python3.7 -m pip install bark-ml --user`
+To install a non-released version, use `python3.7 -m pip install git+https://github.com/bark-simulator/bark-ml --user` (and replace the url with the specific branch's url)
 ### Install Gym (currently apparently not a dependency of BARK ML)
-python3.7 -m pip install gym --user
+`python3.7 -m pip install gym --user`
 ### Update Protobuf if you experience some weird Tensorflow Bug.
-sudo pip uninstall protobuf
-sudo pip install protobuf
+`sudo pip uninstall protobuf`
+`sudo pip install protobuf`
 
 
 ## Starting BARK-ML Wrapper Node

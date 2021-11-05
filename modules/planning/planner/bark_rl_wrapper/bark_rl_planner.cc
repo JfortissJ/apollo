@@ -153,13 +153,14 @@ Status BarkRlPlanner::PlanOnReferenceLine(
       if (bark_response_ &&
           bark_response_->mutable_header()->timestamp_sec() >
               bark_request.mutable_header()->timestamp_sec()) {
-        AINFO << "Received ApolloToBarkMsg:" << bark_response_->DebugString();
+        AINFO << "Received BarkResponse:" << bark_response_->DebugString();
         received_reponse = true;
         break;
       }
     }
     rate.Sleep();
     waited_period += receiver_wait_in_sec_;
+    AINFO << "Already waited for :" << waited_period << "s";
   }
 
   DiscretizedTrajectory apollo_traj;
