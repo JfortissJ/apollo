@@ -144,23 +144,24 @@ Status BarkRlPlanner::PlanOnReferenceLine(
   apollo_to_bark_msg_writer_->Write(bark_request);
 
   // Plan ... wait for trajectory from bark ml
-  Rate rate(receiver_wait_in_sec_);
+  Rate rate(1/receiver_wait_in_sec_);
   double waited_period = 0;
   bool received_reponse = false;
   while (waited_period <= bark_timeout_) {
+    AERROR << "in while loop";
     {
       std::lock_guard<std::mutex> lock(*mutex_);
       if (bark_response_ &&
-          bark_response_->mutable_header()->timestamp_sec() >
+          bark_response_->mutable_header()->timestamp_sec() >=
               bark_request.mutable_header()->timestamp_sec()) {
-        AINFO << "Received BarkResponse:" << bark_response_->DebugString();
+        AERROR << "Received BarkResponse:" << bark_response_->DebugString();
         received_reponse = true;
         break;
       }
     }
     rate.Sleep();
     waited_period += receiver_wait_in_sec_;
-    AINFO << "Already waited for :" << waited_period << "s";
+    AERROR << "Already waited for :" << waited_period << "s";
   }
 
   DiscretizedTrajectory apollo_traj;
