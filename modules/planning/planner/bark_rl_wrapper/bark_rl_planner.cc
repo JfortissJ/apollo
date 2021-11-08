@@ -199,9 +199,10 @@ Status BarkRlPlanner::PlanOnReferenceLine(
 
   // Planning success -> publish trajectory
   Status return_status;
+  int subsampling = 0;
   if (config_.bark_rl_planner_config().use_smoothing()) {
     auto smoothed_apollo_trajectory = fortiss::SmoothTrajectory(
-        apollo_traj, planning_init_point, logdir_.c_str(), map_offset);
+        apollo_traj, planning_init_point, logdir_.c_str(), map_offset, subsampling);
     if (smoothed_apollo_trajectory.first) {
       reference_line_info->SetTrajectory(smoothed_apollo_trajectory.second);
       reference_line_info->SetCost(0);
