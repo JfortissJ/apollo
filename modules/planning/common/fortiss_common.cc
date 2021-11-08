@@ -172,8 +172,7 @@ std::vector<PathPoint> ToDiscretizedReferenceLine(
 std::pair<bool, DiscretizedTrajectory> SmoothTrajectory(
     const DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point, const char logdir[],
-    const MapOffset& map_offset) {
-  int subsampling = 3;
+    const MapOffset& map_offset, int subsampling) {
   TrajectorySmootherNLOpt tsm =
       TrajectorySmootherNLOpt(logdir, map_offset.x, map_offset.y);
   tsm.InitializeProblem(subsampling, traj_in, planning_init_point);

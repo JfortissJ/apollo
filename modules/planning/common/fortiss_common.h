@@ -60,7 +60,7 @@ std::vector<apollo::common::PathPoint> ToDiscretizedReferenceLine(
 std::pair<bool, DiscretizedTrajectory> SmoothTrajectory(
     const DiscretizedTrajectory& traj_in,
     const common::TrajectoryPoint& planning_init_point, const char logdir[],
-    const MapOffset& map_offset);
+    const MapOffset& map_offset, int subsampling);
 
 void CreateStandstillTrajectory(
     const common::TrajectoryPoint& planning_init_point,
