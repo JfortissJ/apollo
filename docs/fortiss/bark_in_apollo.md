@@ -6,11 +6,9 @@
 ### Install BARK ML
 `python3.7 -m pip install bark-ml --user`
 To install a non-released version, use `python3.7 -m pip install git+https://github.com/bark-simulator/bark-ml --user` (and replace the url with the specific branch's url)
-### Install Gym (currently apparently not a dependency of BARK ML)
-`python3.7 -m pip install gym --user`
 ### Update Protobuf if you experience some weird Tensorflow Bug.
-`sudo pip uninstall protobuf`
-`sudo pip install protobuf`
+`sudo pip uninstall -y protobuf` (installs 3.1.0)
+`sudo pip install protobuf` (installs 3.18.0 or newer)
 
 
 ## Starting BARK-ML Wrapper Node
