@@ -148,13 +148,12 @@ Status BarkRlPlanner::PlanOnReferenceLine(
   double waited_period = 0;
   bool received_reponse = false;
   while (waited_period <= bark_timeout_) {
-    AERROR << "in while loop";
     {
       std::lock_guard<std::mutex> lock(*mutex_);
       if (bark_response_ &&
           bark_response_->mutable_header()->timestamp_sec() >=
               bark_request.mutable_header()->timestamp_sec()) {
-        AERROR << "Received BarkResponse:" << bark_response_->DebugString();
+        AINFO << "Received BarkResponse:" << bark_response_->DebugString();
         received_reponse = true;
         break;
       }
