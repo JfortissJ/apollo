@@ -39,6 +39,7 @@ class BarkRlWrapper(object):
                                                 bark_interface_pb2.BarkResponse)
 
         self.params_ = ParameterServer()
+        self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211109_checkoints/'
         observer = NearestAgentsObserver()
         csvfile = "/apollo/modules/planning/data/base_map_lanes_guerickestr_assymetric_48.csv"
         if not os.path.isfile(csvfile):
