@@ -37,9 +37,14 @@ class BarkRlWrapper(object):
         self.apollo_to_bark_msg_ = bark_interface_pb2.ApolloToBarkMsg()
         self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE, 
                                                 bark_interface_pb2.BarkResponse)
-
+        self.step_time_ = 0.2 # this should come from pb param file
+        self.num_steps_ = 20 # this should come from pb param file
+        self.cycle_time_ = 0.2
+        self.sequence_num_ = 0
+        self.use_idm_ = False
+        
         self.params_ = ParameterServer()
-        self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211109_checkoints/'
+        self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211110_checkoints/'
         observer = NearestAgentsObserver()
         csvfile = "/apollo/modules/planning/data/base_map_lanes_guerickestr_assymetric_48.csv"
         if not os.path.isfile(csvfile):
@@ -50,12 +55,20 @@ class BarkRlWrapper(object):
         self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_, viewer=self.viewer_, render=False)
         if not isinstance(self.env_._world, bark.core.world.World):
             print("BARK World could not be created")
-        self.step_time_ = 0.2 # this should come from pb param file
-        self.num_steps_ = 20 # this should come from pb param file
-        self.cycle_time_ = 0.2
-        self.sequence_num_ = 0
-        self.use_idm_ = True
+        self.env_.setupWorld()
+        dummy_state = np.array([0, 0, 0, 0, 0])
+        self.setup_ego_agent(dummy_state)
+        
 
+
+    def setup_ego_agent(self, bark_state):
+        if self.use_idm_:
+            self.params_["BehaviorIDMClassic"]["DesiredVelocity"] = float(self.apollo_to_bark_msg_.velocity_desired)
+            self.env_._ml_behavior = bark.core.models.behavior.BehaviorIDMClassic(self.params_)
+        else:
+            sac_agent = BehaviorSACAgent(environment=self.env_, params=self.params_)
+            self.env_._ml_behavior = sac_agent
+        self.env_.addEgoAgent(bark_state)
 
     def publish_planningmsg(self):
 
@@ -63,21 +76,20 @@ class BarkRlWrapper(object):
             print("apollo to bark msg not received yet")
             return
         
+        time0 = time.time()
+
         # step 1: setup environment
         self.env_.setupWorld()
+        time1 = time.time()
+        print("Creating world took {}s, time since beginning: ".format(time1-time0, time1-time0))
 
         # step 2: init ego vehicle with planning_init_point
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
         print("planning init point received ", pl_init_pt)
         state = convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
-        # TODO: how to handle time stamp of ego state?
-        if self.use_idm_:
-            self.params_["BehaviorIDMClassic"]["DesiredVelocity"] = float(self.apollo_to_bark_msg_.velocity_desired)
-            self.env_._ml_behavior = bark.core.models.behavior.BehaviorIDMClassic(self.params_)
-        else:
-            sac_agent = BehaviorSACAgent(environment=self.env_, params=self.params_)
-            self.env_._ml_behavior = sac_agent
-        self.env_.addEgoAgent(state)
+        self.setup_ego_agent(state)
+        time2 = time.time()
+        print("Setup ego agent took {}s, time since beginning: ".format(time2-time1, time2-time0))
         
         # step 3: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
         for o in self.apollo_to_bark_msg_.obstacles:
@@ -87,10 +99,14 @@ class BarkRlWrapper(object):
                 traj.append(state_i)
             self.env_.addObstacle(traj, o.box_length, o.box_width)
 
+        time3 = time.time()
+        print("Setup other agents took {}s, time since beginning: ".format(time3-time2, time3-time0))
         # TODO step 3: set reference line
 
         # step 4: 
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
+        time4 = time.time()
+        print("Generating trajectory took {}s, time since beginning: ".format(time4-time3, time4-time0))
         adc_trajectory = planning_pb2.ADCTrajectory()
         traj_point = adc_trajectory.trajectory_point.add()
         # append initial state to resulting trajectory
@@ -113,7 +129,7 @@ class BarkRlWrapper(object):
 
         self.response_pub_.write(response_msg)
         self.apollo_to_bark_received_ = False
-        print("Generated Trajectory")
+        print("Generated Trajectory", response_msg)
 
     def apollo_to_bark_callback(self, data):
         """
