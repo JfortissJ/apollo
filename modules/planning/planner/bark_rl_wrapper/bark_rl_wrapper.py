@@ -31,7 +31,7 @@ class BarkRlWrapper(object):
         self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE, 
                                                 bark_interface_pb2.BarkResponse)
         self.step_time_ = 0.2 # this should come from pb param file
-        self.num_steps_ = 20 # this should come from pb param file
+        self.num_steps_ = 10 # this should come from pb param file
         self.cycle_time_ = 0.2
         self.sequence_num_ = 0
         self.use_idm_ = False
@@ -52,7 +52,8 @@ class BarkRlWrapper(object):
             print("BARK World could not be created")
         self.env_.setupWorld()
         dummy_state = np.array([0, 0, 0, 0, 0])
-        self.setup_ego_agent(dummy_state)
+        self.setup_ego_model()
+        self.env_.addEgoAgent(dummy_state)
         
 
     def convert_to_bark_state(self, traj_pt, time_offset):
@@ -64,14 +65,13 @@ class BarkRlWrapper(object):
         state = np.array([t_e, x_e, y_e, theta_e, v_e])
         return state
 
-    def setup_ego_agent(self, bark_state):
+    def setup_ego_model(self):
         if self.use_idm_:
             self.params_["BehaviorIDMClassic"]["DesiredVelocity"] = float(self.apollo_to_bark_msg_.velocity_desired)
             self.env_._ml_behavior = bark.core.models.behavior.BehaviorIDMClassic(self.params_)
         else:
             sac_agent = BehaviorSACAgent(environment=self.env_, params=self.params_)
             self.env_._ml_behavior = sac_agent
-        self.env_.addEgoAgent(bark_state)
 
     def publish_planningmsg(self):
 
@@ -90,7 +90,7 @@ class BarkRlWrapper(object):
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
         print("planning init point received ", pl_init_pt)
         state = self.convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
-        self.setup_ego_agent(state)
+        self.env_.addEgoAgent(state)
         time2 = time.time()
         print("Setup ego agent took {}s, time since beginning: ".format(time2-time1, time2-time0))
         
