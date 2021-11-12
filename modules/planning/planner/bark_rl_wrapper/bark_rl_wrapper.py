@@ -16,19 +16,12 @@ from bark.runtime.commons.parameters import ParameterServer
 from bark_ml.environments.external_runtime import ExternalRuntime
 from bark_ml.library_wrappers.lib_tf_agents.agents.sac_agent import BehaviorSACAgent
 from bark_ml.observers.nearest_state_observer import NearestAgentsObserver
+from bark_ml.core.observers import FrenetObserver
 
 
 CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
 CHANNEL_NAME_RESPONSE = '/apollo/planning/bark_response'
 
-def convert_to_bark_state(traj_pt, time_offset):
-    t_e = traj_pt.relative_time + time_offset
-    x_e = traj_pt.path_point.x
-    y_e = traj_pt.path_point.y
-    theta_e = traj_pt.path_point.theta
-    v_e = traj_pt.v
-    state = np.array([t_e, x_e, y_e, theta_e, v_e])
-    return state
 
 class BarkRlWrapper(object):
     def __init__(self, node):
@@ -42,15 +35,17 @@ class BarkRlWrapper(object):
         self.cycle_time_ = 0.2
         self.sequence_num_ = 0
         self.use_idm_ = False
+        self.pts_offset_x = 652000
+        self.pts_offset_y = 5.339e+06
         
-        self.params_ = ParameterServer()
-        self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211110_checkoints/'
-        observer = NearestAgentsObserver()
+        self.params_ = ParameterServer(filename="/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/single_lane_large.json")
+        self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/'
+        observer = FrenetObserver(self.params_)
         csvfile = "/apollo/modules/planning/data/base_map_lanes_guerickestr_assymetric_48.csv"
         if not os.path.isfile(csvfile):
             print("map file does not exist, path might be wrong: {}".format(csvfile))
         map_interface = MapInterface()
-        map_interface.SetCsvMap(csvfile)
+        map_interface.SetCsvMap(csvfile, self.pts_offset_x, self.pts_offset_y)
         self.viewer_ = MPViewer(params=self.params_)
         self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_, viewer=self.viewer_, render=False)
         if not isinstance(self.env_._world, bark.core.world.World):
@@ -60,6 +55,14 @@ class BarkRlWrapper(object):
         self.setup_ego_agent(dummy_state)
         
 
+    def convert_to_bark_state(self, traj_pt, time_offset):
+        t_e = traj_pt.relative_time + time_offset
+        x_e = traj_pt.path_point.x - self.pts_offset_x
+        y_e = traj_pt.path_point.y - self.pts_offset_y
+        theta_e = traj_pt.path_point.theta
+        v_e = traj_pt.v
+        state = np.array([t_e, x_e, y_e, theta_e, v_e])
+        return state
 
     def setup_ego_agent(self, bark_state):
         if self.use_idm_:
@@ -86,7 +89,7 @@ class BarkRlWrapper(object):
         # step 2: init ego vehicle with planning_init_point
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
         print("planning init point received ", pl_init_pt)
-        state = convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
+        state = self.convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
         self.setup_ego_agent(state)
         time2 = time.time()
         print("Setup ego agent took {}s, time since beginning: ".format(time2-time1, time2-time0))
@@ -95,7 +98,7 @@ class BarkRlWrapper(object):
         for o in self.apollo_to_bark_msg_.obstacles:
             traj = np.array()
             for pred_state in o.prediction:
-                state_i = convert_to_bark_state(pred_state, -pl_init_pt.relative_time)
+                state_i = self.convert_to_bark_state(pred_state, -pl_init_pt.relative_time)
                 traj.append(state_i)
             self.env_.addObstacle(traj, o.box_length, o.box_width)
 
@@ -114,8 +117,8 @@ class BarkRlWrapper(object):
         for bark_state in state_action_traj[0]:
             traj_point = adc_trajectory.trajectory_point.add()
             traj_point.relative_time = bark_state[0] + pl_init_pt.relative_time
-            traj_point.path_point.x = bark_state[1]
-            traj_point.path_point.y = bark_state[2]
+            traj_point.path_point.x = bark_state[1] + self.pts_offset_x
+            traj_point.path_point.y = bark_state[2] + self.pts_offset_y
             traj_point.path_point.theta = bark_state[3]
             traj_point.v = bark_state[4]
             # TODO: do we need to fill traj_point.path_point.s?
