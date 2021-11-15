@@ -4,7 +4,6 @@ import os.path
 from cyber_py3 import cyber
 from cyber_py3 import cyber_time
 
-from common.logger import Logger
 from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
 from modules.canbus.proto import chassis_detail_pb2
@@ -12,13 +11,10 @@ from modules.canbus.proto import chassis_detail_pb2
 import bark
 from bark.core.world.map import MapInterface
 from bark.runtime.viewer.matplotlib_viewer import MPViewer
-from bark.runtime.commons.parameters import ParameterServer
 
 from bark_ml.environments.external_runtime import ExternalRuntime
 from bark_ml.library_wrappers.lib_tf_agents.agents.sac_agent import BehaviorSACAgent
-from bark_ml.observers.nearest_state_observer import NearestAgentsObserver
-from bark_ml.core.observers import FrenetObserver
-
+from bark_ml.experiment.experiment_runner import ExperimentRunner
 
 CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
 CHANNEL_NAME_RESPONSE = '/apollo/planning/bark_response'
@@ -34,7 +30,7 @@ class BarkRlWrapper(object):
 
         self.apollo_to_bark_received_= False
         self.apollo_to_bark_msg_ = bark_interface_pb2.ApolloToBarkMsg()
-        self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE, 
+        self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE,
                                                 bark_interface_pb2.BarkResponse)
         self.step_time_ = 0.2 # this should come from pb param file
         self.num_steps_ = 10 # this should come from pb param file
@@ -43,13 +39,15 @@ class BarkRlWrapper(object):
         self.use_idm_ = False
         self.pts_offset_x = 652000
         self.pts_offset_y = 5.339e+06
-        
-        # Usage without checkpoints
-        #self.params_ = ParameterServer()
-        
-        self.params_ = ParameterServer(filename="/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/single_lane_large.json")
-        self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/'
-        observer = FrenetObserver(self.params_)
+
+        # TODO: make sure the same maps are being used (BARK-ML != BARK MAP)
+        # folder stucture needs to be as follows:
+        # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
+        # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
+        json_file_path = "/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/single_lane_large.json"
+        exp_runner = ExperimentRunner(json_file=json_file_path, mode="print", random_seed=0)
+        self.params_ = exp_runner._params
+        observer = exp_runner._experiment._observer
         csvfile = "/apollo/modules/planning/data/base_map_lanes_guerickestr_assymetric_48.csv"
         if not os.path.isfile(csvfile):
             print("map file does not exist, path might be wrong: {}".format(csvfile))
@@ -90,7 +88,7 @@ class BarkRlWrapper(object):
         if not self.apollo_to_bark_received_:
             print("apollo to bark msg not received yet")
             return
-        
+
         time0 = time.time()
 
         # step 1: setup environment
@@ -105,7 +103,7 @@ class BarkRlWrapper(object):
         self.env_.addEgoAgent(state)
         time2 = time.time()
         print("Setup ego agent took {}s, time since beginning: ".format(time2-time1, time2-time0))
-        
+
         # step 3: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
         for o in self.apollo_to_bark_msg_.obstacles:
             traj = np.array()
@@ -118,7 +116,7 @@ class BarkRlWrapper(object):
         print("Setup other agents took {}s, time since beginning: ".format(time3-time2, time3-time0))
         # TODO step 3: set reference line
 
-        # step 4: 
+        # step 4:
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
         time4 = time.time()
         print("Generating trajectory took {}s, time since beginning: ".format(time4-time3, time4-time0))
@@ -134,7 +132,7 @@ class BarkRlWrapper(object):
             traj_point.path_point.theta = bark_state[3]
             traj_point.v = bark_state[4]
             # TODO: do we need to fill traj_point.path_point.s?
-        
+
         response_msg = bark_interface_pb2.BarkResponse()
         response_msg.planned_trajectory.CopyFrom(adc_trajectory)
         response_msg.header.timestamp_sec = cyber_time.Time.now().to_sec()
@@ -190,8 +188,8 @@ def main():
     node = cyber.Node("bark_rl_node")
     bark_wrp = BarkRlWrapper(node)
 
-    node.create_reader(CHANNEL_NAME_REQUEST, 
-                       bark_interface_pb2.ApolloToBarkMsg, 
+    node.create_reader(CHANNEL_NAME_REQUEST,
+                       bark_interface_pb2.ApolloToBarkMsg,
                        bark_wrp.apollo_to_bark_callback)
 
     node.create_reader(CHANNEL_NAME_CANBUS,
