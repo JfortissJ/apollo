@@ -520,11 +520,13 @@ void MiqpPlanner::ConvertToInitialStateSecondOrder(
   initial_state[0] = planning_init_point.path_point().x() -
                      config_.miqp_planner_config().pts_offset_x();
   initial_state[1] = vel * cos(theta);
-  initial_state[2] = planning_init_point.a() * cos(theta) - pow(vel, 2) * kappa * sin(theta);
+  initial_state[2] =
+      planning_init_point.a() * cos(theta) - pow(vel, 2) * kappa * sin(theta);
   initial_state[3] = planning_init_point.path_point().y() -
                      config_.miqp_planner_config().pts_offset_y();
   initial_state[4] = vel * sin(theta);
-  initial_state[5] = planning_init_point.a() * sin(theta) + pow(vel, 2) * kappa * cos(theta);
+  initial_state[5] =
+      planning_init_point.a() * sin(theta) + pow(vel, 2) * kappa * cos(theta);
   AINFO << std::setprecision(15)
         << "initial state in miqp = x:" << initial_state[0]
         << ", xd:" << initial_state[1] << ", xdd:" << initial_state[2]
@@ -719,9 +721,9 @@ MiqpPlannerSettings MiqpPlanner::DefaultSettings() {
   s.bufferReference = 1.0;
   s.buffer_for_merging_tolerance = 1.0;  // probably too high
   s.refLineInterpInc = 0.2;
-  s.cplexModelpath =
-      "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
-      "miqp_planner/cplex_modfiles/";
+  strcpy(s.cplexModelpath,
+         "../bazel-bin/modules/planning/libplanning_component.so.runfiles/"
+         "miqp_planner/cplex_modfiles/");
   s.mipdisplay = 3;
   s.cutpass = 0;
   s.probe = 0;
@@ -1012,7 +1014,10 @@ apollo::planning::PlannerState MiqpPlanner::DeterminePlannerState(
         minimum_valid_speed_planning_) {  // Low speed -> modify start
       status = PlannerState::START_TRAJECTORY;
       // overwriting start stop_distance!!
-      bool brake_for_inlane = false;  // to be prone against obstacles that slightly collide with lane (referenceLineGenerator cannot handle close obstacles well -> would not stop otherwise)
+      bool brake_for_inlane =
+          false;  // to be prone against obstacles that slightly collide with
+                  // lane (referenceLineGenerator cannot handle close obstacles
+                  // well -> would not stop otherwise)
       stop_dist = MiqpPlanner::CalculateSDistanceToStop(reference_line_info,
                                                         brake_for_inlane);
     } else {  // Driving: default case

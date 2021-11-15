@@ -62,7 +62,7 @@ struct MiqpPlannerSettings {
   int rinsheur;
   int varsel;
   int mircuts;
-  const char* cplexModelpath;
+  char cplexModelpath[1000];
   bool useSos;
   bool useBranchingPriorities;
   MiqpPlannerWarmstartType warmstartType;
