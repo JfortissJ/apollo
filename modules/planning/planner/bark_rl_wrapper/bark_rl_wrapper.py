@@ -22,11 +22,12 @@ from bark_ml.core.observers import FrenetObserver
 
 CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
 CHANNEL_NAME_RESPONSE = '/apollo/planning/bark_response'
-
 CHANNEL_NAME_CANBUS = '/apollo/canbus/chassis_detail'
 
-STEERING_WHEEL_TORQUE_LIMIT = 100
-
+# TODO set reasonable values!
+STEERING_WHEEL_TORQUE_LIMIT = 10.0
+THROTTLE_PEDAL_LIMIT = 10.0
+BRAKE_PEDAL_LIMIT = 10.0
 
 class BarkRlWrapper(object):
     def __init__(self, node):
@@ -42,6 +43,9 @@ class BarkRlWrapper(object):
         self.use_idm_ = False
         self.pts_offset_x = 652000
         self.pts_offset_y = 5.339e+06
+        
+        # Usage without checkpoints
+        #self.params_ = ParameterServer()
         
         self.params_ = ParameterServer(filename="/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/single_lane_large.json")
         self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/'
@@ -159,26 +163,25 @@ class BarkRlWrapper(object):
         self.driver_interaction_triggered()
 
     def driver_interaction_triggered(self):
-        # TODO I (tobias) suspect we need to check each field for existance
+        # TODO idealy check these fields for existance
         steering_wheel_troque = self.chassis_detail_msg_.fortuna.steering.steering_wheel_torque
         throttle = self.chassis_detail_msg_.gas.throttle_input
-        is_brake_pressed = self.chassis_detail_msg_.brake.is_brake_pedal_pressed
+        brake_input = self.chassis_detail_msg_.brake.brake_input
 
-        print("steering_wheel_troque {}, throttle {}, is_brake_pressed".format(steering_wheel_troque, throttle, is_brake_pressed))
+        # print("steering_wheel_troque {}, throttle {}, brake_input {}".format(steering_wheel_troque, throttle, brake_input))
 
-        throttle_limit = 0.5
         interaction = False
         if(steering_wheel_troque > STEERING_WHEEL_TORQUE_LIMIT):
             interaction = True
-        if(throttle > throttle_limit):
+        if(throttle > THROTTLE_PEDAL_LIMIT):
             interaction = True
-        if(is_brake_pressed):
+        if(brake_input > BRAKE_PEDAL_LIMIT):
             interaction = True
 
         if interaction:
-            time = self.chassis_detail_msg_.header.timestamp_sec
+            time = self.chassis_detail_msg_.timestamp
             self.driver_interaction_timesteps.append(time)
-
+            print("Found driver interaction at t = {}".format(time))
 
 def main():
     """
