@@ -7,6 +7,7 @@ from cyber_py3 import cyber_time
 from common.logger import Logger
 from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
+from modules.canbus.proto import chassis_detail_pb2
 
 import bark
 from bark.core.world.map import MapInterface
@@ -21,6 +22,10 @@ from bark_ml.core.observers import FrenetObserver
 
 CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
 CHANNEL_NAME_RESPONSE = '/apollo/planning/bark_response'
+
+CHANNEL_NAME_CANBUS = '/apollo/canbus/chassis_detail'
+
+STEERING_WHEEL_TORQUE_LIMIT = 100
 
 
 class BarkRlWrapper(object):
@@ -54,7 +59,10 @@ class BarkRlWrapper(object):
         dummy_state = np.array([0, 0, 0, 0, 0])
         self.setup_ego_model()
         self.env_.addEgoAgent(dummy_state)
-        
+
+        self.chassis_detail_received_ = False
+        self.chassis_detail_msg_ = chassis_detail_pb2.ChassisDetail()
+        self.driver_interaction_timesteps = []
 
     def convert_to_bark_state(self, traj_pt, time_offset):
         t_e = traj_pt.relative_time + time_offset
@@ -142,6 +150,36 @@ class BarkRlWrapper(object):
         self.apollo_to_bark_msg_.CopyFrom(data)
         self.apollo_to_bark_received_ = True
 
+    def chassis_detail_callback(self, data):
+        """
+        Received new Chassis Detail message
+        """
+        self.chassis_detail_msg_.CopyFrom(data)
+        self.chassis_detail_received_ = True
+        self.driver_interaction_triggered()
+
+    def driver_interaction_triggered(self):
+        # TODO I (tobias) suspect we need to check each field for existance
+        steering_wheel_troque = self.chassis_detail_msg_.fortuna.steering.steering_wheel_torque
+        throttle = self.chassis_detail_msg_.gas.throttle_input
+        is_brake_pressed = self.chassis_detail_msg_.brake.is_brake_pedal_pressed
+
+        print("steering_wheel_troque {}, throttle {}, is_brake_pressed".format(steering_wheel_troque, throttle, is_brake_pressed))
+
+        throttle_limit = 0.5
+        interaction = False
+        if(steering_wheel_troque > STEERING_WHEEL_TORQUE_LIMIT):
+            interaction = True
+        if(throttle > throttle_limit):
+            interaction = True
+        if(is_brake_pressed):
+            interaction = True
+
+        if interaction:
+            time = self.chassis_detail_msg_.header.timestamp_sec
+            self.driver_interaction_timesteps.append(time)
+
+
 def main():
     """
     Main function
@@ -152,6 +190,10 @@ def main():
     node.create_reader(CHANNEL_NAME_REQUEST, 
                        bark_interface_pb2.ApolloToBarkMsg, 
                        bark_wrp.apollo_to_bark_callback)
+
+    node.create_reader(CHANNEL_NAME_CANBUS,
+                       chassis_detail_pb2.ChassisDetail,
+                       bark_wrp.chassis_detail_callback)
 
     while not cyber.is_shutdown():
         now = cyber_time.Time.now().to_sec()
