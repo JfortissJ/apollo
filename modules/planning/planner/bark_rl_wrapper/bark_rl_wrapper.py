@@ -6,32 +6,34 @@ import pickle
 from cyber_py3 import cyber
 from cyber_py3 import cyber_time
 
-from common.logger import Logger
 from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
+from modules.canbus.proto import chassis_detail_pb2
 
 import bark
 from bark.runtime.scenario.scenario import Scenario
 from bark.core.world.map import MapInterface
 from bark.runtime.viewer.matplotlib_viewer import MPViewer
-from bark.runtime.commons.parameters import ParameterServer
 
 from bark_ml.environments.external_runtime import ExternalRuntime
 from bark_ml.library_wrappers.lib_tf_agents.agents.sac_agent import BehaviorSACAgent
-from bark_ml.observers.nearest_state_observer import NearestAgentsObserver
-from bark_ml.core.observers import FrenetObserver
-
+from bark_ml.experiment.experiment_runner import ExperimentRunner
 
 CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
 CHANNEL_NAME_RESPONSE = '/apollo/planning/bark_response'
+CHANNEL_NAME_CANBUS = '/apollo/canbus/chassis_detail'
 
+# TODO set reasonable values!
+STEERING_WHEEL_TORQUE_LIMIT = 10.0
+THROTTLE_PEDAL_LIMIT = 10.0
+BRAKE_PEDAL_LIMIT = 10.0
 
 class BarkRlWrapper(object):
     def __init__(self, node):
 
         self.apollo_to_bark_received_= False
         self.apollo_to_bark_msg_ = bark_interface_pb2.ApolloToBarkMsg()
-        self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE, 
+        self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE,
                                                 bark_interface_pb2.BarkResponse)
         self.step_time_ = 0.2 # this should come from pb param file
         self.num_steps_ = 10 # this should come from pb param file
@@ -40,11 +42,16 @@ class BarkRlWrapper(object):
         self.use_idm_ = False
         self.pts_offset_x = 652000
         self.pts_offset_y = 5.339e+06
-        self.scenario_history_ = []
         
-        self.params_ = ParameterServer(filename="/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/single_lane_large.json")
-        self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/'
-        observer = FrenetObserver(self.params_)
+        self.scenario_history_ = []
+        # TODO: make sure the same maps are being used (BARK-ML != BARK MAP)
+        # folder stucture needs to be as follows:
+        # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
+        # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
+        json_file_path = "/apollo/modules/planning/data/20211111_checkpoints/single_lane_large.json"
+        exp_runner = ExperimentRunner(json_file=json_file_path, mode="print", random_seed=0)
+        self.params_ = exp_runner._params
+        observer = exp_runner._experiment._observer
         csvfile = "/apollo/modules/planning/data/base_map_lanes_guerickestr_assymetric_48.csv"
         if not os.path.isfile(csvfile):
             print("map file does not exist, path might be wrong: {}".format(csvfile))
@@ -58,7 +65,10 @@ class BarkRlWrapper(object):
         dummy_state = np.array([0, 0, 0, 0, 0])
         self.setup_ego_model()
         self.env_.addEgoAgent(dummy_state)
-        
+
+        self.chassis_detail_received_ = False
+        self.chassis_detail_msg_ = chassis_detail_pb2.ChassisDetail()
+        self.driver_interaction_timesteps = []
 
     def convert_to_bark_state(self, traj_pt, time_offset):
         t_e = traj_pt.relative_time + time_offset
@@ -82,7 +92,7 @@ class BarkRlWrapper(object):
         if not self.apollo_to_bark_received_:
             print("apollo to bark msg not received yet")
             return
-        
+
         time0 = time.time()
 
         # step 1: setup environment
@@ -97,7 +107,7 @@ class BarkRlWrapper(object):
         self.env_.addEgoAgent(state)
         time2 = time.time()
         print("Setup ego agent took {}s, time since beginning: ".format(time2-time1, time2-time0))
-        
+
         # step 3: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
         for o in self.apollo_to_bark_msg_.obstacles:
             traj = np.array()
@@ -128,7 +138,7 @@ class BarkRlWrapper(object):
             traj_point.path_point.theta = bark_state[3]
             traj_point.v = bark_state[4]
             # TODO: do we need to fill traj_point.path_point.s?
-        
+
         response_msg = bark_interface_pb2.BarkResponse()
         response_msg.planned_trajectory.CopyFrom(adc_trajectory)
         response_msg.header.timestamp_sec = cyber_time.Time.now().to_sec()
@@ -148,6 +158,35 @@ class BarkRlWrapper(object):
         self.apollo_to_bark_msg_.CopyFrom(data)
         self.apollo_to_bark_received_ = True
 
+    def chassis_detail_callback(self, data):
+        """
+        Received new Chassis Detail message
+        """
+        self.chassis_detail_msg_.CopyFrom(data)
+        self.chassis_detail_received_ = True
+        self.driver_interaction_triggered()
+
+    def driver_interaction_triggered(self):
+        # TODO idealy check these fields for existance
+        steering_wheel_troque = self.chassis_detail_msg_.fortuna.steering.steering_wheel_torque
+        throttle = self.chassis_detail_msg_.gas.throttle_input
+        brake_input = self.chassis_detail_msg_.brake.brake_input
+
+        # print("steering_wheel_troque {}, throttle {}, brake_input {}".format(steering_wheel_troque, throttle, brake_input))
+
+        interaction = False
+        if(steering_wheel_troque > STEERING_WHEEL_TORQUE_LIMIT):
+            interaction = True
+        if(throttle > THROTTLE_PEDAL_LIMIT):
+            interaction = True
+        if(brake_input > BRAKE_PEDAL_LIMIT):
+            interaction = True
+
+        if interaction:
+            time = self.chassis_detail_msg_.timestamp
+            self.driver_interaction_timesteps.append(time)
+            print("Found driver interaction at t = {}".format(time))
+
 def main():
     """
     Main function
@@ -155,9 +194,13 @@ def main():
     node = cyber.Node("bark_rl_node")
     bark_wrp = BarkRlWrapper(node)
 
-    node.create_reader(CHANNEL_NAME_REQUEST, 
-                       bark_interface_pb2.ApolloToBarkMsg, 
+    node.create_reader(CHANNEL_NAME_REQUEST,
+                       bark_interface_pb2.ApolloToBarkMsg,
                        bark_wrp.apollo_to_bark_callback)
+
+    node.create_reader(CHANNEL_NAME_CANBUS,
+                       chassis_detail_pb2.ChassisDetail,
+                       bark_wrp.chassis_detail_callback)
 
     while not cyber.is_shutdown():
         now = cyber_time.Time.now().to_sec()
