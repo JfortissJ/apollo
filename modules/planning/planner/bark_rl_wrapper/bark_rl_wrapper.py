@@ -1,6 +1,8 @@
 import time
 import numpy as np
 import os.path
+
+import pickle
 from cyber_py3 import cyber
 from cyber_py3 import cyber_time
 
@@ -9,6 +11,7 @@ from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
 
 import bark
+from bark.runtime.scenario.scenario import Scenario
 from bark.core.world.map import MapInterface
 from bark.runtime.viewer.matplotlib_viewer import MPViewer
 from bark.runtime.commons.parameters import ParameterServer
@@ -37,6 +40,7 @@ class BarkRlWrapper(object):
         self.use_idm_ = False
         self.pts_offset_x = 652000
         self.pts_offset_y = 5.339e+06
+        self.scenario_history_ = []
         
         self.params_ = ParameterServer(filename="/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/single_lane_large.json")
         self.params_["ML"]["BehaviorTFAAgents"]["CheckpointPath"] = '/apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckpts/'
@@ -105,6 +109,8 @@ class BarkRlWrapper(object):
         time3 = time.time()
         print("Setup other agents took {}s, time since beginning: ".format(time3-time2, time3-time0))
         # TODO step 3: set reference line
+
+        # self.env_.appendToScenarioHistory(self.scenario_history_)
 
         # step 4: 
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
