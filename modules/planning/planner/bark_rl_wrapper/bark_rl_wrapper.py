@@ -40,7 +40,7 @@ class BarkRlWrapper(object):
         self.cycle_time_ = 0.2
         self.sequence_num_ = 0
         self.use_idm_ = False
-        self.pts_offset_x = 652000
+        self.pts_offset_x = 692000
         self.pts_offset_y = 5.339e+06
         
         self.scenario_history_ = []
@@ -48,15 +48,11 @@ class BarkRlWrapper(object):
         # folder stucture needs to be as follows:
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
-        json_file_path = "/apollo/modules/planning/data/20211111_checkpoints/single_lane_large.json"
+        json_file_path = "/apollo/modules/planning/data/20211117_checkpoints/single_lane_large.json"
         exp_runner = ExperimentRunner(json_file=json_file_path, mode="print", random_seed=0)
         self.params_ = exp_runner._params
         observer = exp_runner._experiment._observer
-        csvfile = "/apollo/modules/planning/data/base_map_lanes_guerickestr_assymetric_48.csv"
-        if not os.path.isfile(csvfile):
-            print("map file does not exist, path might be wrong: {}".format(csvfile))
-        map_interface = MapInterface()
-        map_interface.SetCsvMap(csvfile, self.pts_offset_x, self.pts_offset_y)
+        map_interface = exp_runner._experiment._blueprint._scenario_generation._map_interface
         self.viewer_ = MPViewer(params=self.params_)
         self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_, viewer=self.viewer_, render=False)
         if not isinstance(self.env_._world, bark.core.world.World):
@@ -98,26 +94,26 @@ class BarkRlWrapper(object):
         # step 1: setup environment
         self.env_.setupWorld()
         time1 = time.time()
-        print("Creating world took {}s, time since beginning: ".format(time1-time0, time1-time0))
+        print("Creating world took {}s, time since beginning.".format(time1-time0, time1-time0))
 
         # step 2: init ego vehicle with planning_init_point
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
-        print("planning init point received ", pl_init_pt)
         state = self.convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
         self.env_.addEgoAgent(state)
         time2 = time.time()
-        print("Setup ego agent took {}s, time since beginning: ".format(time2-time1, time2-time0))
+        print("Setup ego agent took {}s, time since beginning.".format(time2-time1, time2-time0))
 
         # step 3: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
         for o in self.apollo_to_bark_msg_.obstacles:
-            traj = np.array()
+            traj = []
             for pred_state in o.prediction:
                 state_i = self.convert_to_bark_state(pred_state, -pl_init_pt.relative_time)
                 traj.append(state_i)
-            self.env_.addObstacle(traj, o.box_length, o.box_width)
+            traj_np = np.array(traj)
+            self.env_.addObstacle(traj_np, o.box_length, o.box_width)
 
         time3 = time.time()
-        print("Setup other agents took {}s, time since beginning: ".format(time3-time2, time3-time0))
+        print("Setup other agents took {}s, time since beginning.".format(time3-time2, time3-time0))
         # TODO step 3: set reference line
 
         # self.env_.appendToScenarioHistory(self.scenario_history_)
@@ -125,7 +121,7 @@ class BarkRlWrapper(object):
         # step 4: 
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
         time4 = time.time()
-        print("Generating trajectory took {}s, time since beginning: ".format(time4-time3, time4-time0))
+        print("Generating trajectory took {}s, time since beginning.".format(time4-time3, time4-time0))
         adc_trajectory = planning_pb2.ADCTrajectory()
         traj_point = adc_trajectory.trajectory_point.add()
         # append initial state to resulting trajectory
@@ -148,7 +144,7 @@ class BarkRlWrapper(object):
 
         self.response_pub_.write(response_msg)
         self.apollo_to_bark_received_ = False
-        print("Generated Trajectory", response_msg)
+        print("Generated Trajectory.")
 
     def apollo_to_bark_callback(self, data):
         """
