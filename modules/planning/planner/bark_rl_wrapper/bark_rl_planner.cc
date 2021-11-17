@@ -234,7 +234,26 @@ void BarkRlPlanner::SetBarkInterfacePointers(
 std::vector<BarkObstacle> BarkRlPlanner::ConvertToBarkObstacles(
     const std::vector<const Obstacle*>& obstacles, double timestep) const {
   std::vector<BarkObstacle> bark_obstacles;
-  // TODO: fill in obstacle message
+  const int N = config_.bark_rl_planner_config().nr_steps();
+  const float ts = config_.bark_rl_planner_config().ts();
+  for (const Obstacle* obstacle : obstacles) {
+    if (!obstacle->IsVirtual()) {
+      BarkObstacle bark_obstacle;
+      bark_obstacle.set_id(stoi(obstacle->Id()));
+      common::math::Box2d obst_box = obstacle->PerceptionBoundingBox();
+      bark_obstacle.set_box_length(obst_box.length());
+      bark_obstacle.set_box_width(obst_box.width());
+      for (int i = 0; i < N; ++i) {
+        double pred_time = timestep + i * ts;
+        TrajectoryPoint point = obstacle->GetPointAtTime(pred_time);
+        point.set_relative_time(pred_time);
+        bark_obstacle.add_prediction()->CopyFrom(point);
+      }
+      // optional double s_distance_center_to_reference = 4;  // longitudinal distance from box's center to reference frame
+      // optional double d_distance_center_to_reference = 5;  // lateral distance from box's center to reference frame
+      bark_obstacles.push_back(bark_obstacle);
+    }
+  }
   return bark_obstacles;
 }
 

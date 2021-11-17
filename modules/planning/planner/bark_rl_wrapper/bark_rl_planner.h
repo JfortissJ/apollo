@@ -74,7 +74,7 @@ class BarkRlPlanner : public LatticePlanner {
   BarkResponse* bark_response_;  // TODO: initialize and handle nullptr
   std::mutex* mutex_;            // TODO: initialize and handle nullptr
   double receiver_wait_in_sec_ = 0.05;
-  double bark_timeout_ = 1.0;
+  double bark_timeout_ = 3.0;
   double minimum_valid_speed_planning_;
   double standstill_velocity_threshold_;
   std::string logdir_;
