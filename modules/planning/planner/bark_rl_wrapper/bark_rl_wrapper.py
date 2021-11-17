@@ -28,6 +28,19 @@ STEERING_WHEEL_TORQUE_LIMIT = 10.0
 THROTTLE_PEDAL_LIMIT = 10.0
 BRAKE_PEDAL_LIMIT = 10.0
 
+LOG_FILE = None
+EXCEPT_LOG_FILE = None
+
+def create_log_file():
+    data_time = time.strftime(
+        '%Y-%m-%d-%H-%M-%S', time.localtime(cyber_time.Time.now().to_sec()))
+    file_name = '/apollo/data/log/bark_rl_wrapper.' + data_time + '.log'
+    except_file_name = '/apollo/data/log/bark_rl_wrapper.' + data_time + '.log.err'
+    global LOG_FILE
+    global EXCEPT_LOG_FILE
+    LOG_FILE = open(file_name, 'a+')
+    EXCEPT_LOG_FILE = open(except_file_name, 'a+')
+
 class BarkRlWrapper(object):
     def __init__(self, node):
 
@@ -94,14 +107,17 @@ class BarkRlWrapper(object):
         # step 1: setup environment
         self.env_.setupWorld()
         time1 = time.time()
-        print("Creating world took {}s, time since beginning.".format(time1-time0, time1-time0))
+        log_info = "{}:\tCreating world took {}s, time since beginning {}\n".format(cyber_time.Time.now(), time1-time0, time1-time0)
+        LOG_FILE.write(log_info)
+
 
         # step 2: init ego vehicle with planning_init_point
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
         state = self.convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
         self.env_.addEgoAgent(state)
         time2 = time.time()
-        print("Setup ego agent took {}s, time since beginning.".format(time2-time1, time2-time0))
+        log_info = "{}:\tSetup ego agents took {}s, time since beginning {}\n".format(cyber_time.Time.now(), time2-time1, time2-time0)
+        LOG_FILE.write(log_info)
 
         # step 3: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
         for o in self.apollo_to_bark_msg_.obstacles:
@@ -113,7 +129,8 @@ class BarkRlWrapper(object):
             self.env_.addObstacle(traj_np, o.box_length, o.box_width)
 
         time3 = time.time()
-        print("Setup other agents took {}s, time since beginning.".format(time3-time2, time3-time0))
+        log_info = "{}:\tSetup other agents took {}s, time since beginning {}\n".format(cyber_time.Time.now(), time3-time2, time3-time0)
+        LOG_FILE.write(log_info)
         # TODO step 3: set reference line
 
         # self.env_.appendToScenarioHistory(self.scenario_history_)
@@ -121,7 +138,8 @@ class BarkRlWrapper(object):
         # step 4: 
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
         time4 = time.time()
-        print("Generating trajectory took {}s, time since beginning.".format(time4-time3, time4-time0))
+        log_info = "{}:\tGenerating trajectory took {}s, time since beginning. {}\n".format(cyber_time.Time.now(), time4-time3, time4-time0)
+        LOG_FILE.write(log_info)
         adc_trajectory = planning_pb2.ADCTrajectory()
         traj_point = adc_trajectory.trajectory_point.add()
         # append initial state to resulting trajectory
@@ -145,6 +163,8 @@ class BarkRlWrapper(object):
         self.response_pub_.write(response_msg)
         self.apollo_to_bark_received_ = False
         print("Generated Trajectory.")
+        log_info = "{}:\tgenerated new trajectory: {}\n".format(cyber_time.Time.now(), response_msg)
+        LOG_FILE.write(log_info)
 
     def apollo_to_bark_callback(self, data):
         """
@@ -208,6 +228,7 @@ def main():
 
 
 if __name__ == '__main__':
+    create_log_file()
     cyber.init()
     main()
     cyber.shutdown()
