@@ -9,6 +9,10 @@ from cyber_py3 import cyber_time
 from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
 from modules.canbus.proto import chassis_detail_pb2
+from modules.planning.proto import bark_rl_planner_config_pb2
+from modules.planning.proto import planning_config_pb2
+
+import common.proto_utils as proto_utils
 
 import bark
 from bark.runtime.scenario.scenario import Scenario
@@ -23,6 +27,8 @@ CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
 CHANNEL_NAME_RESPONSE = '/apollo/planning/bark_response'
 CHANNEL_NAME_CANBUS = '/apollo/canbus/chassis_detail'
 
+BARK_RL_PLANNER_CONF_FILE = "/apollo/modules/planning/conf/bark_rl_planning_config.pb.txt"
+
 # TODO set reasonable values!
 STEERING_WHEEL_TORQUE_LIMIT = 10.0
 THROTTLE_PEDAL_LIMIT = 10.0
@@ -32,6 +38,7 @@ LOG_FILE = None
 EXCEPT_LOG_FILE = None
 
 def create_log_file():
+    # Implementation follows modules/drivers/lidar/velodyne/parser/scripts/velodyne_check.py
     data_time = time.strftime(
         '%Y-%m-%d-%H-%M-%S', time.localtime(cyber_time.Time.now().to_sec()))
     file_name = '/apollo/data/log/bark_rl_wrapper.' + data_time + '.log'
@@ -41,20 +48,28 @@ def create_log_file():
     LOG_FILE = open(file_name, 'a+')
     EXCEPT_LOG_FILE = open(except_file_name, 'a+')
 
+
+def load_bark_rl_planning_config():
+    planning_conf_pb = planning_config_pb2.PlanningConfig()
+    proto_utils.get_pb_from_text_file(BARK_RL_PLANNER_CONF_FILE, planning_conf_pb)
+    return planning_conf_pb.bark_rl_planner_config
+
 class BarkRlWrapper(object):
     def __init__(self, node):
+
+        self.bark_rl_planning_config = load_bark_rl_planning_config()
+        self.step_time_ = self.bark_rl_planning_config.ts
+        self.num_steps_ = self.bark_rl_planning_config.nr_steps
+        self.pts_offset_x = self.bark_rl_planning_config.pts_offset_x
+        self.pts_offset_y = self.bark_rl_planning_config.pts_offset_y
+        self.use_idm_ = False
+        self.cycle_time_ = 0.2
+        self.sequence_num_ = 0
 
         self.apollo_to_bark_received_= False
         self.apollo_to_bark_msg_ = bark_interface_pb2.ApolloToBarkMsg()
         self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE,
                                                 bark_interface_pb2.BarkResponse)
-        self.step_time_ = 0.2 # this should come from pb param file
-        self.num_steps_ = 10 # this should come from pb param file
-        self.cycle_time_ = 0.2
-        self.sequence_num_ = 0
-        self.use_idm_ = False
-        self.pts_offset_x = 692000
-        self.pts_offset_y = 5.339e+06
         
         self.scenario_history_ = []
         # TODO: make sure the same maps are being used (BARK-ML != BARK MAP)
@@ -78,6 +93,8 @@ class BarkRlWrapper(object):
         self.chassis_detail_received_ = False
         self.chassis_detail_msg_ = chassis_detail_pb2.ChassisDetail()
         self.driver_interaction_timesteps = []
+        print(self.bark_rl_planning_config)
+
 
     def convert_to_bark_state(self, traj_pt, time_offset):
         t_e = traj_pt.relative_time + time_offset
