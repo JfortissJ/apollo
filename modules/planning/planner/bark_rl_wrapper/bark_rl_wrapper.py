@@ -15,6 +15,7 @@ import common.proto_utils as proto_utils
 
 import bark
 from bark.runtime.viewer.matplotlib_viewer import MPViewer
+from bark.runtime.commons.parameters import ParameterServer
 
 from bark_ml.environments.external_runtime import ExternalRuntime
 from bark_ml.library_wrappers.lib_tf_agents.agents.sac_agent import BehaviorSACAgent
@@ -54,27 +55,34 @@ def load_bark_rl_planning_config():
     return bark_rl_planner_config
 
 class BarkRlWrapper(object):
+    bark_rl_planning_config_: planning_config_pb2.PlanningConfig.bark_rl_planner_config
+    step_time_: float
+    num_steps_: float
+    pts_offset_x_: float
+    pts_offset_y_: float
+    use_idm_: bool = False
+    cycle_time_: float = 0.2
+    sequence_num_: int = 0
+    apollo_to_bark_received_: bool = False
+    apollo_to_bark_msg_: bark_interface_pb2.ApolloToBarkMsg = bark_interface_pb2.ApolloToBarkMsg()
+    chassis_detail_received_: bool = False
+    chassis_detail_msg_: chassis_detail_pb2.ChassisDetail = chassis_detail_pb2.ChassisDetail()
+    response_pub_: cyber.Writer
+    driver_interaction_timesteps_: list = []
+    scenario_history_: list = []
+    params_: ParameterServer
+    env_: ExternalRuntime
+
     def __init__(self, node):
+        self.bark_rl_planning_config_ = load_bark_rl_planning_config()
+        self.step_time_ = self.bark_rl_planning_config_.ts
+        self.num_steps_ = self.bark_rl_planning_config_.nr_steps
+        self.pts_offset_x_ = self.bark_rl_planning_config_.pts_offset_x
+        self.pts_offset_y_ = self.bark_rl_planning_config_.pts_offset_y
 
-        self.bark_rl_planning_config = load_bark_rl_planning_config()
-        self.step_time_ = self.bark_rl_planning_config.ts
-        self.num_steps_ = self.bark_rl_planning_config.nr_steps
-        self.pts_offset_x = self.bark_rl_planning_config.pts_offset_x
-        self.pts_offset_y = self.bark_rl_planning_config.pts_offset_y
-        self.use_idm_ = False
-        self.cycle_time_ = 0.2
-        self.sequence_num_ = 0
-
-        self.apollo_to_bark_received_= False
-        self.apollo_to_bark_msg_ = bark_interface_pb2.ApolloToBarkMsg()
         self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE,
                                                 bark_interface_pb2.BarkResponse)
         
-        self.chassis_detail_received_ = False
-        self.chassis_detail_msg_ = chassis_detail_pb2.ChassisDetail()
-        self.driver_interaction_timesteps = []
-
-        self.scenario_history_ = []
         # TODO: make sure the same maps are being used (BARK-ML != BARK MAP)
         # folder stucture needs to be as follows:
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
@@ -87,8 +95,8 @@ class BarkRlWrapper(object):
         self.params_ = exp_runner._params
         observer = exp_runner._experiment._observer
         map_interface = exp_runner._experiment._blueprint._scenario_generation._map_interface
-        self.viewer_ = MPViewer(params=self.params_)
-        self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_, viewer=self.viewer_, render=False)
+        viewer = MPViewer(params=self.params_)
+        self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_, viewer=viewer, render=False)
         self.env_.setupWorld()
         # setting up ego agent initially as this takes some time...
         dummy_state = np.array([0, 0, 0, 0, 0])
@@ -97,8 +105,8 @@ class BarkRlWrapper(object):
         
     def convert_to_bark_state(self, traj_pt, time_offset):
         t_e = traj_pt.relative_time + time_offset
-        x_e = traj_pt.path_point.x - self.pts_offset_x
-        y_e = traj_pt.path_point.y - self.pts_offset_y
+        x_e = traj_pt.path_point.x - self.pts_offset_x_
+        y_e = traj_pt.path_point.y - self.pts_offset_y_
         theta_e = traj_pt.path_point.theta
         v_e = traj_pt.v
         state = np.array([t_e, x_e, y_e, theta_e, v_e])
@@ -162,8 +170,8 @@ class BarkRlWrapper(object):
         for bark_state in state_action_traj[0]:
             traj_point = adc_trajectory.trajectory_point.add()
             traj_point.relative_time = bark_state[0] + pl_init_pt.relative_time
-            traj_point.path_point.x = bark_state[1] + self.pts_offset_x
-            traj_point.path_point.y = bark_state[2] + self.pts_offset_y
+            traj_point.path_point.x = bark_state[1] + self.pts_offset_x_
+            traj_point.path_point.y = bark_state[2] + self.pts_offset_y_
             traj_point.path_point.theta = bark_state[3]
             traj_point.v = bark_state[4]
             # TODO: do we need to fill traj_point.path_point.s?
@@ -215,7 +223,7 @@ class BarkRlWrapper(object):
 
         if interaction:
             time = self.chassis_detail_msg_.timestamp
-            self.driver_interaction_timesteps.append(time)
+            self.driver_interaction_timesteps_.append(time)
             print("Found driver interaction at t = {}".format(time))
 
 def main():
