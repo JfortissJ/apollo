@@ -9,14 +9,11 @@ from cyber_py3 import cyber_time
 from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
 from modules.canbus.proto import chassis_detail_pb2
-from modules.planning.proto import bark_rl_planner_config_pb2
 from modules.planning.proto import planning_config_pb2
 
 import common.proto_utils as proto_utils
 
 import bark
-from bark.runtime.scenario.scenario import Scenario
-from bark.core.world.map import MapInterface
 from bark.runtime.viewer.matplotlib_viewer import MPViewer
 
 from bark_ml.environments.external_runtime import ExternalRuntime
@@ -52,7 +49,9 @@ def create_log_file():
 def load_bark_rl_planning_config():
     planning_conf_pb = planning_config_pb2.PlanningConfig()
     proto_utils.get_pb_from_text_file(BARK_RL_PLANNER_CONF_FILE, planning_conf_pb)
-    return planning_conf_pb.bark_rl_planner_config
+    bark_rl_planner_config = planning_conf_pb.bark_rl_planner_config
+    print("Reading config file: ", bark_rl_planner_config)
+    return bark_rl_planner_config
 
 class BarkRlWrapper(object):
     def __init__(self, node):
@@ -71,31 +70,31 @@ class BarkRlWrapper(object):
         self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE,
                                                 bark_interface_pb2.BarkResponse)
         
+        self.chassis_detail_received_ = False
+        self.chassis_detail_msg_ = chassis_detail_pb2.ChassisDetail()
+        self.driver_interaction_timesteps = []
+
         self.scenario_history_ = []
         # TODO: make sure the same maps are being used (BARK-ML != BARK MAP)
         # folder stucture needs to be as follows:
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
-        json_file_path = "/apollo/modules/planning/data/20211117_checkpoints/single_lane_large.json"
+        json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
+        self.initialize_external_runtime(json_file_path)
+
+    def initialize_external_runtime(self, json_file_path: str):
         exp_runner = ExperimentRunner(json_file=json_file_path, mode="print", random_seed=0)
         self.params_ = exp_runner._params
         observer = exp_runner._experiment._observer
         map_interface = exp_runner._experiment._blueprint._scenario_generation._map_interface
         self.viewer_ = MPViewer(params=self.params_)
         self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_, viewer=self.viewer_, render=False)
-        if not isinstance(self.env_._world, bark.core.world.World):
-            print("BARK World could not be created")
         self.env_.setupWorld()
+        # setting up ego agent initially as this takes some time...
         dummy_state = np.array([0, 0, 0, 0, 0])
         self.setup_ego_model()
         self.env_.addEgoAgent(dummy_state)
-
-        self.chassis_detail_received_ = False
-        self.chassis_detail_msg_ = chassis_detail_pb2.ChassisDetail()
-        self.driver_interaction_timesteps = []
-        print(self.bark_rl_planning_config)
-
-
+        
     def convert_to_bark_state(self, traj_pt, time_offset):
         t_e = traj_pt.relative_time + time_offset
         x_e = traj_pt.path_point.x - self.pts_offset_x
@@ -127,7 +126,6 @@ class BarkRlWrapper(object):
         log_info = "{}:\tCreating world took {}s, time since beginning {}\n".format(cyber_time.Time.now(), time1-time0, time1-time0)
         LOG_FILE.write(log_info)
 
-
         # step 2: init ego vehicle with planning_init_point
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
         state = self.convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
@@ -150,7 +148,7 @@ class BarkRlWrapper(object):
         LOG_FILE.write(log_info)
         # TODO step 3: set reference line
 
-        # self.env_.appendToScenarioHistory(self.scenario_history_)
+        # self.appendToScenarioHistoryTEST(self.scenario_history_)
 
         # step 4: 
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
