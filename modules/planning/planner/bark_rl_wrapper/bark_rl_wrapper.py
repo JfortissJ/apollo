@@ -34,6 +34,7 @@ BRAKE_PEDAL_LIMIT = 10.0
 
 LOG_FILE = None
 EXCEPT_LOG_FILE = None
+SERIALIZATION_FILE = None
 
 def create_log_file():
     # Implementation follows modules/drivers/lidar/velodyne/parser/scripts/velodyne_check.py
@@ -41,10 +42,13 @@ def create_log_file():
         '%Y-%m-%d-%H-%M-%S', time.localtime(cyber_time.Time.now().to_sec()))
     file_name = '/apollo/data/log/bark_rl_wrapper.' + data_time + '.log'
     except_file_name = '/apollo/data/log/bark_rl_wrapper.' + data_time + '.log.err'
+    serialization_file_name = '/apollo/data/log/bark_serialization.' + data_time + '.pickle'
     global LOG_FILE
     global EXCEPT_LOG_FILE
+    global SERIALIZATION_FILE
     LOG_FILE = open(file_name, 'a+')
     EXCEPT_LOG_FILE = open(except_file_name, 'a+')
+    SERIALIZATION_FILE = open(serialization_file_name,'wb')
 
 
 def load_bark_rl_planning_config():
@@ -69,7 +73,7 @@ class BarkRlWrapper(object):
     chassis_detail_msg_: chassis_detail_pb2.ChassisDetail = chassis_detail_pb2.ChassisDetail()
     response_pub_: cyber.Writer
     driver_interaction_timesteps_: list = []
-    scenario_history_: list = []
+    scenario_history_: dict = {}
     params_: ParameterServer
     env_: ExternalRuntime
 
@@ -156,9 +160,10 @@ class BarkRlWrapper(object):
         LOG_FILE.write(log_info)
         # TODO step 3: set reference line
 
-        # self.appendToScenarioHistoryTEST(self.scenario_history_)
+        # step 4: saving scenario for serialization
+        self.scenario_history_[str(time0)] = self.env_.getScenarioForSerialization()
 
-        # step 4: 
+        # step 5: 
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
         time4 = time.time()
         log_info = "{}:\tGenerating trajectory took {}s, time since beginning. {}\n".format(cyber_time.Time.now(), time4-time3, time4-time0)
@@ -247,7 +252,9 @@ def main():
         sleep_time = bark_wrp.cycle_time_ - (cyber_time.Time.now().to_sec() - now)
         if sleep_time > 0:
             time.sleep(sleep_time)
-
+    
+    pickle.dump([bark_wrp.scenario_history_, bark_wrp.driver_interaction_timesteps_],SERIALIZATION_FILE)
+    print("saved serialization")
 
 
 if __name__ == '__main__':
