@@ -92,11 +92,12 @@ class BarkRlWrapper(object):
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
         json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
+        self.params_ = ParameterServer(filename=json_file_path)
+        # self.params_["Experiment"]["Blueprint"]["Config"]["csv_path"] = "dummy.json"
         self.initialize_external_runtime(json_file_path)
 
     def initialize_external_runtime(self, json_file_path: str):
-        exp_runner = ExperimentRunner(json_file=json_file_path, mode="print", random_seed=0)
-        self.params_ = exp_runner._params
+        exp_runner = ExperimentRunner(json_file=json_file_path, params=self.params_, mode="print", random_seed=0)
         observer = exp_runner._experiment._observer
         map_interface = exp_runner._experiment._blueprint._scenario_generation._map_interface
         viewer = MPViewer(params=self.params_)
