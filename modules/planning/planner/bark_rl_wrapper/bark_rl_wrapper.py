@@ -86,7 +86,7 @@ class BarkRlWrapper(object):
 
         self.response_pub_ = node.create_writer(CHANNEL_NAME_RESPONSE,
                                                 bark_interface_pb2.BarkResponse)
-        
+
         # TODO: make sure the same maps are being used (BARK-ML != BARK MAP)
         # folder stucture needs to be as follows:
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
@@ -101,13 +101,15 @@ class BarkRlWrapper(object):
         observer = exp_runner._experiment._observer
         map_interface = exp_runner._experiment._blueprint._scenario_generation._map_interface
         viewer = MPViewer(params=self.params_)
-        self.env_ = ExternalRuntime(map_interface=map_interface, observer=observer, params=self.params_, viewer=viewer, render=False)
+        self.env_ = ExternalRuntime(
+            map_interface=map_interface, observer=observer,
+            params=self.params_, viewer=viewer, render=False)
         self.env_.setupWorld()
         # setting up ego agent initially as this takes some time...
         dummy_state = np.array([0, 0, 0, 0, 0])
         self.setup_ego_model()
         self.env_.addEgoAgent(dummy_state)
-        
+
     def convert_to_bark_state(self, traj_pt, time_offset):
         t_e = traj_pt.relative_time + time_offset
         x_e = traj_pt.path_point.x - self.pts_offset_x_
@@ -164,7 +166,7 @@ class BarkRlWrapper(object):
         # step 4: saving scenario for serialization
         self.scenario_history_[str(time0)] = self.env_.getScenarioForSerialization()
 
-        # step 5: 
+        # step 5:
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
         time4 = time.time()
         log_info = "{}:\tGenerating trajectory took {}s, time since beginning. {}\n".format(cyber_time.Time.now(), time4-time3, time4-time0)
@@ -253,7 +255,7 @@ def main():
         sleep_time = bark_wrp.cycle_time_ - (cyber_time.Time.now().to_sec() - now)
         if sleep_time > 0:
             time.sleep(sleep_time)
-    
+
     pickle.dump([bark_wrp.scenario_history_, bark_wrp.driver_interaction_timesteps_],SERIALIZATION_FILE)
     print("saved serialization")
 
