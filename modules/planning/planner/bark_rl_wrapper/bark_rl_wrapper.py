@@ -1,7 +1,7 @@
 import time
 import numpy as np
 import os.path
-
+from math import log, sin, cos
 import pickle
 from cyber_py3 import cyber
 from cyber_py3 import cyber_time
@@ -93,7 +93,8 @@ class BarkRlWrapper(object):
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
         json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
         self.params_ = ParameterServer(filename=json_file_path)
-        # self.params_["Experiment"]["Blueprint"]["Config"]["csv_path"] = "dummy.json"
+        self.params_["SingleLaneBluePrint"]["MapOffstX"] = self.pts_offset_x_
+        self.params_["SingleLaneBluePrint"]["MapOffsetY"] = self.pts_offset_y_
         self.initialize_external_runtime(json_file_path)
 
     def initialize_external_runtime(self, json_file_path: str):
@@ -154,6 +155,10 @@ class BarkRlWrapper(object):
             traj = []
             for pred_state in o.prediction:
                 state_i = self.convert_to_bark_state(pred_state, -pl_init_pt.relative_time)
+                # transform state from center to reference frame
+                # theta = state_i[2]
+                # state_i[0] = state_i[0] - o.s_distance_center_to_reference * cos(theta)
+                # state_i[1] = state_i[1] - o.s_distance_center_to_reference * sin(theta)
                 traj.append(state_i)
             traj_np = np.array(traj)
             self.env_.addObstacle(traj_np, o.box_length, o.box_width)
