@@ -1,3 +1,5 @@
+stepsize = 0.01;
+
 controller_params = {};
 controller_params.k4 = 2;
 controller_params.k3 = 0.9; % e_v
@@ -17,16 +19,18 @@ max_delay_time_control = 0.1;
 switch_steering_feedback = 1; % 0:hack internal feedback, 1:from can 
 switch_velocity_feedback = 1; %0:from can, 1:from loca
 
+% convert the steering commands from the controller to steering angle values for the vehicles interfaces
+steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 14.8828*180/pi;
+
 % comfortable/safely handleable limitiation, not the technical limitations
 % of the vehicle
-max_steering_speed_comfort = 2*0.61/0.01/2; % aka maximum range / dt, :2, otherwise too fast
+max_steering_speed_comfort = 2 * 260*stepsize/steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain; 
+% 260*stepsize: theoretical limit of the interface per step when faster
+% than 10km/h; factor 2: current performance of the miqp planner
 max_acceleration_comfort = 2;
 max_deceleration_comfort = -4.5;
 max_long_jerk_comfort = 200/2;
 min_long_jerk_comfort = -450/2;
-
-% convert the steering commands from the controller to steering angle values for the vehicles interfaces
-steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 14.8828*180/pi;
 
 % Parameters for apollo controller
 apollo_control_timeout = 10;

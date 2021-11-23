@@ -425,6 +425,23 @@ classdef ControllerDataAnalysis  < PlotBase
            plot(self.res.Time, s);        
         end
         
+        function plotDiffSteeringAngleCan(self)
+           self.doNextPlot(); clf; hold on;
+           set(gcf, 'Name', 'Diff Steering Angle Can');
+           steering_angle = diff(self.res.VehicleDataCan.Steering.SteeringWheelAngle);
+           steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain = 852.7216;
+           control_command = diff(self.res.steering_angle_limited(self.active))*steering_angle_range_rad_to_steering_wheel_angle_range_deg_gain;
+           control_command(control_command==0) = nan;
+           
+           plot(self.res.Time(1:end-1), steering_angle);
+           plot(self.res.Time(1:end-1), control_command,'x-');
+           plot(self.res.Time(self.active), self.res.controller_active(self.active));
+           plot([self.res.Time(1), self.res.Time(end)], [2.6, 2.6], 'k-');
+           plot([self.res.Time(1), self.res.Time(end)], [-2.6, -2.6], 'k-');
+           ylim([-10, 10])
+           legend('Diff Steering Angle', 'Diff Steering Control Command', 'controller active')
+        end
+        
         %% Tracking Error
         function plotTrackingError(self)
             self.doNextPlot(); clf; hold on;
