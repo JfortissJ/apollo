@@ -1,7 +1,8 @@
 import time
+from datetime import datetime
 import numpy as np
 import os.path
-
+from math import log, sin, cos
 import pickle
 from cyber_py3 import cyber
 from cyber_py3 import cyber_time
@@ -58,6 +59,13 @@ def load_bark_rl_planning_config():
     print("Reading config file: ", bark_rl_planner_config)
     return bark_rl_planner_config
 
+
+def log_message(log_string: str):
+    unix_time = cyber_time.Time.now()
+    local_time = datetime.utcnow().isoformat(sep=' ', timespec='milliseconds')
+    log_info = "{} {}:\t{}\n".format(unix_time, local_time, log_string)
+    LOG_FILE.write(log_info)
+        
 class BarkRlWrapper(object):
     bark_rl_planning_config_: planning_config_pb2.PlanningConfig.bark_rl_planner_config
     step_time_: float
@@ -93,7 +101,8 @@ class BarkRlWrapper(object):
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
         json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
         self.params_ = ParameterServer(filename=json_file_path)
-        # self.params_["Experiment"]["Blueprint"]["Config"]["csv_path"] = "dummy.json"
+        self.params_["SingleLaneBluePrint"]["MapOffstX"] = self.pts_offset_x_
+        self.params_["SingleLaneBluePrint"]["MapOffsetY"] = self.pts_offset_y_
         self.initialize_external_runtime(json_file_path)
 
     def initialize_external_runtime(self, json_file_path: str):
@@ -138,29 +147,30 @@ class BarkRlWrapper(object):
         # step 1: setup environment
         self.env_.setupWorld()
         time1 = time.time()
-        log_info = "{}:\tCreating world took {}s, time since beginning {}\n".format(cyber_time.Time.now(), time1-time0, time1-time0)
-        LOG_FILE.write(log_info)
+        log_message("Creating world took {}s, time since beginning {}".format(time1-time0, time1-time0))
 
         # step 2: init ego vehicle with planning_init_point
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
         state = self.convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
         self.env_.addEgoAgent(state)
         time2 = time.time()
-        log_info = "{}:\tSetup ego agents took {}s, time since beginning {}\n".format(cyber_time.Time.now(), time2-time1, time2-time0)
-        LOG_FILE.write(log_info)
+        log_message("Setup ego agents took {}s, time since beginning {}".format(time2-time1, time2-time0))
 
         # step 3: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
         for o in self.apollo_to_bark_msg_.obstacles:
             traj = []
             for pred_state in o.prediction:
                 state_i = self.convert_to_bark_state(pred_state, -pl_init_pt.relative_time)
+                # transform state from center to reference frame
+                # theta = state_i[2]
+                # state_i[0] = state_i[0] - o.s_distance_center_to_reference * cos(theta)
+                # state_i[1] = state_i[1] - o.s_distance_center_to_reference * sin(theta)
                 traj.append(state_i)
             traj_np = np.array(traj)
             self.env_.addObstacle(traj_np, o.box_length, o.box_width)
 
         time3 = time.time()
-        log_info = "{}:\tSetup other agents took {}s, time since beginning {}\n".format(cyber_time.Time.now(), time3-time2, time3-time0)
-        LOG_FILE.write(log_info)
+        log_message("Setup other agents took {}s, time since beginning {}".format(time3-time2, time3-time0))
         # TODO step 3: set reference line
 
         # step 4: saving scenario for serialization
@@ -169,8 +179,7 @@ class BarkRlWrapper(object):
         # step 5:
         state_action_traj = self.env_.generateTrajectory(self.step_time_, self.num_steps_)
         time4 = time.time()
-        log_info = "{}:\tGenerating trajectory took {}s, time since beginning. {}\n".format(cyber_time.Time.now(), time4-time3, time4-time0)
-        LOG_FILE.write(log_info)
+        log_message("Generating trajectory took {}s, time since beginning. {}".format(time4-time3, time4-time0))
         adc_trajectory = planning_pb2.ADCTrajectory()
         traj_point = adc_trajectory.trajectory_point.add()
         # append initial state to resulting trajectory
@@ -194,8 +203,7 @@ class BarkRlWrapper(object):
         self.response_pub_.write(response_msg)
         self.apollo_to_bark_received_ = False
         print("Generated Trajectory.")
-        log_info = "{}:\tgenerated new trajectory: {}\n".format(cyber_time.Time.now(), response_msg)
-        LOG_FILE.write(log_info)
+        log_message("generated new trajectory: {}".format(response_msg))
 
     def apollo_to_bark_callback(self, data):
         """
