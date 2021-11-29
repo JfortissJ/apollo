@@ -73,7 +73,7 @@ class BarkRlWrapper(object):
     pts_offset_x_: float
     pts_offset_y_: float
     use_idm_: bool = False
-    cycle_time_: float = 0.2
+    cycle_time_: float = 0.01
     sequence_num_: int = 0
     apollo_to_bark_received_: bool = False
     apollo_to_bark_msg_: bark_interface_pb2.ApolloToBarkMsg = bark_interface_pb2.ApolloToBarkMsg()
