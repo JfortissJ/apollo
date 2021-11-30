@@ -249,8 +249,9 @@ std::vector<BarkObstacle> BarkRlPlanner::ConvertToBarkObstacles(
         point.set_relative_time(pred_time);
         bark_obstacle.add_prediction()->CopyFrom(point);
       }
-      // optional double s_distance_center_to_reference = 4;  // longitudinal distance from box's center to reference frame
-      // optional double d_distance_center_to_reference = 5;  // lateral distance from box's center to reference frame
+      // trajectory point's (aka reference frame) are defined at the center of the box detection
+      bark_obstacle.set_s_distance_center_to_reference(0.0);
+      bark_obstacle.set_d_distance_center_to_reference(0.0);
       bark_obstacles.push_back(bark_obstacle);
     }
   }

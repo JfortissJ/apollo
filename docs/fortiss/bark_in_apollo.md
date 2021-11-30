@@ -4,7 +4,7 @@
 ### Update Pip Package
 `python3.7 -m pip install --upgrade pip --user`
 ### Install BARK ML
-`python3.7 -m pip install bark-ml==0.4.24 --user`
+`python3.7 -m pip install bark-ml==0.4.26 --user`
 To install a non-released version, use `python3.7 -m pip install git+https://github.com/bark-simulator/bark-ml --user` (and replace the url with the specific branch's url)
 ### Update Protobuf if you experience some weird Tensorflow Bug.
 `sudo pip uninstall -y protobuf && sudo pip install protobuf` (uninstalls 3.1.0) and (installs 3.18.0 or newer)

@@ -170,12 +170,14 @@ class BarkRlWrapper(object):
         # step 3: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
         for o in self.apollo_to_bark_msg_.obstacles:
             traj = []
+            (crad, wb) = self.env_.ConvertShapeParameters(length=o.box_length, width=o.box_width)
             for pred_state in o.prediction:
                 state_i = self.convert_to_bark_state(pred_state, -pl_init_pt.relative_time)
-                # transform state from center to reference frame
-                # theta = state_i[2]
-                # state_i[0] = state_i[0] - o.s_distance_center_to_reference * cos(theta)
-                # state_i[1] = state_i[1] - o.s_distance_center_to_reference * sin(theta)
+                # transform state from center to reference frame and
+                # move position from center to rear axis
+                theta = state_i[3]
+                state_i[1] = state_i[1] - (wb/2 - o.s_distance_center_to_reference) * cos(theta)
+                state_i[2] = state_i[2] - (wb/2 - o.s_distance_center_to_reference) * sin(theta)
                 traj.append(state_i)
             traj_np = np.array(traj)
             self.env_.addObstacle(traj_np, o.box_length, o.box_width)
