@@ -1,9 +1,14 @@
+import shutil
 import time
 from datetime import datetime
 import numpy as np
 import os.path
+from shutil import copy2
+from pathlib import Path
 from math import log, sin, cos
 import pickle
+
+from numpy.lib.function_base import copy
 from cyber_py3 import cyber
 from cyber_py3 import cyber_time
 
@@ -33,6 +38,7 @@ STEERING_WHEEL_TORQUE_LIMIT = 10.0
 THROTTLE_PEDAL_LIMIT = 10.0
 BRAKE_PEDAL_LIMIT = 10.0
 
+LOG_DIRECTORY_PATH = None
 LOG_FILE = None
 EXCEPT_LOG_FILE = None
 SERIALIZATION_FILE = None
@@ -40,10 +46,13 @@ SERIALIZATION_FILE = None
 def create_log_file():
     # Implementation follows modules/drivers/lidar/velodyne/parser/scripts/velodyne_check.py
     data_time = time.strftime(
-        '%Y-%m-%d-%H-%M-%S', time.localtime(cyber_time.Time.now().to_sec()))
-    file_name = '/apollo/data/log/bark_rl_wrapper.' + data_time + '.log'
-    except_file_name = '/apollo/data/log/bark_rl_wrapper.' + data_time + '.log.err'
-    serialization_file_name = '/apollo/data/log/bark_serialization.' + data_time + '.pickle'
+        '%Y-%m-%d-%H-%M-%S', time.localtime(cyber_time.Time.now().to_sec()))    
+    global LOG_DIRECTORY_PATH
+    LOG_DIRECTORY_PATH = "/apollo/data/log/experiment_{}".format(data_time)
+    Path(LOG_DIRECTORY_PATH).mkdir(parents=True, exist_ok=True)
+    file_name = LOG_DIRECTORY_PATH + '/bark_rl_wrapper.' + data_time + '.log'
+    except_file_name = LOG_DIRECTORY_PATH + '/bark_rl_wrapper.' + data_time + '.log.err'
+    serialization_file_name = LOG_DIRECTORY_PATH + '/bark_serialization.' + data_time + '.pickle'
     global LOG_FILE
     global EXCEPT_LOG_FILE
     global SERIALIZATION_FILE
@@ -55,6 +64,7 @@ def create_log_file():
 def load_bark_rl_planning_config():
     planning_conf_pb = planning_config_pb2.PlanningConfig()
     proto_utils.get_pb_from_text_file(BARK_RL_PLANNER_CONF_FILE, planning_conf_pb)
+    copy2(BARK_RL_PLANNER_CONF_FILE, LOG_DIRECTORY_PATH)
     bark_rl_planner_config = planning_conf_pb.bark_rl_planner_config
     print("Reading config file: ", bark_rl_planner_config)
     return bark_rl_planner_config
@@ -100,6 +110,7 @@ class BarkRlWrapper(object):
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
         json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
+        copy2(json_file_path, LOG_DIRECTORY_PATH)
         self.params_ = ParameterServer(filename=json_file_path)
         self.params_["SingleLaneBluePrint"]["MapOffstX"] = self.pts_offset_x_
         self.params_["SingleLaneBluePrint"]["MapOffsetY"] = self.pts_offset_y_
