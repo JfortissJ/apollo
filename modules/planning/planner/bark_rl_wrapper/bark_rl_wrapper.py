@@ -141,7 +141,9 @@ class BarkRlWrapper(object):
 
     def setup_ego_model(self):
         if self.use_idm_:
-            self.params_["BehaviorIDMClassic"]["DesiredVelocity"] = float(self.apollo_to_bark_msg_.velocity_desired)
+            # IDM cannot deal with desired velocity equal to zero
+            desired_velocity = max([0.01, float(self.apollo_to_bark_msg_.velocity_desired)])
+            self.params_["BehaviorIDMClassic"]["DesiredVelocity"] = desired_velocity
             self.env_._ml_behavior = bark.core.models.behavior.BehaviorIDMClassic(self.params_)
         else:
             sac_agent = BehaviorSACAgent(environment=self.env_, params=self.params_)
@@ -156,6 +158,9 @@ class BarkRlWrapper(object):
         time0 = time.time()
 
         # step 1: setup environment
+        if self.use_idm_:
+            # necessary to update desired velocity in IDM, but recreating SAC agent every time would take too long.
+            self.setup_ego_model() 
         self.env_.setupWorld()
         time1 = time.time()
         log_message("Creating world took {}s, time since beginning {}".format(time1-time0, time1-time0))
