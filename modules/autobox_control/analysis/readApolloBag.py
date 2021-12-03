@@ -141,21 +141,34 @@ def parsePerception(freader, outputDir, substr):
 
             for o in perception.perception_obstacle:
                 id = o.id
+                timestamp_detection_sec = o.timestamp
                 x = o.position.x
                 y = o.position.y
                 z = o.position.z
                 theta = o.theta
+                vx = o.velocity.x
+                vy = o.velocity.y
+                vz = o.velocity.z
+                ax = o.acceleration.x
+                ay = o.acceleration.y
+                az = o.acceleration.z
                 l = o.length
                 w = o.width
                 h = o.height
                 tracking_time = o.tracking_time
-                row = [timestamp_sec, id, x, y, z, theta, l, w, h, tracking_time]
+                obstacle_type = o.type
+                velocity_covariance = o.velocity_covariance
+
+                row = [timestamp_sec, id, timestamp_detection_sec, x, y, z, vx, vy, vz, ax, ay, az, theta, l, w, h, tracking_time, obstacle_type]
+                row.extend(velocity_covariance)
                 rows_perception.append(row)
 
     outputPathPerception = os.path.join(outputDir, substr + "perception.csv")
     with open(outputPathPerception, "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        writer.writerow(["unix_timestamp_sec", "id", "x", "y", "z", "theta", "length", "width", "height", "tracking_time"])
+        writer.writerow(["header_unix_timestamp_sec", "id", "obstacle_unix_timestamp_sec", "x", "y", "z", "vx", "vy", "vz", "ax", "ay", "az", 
+                         "theta", "length", "width", "height", "tracking_time", "type", 
+                         "vel_cov1", "vel_cov2", "vel_cov3", "vel_cov4", "vel_cov5", "vel_cov6", "vel_cov7", "vel_cov8", "vel_cov9"])
         writer.writerows(rows_perception)
         print("######## parsed perception to " + outputPathPerception + " ########")
 
