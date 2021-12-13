@@ -14,7 +14,8 @@ Start Dreamview, activate Simcontrol, and launch the following modules:
 
 - Routing: `cyber_launch start modules/routing/launch/routing.launch`
 - Prediction: `cyber_launch start modules/tools/prediction/fake_prediction/fake_prediction.launch`
-- Planning: `cyber_launch start modules/planning/launch/bark_rl_planning.launch`
+- BarkRlWrapper Node: `python3.7 modules/planning/planner/bark_rl_wrapper/bark_rl_wrapper.py`
+- BarkRlPlanner Node: `cyber_launch start modules/planning/launch/bark_rl_planning.launch`
 
 Finally, you need to perform a routing. The planner should now start planning, and the car should drive.
 

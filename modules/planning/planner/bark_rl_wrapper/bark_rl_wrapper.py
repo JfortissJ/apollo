@@ -5,7 +5,7 @@ import numpy as np
 import os.path
 from shutil import copy2
 from pathlib import Path
-from math import log, sin, cos
+from math import log, sin, cos, atan
 import pickle
 
 from numpy.lib.function_base import copy
@@ -144,12 +144,18 @@ class BarkRlWrapper(object):
         return state
 
     def convert_to_ego_bark_state(self, traj_pt, time_offset):
+        # bark state of rl agent is normal state extended by steering angle
         t_e = traj_pt.relative_time + time_offset
         x_e = traj_pt.path_point.x - self.pts_offset_x_
         y_e = traj_pt.path_point.y - self.pts_offset_y_
         theta_e = traj_pt.path_point.theta
         v_e = traj_pt.v
-        state = np.array([t_e, x_e, y_e, theta_e, v_e, 0.0])
+        wheelbase = 2.786 # get from common::VehicleConfigHelper::Instance()->GetConfig().vehicle_param().wheel_base() ?
+        # delta = atan(kappa * l) follows from kappa = tan(delta)/l
+        delta = atan(traj_pt.path_point.kappa) * wheelbase
+        state = np.array([t_e, x_e, y_e, theta_e, v_e, delta])
+        state_string = np.array2string(state, formatter={'float_kind':lambda x: "%.2f" % x})
+        log_message("Initializing bark with ego state: {}".format(state_string))
         return state
 
     def setup_ego_model(self):
