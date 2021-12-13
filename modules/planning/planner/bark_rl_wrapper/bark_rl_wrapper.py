@@ -31,6 +31,7 @@ CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
 CHANNEL_NAME_RESPONSE = '/apollo/planning/bark_response'
 CHANNEL_NAME_CANBUS = '/apollo/canbus/chassis_detail'
 
+# this is also the parameter file of the apollo bark_rl_planner node
 BARK_RL_PLANNER_CONF_FILE = "/apollo/modules/planning/conf/bark_rl_planning_config.pb.txt"
 
 # TODO set reasonable values!
@@ -116,6 +117,7 @@ class BarkRlWrapper(object):
         self.params_ = ParameterServer(filename=json_file_path)
         self.params_["SingleLaneBluePrint"]["MapOffstX"] = self.pts_offset_x_
         self.params_["SingleLaneBluePrint"]["MapOffsetY"] = self.pts_offset_y_
+        # we call initialize_external_runtime here due to the long loading time of the network
         self.initialize_external_runtime(json_file_path)
 
     def initialize_external_runtime(self, json_file_path: str):
@@ -139,6 +141,15 @@ class BarkRlWrapper(object):
         theta_e = traj_pt.path_point.theta
         v_e = traj_pt.v
         state = np.array([t_e, x_e, y_e, theta_e, v_e])
+        return state
+
+    def convert_to_ego_bark_state(self, traj_pt, time_offset):
+        t_e = traj_pt.relative_time + time_offset
+        x_e = traj_pt.path_point.x - self.pts_offset_x_
+        y_e = traj_pt.path_point.y - self.pts_offset_y_
+        theta_e = traj_pt.path_point.theta
+        v_e = traj_pt.v
+        state = np.array([t_e, x_e, y_e, theta_e, v_e, 0.0])
         return state
 
     def setup_ego_model(self):
@@ -169,7 +180,7 @@ class BarkRlWrapper(object):
 
         # step 2: init ego vehicle with planning_init_point
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
-        state = self.convert_to_bark_state(pl_init_pt, -pl_init_pt.relative_time)
+        state = self.convert_to_ego_bark_state(pl_init_pt, -pl_init_pt.relative_time)
         self.env_.addEgoAgent(state)
         time2 = time.time()
         log_message("Setup ego agents took {}s, time since beginning {}".format(time2-time1, time2-time0))
