@@ -1,6 +1,6 @@
 frame_id: "velodyne32"
 scan_channel: "/apollo/sensor/velodyne32/Scan"
-rpm: 600.0
+rpm: 300.0
 model: VLP32C
 mode: STRONGEST
 firing_data_port: 2368
