@@ -109,7 +109,9 @@ class BarkRlWrapper(object):
         # folder stucture needs to be as follows:
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
-        json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
+        # json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
+        # json_file_path = "/apollo/modules/planning/data/20211210_checkpoints/dense_512.json"
+        json_file_path = "/apollo/modules/planning/data/20211210_checkpoints/dense_small_limits_512.json"
         copy2(json_file_path, LOG_DIRECTORY_PATH)
         self.params_ = ParameterServer(filename=json_file_path)
         self.params_["SingleLaneBluePrint"]["MapOffstX"] = self.pts_offset_x_
