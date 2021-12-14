@@ -158,17 +158,24 @@ def parsePerception(freader, outputDir, substr):
                 tracking_time = o.tracking_time
                 obstacle_type = o.type
                 velocity_covariance = o.velocity_covariance
+                polygon_points = []
+                for idx, poly_point in enumerate(o.polygon_point):
+                    polygon_points.extend([poly_point.x, poly_point.y, poly_point.z])
 
                 row = [timestamp_sec, id, timestamp_detection_sec, x, y, z, vx, vy, vz, ax, ay, az, theta, l, w, h, tracking_time, obstacle_type]
                 row.extend(velocity_covariance)
+                row.extend(polygon_points)
                 rows_perception.append(row)
 
     outputPathPerception = os.path.join(outputDir, substr + "perception.csv")
     with open(outputPathPerception, "wt") as fp:
         writer = csv.writer(fp, delimiter=",")
-        writer.writerow(["header_unix_timestamp_sec", "id", "obstacle_unix_timestamp_sec", "x", "y", "z", "vx", "vy", "vz", "ax", "ay", "az", 
+        column_names = ["header_unix_timestamp_sec", "id", "obstacle_unix_timestamp_sec", "x", "y", "z", "vx", "vy", "vz", "ax", "ay", "az", 
                          "theta", "length", "width", "height", "tracking_time", "type", 
-                         "vel_cov1", "vel_cov2", "vel_cov3", "vel_cov4", "vel_cov5", "vel_cov6", "vel_cov7", "vel_cov8", "vel_cov9"])
+                         "vel_cov1", "vel_cov2", "vel_cov3", "vel_cov4", "vel_cov5", "vel_cov6", "vel_cov7", "vel_cov8", "vel_cov9"]
+        for i in range(0, 60):
+            column_names.extend(["polyx_{}".format(i), "polyy_{}".format(i), "polyz_{}".format(i)])
+        writer.writerow(column_names)
         writer.writerows(rows_perception)
         print("######## parsed perception to " + outputPathPerception + " ########")
 
