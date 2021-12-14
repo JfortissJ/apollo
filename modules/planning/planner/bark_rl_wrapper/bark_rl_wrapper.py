@@ -22,6 +22,7 @@ import common.proto_utils as proto_utils
 import bark
 from bark.runtime.viewer.matplotlib_viewer import MPViewer
 from bark.runtime.commons.parameters import ParameterServer
+from bark.core.geometry import Line2d
 
 from bark_ml.environments.external_runtime import ExternalRuntime
 from bark_ml.library_wrappers.lib_tf_agents.agents.sac_agent import BehaviorSACAgent
@@ -132,7 +133,8 @@ class BarkRlWrapper(object):
         # setting up ego agent initially as this takes some time...
         dummy_state = np.array([0, 0, 0, 0, 0])
         self.setup_ego_model()
-        self.env_.addEgoAgent(dummy_state)
+        goal_line = Line2d(np.array([[0., 0.], [1., 1.]]))
+        self.env_.addEgoAgent(dummy_state, goal_line)
 
     def convert_to_bark_state(self, traj_pt, time_offset):
         t_e = traj_pt.relative_time + time_offset
@@ -157,6 +159,19 @@ class BarkRlWrapper(object):
         state_string = np.array2string(state, formatter={'float_kind':lambda x: "%.2f" % x})
         log_message("Initializing bark with ego state: {}".format(state_string))
         return state
+
+    def convert_reference_line_to_bark_line(self, reference_line):
+        pts = []
+        N = len(reference_line)
+        for idx, ref_pt in enumerate(reference_line):
+            if idx > N - 100: # only use last points
+                pts.append([ref_pt.x - self.pts_offset_x_, ref_pt.y - self.pts_offset_y_])
+        
+        pts_np = np.array(pts)
+        # print("goal line", pts_np)
+        new_line = Line2d(pts_np)
+        return new_line
+
 
     def setup_ego_model(self):
         if self.use_idm_:
@@ -187,7 +202,8 @@ class BarkRlWrapper(object):
         # step 2: init ego vehicle with planning_init_point
         pl_init_pt = self.apollo_to_bark_msg_.planning_init_point
         state = self.convert_to_ego_bark_state(pl_init_pt, -pl_init_pt.relative_time)
-        self.env_.addEgoAgent(state)
+        goal_line = self.convert_reference_line_to_bark_line(self.apollo_to_bark_msg_.reference_line)
+        self.env_.addEgoAgent(state, goal_line)
         time2 = time.time()
         log_message("Setup ego agents took {}s, time since beginning {}".format(time2-time1, time2-time0))
 
