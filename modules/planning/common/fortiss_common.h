@@ -74,7 +74,8 @@ PlannerState DeterminePlannerState(const double planning_init_v,
                                    double& stop_dist,
                                    const double destin_dist_thresh,
                                    const double standstill_velocity_thresh,
-                                   const double minimum_valid_speed);
+                                   const double minimum_valid_speed,
+                                   const bool brake_for_inline_while_driving = false);
 
 void FillTimeDerivativesInApolloTrajectory(DiscretizedTrajectory& traj);
 

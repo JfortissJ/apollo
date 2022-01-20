@@ -332,6 +332,7 @@ enum PlannerType {
   LATTICE = 3;      // lattice planner
   MIQP = 4;         // miqp planner
   BARK_RL = 5;      // bark rl planner
+  REFERENCE_TRACKING = 6; // smoother only planner
 }
 
 message RtkPlanningConfig {

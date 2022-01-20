@@ -1,0 +1,32 @@
+# Define all coms in DAG streaming.
+module_config {
+  module_library : "/apollo/bazel-bin/modules/planning/libplanning_component.so"
+  components {
+    class_name : "PlanningComponent"
+    config {
+      name: "planning"
+      flag_file_path:  "/apollo/modules/planning/conf/reference_tracking_planning.conf"
+      
+      readers: [
+        {
+          channel: "/apollo/prediction"
+          pending_queue_size: 1
+        },
+        {
+          channel: "/apollo/canbus/chassis"
+          qos_profile: {
+              depth : 7
+          }
+          pending_queue_size: 25
+        },
+        {
+          channel: "/apollo/localization/pose"
+          qos_profile: {
+              depth : 7
+          }
+          pending_queue_size: 25
+        }
+      ]
+    }
+  }
+}

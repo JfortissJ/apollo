@@ -249,7 +249,8 @@ PlannerState DeterminePlannerState(const double planning_init_v,
                                    double& stop_dist,
                                    const double destin_dist_thresh,
                                    const double standstill_velocity_thresh,
-                                   const double minimum_valid_speed) {
+                                   const double minimum_valid_speed,
+                                   const bool brake_for_inline_while_driving) {
   PlannerState status;
   // issue hard stop trajectory without optimization if velocity is
   // low enough and goal is nearer than this
@@ -277,9 +278,13 @@ PlannerState DeterminePlannerState(const double planning_init_v,
       status = PlannerState::START_TRAJECTORY;
       // overwriting start stop_distance!!
       bool brake_for_inlane =
-          false;  // to be prone against obstacles that slightly collide with
-                  // lane (referenceLineGenerator cannot handle close obstacles
-                  // well -> would not stop otherwise)
+          brake_for_inline_while_driving;  // to be prone against obstacles that
+                                           // slightly collide with lane
+                                           // (referenceLineGenerator cannot
+                                           // handle close obstacles well ->
+                                           // would not stop otherwise) true in
+                                           // the only smoother usecase, false
+                                           // with an obstacle avoiding planner
       stop_dist =
           CalculateSDistanceToStop(reference_line_info, brake_for_inlane);
     } else {  // Driving: default case

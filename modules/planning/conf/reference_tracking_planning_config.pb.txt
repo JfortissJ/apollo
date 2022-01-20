@@ -1,0 +1,20 @@
+standard_planning_config {
+  planner_type: REFERENCE_TRACKING
+  planner_public_road_config {
+  }
+}
+bark_rl_planner_config: {
+    use_environment_polygon: true
+    consider_obstacles: true
+    nr_steps: 20
+    ts: 0.2
+    distance_stop_before: 1
+    distance_start_slowdown: 15
+    destination_distance_stop_threshold: 5.0
+    cutoff_distance_reference_after_stop: 10.0
+    pts_offset_x: 692000
+    pts_offset_y: 5.339e+06
+    use_smoothing: true
+}
+
+
