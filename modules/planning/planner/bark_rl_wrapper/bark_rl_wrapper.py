@@ -15,6 +15,7 @@ from cyber_py3 import cyber_time
 from modules.planning.proto import planning_pb2
 from modules.planning.proto import bark_interface_pb2
 from modules.canbus.proto import chassis_detail_pb2
+from modules.localization.proto import localization_pb2
 from modules.planning.proto import planning_config_pb2
 
 import common.proto_utils as proto_utils
@@ -31,6 +32,7 @@ from bark_ml.experiment.experiment_runner import ExperimentRunner
 CHANNEL_NAME_REQUEST = '/apollo/planning/apollo_to_bark'
 CHANNEL_NAME_RESPONSE = '/apollo/planning/bark_response'
 CHANNEL_NAME_CANBUS = '/apollo/canbus/chassis_detail'
+CHANNEL_NAME_LOCALIZATION = '/apollo/localization/pose'
 
 # this is also the parameter file of the apollo bark_rl_planner node
 BARK_RL_PLANNER_CONF_FILE = "/apollo/modules/planning/conf/bark_rl_planning_config.pb.txt"
@@ -91,6 +93,7 @@ class BarkRlWrapper(object):
     apollo_to_bark_msg_: bark_interface_pb2.ApolloToBarkMsg = bark_interface_pb2.ApolloToBarkMsg()
     chassis_detail_received_: bool = False
     chassis_detail_msg_: chassis_detail_pb2.ChassisDetail = chassis_detail_pb2.ChassisDetail()
+    localization_msgs_: list = []
     response_pub_: cyber.Writer
     driver_interaction_timesteps_: list = []
     scenario_history_: dict = {}
@@ -112,8 +115,8 @@ class BarkRlWrapper(object):
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
         # json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
-        # json_file_path = "/apollo/modules/planning/data/20211210_checkpoints/dense_512.json"
-        json_file_path = "/apollo/modules/planning/data/20211210_checkpoints/dense_small_limits_512.json"
+        json_file_path = "/apollo/modules/planning/data/20211210_checkpoints/dense_512.json"
+        # json_file_path = "/apollo/modules/planning/data/20211210_checkpoints/dense_small_limits_512.json"
         copy2(json_file_path, LOG_DIRECTORY_PATH)
         self.params_ = ParameterServer(filename=json_file_path)
         self.params_["SingleLaneBluePrint"]["MapOffstX"] = self.pts_offset_x_
@@ -274,6 +277,9 @@ class BarkRlWrapper(object):
         self.chassis_detail_received_ = True
         self.driver_interaction_triggered()
 
+    def localization_callback(self, data):
+        self.localization_msgs_.append({'Time': data.header.timestamp_sec, 'Localization_Pose': data.pose})
+
     def driver_interaction_triggered(self):
         # TODO idealy check these fields for existance
         steering_wheel_troque = self.chassis_detail_msg_.fortuna.steering.steering_wheel_torque
@@ -310,6 +316,10 @@ def main():
                        chassis_detail_pb2.ChassisDetail,
                        bark_wrp.chassis_detail_callback)
 
+    node.create_reader(CHANNEL_NAME_LOCALIZATION,
+                       localization_pb2.LocalizationEstimate,
+                       bark_wrp.localization_callback)
+
     while not cyber.is_shutdown():
         now = cyber_time.Time.now().to_sec()
         bark_wrp.publish_planningmsg()
@@ -317,7 +327,7 @@ def main():
         if sleep_time > 0:
             time.sleep(sleep_time)
 
-    pickle.dump([bark_wrp.scenario_history_, bark_wrp.driver_interaction_timesteps_],SERIALIZATION_FILE)
+    pickle.dump([bark_wrp.scenario_history_, bark_wrp.driver_interaction_timesteps_, bark_wrp.localization_msgs_], SERIALIZATION_FILE)
     print("saved serialization")
 
 
