@@ -125,7 +125,7 @@ class BarkRlWrapper(object):
         self.initialize_external_runtime(json_file_path)
 
     def initialize_external_runtime(self, json_file_path: str):
-        exp_runner = ExperimentRunner(json_file=json_file_path, params=self.params_, mode="print", random_seed=0)
+        exp_runner = ExperimentRunner(json_file=json_file_path, params=self.params_, mode="print", random_seed=0, use_best_ckpt_folder = True)
         observer = exp_runner._experiment._observer
         map_interface = exp_runner._experiment._blueprint._scenario_generation._map_interface
         viewer = MPViewer(params=self.params_)
