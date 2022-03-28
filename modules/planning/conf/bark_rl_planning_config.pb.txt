@@ -6,7 +6,7 @@ standard_planning_config {
 bark_rl_planner_config: {
     use_environment_polygon: true
     consider_obstacles: true
-    nr_steps: 5
+    nr_steps: 10
     ts: 0.2
     distance_stop_before: 1
     distance_start_slowdown: 15
