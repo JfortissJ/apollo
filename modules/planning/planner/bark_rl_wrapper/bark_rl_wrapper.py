@@ -115,7 +115,7 @@ class BarkRlWrapper(object):
         # /apollo/modules/planning/data/20211111_checkpoints/ HERE THE JSON NEEDS TO BE
         # /apollo/modules/planning/data/20211111_checkpoints/single_lane_large/0/ckps/ HERE THE CKPTS NEED TO BE
         # json_file_path = "/apollo/modules/planning/data/20211118_checkpoints/single_lane_large_max_vel.json"
-        json_file_path = "/apollo/modules/planning/data/20220322_checkpoints/case_be_careful_new.json"
+        json_file_path = "/apollo/modules/planning/data/20220405_checkpoints/case_be_careful.json"
         # json_file_path = "/apollo/modules/planning/data/20211210_checkpoints/dense_small_limits_512.json"
         copy2(json_file_path, LOG_DIRECTORY_PATH)
         self.params_ = ParameterServer(filename=json_file_path)
@@ -210,6 +210,11 @@ class BarkRlWrapper(object):
         time2 = time.time()
         log_message("Setup ego agents took {}s, time since beginning {}".format(time2-time1, time2-time0))
 
+        # step 2.5: create ROI for ego vehicle
+        self.env_.createROI4EgoAgent()
+        time2_5 = time.time()
+        log_message("Create ROI took {}s, time since beginning {}".format(time2_5-time2, time2_5-time0))
+        
         # step 3: fill BARK world with perception_obstacle_msg_ (call self.env.addObstacle())
         for o in self.apollo_to_bark_msg_.obstacles:
             traj = []
